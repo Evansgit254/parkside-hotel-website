@@ -1,0 +1,115 @@
+[2m[WebServer] [22m
+[2m[WebServer] [22m> parkside-villa@0.1.0 dev
+[2m[WebServer] [22m> next dev
+[2m[WebServer] [22m
+[2m[WebServer] [22m[1m[38;2;173;127;168m▲ Next.js 16.1.6[39m[22m (Turbopack)
+[2m[WebServer] [22m- Local:         http://localhost:3000
+[2m[WebServer] [22m- Network:       http://192.168.100.169:3000
+[2m[WebServer] [22m
+[2m[WebServer] [22m[32m[1m✓[22m[39m Starting...
+[2m[WebServer] [22m[32m[1m✓[22m[39m Ready in 1535ms
+[2m[WebServer] [22m GET / [32m200[39m in 1244ms[2m (compile: 771ms, render: 473ms)[22m
+
+Running 1 test using 1 worker
+
+[2m[WebServer] [22m GET /admin/login [32m200[39m in 174ms[2m (compile: 38ms, render: 136ms)[22m
+[2m[WebServer] [22m POST /admin/login [32m200[39m in 59ms[2m (compile: 7ms, render: 53ms)[22m
+[2m[WebServer] [22m GET /admin [32m200[39m in 119ms[2m (compile: 45ms, render: 74ms)[22m
+[2m[WebServer] [22m POST /admin [32m200[39m in 31ms[2m (compile: 8ms, render: 23ms)[22m
+[2m[WebServer] [22m POST /admin [32m200[39m in 27ms[2m (compile: 6ms, render: 20ms)[22m
+>>> [Leads Test] Starting...
+[2m[WebServer] [22m GET / [32m200[39m in 186ms[2m (compile: 8ms, render: 178ms)[22m
+[2m[WebServer] [22m POST / [32m200[39m in 24ms[2m (compile: 7ms, render: 17ms)[22m
+[2m[WebServer] [22m POST / [32m200[39m in 39ms[2m (compile: 13ms, render: 26ms)[22m
+[2m[WebServer] [22m POST / [32m200[39m in 118ms[2m (compile: 13ms, render: 106ms)[22m
+[2m[WebServer] [22m GET /admin/rooms [32m200[39m in 114ms[2m (compile: 38ms, render: 76ms)[22m
+[2m[WebServer] [22m POST /admin/rooms [32m200[39m in 20ms[2m (compile: 4ms, render: 17ms)[22m
+[2m[WebServer] [22m POST /admin/rooms [32m200[39m in 17ms[2m (compile: 4ms, render: 14ms)[22m
+[2m[WebServer] [22m POST /admin/rooms [32m200[39m in 24ms[2m (compile: 5ms, render: 19ms)[22m
+[2m[WebServer] [22m POST /admin/rooms [32m200[39m in 29ms[2m (compile: 4ms, render: 25ms)[22m
+[2m[WebServer] [22m POST /admin/rooms [32m200[39m in 20ms[2m (compile: 4ms, render: 16ms)[22m
+[2m[WebServer] [22m GET /undefined [33m404[39m in 203ms[2m (compile: 86ms, render: 117ms)[22m
+  ✘  1 [chromium] › tests/admin-crud.spec.ts:99:9 › Parkside Villa Admin CRUD Operations › Leads Management (26.7s)
+[2m[WebServer] [22m GET /admin/login [32m200[39m in 162ms[2m (compile: 8ms, render: 154ms)[22m
+[2m[WebServer] [22m POST /admin/login [32m200[39m in 38ms[2m (compile: 7ms, render: 31ms)[22m
+[2m[WebServer] [22m GET /admin [32m200[39m in 38ms[2m (compile: 4ms, render: 34ms)[22m
+[2m[WebServer] [22m POST /admin [32m200[39m in 23ms[2m (compile: 5ms, render: 18ms)[22m
+[2m[WebServer] [22m POST /admin [32m200[39m in 39ms[2m (compile: 6ms, render: 33ms)[22m
+>>> [Leads Test] Starting...
+[2m[WebServer] [22m GET / [32m200[39m in 121ms[2m (compile: 6ms, render: 115ms)[22m
+[2m[WebServer] [22m POST / [32m200[39m in 22ms[2m (compile: 6ms, render: 15ms)[22m
+[2m[WebServer] [22m POST / [32m200[39m in 24ms[2m (compile: 8ms, render: 16ms)[22m
+[2m[WebServer] [22m POST / [32m200[39m in 68ms[2m (compile: 6ms, render: 62ms)[22m
+[2m[WebServer] [22m GET /admin/rooms [32m200[39m in 57ms[2m (compile: 3ms, render: 54ms)[22m
+[2m[WebServer] [22m POST /admin/rooms [32m200[39m in 20ms[2m (compile: 5ms, render: 15ms)[22m
+[2m[WebServer] [22m POST /admin/rooms [32m200[39m in 32ms[2m (compile: 4ms, render: 29ms)[22m
+[2m[WebServer] [22m POST /admin/rooms [32m200[39m in 21ms[2m (compile: 5ms, render: 16ms)[22m
+[2m[WebServer] [22m POST /admin/rooms [32m200[39m in 31ms[2m (compile: 6ms, render: 25ms)[22m
+[2m[WebServer] [22m POST /admin/rooms [32m200[39m in 36ms[2m (compile: 15ms, render: 21ms)[22m
+[2m[WebServer] [22m GET /undefined [33m404[39m in 86ms[2m (compile: 8ms, render: 78ms)[22m
+[2m[WebServer] [22m GET / [32m200[39m in 38ms[2m (compile: 5ms, render: 33ms)[22m
+[2m[WebServer] [22m POST / [32m200[39m in 29ms[2m (compile: 6ms, render: 23ms)[22m
+[2m[WebServer] [22m POST / [32m200[39m in 24ms[2m (compile: 7ms, render: 17ms)[22m
+  ✘  2 [chromium] › tests/admin-crud.spec.ts:99:9 › Parkside Villa Admin CRUD Operations › Leads Management (retry #1) (25.5s)
+
+
+  1) [chromium] › tests/admin-crud.spec.ts:99:9 › Parkside Villa Admin CRUD Operations › Leads Management 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('div[style*="rgba(0,0,0,0.8)"]').getByText(/Booking Confirmed/i)
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 20000ms[22m
+    [2m  - waiting for locator('div[style*="rgba(0,0,0,0.8)"]').getByText(/Booking Confirmed/i)[22m
+
+
+      118 |         // Wait for success message to appear on public site - scope to modal to avoid strict mode violation
+      119 |         const modal = page.locator('div[style*="rgba(0,0,0,0.8)"]');
+    > 120 |         await expect(modal.getByText(/Booking Confirmed/i)).toBeVisible({ timeout: 20000 });
+          |                                                             ^
+      121 |         // Wait for modal to disappear
+      122 |         await expect(page.locator('div[class*="modal"]')).not.toBeVisible({ timeout: 10000 }).catch(() => { });
+      123 |
+        at /home/evans/Projects/WEBSITE UPGRADE PARKSIDE VILLA/tests/admin-crud.spec.ts:120:61
+
+    Error Context: test-results/admin-crud-Parkside-Villa--4c45c-Operations-Leads-Management-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('div[style*="rgba(0,0,0,0.8)"]').getByText(/Booking Confirmed/i)
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 20000ms[22m
+    [2m  - waiting for locator('div[style*="rgba(0,0,0,0.8)"]').getByText(/Booking Confirmed/i)[22m
+
+
+      118 |         // Wait for success message to appear on public site - scope to modal to avoid strict mode violation
+      119 |         const modal = page.locator('div[style*="rgba(0,0,0,0.8)"]');
+    > 120 |         await expect(modal.getByText(/Booking Confirmed/i)).toBeVisible({ timeout: 20000 });
+          |                                                             ^
+      121 |         // Wait for modal to disappear
+      122 |         await expect(page.locator('div[class*="modal"]')).not.toBeVisible({ timeout: 10000 }).catch(() => { });
+      123 |
+        at /home/evans/Projects/WEBSITE UPGRADE PARKSIDE VILLA/tests/admin-crud.spec.ts:120:61
+
+    Error Context: test-results/admin-crud-Parkside-Villa--4c45c-Operations-Leads-Management-chromium-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/admin-crud-Parkside-Villa--4c45c-Operations-Leads-Management-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/admin-crud-Parkside-Villa--4c45c-Operations-Leads-Management-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/admin-crud.spec.ts:99:9 › Parkside Villa Admin CRUD Operations › Leads Management 

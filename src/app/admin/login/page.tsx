@@ -1,0 +1,113 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import styles from "../admin.module.css";
+import { motion } from "framer-motion";
+import { Lock, Mail, ChevronRight, ShieldCheck } from "lucide-react";
+
+export default function AdminLogin() {
+    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
+    const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError("");
+
+        // Artificial delay for premium feel
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        if (email === "admin@parksidevilla.com" && password === "parkside2025") {
+            document.cookie = "admin_session=true; path=/";
+            router.push("/admin");
+        } else {
+            setError("The credentials provided do not match our records.");
+            setIsLoading(false);
+        }
+    };
+
+    return (
+        <div className={styles.loginWrapper}>
+            <div className={styles.loginBackground}>
+                <div className={styles.blob}></div>
+                <div className={styles.blob2}></div>
+            </div>
+
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className={styles.loginCard}
+            >
+                <span className={styles.loginBrand}>Parkside Villa</span>
+                <span className={styles.loginRole}>Estate Management Console</span>
+
+                <div style={{ display: 'inline-flex', padding: '0.875rem', background: 'rgba(201,168,76,0.08)', color: '#C9A84C', marginBottom: '2rem', border: '1px solid rgba(201,168,76,0.15)' }}>
+                    <ShieldCheck size={28} />
+                </div>
+                <h1 className={styles.loginTitle}>Secure Access</h1>
+                <p className={styles.loginSubtitle}>Authorized personnel only</p>
+
+
+                {error && (
+                    <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className={styles.error}
+                    >
+                        {error}
+                    </motion.div>
+                )}
+
+                <form className={styles.loginForm} onSubmit={handleLogin}>
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>
+                            <Mail size={14} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} /> Official Email
+                        </label>
+                        <input
+                            type="email"
+                            className={styles.input}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="admin@parksidevilla.com"
+                            required
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>
+                            <Lock size={14} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} /> Access Password
+                        </label>
+                        <input
+                            type="password"
+                            className={styles.input}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="••••••••"
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" disabled={isLoading} className={styles.loginButton} style={{ marginTop: '1rem' }}>
+                        {isLoading ? "Authenticating..." : (
+                            <>
+                                Enter Dashboard <ChevronRight size={18} />
+                            </>
+                        )}
+                    </button>
+                </form>
+
+                <div style={{ marginTop: '3rem', textAlign: 'center' }}>
+                    <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        PARKSIDE VILLA &copy; 2025
+                    </p>
+                </div>
+            </motion.div>
+        </div>
+    );
+}
+

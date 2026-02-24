@@ -1,0 +1,1538 @@
+/* ============================================
+   PARKSIDE VILLA — WORLD CLASS DESIGN SYSTEM
+   Inspired by Aman Resorts / Four Seasons UX
+   ============================================ */
+
+/* === ROOT LAYOUT === */
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--charcoal);
+}
+
+/* === NAVIGATION === */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 200;
+    padding: 0 3rem;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    transition: all 0.6s var(--ease-luxury);
+}
+
+.headerScrolled {
+    background: rgba(28, 28, 26, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-dark);
+    height: 64px;
+}
+
+.navContainer {
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ivory);
+    transition: color 0.3s ease;
+}
+
+.logo:hover {
+    color: var(--gold);
+}
+
+.nav {
+    display: flex;
+    gap: 1.75rem;
+    align-items: center;
+}
+
+.nav a {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-on-dark-soft);
+    transition: color 0.3s ease;
+    padding: 0.25rem 0;
+    position: relative;
+    white-space: nowrap;
+}
+
+.nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transition: width 0.4s var(--ease-luxury);
+}
+
+.nav a:hover {
+    color: var(--ivory);
+}
+
+.nav a:hover::after {
+    width: 100%;
+}
+
+/* === HERO === */
+.hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+}
+
+.heroSlide {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.imageReveal {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: center center;
+}
+
+.heroOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top,
+            rgba(28, 28, 26, 0.98) 0%,
+            rgba(28, 28, 26, 0.5) 40%,
+            rgba(28, 28, 26, 0.1) 70%,
+            transparent 100%);
+    z-index: 3;
+}
+
+.heroContent {
+    position: relative;
+    z-index: 10;
+    padding: 0 4rem 7rem;
+    max-width: 1100px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
+/* Eyebrow label */
+.badge {
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: fit-content;
+}
+
+.badge::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    flex-shrink: 0;
+}
+
+.title {
+    font-family: var(--font-serif);
+    font-size: clamp(3.5rem, 7vw, 6.5rem);
+    font-weight: 300;
+    line-height: 1.0;
+    color: var(--ivory);
+    letter-spacing: -0.02em;
+    max-width: 800px;
+}
+
+.title em {
+    font-style: italic;
+    color: var(--gold-light);
+}
+
+.subtitle {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--text-on-dark-soft);
+    max-width: 480px;
+    line-height: 1.8;
+    font-weight: 300;
+}
+
+.ctaGroup {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+/* === BUTTONS === */
+.buttonPrimary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2.5rem;
+    background: var(--gold);
+    color: var(--charcoal);
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.45s var(--ease-luxury);
+    position: relative;
+    overflow: hidden;
+}
+
+.buttonPrimary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--ivory);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s var(--ease-luxury);
+}
+
+.buttonPrimary:hover::before {
+    transform: scaleX(1);
+}
+
+.buttonPrimary:hover {
+    color: var(--charcoal);
+}
+
+.buttonPrimary>* {
+    position: relative;
+    z-index: 1;
+}
+
+.buttonSecondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2.5rem;
+    background: transparent;
+    color: var(--ivory);
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: 1px solid var(--border-dark);
+    cursor: pointer;
+    transition: all 0.45s var(--ease-luxury);
+}
+
+.buttonSecondary:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.buttonGhost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: gap 0.3s ease;
+}
+
+.buttonGhost:hover {
+    gap: 1rem;
+}
+
+/* === BOOKING BAR === */
+.bookingWrapper {
+    position: relative;
+    width: 100%;
+    background: var(--surface-mid);
+    border-top: 1px solid var(--border-gold);
+    z-index: 20;
+}
+
+.bookingBar {
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) auto;
+    /* fields separated by ::after borders */
+}
+
+.bookingField {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.75rem 2.5rem;
+    border-right: 1px solid var(--border-dark);
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.bookingField:hover {
+    background: var(--surface-card);
+}
+
+.bookingLabel {
+    font-family: var(--font-sans);
+    font-size: 0.5625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+}
+
+.bookingInput {
+    background: transparent;
+    border: none;
+    color: var(--text-on-dark);
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    font-weight: 300;
+    padding: 0;
+    width: 100%;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+/* Ensure the calendar icon is visible on the dark background */
+.bookingInput::-webkit-calendar-picker-indicator {
+    filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(10deg) brightness(1.2) contrast(1.1);
+    cursor: pointer;
+}
+
+.bookingInput option {
+    background: var(--surface-mid);
+    color: var(--text-on-dark);
+}
+
+.bookingSubmit {
+    padding: 0 3rem;
+    background: var(--gold);
+    color: var(--charcoal);
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    white-space: nowrap;
+}
+
+.bookingSubmit:hover {
+    background: var(--gold-light);
+}
+
+/* === CAROUSEL CONTROLS === */
+.carouselControls {
+    position: absolute;
+    right: 4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.carouselDots {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.dot {
+    width: 1px;
+    height: 24px;
+    background: rgba(247, 243, 237, 0.2);
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+.activeDot {
+    background: var(--gold);
+    height: 48px;
+}
+
+.carouselBtn {
+    background: none;
+    border: 1px solid var(--border-dark);
+    color: var(--text-on-dark);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.carouselBtn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+/* === SECTION SYSTEM === */
+.section {
+    padding: 8rem 3rem;
+    width: 100%;
+    position: relative;
+    scroll-margin-top: 64px;
+}
+
+.contentContainer {
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+}
+
+.sectionHeader {
+    margin-bottom: 5rem;
+}
+
+.sectionEyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.sectionEyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+}
+
+.sectionTitle {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    color: var(--ivory);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+}
+
+.sectionTitleLight {
+    color: var(--text-primary);
+}
+
+.sectionSubtitle {
+    font-size: 1rem;
+    color: var(--text-on-dark-soft);
+    line-height: 1.8;
+    max-width: 520px;
+    margin-top: 1.5rem;
+    font-weight: 300;
+}
+
+.sectionSubtitleLight {
+    color: var(--text-secondary);
+}
+
+/* === ROOMS SECTION — Editorial Photo + Text === */
+.roomsSection {
+    background: var(--charcoal);
+    padding: 8rem 3rem;
+}
+
+.roomsIntro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: end;
+    max-width: var(--max-width);
+    margin: 0 auto 5rem;
+}
+
+.roomsIntroText {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.roomsIntroTitle {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    font-weight: 300;
+    color: var(--ivory);
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+}
+
+.roomsIntroRight {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: flex-end;
+    padding-top: 1rem;
+}
+
+.roomsIntroDesc {
+    text-align: right;
+    color: var(--text-on-dark-soft);
+    font-size: 0.9375rem;
+    line-height: 1.8;
+    max-width: 360px;
+}
+
+/* Bento Grid - World Class */
+.roomGrid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    grid-auto-rows: 340px;
+    gap: 4px;
+    max-width: var(--max-width);
+    margin: 0 auto;
+}
+
+.roomCard {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface-card);
+    cursor: pointer;
+    min-height: 340px;
+}
+
+.roomCard:nth-child(1) {
+    grid-row: span 2;
+    min-height: 684px;
+}
+
+.roomCard:nth-child(2) {
+    grid-column: span 1;
+}
+
+.roomCard:nth-child(3) {
+    grid-column: span 1;
+}
+
+.roomCard:nth-child(4) {
+    grid-column: span 2;
+}
+
+.roomImage {
+    z-index: 0;
+    transition: transform 0.9s var(--ease-luxury) !important;
+    will-change: transform;
+}
+
+.roomCard:hover .roomImage {
+    transform: scale(1.06) !important;
+}
+
+.roomInfo {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem;
+    background: linear-gradient(to top,
+            rgba(28, 28, 26, 0.97) 0%,
+            rgba(28, 28, 26, 0.7) 55%,
+            transparent 100%);
+    z-index: 5;
+    transform: translateY(8px);
+    transition: transform 0.4s var(--ease-luxury);
+}
+
+.roomCard:hover .roomInfo {
+    transform: translateY(0);
+}
+
+.roomType {
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    font-weight: 400;
+    color: var(--ivory) !important;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.25rem;
+}
+
+.roomDesc {
+    font-size: 0.8125rem;
+    color: rgba(247, 243, 237, 0.6) !important;
+    line-height: 1.6;
+    margin: 0;
+    display: none;
+}
+
+.roomCard:hover .roomDesc {
+    display: block;
+}
+
+.roomPrice {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.roomPriceValue {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: var(--gold) !important;
+    font-weight: 400;
+}
+
+.roomTag {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    padding: 0.375rem 0.875rem;
+    background: var(--gold);
+    color: var(--charcoal);
+    font-family: var(--font-sans);
+    font-size: 0.5625rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    z-index: 10;
+}
+
+/* === EXPERIENCE STRIP — Between Rooms and Facilities === */
+.experienceStrip {
+    background: var(--ivory);
+    padding: 6rem 3rem;
+}
+
+.experienceStripInner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr 1px 1fr 1px 1fr;
+    align-items: center;
+    gap: 0;
+}
+
+.experienceStat {
+    padding: 2rem 3rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.experienceStatNum {
+    font-family: var(--font-serif);
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    line-height: 1;
+    letter-spacing: -0.03em;
+}
+
+.experienceStatNum span {
+    font-size: 2rem;
+    color: var(--gold);
+}
+
+.experienceStatLabel {
+    font-family: var(--font-sans);
+    font-size: 0.5625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.experienceDivider {
+    width: 1px;
+    height: 60px;
+    background: var(--border-light);
+    margin: 0 auto;
+}
+
+/* === FACILITIES SECTION === */
+.facilitiesSection {
+    background: var(--surface-mid);
+    padding: 8rem 3rem;
+}
+
+.facilitiesLayout {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 6rem;
+    align-items: start;
+}
+
+.facilitiesIntro {
+    position: sticky;
+    top: 8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.facilitiesIntroTitle {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 3.5vw, 3.5rem);
+    font-weight: 300;
+    color: var(--ivory);
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+}
+
+.facilitiesIntroDesc {
+    font-size: 0.9375rem;
+    color: var(--text-on-dark-soft);
+    line-height: 1.8;
+}
+
+.facilitiesGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.facilityCard {
+    display: grid;
+    grid-template-columns: 48px 1fr 24px 18px;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--border-dark);
+    cursor: pointer;
+    transition: all 0.4s var(--ease-luxury);
+    text-decoration: none;
+    color: var(--text-on-dark);
+}
+
+.facilityCard:first-child {
+    border-top: 1px solid var(--border-dark);
+}
+
+.facilityCard:hover {
+    padding-left: 1rem;
+    border-color: var(--border-gold);
+}
+
+.facilityNum {
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+    color: var(--gold);
+    font-style: italic;
+}
+
+.facilityIcon {
+    width: 24px;
+    height: 24px;
+    color: var(--gold);
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.facilityCard:hover .facilityIcon {
+    opacity: 1;
+}
+
+.facilityInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.facilityTitle {
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    font-weight: 400;
+    color: var(--ivory);
+    letter-spacing: -0.01em;
+}
+
+.facilityDesc {
+    font-size: 0.875rem;
+    color: var(--text-on-dark-soft);
+    line-height: 1.6;
+}
+
+.facilityArrow {
+    color: var(--gold);
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.35s var(--ease-luxury);
+}
+
+.facilityCard:hover .facilityArrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* === TESTIMONIALS === */
+.testimonialsSection {
+    background: var(--ivory);
+    padding: 8rem 3rem;
+    overflow: hidden;
+}
+
+.testimonialsInner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+}
+
+.testimonialsHeader {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 5rem;
+}
+
+.testimonialsTitle {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+.testimonialsSubtitle {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.8;
+    max-width: 400px;
+    align-self: flex-end;
+}
+
+.testimonialsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+}
+
+.testimonialCard {
+    padding: 3rem;
+    background: var(--ivory-deep);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: relative;
+    transition: background 0.4s ease;
+}
+
+.testimonialCard:hover {
+    background: var(--ivory);
+}
+
+.quoteIcon {
+    font-family: var(--font-serif);
+    font-size: 5rem;
+    line-height: 0.8;
+    color: var(--gold);
+    opacity: 0.35;
+    display: block;
+}
+
+.testimonialText {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: var(--text-primary);
+    font-style: italic;
+    font-weight: 400;
+}
+
+.testimonialAuthor {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.authorName {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    font-weight: 400;
+}
+
+.authorTitle {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+}
+
+/* === CONTACT SECTION === */
+.contactSection {
+    background: var(--charcoal);
+    padding: 8rem 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.contactSection::before {
+    content: 'CONTACT';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-serif);
+    font-size: 20vw;
+    font-weight: 300;
+    color: var(--charcoal-soft);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: -0.03em;
+    opacity: 0.6;
+}
+
+.contactInner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    position: relative;
+    z-index: 2;
+}
+
+.contactLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.contactTitle {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 4vw, 4.5rem);
+    font-weight: 300;
+    color: var(--ivory);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+}
+
+.contactDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.contactItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.contactLabel {
+    font-family: var(--font-sans);
+    font-size: 0.5625rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+}
+
+.contactText {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    color: var(--ivory);
+    font-weight: 300;
+}
+
+.contactText a {
+    transition: color 0.3s ease;
+}
+
+.contactText a:hover {
+    color: var(--gold);
+}
+
+.contactForm {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.formLabel {
+    font-family: var(--font-sans);
+    font-size: 0.5625rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+}
+
+.input {
+    padding: 1rem 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border-dark);
+    color: var(--ivory);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 300;
+    transition: border-color 0.3s ease;
+    outline: none;
+    font-family: inherit;
+    width: 100%;
+}
+
+.input::placeholder {
+    color: var(--text-muted);
+}
+
+.input:focus {
+    border-bottom-color: var(--gold);
+}
+
+.textarea {
+    min-height: 120px;
+    resize: none;
+}
+
+/* === FOOTER === */
+.footer {
+    background: var(--surface-mid);
+    border-top: 1px solid var(--border-dark);
+    padding: 6rem 3rem 3rem;
+    width: 100%;
+}
+
+.footerGrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 5rem;
+    max-width: var(--max-width);
+    margin: 0 auto;
+}
+
+.footerBrand {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+.footerLogo {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ivory);
+}
+
+.footerDesc {
+    color: var(--text-on-dark-soft);
+    line-height: 1.8;
+    font-size: 0.875rem;
+    max-width: 300px;
+}
+
+.footerTitle {
+    font-family: var(--font-sans);
+    font-size: 0.5625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+}
+
+.footerLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.footerLinks a {
+    font-size: 0.875rem;
+    color: var(--text-on-dark-soft);
+    transition: color 0.3s ease;
+    font-weight: 300;
+}
+
+.footerLinks a:hover {
+    color: var(--gold);
+}
+
+.footerBottom {
+    max-width: var(--max-width);
+    margin: 5rem auto 0;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+}
+
+.footerSocial {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footerSocial a {
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+}
+
+.footerSocial a:hover {
+    color: var(--gold);
+}
+
+/* === CONCIERGE / CHAT === */
+.conciergeBtn {
+    position: fixed;
+    bottom: 2.5rem;
+    right: 2.5rem;
+    width: 54px;
+    height: 54px;
+    background: var(--gold);
+    color: var(--charcoal);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 300;
+    box-shadow: 0 8px 30px rgba(201, 168, 76, 0.35);
+    transition: all 0.35s var(--ease-luxury);
+}
+
+.conciergeBtn:hover {
+    background: var(--gold-light);
+    transform: scale(1.08);
+}
+
+.conciergeOverlay {
+    position: fixed;
+    bottom: 6.5rem;
+    right: 2.5rem;
+    width: 360px;
+    background: var(--surface-mid);
+    border: 1px solid var(--border-dark);
+    z-index: 250;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+}
+
+.conciergeHeader {
+    padding: 1.5rem 2rem;
+    background: var(--charcoal);
+    border-bottom: 1px solid var(--border-gold);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.aiAvatar {
+    font-family: var(--font-serif);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    display: flex;
+    flex-direction: column;
+}
+
+.aiAvatarLabel {
+    font-family: var(--font-sans);
+    font-size: 0.5625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.25rem;
+    transition: color 0.3s ease;
+    line-height: 1;
+}
+
+.closeBtn:hover {
+    color: var(--ivory);
+}
+
+.conciergeBody {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.aiMessage {
+    background: var(--surface-card);
+    padding: 1.25rem;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--text-on-dark-soft);
+    border-left: 2px solid var(--gold);
+}
+
+.conciergeOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.optionBtn {
+    padding: 0.875rem 1.25rem;
+    background: transparent;
+    border: 1px solid var(--border-dark);
+    color: var(--text-on-dark-soft);
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.3s ease;
+}
+
+.optionBtn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-muted);
+}
+
+/* === BOOKING MODAL === */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(28, 28, 26, 0.92);
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    backdrop-filter: blur(8px);
+}
+
+.modalContent {
+    background: var(--surface-mid);
+    border: 1px solid var(--border-dark);
+    padding: 3.5rem;
+    max-width: 540px;
+    width: 100%;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.closeModal {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.25rem;
+    transition: color 0.3s ease;
+    line-height: 1;
+}
+
+.closeModal:hover {
+    color: var(--ivory);
+}
+
+.modalTitle {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--ivory);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+}
+
+.modalSubtitle {
+    font-size: 0.875rem;
+    color: var(--gold);
+    font-family: var(--font-sans);
+    letter-spacing: 0.1em;
+    margin-bottom: 2.5rem;
+}
+
+/* === RECENTLY VIEWED === */
+.recentSection {
+    background: var(--surface-mid);
+    padding: 5rem 3rem;
+    border-top: 1px solid var(--border-dark);
+}
+
+.recentGrid {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    max-width: var(--max-width);
+    margin: 0 auto;
+}
+
+.recentGrid::-webkit-scrollbar {
+    display: none;
+}
+
+.recentItem {
+    flex: 0 0 300px;
+    background: var(--surface-card);
+    text-decoration: none;
+    transition: all 0.4s var(--ease-luxury);
+}
+
+.recentItem:hover {
+    transform: translateY(-4px);
+}
+
+.recentImgWrap {
+    position: relative;
+    height: 180px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.recentInfo {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.recentName {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--ivory);
+    font-weight: 400;
+}
+
+.recentPrice {
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+}
+
+/* === BRAND DIVIDER SECTION === */
+.brandQuote {
+    background: var(--gold);
+    padding: 5rem 3rem;
+    text-align: center;
+}
+
+.brandQuoteText {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 3.5vw, 3rem);
+    font-weight: 300;
+    color: var(--charcoal);
+    font-style: italic;
+    letter-spacing: -0.01em;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.4;
+}
+
+.brandQuoteAttr {
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    opacity: 0.6;
+    margin-top: 1.5rem;
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+    .roomGrid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+    }
+
+    .roomCard:nth-child(1) {
+        grid-row: span 1;
+    }
+
+    .roomCard:nth-child(4) {
+        grid-column: span 1;
+    }
+
+    .facilitiesLayout {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .facilitiesIntro {
+        position: static;
+    }
+
+    .testimonialsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .testimonialsHeader {
+        grid-template-columns: 1fr;
+    }
+
+    .contactInner {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+    }
+
+    .footerGrid {
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+    }
+
+    .roomsIntro {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .roomsIntroRight {
+        align-items: flex-start;
+    }
+
+    .roomsIntroDesc {
+        text-align: left;
+    }
+
+    .experienceStripInner {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+
+    .experienceDivider {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 0 1.5rem;
+    }
+
+    .nav {
+        display: none;
+    }
+
+    .heroContent {
+        padding: 0 1.5rem 5rem;
+    }
+
+    .section {
+        padding: 5rem 1.5rem;
+    }
+
+    .roomGrid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+
+    .roomCard {
+        height: 300px;
+    }
+
+    .roomCard:nth-child(1),
+    .roomCard:nth-child(4) {
+        grid-column: span 1;
+        height: 380px;
+    }
+
+    .contactSection {
+        padding: 6rem 1.5rem;
+    }
+
+    .footerGrid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .footerBottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .bookingBar {
+        display: none;
+    }
+
+    .testimonialsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .experienceStripInner {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .facilityCard {
+        grid-template-columns: 40px 1fr auto;
+        gap: 1rem;
+        padding: 2rem 0;
+    }
+}

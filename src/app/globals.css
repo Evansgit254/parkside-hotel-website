@@ -1,0 +1,187 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Tenor+Sans&family=Inter:wght@300;400;500;600&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  /* === LUXURY EDITORIAL PALETTE === */
+  /* Primary Brand Colors */
+  --ivory: #F7F3ED;
+  --ivory-deep: #EDE7DD;
+  --charcoal: #1C1C1A;
+  --charcoal-soft: #2A2A27;
+  --charcoal-mid: #3D3D38;
+
+  /* Gold System */
+  --gold: #C9A84C;
+  --gold-light: #E5C97A;
+  --gold-dark: #A07828;
+  --gold-muted: rgba(201, 168, 76, 0.15);
+  --gold-border: rgba(201, 168, 76, 0.3);
+
+  /* Brand Colors - Used for accents only */
+  --brand-green: #2D5A27;
+  --brand-green-light: rgba(45, 90, 39, 0.1);
+
+  /* Surface Colors */
+  --surface-dark: #1C1C1A;
+  --surface-mid: #252522;
+  --surface-card: #2E2E2A;
+  --surface-light: #F7F3ED;
+
+  /* Text */
+  --text-primary: #1C1C1A;
+  --text-secondary: #5C5849;
+  --text-muted: #8C8679;
+  --text-on-dark: #F7F3ED;
+  --text-on-dark-soft: rgba(247, 243, 237, 0.65);
+
+  /* Borders */
+  --border-dark: rgba(255, 255, 255, 0.08);
+  --border-light: rgba(28, 28, 26, 0.1);
+  --border-gold: rgba(201, 168, 76, 0.35);
+
+  /* Typography */
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Tenor Sans', sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  /* Layout */
+  --max-width: 1320px;
+  --section-gap: 10rem;
+
+  /* Transitions */
+  --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* === RESET & BASE === */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--charcoal);
+  color: var(--text-on-dark);
+  font-family: var(--font-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* === TYPOGRAPHY SYSTEM === */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.1;
+  color: inherit;
+}
+
+h1 {
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  letter-spacing: -0.015em;
+}
+
+h3 {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+p {
+  font-family: var(--font-body);
+  line-height: 1.75;
+  color: var(--text-on-dark-soft);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* === UTILITY CLASSES === */
+.gold-text {
+  background: linear-gradient(140deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section--dark {
+  background: var(--charcoal);
+  color: var(--text-on-dark);
+}
+
+.section--light {
+  background: var(--ivory);
+  color: var(--text-primary);
+}
+
+.section--light h1,
+.section--light h2,
+.section--light h3,
+.section--light h4 {
+  color: var(--text-primary);
+}
+
+.section--light p {
+  color: var(--text-secondary);
+}
+
+.section--mid {
+  background: var(--surface-mid);
+  color: var(--text-on-dark);
+}
+
+/* Eyebrow Label */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Thin Divider Line */
+.divider-gold {
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  display: block;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--charcoal);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--charcoal-mid);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-dark);
+}

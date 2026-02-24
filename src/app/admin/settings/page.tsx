@@ -1,0 +1,247 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import styles from "../admin.module.css";
+import { getSiteData, updateContactInfo, addHeroImage, deleteHeroImage, uploadImage } from "../../actions";
+import { Save, Phone, Mail, MapPin, MessageSquare, Facebook, Instagram, Linkedin, Plus, Trash2, Image as ImageIcon, Upload } from "lucide-react";
+
+export default function AdminSettings() {
+    const [contact, setContact] = useState<any>(null);
+    const [heroImages, setHeroImages] = useState<string[]>([]);
+    const [newImageUrl, setNewImageUrl] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const fetchData = async () => {
+        const data = await getSiteData();
+        if (data && data.contactInfo) setContact(data.contactInfo);
+        if (data && data.heroImages) setHeroImages(data.heroImages);
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const handleSave = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSaving(true);
+        await updateContactInfo(contact);
+        setSaving(false);
+    };
+
+    const handleAddImage = async () => {
+        if (!newImageUrl.trim()) return;
+        await addHeroImage(newImageUrl.trim());
+        setNewImageUrl("");
+        await fetchData();
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            const { url } = await uploadImage(formData);
+            await addHeroImage(url);
+            await fetchData();
+        } catch (error) {
+            console.error("Upload failed:", error);
+            alert("Upload failed. Please try again.");
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const handleDeleteImage = async (url: string) => {
+        if (confirm("Remove this hero image?")) {
+            await deleteHeroImage(url);
+            await fetchData();
+        }
+    };
+
+    if (loading) return <div className={styles.mainContent}>Loading...</div>;
+
+    return (
+        <div className={styles.mainContent}>
+            <div className={styles.sectionHeader}>
+                <div>
+                    <h1 className={styles.sectionTitle}>Global Settings</h1>
+                    <p style={{ color: 'rgba(255,255,255,0.5)', marginTop: '0.5rem' }}>Configure your hotel's presence and core identity</p>
+                </div>
+            </div>
+
+            <div style={{ display: 'grid', gap: '3rem' }}>
+                {/* Contact Information Section */}
+                <form onSubmit={handleSave} className={styles.card}>
+                    <div style={{ marginBottom: '2.5rem' }}>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff', marginBottom: '0.5rem' }}>Core Identity</h3>
+                        <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)' }}>Maintain accurate contact details for guest communication</p>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}><Phone size={14} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Primary Phone</label>
+                            <input
+                                className={styles.input}
+                                value={contact.phone}
+                                onChange={e => setContact({ ...contact, phone: e.target.value })}
+                                required
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}><Mail size={14} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Primary Email</label>
+                            <input
+                                type="email"
+                                className={styles.input}
+                                value={contact.email}
+                                onChange={e => setContact({ ...contact, email: e.target.value })}
+                                required
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}><MessageSquare size={14} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> WhatsApp Business</label>
+                            <input
+                                className={styles.input}
+                                value={contact.whatsapp}
+                                onChange={e => setContact({ ...contact, whatsapp: e.target.value })}
+                                placeholder="e.g. 254700000000"
+                                required
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}><MapPin size={14} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Physical Location</label>
+                            <input
+                                className={styles.input}
+                                value={contact.address}
+                                onChange={e => setContact({ ...contact, address: e.target.value })}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div style={{ marginTop: '3rem', marginBottom: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '2.5rem' }}>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff', marginBottom: '0.5rem' }}>Social Eminence</h3>
+                        <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)' }}>Links to your premium social media profiles</p>
+                    </div>
+
+                    <div style={{ display: 'grid', gap: '1.5rem' }}>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}><Facebook size={14} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Facebook Profile</label>
+                            <input
+                                type="url"
+                                className={styles.input}
+                                value={contact.social?.facebook || ''}
+                                onChange={e => setContact({ ...contact, social: { ...contact.social, facebook: e.target.value } })}
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}><Instagram size={14} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Instagram Feed</label>
+                            <input
+                                type="url"
+                                className={styles.input}
+                                value={contact.social?.instagram || ''}
+                                onChange={e => setContact({ ...contact, social: { ...contact.social, instagram: e.target.value } })}
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}><Linkedin size={14} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> LinkedIn Network</label>
+                            <input
+                                type="url"
+                                className={styles.input}
+                                value={contact.social?.linkedin || ''}
+                                onChange={e => setContact({ ...contact, social: { ...contact.social, linkedin: e.target.value } })}
+                            />
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '3rem' }}>
+                        <button type="submit" disabled={saving} className={styles.loginButton} style={{ width: 'auto', minWidth: '200px' }}>
+                            <Save size={18} /> {saving ? "Saving Changes..." : "Commit Global Update"}
+                        </button>
+                    </div>
+                </form>
+
+                {/* Hero Slideshow Section */}
+                <div className={styles.card}>
+                    <div style={{ marginBottom: '2.5rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                            <ImageIcon size={20} color="var(--gold)" />
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff', margin: 0 }}>Visual Ambiance</h3>
+                        </div>
+                        <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)' }}>Manage the high-definition hero imagery for the home carousel</p>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
+                        {heroImages.map((url, idx) => (
+                            <div key={idx} style={{ position: 'relative', borderRadius: '16px', overflow: 'hidden', aspectRatio: '16/9', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                <img src={url} alt={`Hero ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)', display: 'flex', alignItems: 'flex-end', padding: '1rem' }}>
+                                    <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80%' }}>{url.split('/').pop()}</span>
+                                    <button type="button" onClick={() => handleDeleteImage(url)} style={{ marginLeft: 'auto', padding: '0.5rem', background: 'rgba(239, 68, 68, 0.2)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '8px', cursor: 'pointer', color: '#ef4444' }} title="Remove Image">
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div style={{ display: 'grid', gap: '1rem' }}>
+                        <div
+                            onClick={() => fileInputRef.current?.click()}
+                            style={{
+                                width: '100%',
+                                padding: '2.5rem',
+                                background: 'rgba(255,255,255,0.02)',
+                                border: '2px dashed rgba(255,255,255,0.1)',
+                                borderRadius: '16px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease'
+                            }}
+                            onMouseOver={e => e.currentTarget.style.borderColor = 'var(--gold)'}
+                            onMouseOut={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'}
+                        >
+                            <Upload size={32} color="var(--gold)" />
+                            <span style={{ color: 'rgba(255,255,255,0.5)', marginTop: '0.75rem', fontSize: '0.9375rem', fontWeight: 500 }}>
+                                {isUploading ? "Uploading..." : "Click to upload a new ambiance image"}
+                            </span>
+                            <span style={{ color: 'rgba(255,255,255,0.2)', marginTop: '0.25rem', fontSize: '0.75rem' }}>
+                                Recommended: 1920x1080px (16:9)
+                            </span>
+                        </div>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            style={{ display: 'none' }}
+                            accept="image/*"
+                        />
+
+                        <div style={{ display: 'flex', gap: '1rem', background: 'rgba(255,255,255,0.01)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                            <input
+                                type="url"
+                                className={styles.input}
+                                placeholder="Or entrust a new image URL manually..."
+                                value={newImageUrl}
+                                onChange={e => setNewImageUrl(e.target.value)}
+                                onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddImage())}
+                            />
+                            <button type="button" onClick={handleAddImage} className={styles.loginButton} style={{ width: 'auto', whiteSpace: 'nowrap' }}>
+                                <Plus size={18} /> Add Ambiance
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

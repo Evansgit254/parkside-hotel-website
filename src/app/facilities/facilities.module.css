@@ -1,0 +1,211 @@
+.pageWrapper {
+    min-height: 100vh;
+    background: var(--charcoal);
+    color: var(--text-on-dark);
+    font-family: var(--font-body);
+}
+
+.hero {
+    height: 50vh;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-image: url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=2070');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.heroOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(5, 5, 5, 0.7), rgba(5, 5, 5, 0.95));
+}
+
+.heroContent {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 800px;
+    padding: 0 2rem;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: var(--gold);
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+.title {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+}
+
+.subtitle {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--text-on-dark-soft);
+}
+
+.facilitiesSection {
+    padding: 6rem 2rem;
+    background: var(--charcoal);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 3rem;
+}
+
+.facilityCard {
+    background: var(--surface-dark);
+    border: 1px solid var(--border-dark);
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+}
+
+.facilityCard:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+    border-color: rgba(212, 175, 55, 0.2);
+}
+
+.imageWrapper {
+    height: 280px;
+    position: relative;
+    background: var(--surface-mid);
+    overflow: hidden;
+}
+
+.cardImage {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.8s ease;
+}
+
+.facilityCard:hover .cardImage {
+    transform: scale(1.05);
+}
+
+.imageOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, var(--surface-dark) 0%, transparent 100%);
+}
+
+.placeholderImage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-mid);
+}
+
+.placeholderIcon {
+    color: rgba(255, 255, 255, 0.1);
+}
+
+.cardContent {
+    padding: 0 2.5rem 2.5rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.iconBadge {
+    width: 56px;
+    height: 56px;
+    background: var(--surface-dark);
+    border: 1px solid var(--border-gold);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    margin-top: -28px;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.cardTitle {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.cardDesc {
+    color: var(--text-on-dark-soft);
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    flex: 1;
+}
+
+.exploreLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--gold);
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    transition: gap 0.3s ease;
+    margin-top: auto;
+}
+
+.exploreLink:hover {
+    gap: 1.25rem;
+}
+
+.loading {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-outfit);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--gold);
+    background: #050505;
+}
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        height: 60vh;
+    }
+}

@@ -1,0 +1,291 @@
+
+Running 12 tests using 2 workers
+
+>>> [Dining Test] Starting...
+>>> [Rooms Test] Starting...
+>>> [Dining Test] SUCCESS.
+  ✓   1 [chromium] › tests/admin-crud.spec.ts:44:9 › Parkside Villa Admin CRUD Operations › Dining CRUD (16.3s)
+  ✘   2 [chromium] › tests/admin-crud.spec.ts:16:9 › Parkside Villa Admin CRUD Operations › Rooms CRUD (24.0s)
+>>> [Facilities Test] SUCCESS.
+  ✓   3 [chromium] › tests/admin-crud.spec.ts:86:9 › Parkside Villa Admin CRUD Operations › Facilities CRUD (9.7s)
+>>> [Leads Test] Starting...
+>>> [Rooms Test] Starting...
+>>> [Rooms Test] SUCCESS.
+  ✓   5 [chromium] › tests/admin-crud.spec.ts:16:9 › Parkside Villa Admin CRUD Operations › Rooms CRUD (retry #1) (9.9s)
+>>> [Settings Test] Starting...
+>>> [Settings Test] SUCCESS.
+  ✓   6 [chromium] › tests/admin-crud.spec.ts:150:9 › Parkside Villa Admin CRUD Operations › Settings Page (8.2s)
+  ✓   7 [chromium] › tests/navigation.spec.ts:5:9 › Parkside Villa Kitui E2E Tests › Homepage loads correctly and has title (10.8s)
+  ✘   4 [chromium] › tests/admin-crud.spec.ts:101:9 › Parkside Villa Admin CRUD Operations › Leads Management (1.0m)
+  ✓   8 [chromium] › tests/navigation.spec.ts:11:9 › Parkside Villa Kitui E2E Tests › Navigation links on homepage are visible (23.6s)
+>>> [Leads Test] Starting...
+  ✓   9 [chromium] › tests/navigation.spec.ts:21:9 › Parkside Villa Kitui E2E Tests › Room cards are visible and "Book Room" button opens a modal (27.8s)
+  ✘  10 [chromium] › tests/admin-crud.spec.ts:101:9 › Parkside Villa Admin CRUD Operations › Leads Management (retry #1) (29.2s)
+  ✘  11 [chromium] › tests/navigation.spec.ts:32:9 › Parkside Villa Kitui E2E Tests › Dining page navigation and content (8.5s)
+  ✘  12 [chromium] › tests/navigation.spec.ts:39:9 › Parkside Villa Kitui E2E Tests › Contact section form elements are present (1.8s)
+  ✘  13 [chromium] › tests/navigation.spec.ts:32:9 › Parkside Villa Kitui E2E Tests › Dining page navigation and content (retry #1) (759ms)
+  ✘  15 [chromium] › tests/navigation.spec.ts:51:9 › Parkside Villa Kitui E2E Tests › Footer is visible with copyright text (1.2s)
+  ✘  14 [chromium] › tests/navigation.spec.ts:39:9 › Parkside Villa Kitui E2E Tests › Contact section form elements are present (retry #1) (2.0s)
+  ✘  16 [chromium] › tests/navigation.spec.ts:51:9 › Parkside Villa Kitui E2E Tests › Footer is visible with copyright text (retry #1) (318ms)
+  ✘  17 [chromium] › tests/navigation.spec.ts:57:9 › Parkside Villa Kitui E2E Tests › Admin login page is accessible (1.3s)
+  ✘  18 [chromium] › tests/navigation.spec.ts:57:9 › Parkside Villa Kitui E2E Tests › Admin login page is accessible (retry #1) (282ms)
+
+
+  1) [chromium] › tests/admin-crud.spec.ts:101:9 › Parkside Villa Admin CRUD Operations › Leads Management 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.fill: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="date"]').first()[22m
+
+
+      110 |         const today = new Date().toISOString().split('T')[0];
+      111 |         const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+    > 112 |         await page.locator('input[type="date"]').first().fill(today);
+          |                                                          ^
+      113 |         await page.locator('input[type="date"]').last().fill(tomorrow);
+      114 |
+      115 |         await page.fill('input[placeholder="John Doe"]', testName);
+        at /home/evans/Projects/WEBSITE UPGRADE PARKSIDE VILLA/tests/admin-crud.spec.ts:112:58
+
+    Error Context: test-results/admin-crud-Parkside-Villa--4c45c-Operations-Leads-Management-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('div[style*="rgba(0,0,0,0.8)"]').getByText(/Booking Confirmed/i)
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 20000ms[22m
+    [2m  - waiting for locator('div[style*="rgba(0,0,0,0.8)"]').getByText(/Booking Confirmed/i)[22m
+
+
+      120 |         // Wait for success message to appear on public site - scope to modal to avoid strict mode violation
+      121 |         const modal = page.locator('div[style*="rgba(0,0,0,0.8)"]');
+    > 122 |         await expect(modal.getByText(/Booking Confirmed/i)).toBeVisible({ timeout: 20000 });
+          |                                                             ^
+      123 |         // Wait for modal to disappear
+      124 |         await expect(page.locator('div[class*="modal"]')).not.toBeVisible({ timeout: 10000 }).catch(() => { });
+      125 |
+        at /home/evans/Projects/WEBSITE UPGRADE PARKSIDE VILLA/tests/admin-crud.spec.ts:122:61
+
+    Error Context: test-results/admin-crud-Parkside-Villa--4c45c-Operations-Leads-Management-chromium-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/admin-crud-Parkside-Villa--4c45c-Operations-Leads-Management-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/admin-crud-Parkside-Villa--4c45c-Operations-Leads-Management-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/navigation.spec.ts:32:9 › Parkside Villa Kitui E2E Tests › Dining page navigation and content 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText('Main Course').first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText('Main Course').first()[22m
+
+
+      33 |         await page.goto('/dining');
+      34 |         await expect(page).toHaveURL(/\/dining/);
+    > 35 |         await expect(page.getByText('Main Course').first()).toBeVisible();
+         |                                                             ^
+      36 |         await expect(page.getByText('Grilled Beef Tenderloin')).toBeVisible();
+      37 |     });
+      38 |
+        at /home/evans/Projects/WEBSITE UPGRADE PARKSIDE VILLA/tests/navigation.spec.ts:35:61
+
+    Error Context: test-results/navigation-Parkside-Villa--80630-page-navigation-and-content-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/dining
+    Call log:
+    [2m  - navigating to "http://localhost:3000/dining", waiting until "load"[22m
+
+
+      31 |
+      32 |     test('Dining page navigation and content', async ({ page }) => {
+    > 33 |         await page.goto('/dining');
+         |                    ^
+      34 |         await expect(page).toHaveURL(/\/dining/);
+      35 |         await expect(page.getByText('Main Course').first()).toBeVisible();
+      36 |         await expect(page.getByText('Grilled Beef Tenderloin')).toBeVisible();
+        at /home/evans/Projects/WEBSITE UPGRADE PARKSIDE VILLA/tests/navigation.spec.ts:33:20
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/navigation-Parkside-Villa--80630-page-navigation-and-content-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/navigation-Parkside-Villa--80630-page-navigation-and-content-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › tests/navigation.spec.ts:39:9 › Parkside Villa Kitui E2E Tests › Contact section form elements are present 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/
+    Call log:
+    [2m  - navigating to "http://localhost:3000/", waiting until "load"[22m
+
+
+      38 |
+      39 |     test('Contact section form elements are present', async ({ page }) => {
+    > 40 |         await page.goto('/');
+         |                    ^
+      41 |         await page.evaluate(() => {
+      42 |             document.getElementById('contact')?.scrollIntoView();
+      43 |         });
+        at /home/evans/Projects/WEBSITE UPGRADE PARKSIDE VILLA/tests/navigation.spec.ts:40:20
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/
+    Call log:
+    [2m  - navigating to "http://localhost:3000/", waiting until "load"[22m
+
+
+      38 |
+      39 |     test('Contact section form elements are present', async ({ page }) => {
+    > 40 |         await page.goto('/');
+         |                    ^
+      41 |         await page.evaluate(() => {
+      42 |             document.getElementById('contact')?.scrollIntoView();
+      43 |         });
+        at /home/evans/Projects/WEBSITE UPGRADE PARKSIDE VILLA/tests/navigation.spec.ts:40:20
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/navigation-Parkside-Villa--e0c78-n-form-elements-are-present-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/navigation-Parkside-Villa--e0c78-n-form-elements-are-present-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chromium] › tests/navigation.spec.ts:51:9 › Parkside Villa Kitui E2E Tests › Footer is visible with copyright text 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/
+    Call log:
+    [2m  - navigating to "http://localhost:3000/", waiting until "load"[22m
+
+
+      50 |
+      51 |     test('Footer is visible with copyright text', async ({ page }) => {
+    > 52 |         await page.goto('/');
+         |                    ^
+      53 |         await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      54 |         await expect(page.getByText('Parkside Villa Kitui. All Rights Reserved.', { exact: false })).toBeVisible();
+      55 |     });
+        at /home/evans/Projects/WEBSITE UPGRADE PARKSIDE VILLA/tests/navigation.spec.ts:52:20
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/
+    Call log:
+    [2m  - navigating to "http://localhost:3000/", waiting until "load"[22m
+
+
+      50 |
+      51 |     test('Footer is visible with copyright text', async ({ page }) => {
+    > 52 |         await page.goto('/');
+         |                    ^
+      53 |         await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      54 |         await expect(page.getByText('Parkside Villa Kitui. All Rights Reserved.', { exact: false })).toBeVisible();
+      55 |     });
+        at /home/evans/Projects/WEBSITE UPGRADE PARKSIDE VILLA/tests/navigation.spec.ts:52:20
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/navigation-Parkside-Villa--3a0b3-visible-with-copyright-text-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/navigation-Parkside-Villa--3a0b3-visible-with-copyright-text-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [chromium] › tests/navigation.spec.ts:57:9 › Parkside Villa Kitui E2E Tests › Admin login page is accessible 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/admin/login
+    Call log:
+    [2m  - navigating to "http://localhost:3000/admin/login", waiting until "load"[22m
+
+
+      56 |
+      57 |     test('Admin login page is accessible', async ({ page }) => {
+    > 58 |         await page.goto('/admin/login');
+         |                    ^
+      59 |         await expect(page.getByText('Admin Access')).toBeVisible();
+      60 |         await expect(page.getByPlaceholder('admin@parksidevilla.com')).toBeVisible();
+      61 |     });
+        at /home/evans/Projects/WEBSITE UPGRADE PARKSIDE VILLA/tests/navigation.spec.ts:58:20
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/admin/login
+    Call log:
+    [2m  - navigating to "http://localhost:3000/admin/login", waiting until "load"[22m
+
+
+      56 |
+      57 |     test('Admin login page is accessible', async ({ page }) => {
+    > 58 |         await page.goto('/admin/login');
+         |                    ^
+      59 |         await expect(page.getByText('Admin Access')).toBeVisible();
+      60 |         await expect(page.getByPlaceholder('admin@parksidevilla.com')).toBeVisible();
+      61 |     });
+        at /home/evans/Projects/WEBSITE UPGRADE PARKSIDE VILLA/tests/navigation.spec.ts:58:20
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/navigation-Parkside-Villa--d3d8a-in-login-page-is-accessible-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/navigation-Parkside-Villa--d3d8a-in-login-page-is-accessible-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [chromium] › tests/admin-crud.spec.ts:16:9 › Parkside Villa Admin CRUD Operations › Rooms CRUD 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).not.[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  getByText('Test Room 1771883418777')
+    Expected: not visible
+    Received: visible
+    Timeout:  10000ms
+
+    Call log:
+    [2m  - Expect "not toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByText('Test Room 1771883418777')[22m
+    [2m    13 × locator resolved to <div>Test Room 1771883418777</div>[22m
+    [2m       - unexpected value "visible"[22m
+
+
+      38 |
+      39 |         await roomRow.getByRole('button', { name: 'Delete' }).click();
+    > 40 |         await expect(page.getByText(roomName)).not.toBeVisible({ timeout: 10000 });
+         |                                                    ^
+      41 |         console.log('>>> [Rooms Test] SUCCESS.');
+      42 |     });
+      43 |
+        at /home/evans/Projects/WEBSITE UPGRADE PARKSIDE VILLA/tests/admin-crud.spec.ts:40:52
+
+    Error Context: test-results/admin-crud-Parkside-Villa-Admin-CRUD-Operations-Rooms-CRUD-chromium/error-context.md
+
+  5 failed
+    [chromium] › tests/admin-crud.spec.ts:101:9 › Parkside Villa Admin CRUD Operations › Leads Management 
+    [chromium] › tests/navigation.spec.ts:32:9 › Parkside Villa Kitui E2E Tests › Dining page navigation and content 
+    [chromium] › tests/navigation.spec.ts:39:9 › Parkside Villa Kitui E2E Tests › Contact section form elements are present 
+    [chromium] › tests/navigation.spec.ts:51:9 › Parkside Villa Kitui E2E Tests › Footer is visible with copyright text 
+    [chromium] › tests/navigation.spec.ts:57:9 › Parkside Villa Kitui E2E Tests › Admin login page is accessible 
+  1 flaky
+    [chromium] › tests/admin-crud.spec.ts:16:9 › Parkside Villa Admin CRUD Operations › Rooms CRUD ─
+  6 passed (2.4m)
