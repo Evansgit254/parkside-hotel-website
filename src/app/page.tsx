@@ -7,7 +7,7 @@ import {
   Calendar, MapPin, ChevronRight, ChevronLeft, ArrowUpRight
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./page.module.css";
@@ -16,12 +16,12 @@ import { useRouter } from "next/navigation";
 import Magnetic from "./components/Magnetic";
 import Schema from "./components/Schema";
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
 };
 
-const stagger = {
+const stagger: Variants = {
   visible: { transition: { staggerChildren: 0.12 } }
 };
 
@@ -600,7 +600,7 @@ export default function Home() {
                   setBookingStatus("Reservation Confirmed!");
                   setTimeout(() => {
                     setBookingStatus(""); setIsBookingModalOpen(false); setBookingStep(1);
-                    setBookingData({ name: "", email: "", phone: "", checkIn: "", checkOut: "", guests: "2 Adults" });
+                    setBookingData({ name: "", email: "", phone: "", checkIn: "", checkOut: "", guests: "2 Adults", roomType: "Any Room" });
                   }, 2500);
                 }}
               >
