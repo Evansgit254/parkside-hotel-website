@@ -29,7 +29,12 @@ export default function PromotionsAdmin() {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        const res = await addPromotion(newPromo);
+        const res = await addPromotion({
+            code: newPromo.code,
+            discount: parseFloat(newPromo.discount) || 0,
+            type: "percentage",
+            validTo: newPromo.expiry || undefined,
+        });
         if (res.success) {
             setPromotions([...promotions, res.promotion]);
             setNewPromo({ title: "", code: "", discount: "", expiry: "", description: "" });

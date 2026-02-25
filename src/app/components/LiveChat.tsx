@@ -35,8 +35,7 @@ export default function LiveChat() {
                 phone: "Via Live Chat",
                 room: "General Inquiry",
                 guests: "1",
-                date: "Ongoing",
-                message: formData.message
+                date: `Chat: ${formData.message}`,
             });
 
             setMessages(prev => [...prev, { role: 'bot', text: 'Got it! Our concierge team has been notified and will reach out to you shortly via email. Have a wonderful day!' }]);
@@ -72,8 +71,8 @@ export default function LiveChat() {
                             {messages.map((m, i) => (
                                 <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm ${m.role === 'user'
-                                            ? 'bg-[#d4af37] text-[#0f0f0e]'
-                                            : 'bg-white/5 text-white/80 border border-white/5'
+                                        ? 'bg-[#d4af37] text-[#0f0f0e]'
+                                        : 'bg-white/5 text-white/80 border border-white/5'
                                         }`}>
                                         {m.text}
                                     </div>

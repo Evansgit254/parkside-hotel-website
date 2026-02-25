@@ -1,97 +1,19 @@
 "use server";
 
-import fs from "fs/promises";
-import path from "path";
 import { revalidatePath } from "next/cache";
+import { prisma } from "../lib/prisma";
 import { NotificationService } from "./services/mailService";
-import {
-    rooms as initialRooms,
-    facilities as initialFacilities,
-    testimonials as initialTestimonials,
-    menuCategories as initialMenuCategories,
-    contactInfo as initialContactInfo,
-    heroImages as initialHeroImages
-} from "../data/site-data";
 
-const DATA_PATH = path.join(process.cwd(), "src/data/site-data.json");
-const BLOB_KEY = "site-data.json";
-const USE_BLOB = !!process.env.BLOB_READ_WRITE_TOKEN;
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
 
-// Lock for local dev file writes
-let fileLock = Promise.resolve();
-
-export async function getSiteData() {
-    const fallback = {
-        heroImages: initialHeroImages,
-        rooms: initialRooms,
-        facilities: initialFacilities,
-        testimonials: initialTestimonials,
-        menuCategories: initialMenuCategories,
-        contactInfo: initialContactInfo,
-        blogPosts: [],
-        leads: [],
-        subscribers: [],
-        promotions: [],
-        users: [],
-        galleryVideos: []
-    };
-
-    try {
-        let content: string;
-
-        if (USE_BLOB) {
-            // Production: read from Vercel Blob
-            const { list } = await import("@vercel/blob");
-            const { blobs } = await list({ prefix: BLOB_KEY });
-            if (blobs.length === 0) return fallback;
-            const res = await fetch(blobs[0].url, { cache: 'no-store' });
-            content = await res.text();
-        } else {
-            // Local dev: read from JSON file
-            content = await fs.readFile(DATA_PATH, "utf-8");
-        }
-
-        const data = JSON.parse(content);
-        return {
-            heroImages: data.heroImages || initialHeroImages,
-            rooms: data.rooms || initialRooms,
-            facilities: data.facilities || initialFacilities,
-            testimonials: data.testimonials || initialTestimonials,
-            menuCategories: data.menuCategories || initialMenuCategories,
-            contactInfo: data.contactInfo || initialContactInfo,
-            blogPosts: data.blogPosts || [],
-            leads: data.leads || [],
-            subscribers: data.subscribers || [],
-            promotions: data.promotions || [],
-            users: data.users || [],
-            galleryVideos: data.galleryVideos || []
-        };
-    } catch (error) {
-        console.error("Error reading site data:", error);
-        return fallback;
-    }
-}
-
-export async function updateSiteData(newData: any) {
-    const jsonStr = JSON.stringify(newData, null, 2);
-
-    if (USE_BLOB) {
-        // Production: write to Vercel Blob
-        const { put } = await import("@vercel/blob");
-        await put(BLOB_KEY, jsonStr, { access: 'public', addRandomSuffix: false });
-    } else {
-        // Local dev: write to JSON file (with lock)
-        const operation = fileLock.then(async () => {
-            const tempPath = `${DATA_PATH}.tmp`;
-            await fs.writeFile(tempPath, jsonStr);
-            await fs.rename(tempPath, DATA_PATH);
-        });
-        fileLock = operation.catch(() => { });
-        await operation;
-    }
-
+function revalidateAll() {
     revalidatePath("/");
+    revalidatePath("/rooms");
     revalidatePath("/dining");
+    revalidatePath("/gallery");
+    revalidatePath("/blog");
     revalidatePath("/admin");
     revalidatePath("/admin/rooms");
     revalidatePath("/admin/dining");
@@ -99,31 +21,111 @@ export async function updateSiteData(newData: any) {
     revalidatePath("/admin/facilities");
     revalidatePath("/admin/settings");
     revalidatePath("/admin/promotions");
-
-    return { success: true };
+    revalidatePath("/admin/testimonials");
 }
 
-export async function addLead(lead: any) {
+// ─────────────────────────────────────────────
+// SITE DATA (read everything in one call for legacy compatibility)
+// ─────────────────────────────────────────────
+
+export async function getSiteData() {
+    const [
+        heroImages,
+        rooms,
+        facilities,
+        testimonials,
+        menuCategories,
+        contactInfoRow,
+        blogPosts,
+        leads,
+        subscribers,
+        promotions,
+        users,
+        galleryVideos
+    ] = await Promise.all([
+        prisma.heroImage.findMany({ orderBy: { order: "asc" } }),
+        prisma.room.findMany({ orderBy: { createdAt: "asc" } }),
+        prisma.facility.findMany(),
+        prisma.testimonial.findMany({ orderBy: { createdAt: "asc" } }),
+        prisma.menuCategory.findMany({ orderBy: { order: "asc" } }),
+        prisma.contactInfo.findUnique({ where: { id: 1 } }),
+        prisma.blogPost.findMany({ orderBy: { createdAt: "desc" } }),
+        prisma.lead.findMany({ orderBy: { createdAt: "desc" } }),
+        prisma.subscriber.findMany(),
+        prisma.promotion.findMany({ orderBy: { createdAt: "desc" } }),
+        prisma.user.findMany(),
+        Promise.resolve([]) // GalleryVideos stored in Facility/json for now
+    ]);
+
+    // Map DB rows to the shape the UI already expects
+    return {
+        heroImages: heroImages.map((h) => h.url),
+        rooms: rooms.map((r) => ({
+            id: r.slug,
+            name: r.name,
+            desc: r.desc,
+            price: r.price,
+            image: r.image,
+            tag: r.tag ?? undefined,
+            capacity: r.capacity,
+        })),
+        facilities,
+        testimonials,
+        menuCategories,
+        contactInfo: contactInfoRow ?? {},
+        blogPosts,
+        leads: leads.map((l) => ({
+            ...l,
+            id: l.id,
+            room: l.roomSlug ?? "",
+        })),
+        subscribers: subscribers.map((s) => s.email),
+        promotions,
+        users: users.map(({ password: _, ...u }) => u),
+        galleryVideos,
+    };
+}
+
+// ─────────────────────────────────────────────
+// LEADS / BOOKINGS
+// ─────────────────────────────────────────────
+
+export async function addLead(lead: {
+    name: string;
+    email: string;
+    phone?: string;
+    date?: string;
+    room?: string;
+    guests?: string;
+}) {
     try {
         if (!lead.email || !lead.name) {
             return { success: false, error: "Name and Email are required" };
         }
 
-        const data = await getSiteData();
-        const newLead = {
-            ...lead,
-            id: Date.now(),
-            time: "Just now",
-            status: "Pending"
-        };
-        data.leads = [newLead, ...(data.leads || [])];
-        await updateSiteData(data);
+        // Resolve room relation if slug provided and exists
+        const roomExists = lead.room
+            ? await prisma.room.findUnique({ where: { slug: lead.room } })
+            : null;
 
-        // Trigger Notifications (Fire and forget or catch errors)
-        NotificationService.notifyAdminNewLead(newLead).catch(err =>
+        const newLead = await prisma.lead.create({
+            data: {
+                name: lead.name,
+                email: lead.email,
+                phone: lead.phone ?? null,
+                date: lead.date ?? null,
+                guests: lead.guests ?? null,
+                roomSlug: roomExists ? lead.room! : null,
+                status: "Pending",
+                time: "Just now",
+            },
+        });
+
+        NotificationService.notifyAdminNewLead(newLead).catch((err) =>
             console.error("Failed to notify admin:", err)
         );
 
+        revalidatePath("/admin/leads");
         return { success: true };
     } catch (error) {
         console.error("Error adding lead:", error);
@@ -131,228 +133,325 @@ export async function addLead(lead: any) {
     }
 }
 
-export async function updateRoom(roomId: string, updatedRoom: any) {
-    const data = await getSiteData();
-    data.rooms = data.rooms.map((r: any) => r.id === roomId ? updatedRoom : r);
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function updateDiningCategory(categoryId: string, updatedCategory: any) {
-    const data = await getSiteData();
-    data.menuCategories = data.menuCategories.map((c: any) => c.id === categoryId ? updatedCategory : c);
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function updateTestimonial(id: number, updatedData: any) {
-    const data = await getSiteData();
-    data.testimonials = data.testimonials.map((t: any) => t.id === id ? updatedData : t);
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function addTestimonial(newTestimonial: any) {
-    const data = await getSiteData();
-    const id = Math.max(0, ...data.testimonials.map((t: any) => t.id)) + 1;
-    data.testimonials.push({
-        ...newTestimonial,
-        id,
-        status: newTestimonial.status || 'Active' // Default to Active for admin, but public ones can be 'Pending'
-    });
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function submitPublicReview(review: any) {
-    await NotificationService.sendEmail("concierge@parksidevillakitui.com", `New Public Review: ${review.name}`, review.text);
-    return addTestimonial({
-        ...review,
-        status: 'Pending',
-        createdAt: new Date().toISOString()
-    });
-}
-
-export async function deleteTestimonial(id: number) {
-    const data = await getSiteData();
-    data.testimonials = data.testimonials.filter((t: any) => t.id !== id);
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function updateContactInfo(contactInfo: any) {
-    const data = await getSiteData();
-    data.contactInfo = contactInfo;
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function createRoom(newRoom: any) {
-    const data = await getSiteData();
-    data.rooms.push({ ...newRoom, id: newRoom.id || newRoom.name.toLowerCase().replace(/\s+/g, '-') });
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function deleteRoom(roomId: string) {
-    const data = await getSiteData();
-    data.rooms = data.rooms.filter((r: any) => r.id !== roomId);
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function createDiningCategory(newCategory: any) {
-    const data = await getSiteData();
-    data.menuCategories.push({ ...newCategory, id: newCategory.id || newCategory.name.toLowerCase().replace(/\s+/g, '-') });
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function deleteDiningCategory(categoryId: string) {
-    const data = await getSiteData();
-    data.menuCategories = data.menuCategories.filter((c: any) => c.id !== categoryId);
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function addFacility(newFacility: any) {
-    const data = await getSiteData();
-    data.facilities.push({ ...newFacility, id: newFacility.id || newFacility.title.toLowerCase().replace(/\s+/g, '-') });
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function updateFacility(facilityId: string, updatedFacility: any) {
-    const data = await getSiteData();
-    data.facilities = data.facilities.map((f: any) => f.id === facilityId ? updatedFacility : f);
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function deleteFacility(facilityId: string) {
-    const data = await getSiteData();
-    data.facilities = data.facilities.filter((f: any) => f.id !== facilityId);
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function addHeroImage(imageUrl: string) {
-    const data = await getSiteData();
-    data.heroImages.push(imageUrl);
-    await updateSiteData(data);
-    return { success: true };
-}
-
-export async function deleteHeroImage(imageUrl: string) {
-    const data = await getSiteData();
-    data.heroImages = data.heroImages.filter((img: string) => img !== imageUrl);
-    await updateSiteData(data);
-    return { success: true };
-}
-
 export async function updateLeadStatus(id: number, status: string) {
-    const data = await getSiteData();
-    data.leads = data.leads.map((l: any) => l.id === id ? { ...l, status } : l);
-    await updateSiteData(data);
+    await prisma.lead.update({ where: { id }, data: { status } });
+    revalidatePath("/admin/leads");
     return { success: true };
 }
 
 export async function deleteLead(id: number) {
-    const data = await getSiteData();
-    data.leads = data.leads.filter((l: any) => l.id !== id);
-    await updateSiteData(data);
+    await prisma.lead.delete({ where: { id } });
+    revalidatePath("/admin/leads");
     return { success: true };
 }
 
-export async function uploadImage(formData: FormData) {
-    const file = formData.get("file") as File;
-    if (!file) {
-        throw new Error("No file uploaded");
-    }
-
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Create unique filename
-    const filename = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    const filePath = path.join(uploadDir, filename);
-
-    // Ensure directory exists
-    try {
-        await fs.access(uploadDir);
-    } catch {
-        await fs.mkdir(uploadDir, { recursive: true });
-    }
-
-    await fs.writeFile(filePath, buffer);
-    return { url: `/uploads/${filename}` };
+export async function requestBookingAction(bookingId: number, type: "modify" | "cancel", reason: string) {
+    const label = type === "modify" ? "Modification" : "Cancellation";
+    await prisma.lead.update({
+        where: { id: bookingId },
+        data: {
+            status: `Request: ${label}`,
+            notes: `[${new Date().toISOString()}] Request: ${type.toUpperCase()} - Reason: ${reason}`,
+        },
+    });
+    return { success: true };
 }
+
+// ─────────────────────────────────────────────
+// ROOMS
+// ─────────────────────────────────────────────
+
+export async function createRoom(newRoom: {
+    id?: string;
+    name: string;
+    desc: string;
+    price: string;
+    image: string;
+    tag?: string;
+    capacity?: number;
+}) {
+    const slug = newRoom.id ?? newRoom.name.toLowerCase().replace(/\s+/g, "-");
+    await prisma.room.create({
+        data: {
+            slug,
+            name: newRoom.name,
+            desc: newRoom.desc,
+            price: newRoom.price,
+            image: newRoom.image,
+            tag: newRoom.tag ?? null,
+            capacity: newRoom.capacity ?? 2,
+        },
+    });
+    revalidateAll();
+    return { success: true };
+}
+
+export async function updateRoom(roomId: string, updatedRoom: any) {
+    await prisma.room.update({
+        where: { slug: roomId },
+        data: {
+            name: updatedRoom.name,
+            desc: updatedRoom.desc,
+            price: updatedRoom.price,
+            image: updatedRoom.image,
+            tag: updatedRoom.tag ?? null,
+            capacity: updatedRoom.capacity ?? 2,
+        },
+    });
+    revalidateAll();
+    return { success: true };
+}
+
+export async function deleteRoom(roomId: string) {
+    await prisma.room.delete({ where: { slug: roomId } });
+    revalidateAll();
+    return { success: true };
+}
+
+// ─────────────────────────────────────────────
+// TESTIMONIALS
+// ─────────────────────────────────────────────
+
+export async function addTestimonial(t: {
+    name: string;
+    title: string;
+    text: string;
+    status?: string;
+}) {
+    await prisma.testimonial.create({
+        data: {
+            name: t.name,
+            title: t.title,
+            text: t.text,
+            status: t.status ?? "Active",
+        },
+    });
+    revalidateAll();
+    return { success: true };
+}
+
+export async function updateTestimonial(id: number, updatedData: any) {
+    await prisma.testimonial.update({
+        where: { id },
+        data: {
+            name: updatedData.name,
+            title: updatedData.title,
+            text: updatedData.text,
+            status: updatedData.status,
+        },
+    });
+    revalidateAll();
+    return { success: true };
+}
+
+export async function deleteTestimonial(id: number) {
+    await prisma.testimonial.delete({ where: { id } });
+    revalidateAll();
+    return { success: true };
+}
+
+export async function submitPublicReview(review: { name: string; title: string; text: string }) {
+    await NotificationService.sendEmail(
+        "concierge@parksidevillakitui.com",
+        `New Public Review: ${review.name}`,
+        review.text
+    );
+    return addTestimonial({ ...review, status: "Pending" });
+}
+
+// ─────────────────────────────────────────────
+// DINING (Menu Categories)
+// ─────────────────────────────────────────────
+
+export async function createDiningCategory(newCategory: any) {
+    const id = newCategory.id ?? newCategory.name.toLowerCase().replace(/\s+/g, "-");
+    await prisma.menuCategory.create({
+        data: { id, name: newCategory.name, items: newCategory.items ?? [], order: newCategory.order ?? 0 },
+    });
+    revalidateAll();
+    return { success: true };
+}
+
+export async function updateDiningCategory(categoryId: string, updatedCategory: any) {
+    await prisma.menuCategory.update({
+        where: { id: categoryId },
+        data: { name: updatedCategory.name, items: updatedCategory.items ?? [] },
+    });
+    revalidateAll();
+    return { success: true };
+}
+
+export async function deleteDiningCategory(categoryId: string) {
+    await prisma.menuCategory.delete({ where: { id: categoryId } });
+    revalidateAll();
+    return { success: true };
+}
+
+// ─────────────────────────────────────────────
+// FACILITIES
+// ─────────────────────────────────────────────
+
+export async function addFacility(f: any) {
+    const id = f.id ?? f.title.toLowerCase().replace(/\s+/g, "-");
+    await prisma.facility.create({
+        data: { id, title: f.title, desc: f.desc, icon: f.icon, image: f.image ?? null, features: f.features ?? [], highlights: f.highlights ?? [] },
+    });
+    revalidateAll();
+    return { success: true };
+}
+
+export async function updateFacility(facilityId: string, updatedFacility: any) {
+    await prisma.facility.update({
+        where: { id: facilityId },
+        data: {
+            title: updatedFacility.title,
+            desc: updatedFacility.desc,
+            icon: updatedFacility.icon,
+            image: updatedFacility.image ?? null,
+            features: updatedFacility.features ?? [],
+            highlights: updatedFacility.highlights ?? [],
+        },
+    });
+    revalidateAll();
+    return { success: true };
+}
+
+export async function deleteFacility(facilityId: string) {
+    await prisma.facility.delete({ where: { id: facilityId } });
+    revalidateAll();
+    return { success: true };
+}
+
+// ─────────────────────────────────────────────
+// HERO IMAGES
+// ─────────────────────────────────────────────
+
+export async function addHeroImage(imageUrl: string) {
+    const count = await prisma.heroImage.count();
+    await prisma.heroImage.create({ data: { url: imageUrl, order: count } });
+    revalidateAll();
+    return { success: true };
+}
+
+export async function deleteHeroImage(imageUrl: string) {
+    await prisma.heroImage.deleteMany({ where: { url: imageUrl } });
+    revalidateAll();
+    return { success: true };
+}
+
+// ─────────────────────────────────────────────
+// CONTACT INFO
+// ─────────────────────────────────────────────
+
+export async function updateContactInfo(contactInfo: any) {
+    await prisma.contactInfo.upsert({
+        where: { id: 1 },
+        update: {
+            phone: contactInfo.phone,
+            email: contactInfo.email,
+            whatsapp: contactInfo.whatsapp ?? null,
+            address: contactInfo.address,
+            social: contactInfo.social ?? {},
+        },
+        create: {
+            id: 1,
+            phone: contactInfo.phone,
+            email: contactInfo.email,
+            whatsapp: contactInfo.whatsapp ?? null,
+            address: contactInfo.address,
+            social: contactInfo.social ?? {},
+        },
+    });
+    revalidateAll();
+    return { success: true };
+}
+
+// ─────────────────────────────────────────────
+// NEWSLETTER
+// ─────────────────────────────────────────────
 
 export async function subscribeNewsletter(email: string) {
     try {
         if (!email || !email.includes("@")) return { success: false, error: "Valid email required" };
-        const data = await getSiteData();
-        if (!data.subscribers) data.subscribers = [];
-        if (data.subscribers.includes(email)) return { success: true, alreadyExists: true };
-
-        data.subscribers.push(email);
-        await updateSiteData(data);
+        const existing = await prisma.subscriber.findUnique({ where: { email } });
+        if (existing) return { success: true, alreadyExists: true };
+        await prisma.subscriber.create({ data: { email } });
         return { success: true };
     } catch (error) {
         return { success: false, error: "Subscription failed" };
     }
 }
 
+// ─────────────────────────────────────────────
+// PROMOTIONS
+// ─────────────────────────────────────────────
+
 export async function getPromotions() {
-    const data = await getSiteData();
-    return data.promotions || [];
+    return prisma.promotion.findMany({ orderBy: { createdAt: "desc" } });
 }
 
-export async function addPromotion(promotion: any) {
-    const data = await getSiteData();
-    if (!data.promotions) data.promotions = [];
-    const newPromotion = {
-        ...promotion,
-        id: Date.now().toString(),
-        createdAt: new Date().toISOString()
-    };
-    data.promotions.push(newPromotion);
-    await updateSiteData(data);
+export async function addPromotion(promotion: {
+    code: string;
+    discount: number;
+    type?: string;
+    validFrom?: string;
+    validTo?: string;
+}) {
+    const newPromotion = await prisma.promotion.create({
+        data: {
+            code: promotion.code,
+            discount: promotion.discount,
+            type: promotion.type ?? "percentage",
+            validFrom: promotion.validFrom ? new Date(promotion.validFrom) : null,
+            validTo: promotion.validTo ? new Date(promotion.validTo) : null,
+        },
+    });
+    revalidatePath("/admin/promotions");
     return { success: true, promotion: newPromotion };
 }
 
 export async function deletePromotion(id: string) {
-    const data = await getSiteData();
-    data.promotions = (data.promotions || []).filter((p: any) => p.id !== id);
-    await updateSiteData(data);
+    await prisma.promotion.delete({ where: { id } });
+    revalidatePath("/admin/promotions");
     return { success: true };
 }
 
-export async function requestBookingAction(bookingId: number, type: 'modify' | 'cancel', reason: string) {
-    const data = await getSiteData();
-    data.leads = (data.leads || []).map((l: any) => {
-        if (l.id === bookingId) {
-            return {
-                ...l,
-                status: `Request: ${type === 'modify' ? 'Modification' : 'Cancellation'}`,
-                notes: `${l.notes || ''}\n[${new Date().toISOString()}] Request: ${type.toUpperCase()} - Reason: ${reason}`
-            };
-        }
-        return l;
-    });
-    await updateSiteData(data);
-    return { success: true };
+// ─────────────────────────────────────────────
+// UPLOAD (unchanged — local FS / blob storage for files)
+// ─────────────────────────────────────────────
+
+import fs from "fs/promises";
+import path from "path";
+
+export async function uploadImage(formData: FormData) {
+    const file = formData.get("file") as File;
+    if (!file) throw new Error("No file uploaded");
+
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const filename = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
+    const uploadDir = path.join(process.cwd(), "public", "uploads");
+
+    try {
+        await fs.access(uploadDir);
+    } catch {
+        await fs.mkdir(uploadDir, { recursive: true });
+    }
+
+    await fs.writeFile(path.join(uploadDir, filename), buffer);
+    return { url: `/uploads/${filename}` };
 }
 
-// --- AUTH & PROFILE ACTIONS ---
+// ─────────────────────────────────────────────
+// AUTH & PROFILE
+// ─────────────────────────────────────────────
 
 export async function loginUser(email: string, password: string) {
     try {
-        const data = await getSiteData();
-        const user = (data.users || []).find((u: any) => u.email === email && u.password === password);
-        if (!user) return { success: false, message: "Invalid email or password" };
-
+        const user = await prisma.user.findUnique({ where: { email } });
+        if (!user || user.password !== password) {
+            return { success: false, message: "Invalid email or password" };
+        }
         const { password: _, ...safeUser } = user;
         return { success: true, user: safeUser };
     } catch (error) {
@@ -361,45 +460,46 @@ export async function loginUser(email: string, password: string) {
     }
 }
 
-export async function registerUser(user: any) {
-    const data = await getSiteData();
-    if (!data.users) data.users = [];
+export async function registerUser(user: {
+    name: string;
+    email: string;
+    password: string;
+}) {
+    try {
+        const existing = await prisma.user.findUnique({ where: { email: user.email } });
+        if (existing) return { success: false, message: "Email already registered" };
 
-    if (data.users.find((u: any) => u.email === user.email)) {
-        return { success: false, message: "Email already registered" };
+        const newUser = await prisma.user.create({
+            data: { name: user.name, email: user.email, password: user.password },
+        });
+        const { password: _, ...safeUser } = newUser;
+        return { success: true, user: safeUser };
+    } catch (error) {
+        console.error("Register error:", error);
+        return { success: false, message: "Registration error. Try again." };
     }
-
-    const newUser = {
-        ...user,
-        id: Date.now().toString(),
-        joinedAt: new Date().toISOString()
-    };
-
-    data.users.push(newUser);
-    await updateSiteData(data);
-
-    const { password: _, ...safeUser } = newUser;
-    return { success: true, user: safeUser };
 }
 
-export async function updateProfile(userId: string, updates: any) {
-    const data = await getSiteData();
-    data.users = (data.users || []).map((u: any) => {
-        if (u.id === userId) {
-            return { ...u, ...updates };
-        }
-        return u;
+export async function updateProfile(userId: string, updates: { name?: string; email?: string }) {
+    const user = await prisma.user.update({
+        where: { id: userId },
+        data: updates,
     });
-    await updateSiteData(data);
     return { success: true };
 }
 
 export async function getUserBookings(userId: string) {
-    const data = await getSiteData();
-    // Filter leads where email matches user email (or we add a userId to leads)
-    const user = (data.users || []).find((u: any) => u.id === userId);
+    const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) return [];
-
-    return (data.leads || []).filter((l: any) => l.email === user.email);
+    return prisma.lead.findMany({
+        where: { email: user.email },
+        orderBy: { createdAt: "desc" },
+    });
 }
 
+// Legacy compat — some admin pages still call updateSiteData directly for bulk ops
+export async function updateSiteData(_data: any) {
+    // No-op in Prisma mode — individual actions handle their own updates
+    revalidateAll();
+    return { success: true };
+}

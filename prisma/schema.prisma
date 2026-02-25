@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Room {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  desc      String
+  price     String
+  image     String
+  tag       String?
+  capacity  Int      @default(2)
+  createdAt DateTime @default(now())
+  leads     Lead[]
+}
+
+model Lead {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  date      String?
+  guests    String?
+  status    String   @default("Pending")
+  notes     String?
+  time      String   @default("Just now")
+  roomSlug  String?
+  room      Room?    @relation(fields: [roomSlug], references: [slug])
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id       String   @id @default(cuid())
+  name     String
+  email    String   @unique
+  password String
+  joinedAt DateTime @default(now())
+}
+
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  name      String
+  title     String
+  text      String
+  status    String   @default("Active")
+  createdAt DateTime @default(now())
+}
+
+model BlogPost {
+  id        String   @id
+  title     String
+  excerpt   String
+  content   String   @db.Text
+  date      String
+  author    String
+  category  String
+  image     String
+  createdAt DateTime @default(now())
+}
+
+model Facility {
+  id         String @id
+  title      String
+  desc       String
+  icon       String
+  image      String?
+  features   Json   @default("[]")
+  highlights Json   @default("[]")
+}
+
+model MenuCategory {
+  id    String @id
+  name  String
+  items Json   @default("[]")
+  order Int    @default(0)
+}
+
+model HeroImage {
+  id    Int    @id @default(autoincrement())
+  url   String @unique
+  order Int    @default(0)
+}
+
+model Promotion {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  discount  Float
+  type      String    @default("percentage")
+  validFrom DateTime?
+  validTo   DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model Subscriber {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model ContactInfo {
+  id       Int    @id @default(1)
+  phone    String
+  email    String
+  whatsapp String?
+  address  String
+  social   Json   @default("{}")
+}

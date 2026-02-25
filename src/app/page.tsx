@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { rooms as initialRooms, facilities as initialFacilities, testimonials as initialTestimonials, contactInfo as initialContactInfo, heroImages as initialHeroImages } from "../data/site-data";
 import {
@@ -541,9 +542,12 @@ export default function Home() {
               setContactStatus("Sending...");
               const fd = new FormData(e.currentTarget as HTMLFormElement);
               await addLead({
-                name: fd.get("name"), email: fd.get("email"),
-                phone: "N/A", date: "N/A",
-                room: "General Inquiry", guests: fd.get("message"),
+                name: (fd.get("name") as string) || "",
+                email: (fd.get("email") as string) || "",
+                phone: "N/A",
+                date: "N/A",
+                room: "General Inquiry",
+                guests: (fd.get("message") as string) || "",
               });
               setContactStatus("Message sent!");
               (e.target as HTMLFormElement).reset();

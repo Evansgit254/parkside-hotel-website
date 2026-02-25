@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import styles from "../admin.module.css";
 import { Mail, Phone, Calendar, Clock, CheckCircle, Trash2, BedDouble, User, AlertTriangle } from "lucide-react";

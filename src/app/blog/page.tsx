@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getSiteData } from "../actions";
 import { motion } from "framer-motion";
 import { Calendar, User } from "lucide-react";

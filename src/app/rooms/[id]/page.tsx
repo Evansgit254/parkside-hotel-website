@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getSiteData } from "../../actions";
 import { notFound } from "next/navigation";
 import ClientRoomDetail from "./ClientRoomDetail";

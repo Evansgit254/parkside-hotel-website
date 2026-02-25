@@ -17,9 +17,9 @@ export default function ReviewForm({ onClose }: { onClose?: () => void }) {
         e.preventDefault();
         setIsSubmitting(true);
         const res = await submitPublicReview({
-            ...formData,
-            rating,
-            image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop" // Default avatar
+            name: formData.name,
+            title: formData.title || `${rating}/5 Stars`,
+            text: formData.text,
         });
         if (res.success) {
             setStep(2);
