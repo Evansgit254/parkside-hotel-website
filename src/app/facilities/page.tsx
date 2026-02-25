@@ -11,14 +11,18 @@ import Image from "next/image"; // Next.js image component for optimization
 
 export default function FacilitiesPage() {
     const [facilities, setFacilities] = useState<any[]>([]);
+    const [content, setContent] = useState<any>({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         getSiteData().then(data => {
             setFacilities(data.facilities || []);
+            if (data && data.content) setContent(data.content);
             setLoading(false);
         });
     }, []);
+
+    const facilitiesKeys = content?.facilities_intro || {};
 
     const fadeInUp = {
         hidden: { opacity: 0, y: 30 },
@@ -40,11 +44,10 @@ export default function FacilitiesPage() {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 1 }}
                     >
-                        <span className={styles.badge}>World-Class Amenities</span>
-                        <h1 className={styles.title}>Hotel Facilities</h1>
+                        <span className={styles.badge}>{facilitiesKeys.badge || "World-Class Amenities"}</span>
+                        <h1 className={styles.title}>{facilitiesKeys.title || "Hotel Facilities"}</h1>
                         <p className={styles.subtitle}>
-                            Discover a world where unparalleled luxury meets every need. From state-of-the-art
-                            conference halls to our tranquil infinity pool, every detail is considered.
+                            {facilitiesKeys.desc || "Discover a world where unparalleled luxury meets every need. From state-of-the-art conference halls to our tranquil infinity pool, every detail is considered."}
                         </p>
                     </motion.div>
                 </div>

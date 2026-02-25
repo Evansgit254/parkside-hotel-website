@@ -10,6 +10,7 @@ import { Play } from "lucide-react";
 
 export default function GalleryPage() {
     const [media, setMedia] = useState<{ url: string; category: string; caption?: string; type: 'image' | 'video'; thumbnail?: string }[]>([]);
+    const [content, setContent] = useState<any>({});
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("All");
 
@@ -65,6 +66,7 @@ export default function GalleryPage() {
             }
 
             setMedia(allImages);
+            if (data.content) setContent(data.content);
             setLoading(false);
         });
     }, []);
@@ -85,10 +87,10 @@ export default function GalleryPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                 >
-                    <span className={styles.badge}>Visual Experience</span>
-                    <h1 className={styles.title}>The Gallery</h1>
+                    <span className={styles.badge}>{content.gallery_intro?.badge || "Visual Experience"}</span>
+                    <h1 className={styles.title}>{content.gallery_intro?.title || "The Gallery"}</h1>
                     <p className={styles.subtitle}>
-                        A visual journey through the luxury, comfort, and elegance of Parkside Villa.
+                        {content.gallery_intro?.subtitle || "A visual journey through the luxury, comfort, and elegance of Parkside Villa."}
                     </p>
                 </motion.div>
 

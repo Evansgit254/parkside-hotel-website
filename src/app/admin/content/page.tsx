@@ -85,11 +85,74 @@ const contentSchema = [
             { name: "stat4_suffix", label: "Stat 4 · Suffix", type: "text", default: "%" },
             { name: "stat4_label", label: "Stat 4 · Label", type: "text", default: "Guest Satisfaction" },
         ]
+    },
+    {
+        key: "brand_quote",
+        label: "Brand Quote",
+        description: "The centered quote shown on the homepage divider.",
+        icon: LayoutTemplate,
+        fields: [
+            { name: "text", label: "Quote Text", type: "textarea", default: "Luxury is the ease of supreme quality — in every detail, in every moment, in every interaction." },
+            { name: "author", label: "Author / Philosophy", type: "text", default: "— The Parkside Villa Philosophy" }
+        ]
+    },
+    {
+        key: "testimonials_intro",
+        label: "Testimonials Intro",
+        description: "Heading and subtitle for the guest reviews section.",
+        icon: Star,
+        fields: [
+            { name: "title", label: "Section Title", type: "text", default: "What Our Guests Say" },
+            { name: "subtitle", label: "Section Subtitle", type: "textarea", default: "Real experiences from guests who have discovered the Parkside Villa difference." }
+        ]
+    },
+    {
+        key: "gallery_intro",
+        label: "Gallery Page Intro",
+        description: "Heading and subtitle for the main Gallery page.",
+        icon: Star,
+        fields: [
+            { name: "title", label: "Page Title", type: "text", default: "Visual Gallery" },
+            { name: "subtitle", label: "Page Subtitle", type: "textarea", default: "A visual journey through the estate, capturing moments of luxury and tranquility." }
+        ]
+    },
+    {
+        key: "blog_intro",
+        label: "Blog Page Intro",
+        description: "Heading and subtitle for the Editorial / Blog page.",
+        icon: Star,
+        fields: [
+            { name: "title", label: "Page Title", type: "text", default: "Editorial" },
+            { name: "subtitle", label: "Page Subtitle", type: "textarea", default: "Stories, insights, and updates from the heart of Parkside Villa." }
+        ]
+    },
+    {
+        key: "recent_rooms",
+        label: "Recently Viewed",
+        description: "Copy for the section showing recently visited rooms.",
+        icon: Star,
+        fields: [
+            { name: "badge", label: "Section Badge", type: "text", default: "Your Interests" },
+            { name: "title", label: "Section Title", type: "text", default: "Continue Exploring" }
+        ]
+    },
+    {
+        key: "contact_section",
+        label: "Contact Section",
+        description: "Heading and contact details for the landing page form.",
+        icon: Star,
+        fields: [
+            { name: "badge", label: "Section Badge", type: "text", default: "Get In Touch" },
+            { name: "title", label: "Section Title", type: "text", default: "Begin Your Journey" },
+            { name: "hours", label: "Opening Hours", type: "text", default: "Reception 24/7 · Dining 06:00–23:00" },
+            { name: "form_placeholder", label: "Form Placeholder", type: "text", default: "How can we assist you?" }
+        ]
     }
 ];
 
 const TABS = [
-    { id: "page-copy", label: "Page Copy", keys: ["landing_hero", "rooms_intro", "dining_intro", "facilities_intro", "footer_about"] },
+    { id: "page-copy", label: "Page Copy", keys: ["landing_hero", "rooms_intro", "dining_intro", "facilities_intro", "brand_quote", "testimonials_intro", "recent_rooms", "contact_section", "footer_about"] },
+    { id: "pages", label: "Page Headers", keys: ["gallery_intro", "blog_intro"] },
     { id: "stats", label: "Statistics", keys: ["experience_stats"] },
     { id: "contact", label: "Contact Info", keys: [] },
 ];

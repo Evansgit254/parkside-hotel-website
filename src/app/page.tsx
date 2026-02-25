@@ -407,9 +407,9 @@ export default function Home() {
       {/* ── BRAND QUOTE DIVIDER ── */}
       <div className={styles.brandQuote}>
         <p className={styles.brandQuoteText}>
-          &ldquo;Luxury is the ease of supreme quality — in every detail, in every moment, in every interaction.&rdquo;
+          &ldquo;{content?.brand_quote?.text || "Luxury is the ease of supreme quality — in every detail, in every moment, in every interaction."}&rdquo;
         </p>
-        <p className={styles.brandQuoteAttr}>— The Parkside Villa Philosophy</p>
+        <p className={styles.brandQuoteAttr}>{content?.brand_quote?.author || "— The Parkside Villa Philosophy"}</p>
       </div>
 
       {/* ── TESTIMONIALS ── */}
@@ -421,14 +421,14 @@ export default function Home() {
               initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ duration: 0.8 }}
             >
-              What Our<br />Guests Say
+              {content?.testimonials_intro?.title || <>What Our<br />Guests Say</>}
             </motion.h2>
             <motion.p
               className={styles.testimonialsSubtitle}
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Real experiences from guests who have discovered the Parkside Villa difference.
+              {content?.testimonials_intro?.subtitle || "Real experiences from guests who have discovered the Parkside Villa difference."}
             </motion.p>
           </div>
 
@@ -490,8 +490,8 @@ export default function Home() {
         <section className={styles.recentSection}>
           <div style={{ maxWidth: 'var(--max-width)', margin: '0 auto 2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <div>
-              <span className={styles.badge} style={{ marginBottom: '1rem', display: 'flex' }}>Your Interests</span>
-              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', fontWeight: 300, color: 'var(--ivory)', letterSpacing: '-0.02em' }}>Continue Exploring</h2>
+              <span className={styles.badge} style={{ marginBottom: '1rem', display: 'flex' }}>{content?.recent_rooms?.badge || "Your Interests"}</span>
+              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', fontWeight: 300, color: 'var(--ivory)', letterSpacing: '-0.02em' }}>{content?.recent_rooms?.title || "Continue Exploring"}</h2>
             </div>
             <a href="#accommodation" className={styles.buttonGhost}>View All Rooms <ArrowUpRight size={12} /></a>
           </div>
@@ -519,16 +519,16 @@ export default function Home() {
             initial="hidden" whileInView="visible" viewport={{ once: true }}
             variants={stagger}
           >
-            <motion.span variants={fadeUp} className={styles.badge}>Get In Touch</motion.span>
+            <motion.span variants={fadeUp} className={styles.badge}>{content?.contact_section?.badge || "Get In Touch"}</motion.span>
             <motion.h2 variants={fadeUp} className={styles.contactTitle}>
-              Begin Your<br />Journey
+              {content?.contact_section?.title || <>Begin Your<br />Journey</>}
             </motion.h2>
             <motion.div variants={fadeUp} className={styles.contactDetails}>
               {[
                 { label: "Address", icon: MapPin, text: contactInfo.address },
                 { label: "Phone", icon: Phone, text: contactInfo.phone, link: `tel:${contactInfo.phone}` },
                 { label: "Email", icon: Mail, text: contactInfo.email, link: `mailto:${contactInfo.email}` },
-                { label: "Hours", icon: Calendar, text: "Reception 24/7 · Dining 06:00–23:00" },
+                { label: "Hours", icon: Calendar, text: content?.contact_section?.hours || "Reception 24/7 · Dining 06:00–23:00" },
               ].map((item: any, i: number) => (
                 <div key={`contact-item-${i}`} className={styles.contactItem}>
                   <span className={styles.contactLabel}>{item.label}</span>
@@ -581,7 +581,7 @@ export default function Home() {
             ))}
             <motion.div variants={fadeUp} className={styles.formGroup}>
               <label className={styles.formLabel}>Message</label>
-              <textarea name="message" className={`${styles.input} ${styles.textarea}`} placeholder="How can we assist you?" required />
+              <textarea name="message" className={`${styles.input} ${styles.textarea}`} placeholder={content?.contact_section?.form_placeholder || "How can we assist you?"} required />
             </motion.div>
             <motion.div variants={fadeUp}>
               <Magnetic>

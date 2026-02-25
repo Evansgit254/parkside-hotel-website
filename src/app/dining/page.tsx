@@ -28,12 +28,16 @@ interface MenuCategory {
 export default function Dining() {
     const { formatPrice } = useCurrency();
     const [menuCategories, setMenuCategories] = useState<any[]>(initialMenu);
+    const [content, setContent] = useState<any>({});
 
     useEffect(() => {
         getSiteData().then(data => {
             if (data && data.menuCategories) setMenuCategories(data.menuCategories);
+            if (data && data.content) setContent(data.content);
         });
     }, []);
+
+    const diningKeys = content?.dining_intro || {};
 
     const [activeCategory, setActiveCategory] = useState<string>("all");
     const [isScrolled, setIsScrolled] = useState(false);
@@ -87,9 +91,9 @@ export default function Dining() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5 }}
                     >
-                        <h1 className={styles.title}>Divine <span className="gold-text">Dining</span> at Parkside Villa</h1>
+                        <h1 className={styles.title}>{diningKeys.title || "Divine Dining at Parkside Villa"}</h1>
                         <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1.25rem', marginTop: '1rem' }}>
-                            A culinary journey through the flavors of Kitui
+                            {diningKeys.desc || "A culinary journey through the flavors of Kitui"}
                         </p>
                     </motion.div>
                 </div>

@@ -19,6 +19,7 @@ export default function RoomsPage() {
     const router = useRouter();
     const { formatPrice } = useCurrency();
     const [rooms, setRooms] = useState<any[]>([]);
+    const [content, setContent] = useState<any>({});
     const [loading, setLoading] = useState(true);
     const [selectedRoom, setSelectedRoom] = useState<any>(null);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -43,6 +44,7 @@ export default function RoomsPage() {
             const roomList = data.rooms || [];
             setRooms(roomList);
             setFilteredRooms(roomList);
+            if (data && data.content) setContent(data.content);
             setLoading(false);
         });
     }, []);
@@ -83,6 +85,8 @@ export default function RoomsPage() {
 
     if (loading) return <div className={styles.loading}>Curating Collections...</div>;
 
+    const roomsKeys = content?.rooms_intro || {};
+
     const fadeUp = {
         hidden: { opacity: 0, y: 30 },
         visible: { opacity: 1, y: 0 }
@@ -99,10 +103,10 @@ export default function RoomsPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <span className={styles.badge}>Our Collection</span>
-                        <h1 className={styles.title}>Luxury Reimagined</h1>
+                        <span className={styles.badge}>{roomsKeys.badge || "Our Collection"}</span>
+                        <h1 className={styles.title}>{roomsKeys.title || "Luxury Reimagined"}</h1>
                         <p className={styles.subtitle}>
-                            A curated selection of sanctuaries designed for ultimate comfort and cultural elegance.
+                            {roomsKeys.desc || "A curated selection of sanctuaries designed for ultimate comfort and cultural elegance."}
                         </p>
                     </motion.div>
                 </div>

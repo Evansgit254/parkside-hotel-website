@@ -17,10 +17,10 @@ export default async function BlogPage() {
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>
                     <div>
-                        <span className={styles.badge}>Our Journal</span>
-                        <h1 className={styles.title}>The Insider&apos;s Guide</h1>
+                        <span className={styles.badge}>{data.content?.blog_intro?.badge || "Our Journal"}</span>
+                        <h1 className={styles.title}>{data.content?.blog_intro?.title || "The Insider's Guide"}</h1>
                         <p className={styles.subtitle}>
-                            Discover design trends, architectural inspiration, and updates from Parkside Villa.
+                            {data.content?.blog_intro?.subtitle || "Discover design trends, architectural inspiration, and updates from Parkside Villa."}
                         </p>
                     </div>
                 </div>
