@@ -1,8 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { prisma } from "../lib/prisma";
+import { prisma, isDatabaseConfigured } from "../lib/prisma";
 import { NotificationService } from "./services/mailService";
+import {
+    Room, Lead, User, Testimonial, BlogPost, Facility,
+    MenuCategory, HeroImage, GalleryItem, Promotion, Subscriber, ContactInfo
+} from "@prisma/client";
 
 // ─────────────────────────────────────────────
 // HELPERS
@@ -22,68 +26,102 @@ function revalidateAll() {
     revalidatePath("/admin/settings");
     revalidatePath("/admin/promotions");
     revalidatePath("/admin/testimonials");
+    revalidatePath("/admin/blog");
+    revalidatePath("/admin/gallery");
 }
 
 // ─────────────────────────────────────────────
 // SITE DATA (read everything in one call for legacy compatibility)
 // ─────────────────────────────────────────────
 
-export async function getSiteData() {
-    const [
-        heroImages,
-        rooms,
-        facilities,
-        testimonials,
-        menuCategories,
-        contactInfoRow,
-        blogPosts,
-        leads,
-        subscribers,
-        promotions,
-        users,
-        galleryItems
-    ] = await Promise.all([
-        prisma.heroImage.findMany({ orderBy: { order: "asc" } }),
-        prisma.room.findMany({ orderBy: { createdAt: "asc" } }),
-        prisma.facility.findMany(),
-        prisma.testimonial.findMany({ orderBy: { createdAt: "asc" } }),
-        prisma.menuCategory.findMany({ orderBy: { order: "asc" } }),
-        prisma.contactInfo.findUnique({ where: { id: 1 } }),
-        prisma.blogPost.findMany({ orderBy: { createdAt: "desc" } }),
-        prisma.lead.findMany({ orderBy: { createdAt: "desc" } }),
-        prisma.subscriber.findMany(),
-        prisma.promotion.findMany({ orderBy: { createdAt: "desc" } }),
-        prisma.user.findMany(),
-        prisma.galleryItem.findMany({ orderBy: { order: "asc" } })
-    ]);
+import * as staticData from "../data/site-data";
 
-    // Map DB rows to the shape the UI already expects
+export async function getSiteData() {
+    if (!isDatabaseConfigured()) {
+        return getStaticSiteData();
+    }
+
+    try {
+        const [
+            heroImages,
+            rooms,
+            facilities,
+            testimonials,
+            menuCategories,
+            contactInfoRow,
+            blogPosts,
+            leads,
+            subscribers,
+            promotions,
+            users,
+            galleryItems
+        ] = await Promise.all([
+            prisma.heroImage.findMany({ orderBy: { order: "asc" } }),
+            prisma.room.findMany({ orderBy: { createdAt: "asc" } }),
+            prisma.facility.findMany(),
+            prisma.testimonial.findMany({ orderBy: { createdAt: "asc" } }),
+            prisma.menuCategory.findMany({ orderBy: { order: "asc" } }),
+            prisma.contactInfo.findUnique({ where: { id: 1 } }),
+            prisma.blogPost.findMany({ orderBy: { createdAt: "desc" } }),
+            prisma.lead.findMany({ orderBy: { createdAt: "desc" } }),
+            prisma.subscriber.findMany(),
+            prisma.promotion.findMany({ orderBy: { createdAt: "desc" } }),
+            prisma.user.findMany(),
+            prisma.galleryItem.findMany({ orderBy: { order: "asc" } })
+        ]);
+
+        // Map DB rows to the shape the UI already expects
+        return {
+            heroImages: heroImages.map((h: HeroImage) => h.url),
+            rooms: rooms.map((r: Room) => ({
+                id: r.slug,
+                name: r.name,
+                desc: r.desc,
+                price: r.price,
+                image: r.image,
+                tag: r.tag ?? undefined,
+                capacity: r.capacity,
+            })),
+            facilities: facilities as Facility[],
+            testimonials: testimonials as Testimonial[],
+            menuCategories: menuCategories as MenuCategory[],
+            contactInfo: (contactInfoRow as ContactInfo) ?? {},
+            blogPosts: blogPosts as BlogPost[],
+            leads: leads.map((l: Lead) => ({
+                ...l,
+                id: l.id,
+                room: l.roomSlug ?? "",
+            })),
+            subscribers: subscribers.map((s: Subscriber) => s.email),
+            promotions: promotions as Promotion[],
+            users: users.map(({ password: _, ...u }: any) => u),
+            galleryItems: galleryItems as GalleryItem[],
+            galleryVideos: galleryItems.filter((i: GalleryItem) => i.type === "video"),
+        };
+    } catch (error) {
+        console.error("Database connection failed, falling back to static data.", error);
+        return getStaticSiteData();
+    }
+}
+
+function getStaticSiteData() {
     return {
-        heroImages: heroImages.map((h: any) => h.url),
-        rooms: rooms.map((r: any) => ({
-            id: r.slug,
-            name: r.name,
-            desc: r.desc,
-            price: r.price,
-            image: r.image,
-            tag: r.tag ?? undefined,
-            capacity: r.capacity,
-        })),
-        facilities,
-        testimonials,
-        menuCategories,
-        contactInfo: contactInfoRow ?? {},
-        blogPosts,
-        leads: leads.map((l: any) => ({
-            ...l,
-            id: l.id,
-            room: l.roomSlug ?? "",
-        })),
-        subscribers: subscribers.map((s: any) => s.email),
-        promotions,
-        users: users.map(({ password: _, ...u }: any) => u),
-        galleryItems: galleryItems,
-        galleryVideos: galleryItems.filter((i: any) => i.type === "video"),
+        heroImages: staticData.heroImages,
+        rooms: staticData.rooms,
+        facilities: staticData.facilities,
+        testimonials: staticData.testimonials,
+        menuCategories: staticData.menuCategories,
+        contactInfo: staticData.contactInfo,
+        blogPosts: [
+            { id: "1", title: "The Art of Kenyan Hospitality", author: "Editorial Team", date: "2025-05-10", category: "Lifestyle", content: "...", excerpt: "...", image: "https://images.unsplash.com/photo-1566073771259-6a8506099945" },
+            { id: "2", title: "Culinary Excellence at Parkside", author: "Master Chef", date: "2025-05-12", category: "Dining", content: "...", excerpt: "...", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836" }
+        ],
+        leads: [],
+        subscribers: [],
+        promotions: [],
+        users: [],
+        galleryItems: [],
+        galleryVideos: []
     };
 }
 
@@ -99,6 +137,7 @@ export async function addLead(lead: {
     room?: string;
     guests?: string;
 }) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         if (!lead.email || !lead.name) {
             return { success: false, error: "Name and Email are required" };
@@ -135,27 +174,45 @@ export async function addLead(lead: {
 }
 
 export async function updateLeadStatus(id: number, status: string) {
-    await prisma.lead.update({ where: { id }, data: { status } });
-    revalidatePath("/admin/leads");
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.lead.update({ where: { id }, data: { status } });
+        revalidatePath("/admin/leads");
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating lead status:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function deleteLead(id: number) {
-    await prisma.lead.delete({ where: { id } });
-    revalidatePath("/admin/leads");
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.lead.delete({ where: { id } });
+        revalidatePath("/admin/leads");
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting lead:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function requestBookingAction(bookingId: number, type: "modify" | "cancel", reason: string) {
-    const label = type === "modify" ? "Modification" : "Cancellation";
-    await prisma.lead.update({
-        where: { id: bookingId },
-        data: {
-            status: `Request: ${label}`,
-            notes: `[${new Date().toISOString()}] Request: ${type.toUpperCase()} - Reason: ${reason}`,
-        },
-    });
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        const label = type === "modify" ? "Modification" : "Cancellation";
+        await prisma.lead.update({
+            where: { id: bookingId },
+            data: {
+                status: `Request: ${label}`,
+                notes: `[${new Date().toISOString()}] Request: ${type.toUpperCase()} - Reason: ${reason}`,
+            },
+        });
+        return { success: true };
+    } catch (error) {
+        console.error("Error requesting booking action:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 // ─────────────────────────────────────────────
@@ -171,42 +228,60 @@ export async function createRoom(newRoom: {
     tag?: string;
     capacity?: number;
 }) {
-    const slug = newRoom.id ?? newRoom.name.toLowerCase().replace(/\s+/g, "-");
-    await prisma.room.create({
-        data: {
-            slug,
-            name: newRoom.name,
-            desc: newRoom.desc,
-            price: newRoom.price,
-            image: newRoom.image,
-            tag: newRoom.tag ?? null,
-            capacity: newRoom.capacity ?? 2,
-        },
-    });
-    revalidateAll();
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        const slug = newRoom.id ?? newRoom.name.toLowerCase().replace(/\s+/g, "-");
+        await prisma.room.create({
+            data: {
+                slug,
+                name: newRoom.name,
+                desc: newRoom.desc,
+                price: newRoom.price,
+                image: newRoom.image,
+                tag: newRoom.tag ?? null,
+                capacity: newRoom.capacity ?? 2,
+            },
+        });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error creating room:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
-export async function updateRoom(roomId: string, updatedRoom: any) {
-    await prisma.room.update({
-        where: { slug: roomId },
-        data: {
-            name: updatedRoom.name,
-            desc: updatedRoom.desc,
-            price: updatedRoom.price,
-            image: updatedRoom.image,
-            tag: updatedRoom.tag ?? null,
-            capacity: updatedRoom.capacity ?? 2,
-        },
-    });
-    revalidateAll();
-    return { success: true };
+export async function updateRoom(roomId: string, updatedRoom: Partial<Room>) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.room.update({
+            where: { slug: roomId },
+            data: {
+                name: updatedRoom.name,
+                desc: updatedRoom.desc,
+                price: updatedRoom.price,
+                image: updatedRoom.image,
+                tag: updatedRoom.tag ?? null,
+                capacity: updatedRoom.capacity ?? 2,
+            },
+        });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating room:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function deleteRoom(roomId: string) {
-    await prisma.room.delete({ where: { slug: roomId } });
-    revalidateAll();
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.room.delete({ where: { slug: roomId } });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting room:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 // ─────────────────────────────────────────────
@@ -219,36 +294,54 @@ export async function addTestimonial(t: {
     text: string;
     status?: string;
 }) {
-    await prisma.testimonial.create({
-        data: {
-            name: t.name,
-            title: t.title,
-            text: t.text,
-            status: t.status ?? "Active",
-        },
-    });
-    revalidateAll();
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.testimonial.create({
+            data: {
+                name: t.name,
+                title: t.title,
+                text: t.text,
+                status: t.status ?? "Active",
+            },
+        });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error adding testimonial:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
-export async function updateTestimonial(id: number, updatedData: any) {
-    await prisma.testimonial.update({
-        where: { id },
-        data: {
-            name: updatedData.name,
-            title: updatedData.title,
-            text: updatedData.text,
-            status: updatedData.status,
-        },
-    });
-    revalidateAll();
-    return { success: true };
+export async function updateTestimonial(id: number, updatedData: Partial<Testimonial>) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.testimonial.update({
+            where: { id },
+            data: {
+                name: updatedData.name,
+                title: updatedData.title,
+                text: updatedData.text,
+                status: updatedData.status,
+            },
+        });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating testimonial:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function deleteTestimonial(id: number) {
-    await prisma.testimonial.delete({ where: { id } });
-    revalidateAll();
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.testimonial.delete({ where: { id } });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting testimonial:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function submitPublicReview(review: { name: string; title: string; text: string }) {
@@ -264,63 +357,99 @@ export async function submitPublicReview(review: { name: string; title: string; 
 // DINING (Menu Categories)
 // ─────────────────────────────────────────────
 
-export async function createDiningCategory(newCategory: any) {
-    const id = newCategory.id ?? newCategory.name.toLowerCase().replace(/\s+/g, "-");
-    await prisma.menuCategory.create({
-        data: { id, name: newCategory.name, items: newCategory.items ?? [], order: newCategory.order ?? 0 },
-    });
-    revalidateAll();
-    return { success: true };
+export async function createDiningCategory(newCategory: { name: string; items?: any[]; order?: number; id?: string }) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        const id = newCategory.id ?? newCategory.name.toLowerCase().replace(/\s+/g, "-");
+        await prisma.menuCategory.create({
+            data: { id, name: newCategory.name, items: newCategory.items ?? [], order: newCategory.order ?? 0 },
+        });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error creating dining category:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
-export async function updateDiningCategory(categoryId: string, updatedCategory: any) {
-    await prisma.menuCategory.update({
-        where: { id: categoryId },
-        data: { name: updatedCategory.name, items: updatedCategory.items ?? [] },
-    });
-    revalidateAll();
-    return { success: true };
+export async function updateDiningCategory(categoryId: string, updatedCategory: { name: string; items: any[] }) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.menuCategory.update({
+            where: { id: categoryId },
+            data: { name: updatedCategory.name, items: updatedCategory.items ?? [] },
+        });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating dining category:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function deleteDiningCategory(categoryId: string) {
-    await prisma.menuCategory.delete({ where: { id: categoryId } });
-    revalidateAll();
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.menuCategory.delete({ where: { id: categoryId } });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting dining category:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 // ─────────────────────────────────────────────
 // FACILITIES
 // ─────────────────────────────────────────────
 
-export async function addFacility(f: any) {
-    const id = f.id ?? f.title.toLowerCase().replace(/\s+/g, "-");
-    await prisma.facility.create({
-        data: { id, title: f.title, desc: f.desc, icon: f.icon, image: f.image ?? null, features: f.features ?? [], highlights: f.highlights ?? [] },
-    });
-    revalidateAll();
-    return { success: true };
+export async function addFacility(f: Partial<Facility> & { title: string; desc: string; icon: string }) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        const id = f.id ?? f.title.toLowerCase().replace(/\s+/g, "-");
+        await prisma.facility.create({
+            data: { id, title: f.title, desc: f.desc, icon: f.icon, image: f.image ?? null, features: f.features ?? [], highlights: f.highlights ?? [] },
+        });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error adding facility:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function updateFacility(facilityId: string, updatedFacility: any) {
-    await prisma.facility.update({
-        where: { id: facilityId },
-        data: {
-            title: updatedFacility.title,
-            desc: updatedFacility.desc,
-            icon: updatedFacility.icon,
-            image: updatedFacility.image ?? null,
-            features: updatedFacility.features ?? [],
-            highlights: updatedFacility.highlights ?? [],
-        },
-    });
-    revalidateAll();
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.facility.update({
+            where: { id: facilityId },
+            data: {
+                title: updatedFacility.title,
+                desc: updatedFacility.desc,
+                icon: updatedFacility.icon,
+                image: updatedFacility.image ?? null,
+                features: updatedFacility.features ?? [],
+                highlights: updatedFacility.highlights ?? [],
+            },
+        });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating facility:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function deleteFacility(facilityId: string) {
-    await prisma.facility.delete({ where: { id: facilityId } });
-    revalidateAll();
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.facility.delete({ where: { id: facilityId } });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting facility:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 // ─────────────────────────────────────────────
@@ -328,16 +457,28 @@ export async function deleteFacility(facilityId: string) {
 // ─────────────────────────────────────────────
 
 export async function addHeroImage(imageUrl: string) {
-    const count = await prisma.heroImage.count();
-    await prisma.heroImage.create({ data: { url: imageUrl, order: count } });
-    revalidateAll();
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        const count = await prisma.heroImage.count();
+        await prisma.heroImage.create({ data: { url: imageUrl, order: count } });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error adding hero image:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function deleteHeroImage(imageUrl: string) {
-    await prisma.heroImage.deleteMany({ where: { url: imageUrl } });
-    revalidateAll();
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.heroImage.deleteMany({ where: { url: imageUrl } });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting hero image:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 // ─────────────────────────────────────────────
@@ -345,26 +486,32 @@ export async function deleteHeroImage(imageUrl: string) {
 // ─────────────────────────────────────────────
 
 export async function updateContactInfo(contactInfo: any) {
-    await prisma.contactInfo.upsert({
-        where: { id: 1 },
-        update: {
-            phone: contactInfo.phone,
-            email: contactInfo.email,
-            whatsapp: contactInfo.whatsapp ?? null,
-            address: contactInfo.address,
-            social: contactInfo.social ?? {},
-        },
-        create: {
-            id: 1,
-            phone: contactInfo.phone,
-            email: contactInfo.email,
-            whatsapp: contactInfo.whatsapp ?? null,
-            address: contactInfo.address,
-            social: contactInfo.social ?? {},
-        },
-    });
-    revalidateAll();
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.contactInfo.upsert({
+            where: { id: 1 },
+            update: {
+                phone: contactInfo.phone,
+                email: contactInfo.email,
+                whatsapp: contactInfo.whatsapp ?? null,
+                address: contactInfo.address,
+                social: contactInfo.social ?? {},
+            },
+            create: {
+                id: 1,
+                phone: contactInfo.phone,
+                email: contactInfo.email,
+                whatsapp: contactInfo.whatsapp ?? null,
+                address: contactInfo.address,
+                social: contactInfo.social ?? {},
+            },
+        });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating contact info:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 // ─────────────────────────────────────────────
@@ -372,6 +519,7 @@ export async function updateContactInfo(contactInfo: any) {
 // ─────────────────────────────────────────────
 
 export async function subscribeNewsletter(email: string) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         if (!email || !email.includes("@")) return { success: false, error: "Valid email required" };
         const existing = await prisma.subscriber.findUnique({ where: { email } });
@@ -388,7 +536,13 @@ export async function subscribeNewsletter(email: string) {
 // ─────────────────────────────────────────────
 
 export async function getPromotions() {
-    return prisma.promotion.findMany({ orderBy: { createdAt: "desc" } });
+    if (!isDatabaseConfigured()) return [];
+    try {
+        return await prisma.promotion.findMany({ orderBy: { createdAt: "desc" } });
+    } catch (error) {
+        console.error("Error getting promotions:", error);
+        return [];
+    }
 }
 
 export async function addPromotion(promotion: {
@@ -398,23 +552,35 @@ export async function addPromotion(promotion: {
     validFrom?: string;
     validTo?: string;
 }) {
-    const newPromotion = await prisma.promotion.create({
-        data: {
-            code: promotion.code,
-            discount: promotion.discount,
-            type: promotion.type ?? "percentage",
-            validFrom: promotion.validFrom ? new Date(promotion.validFrom) : null,
-            validTo: promotion.validTo ? new Date(promotion.validTo) : null,
-        },
-    });
-    revalidatePath("/admin/promotions");
-    return { success: true, promotion: newPromotion };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        const newPromotion = await prisma.promotion.create({
+            data: {
+                code: promotion.code,
+                discount: promotion.discount,
+                type: promotion.type ?? "percentage",
+                validFrom: promotion.validFrom ? new Date(promotion.validFrom) : null,
+                validTo: promotion.validTo ? new Date(promotion.validTo) : null,
+            },
+        });
+        revalidatePath("/admin/promotions");
+        return { success: true, promotion: newPromotion };
+    } catch (error) {
+        console.error("Error adding promotion:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function deletePromotion(id: string) {
-    await prisma.promotion.delete({ where: { id } });
-    revalidatePath("/admin/promotions");
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.promotion.delete({ where: { id } });
+        revalidatePath("/admin/promotions");
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting promotion:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 // ─────────────────────────────────────────────
@@ -448,6 +614,7 @@ export async function uploadImage(formData: FormData) {
 // ─────────────────────────────────────────────
 
 export async function loginUser(email: string, password: string) {
+    if (!isDatabaseConfigured()) return { success: false, message: "Server maintains local legacy mode. Database authentication unavailable." };
     try {
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user || user.password !== password) {
@@ -466,6 +633,7 @@ export async function registerUser(user: {
     email: string;
     password: string;
 }) {
+    if (!isDatabaseConfigured()) return { success: false, message: "Database not configured" };
     try {
         const existing = await prisma.user.findUnique({ where: { email: user.email } });
         if (existing) return { success: false, message: "Email already registered" };
@@ -482,20 +650,32 @@ export async function registerUser(user: {
 }
 
 export async function updateProfile(userId: string, updates: { name?: string; email?: string }) {
-    const user = await prisma.user.update({
-        where: { id: userId },
-        data: updates,
-    });
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.user.update({
+            where: { id: userId },
+            data: updates,
+        });
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function getUserBookings(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) return [];
-    return prisma.lead.findMany({
-        where: { email: user.email },
-        orderBy: { createdAt: "desc" },
-    });
+    if (!isDatabaseConfigured()) return [];
+    try {
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (!user) return [];
+        return await prisma.lead.findMany({
+            where: { email: user.email },
+            orderBy: { createdAt: "desc" },
+        });
+    } catch (error) {
+        console.error("Error getting user bookings:", error);
+        return [];
+    }
 }
 
 // ─────────────────────────────────────────────
@@ -503,35 +683,53 @@ export async function getUserBookings(userId: string) {
 // ─────────────────────────────────────────────
 
 export async function createBlogPost(post: any) {
-    const newPost = await prisma.blogPost.create({
-        data: {
-            id: post.id || post.title.toLowerCase().replace(/\s+/g, "-"),
-            title: post.title,
-            excerpt: post.excerpt,
-            content: post.content,
-            date: post.date || new Date().toISOString().split("T")[0],
-            author: post.author || "Parkside Villa",
-            category: post.category,
-            image: post.image,
-        },
-    });
-    revalidateAll();
-    return { success: true, post: newPost };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        const newPost = await prisma.blogPost.create({
+            data: {
+                id: post.id || post.title.toLowerCase().replace(/\s+/g, "-"),
+                title: post.title,
+                excerpt: post.excerpt,
+                content: post.content,
+                date: post.date || new Date().toISOString().split("T")[0],
+                author: post.author || "Parkside Villa",
+                category: post.category,
+                image: post.image,
+            },
+        });
+        revalidateAll();
+        return { success: true, post: newPost };
+    } catch (error) {
+        console.error("Error creating blog post:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function updateBlogPost(id: string, post: any) {
-    await prisma.blogPost.update({
-        where: { id },
-        data: post,
-    });
-    revalidateAll();
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.blogPost.update({
+            where: { id },
+            data: post,
+        });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating blog post:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function deleteBlogPost(id: string) {
-    await prisma.blogPost.delete({ where: { id } });
-    revalidateAll();
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.blogPost.delete({ where: { id } });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting blog post:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 // ─────────────────────────────────────────────
@@ -539,33 +737,57 @@ export async function deleteBlogPost(id: string) {
 // ─────────────────────────────────────────────
 
 export async function getGalleryItems() {
-    return prisma.galleryItem.findMany({ orderBy: { order: "asc" } });
+    if (!isDatabaseConfigured()) return [];
+    try {
+        return await prisma.galleryItem.findMany({ orderBy: { order: "asc" } });
+    } catch (error) {
+        console.error("Error getting gallery items:", error);
+        return [];
+    }
 }
 
 export async function addGalleryItem(item: { url: string; type: string; title?: string }) {
-    const count = await prisma.galleryItem.count();
-    const newItem = await prisma.galleryItem.create({
-        data: { ...item, order: count },
-    });
-    revalidateAll();
-    return { success: true, item: newItem };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        const count = await prisma.galleryItem.count();
+        const newItem = await prisma.galleryItem.create({
+            data: { ...item, order: count },
+        });
+        revalidateAll();
+        return { success: true, item: newItem };
+    } catch (error) {
+        console.error("Error adding gallery item:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function deleteGalleryItem(id: string) {
-    await prisma.galleryItem.delete({ where: { id } });
-    revalidateAll();
-    return { success: true };
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.galleryItem.delete({ where: { id } });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting gallery item:", error);
+        return { success: false, error: "Database error" };
+    }
 }
 
 export async function updateGalleryOrder(items: { id: string; order: number }[]) {
-    for (const item of items) {
-        await prisma.galleryItem.update({
-            where: { id: item.id },
-            data: { order: item.order },
-        });
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        for (const item of items) {
+            await prisma.galleryItem.update({
+                where: { id: item.id },
+                data: { order: item.order },
+            });
+        }
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating gallery order:", error);
+        return { success: false, error: "Database error" };
     }
-    revalidateAll();
-    return { success: true };
 }
 
 // Legacy compat — some admin pages still call updateSiteData directly for bulk ops

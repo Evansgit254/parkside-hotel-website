@@ -1,0 +1,98 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "PARKSIDE VILLA" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e6]: PARKSIDE VILLA
+        - navigation [ref=e7]:
+          - link "Accommodation" [ref=e8] [cursor=pointer]:
+            - /url: /rooms
+          - link "Conference" [ref=e9] [cursor=pointer]:
+            - /url: /#conference
+          - link "Facilities" [ref=e10] [cursor=pointer]:
+            - /url: /facilities
+          - link "Gallery" [ref=e11] [cursor=pointer]:
+            - /url: /gallery
+          - link "Blog" [ref=e12] [cursor=pointer]:
+            - /url: /blog
+          - link "Dining" [ref=e13] [cursor=pointer]:
+            - /url: /dining
+          - link "Contact" [ref=e14] [cursor=pointer]:
+            - /url: /#contact
+        - generic [ref=e15]:
+          - link "Sign In" [ref=e16] [cursor=pointer]:
+            - /url: /login
+            - img [ref=e17]
+            - generic [ref=e20]: Sign In
+          - button "USD" [ref=e21] [cursor=pointer]
+    - generic [ref=e28]:
+      - heading "404" [level=1] [ref=e29]
+      - heading "This page could not be found." [level=2] [ref=e31]
+    - contentinfo [ref=e32]:
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]: PARKSIDE VILLA
+            - paragraph [ref=e37]: Kitui's premier luxury destination. Stay updated on our exclusive offers and upcoming events by subscribing to our newsletter.
+            - generic [ref=e38]:
+              - textbox "Enter your email address" [active] [ref=e39]: admin@parksidevilla.com
+              - button "Subscribe" [ref=e40] [cursor=pointer]
+            - generic [ref=e41]:
+              - link [ref=e42] [cursor=pointer]:
+                - /url: https://facebook.com/parksidevillakitui
+                - img [ref=e43]
+              - link [ref=e45] [cursor=pointer]:
+                - /url: https://instagram.com/parksidevillakitui
+                - img [ref=e46]
+              - link [ref=e49] [cursor=pointer]:
+                - /url: https://linkedin.com/company/parksidevillakitui
+                - img [ref=e50]
+          - generic [ref=e54]:
+            - heading "Quick Links" [level=4] [ref=e55]
+            - generic [ref=e56]:
+              - link "Accommodation" [ref=e57] [cursor=pointer]:
+                - /url: /#accommodation
+              - link "Conference" [ref=e58] [cursor=pointer]:
+                - /url: /#conference
+              - link "Facilities" [ref=e59] [cursor=pointer]:
+                - /url: /facilities
+              - link "Dining" [ref=e60] [cursor=pointer]:
+                - /url: /dining
+              - link "Gallery" [ref=e61] [cursor=pointer]:
+                - /url: /gallery
+              - link "Blog" [ref=e62] [cursor=pointer]:
+                - /url: /blog
+              - link "Contact Us" [ref=e63] [cursor=pointer]:
+                - /url: /#contact
+          - generic [ref=e64]:
+            - heading "Our Pillars" [level=4] [ref=e65]
+            - generic [ref=e66]:
+              - link "Luxury Rooms" [ref=e67] [cursor=pointer]:
+                - /url: /#accommodation
+              - link "Event Space" [ref=e68] [cursor=pointer]:
+                - /url: /#conference
+              - link "Gourmet Food" [ref=e69] [cursor=pointer]:
+                - /url: /dining
+              - link "Garden Oasis" [ref=e70] [cursor=pointer]:
+                - /url: /#accommodation
+          - generic [ref=e71]:
+            - heading "Visit Us" [level=4] [ref=e72]
+            - generic [ref=e73]:
+              - generic [ref=e74]: Parkside Villa, Kitui
+              - generic [ref=e75]: P.O. Box 1234-90200
+              - generic [ref=e76]: Kitui, Kenya
+        - paragraph [ref=e78]:
+          - text: © 2026 Parkside Villa Kitui. All Rights Reserved. |
+          - link "Admin Login" [ref=e79] [cursor=pointer]:
+            - /url: /admin
+  - button "Open Next.js Dev Tools" [ref=e85] [cursor=pointer]:
+    - img [ref=e86]
+  - alert [ref=e89]
+  - img [ref=e92]
+  - button [ref=e95]:
+    - img [ref=e96]
+```

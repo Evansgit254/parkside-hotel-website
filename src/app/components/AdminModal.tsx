@@ -13,6 +13,7 @@ interface AdminModalProps {
     onSubmit: (e: React.FormEvent) => void;
     submitLabel?: string;
     loading?: boolean;
+    error?: string | null;
 }
 
 export default function AdminModal({
@@ -22,7 +23,8 @@ export default function AdminModal({
     children,
     onSubmit,
     submitLabel = "Save Changes",
-    loading = false
+    loading = false,
+    error = null
 }: AdminModalProps) {
     return (
         <AnimatePresence>
@@ -48,6 +50,12 @@ export default function AdminModal({
                         <div className={styles.modalHeader}>
                             <h2 className={styles.modalTitle}>{title}</h2>
                         </div>
+
+                        {error && (
+                            <div className={styles.error} style={{ margin: '0 2rem 1rem', borderRadius: '8px' }}>
+                                {error}
+                            </div>
+                        )}
 
                         <form onSubmit={onSubmit} style={{ padding: '0 2rem 2rem' }}>
                             {children}

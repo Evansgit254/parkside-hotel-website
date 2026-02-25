@@ -29,15 +29,22 @@ export default function AdminSettings() {
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
         setSaving(true);
-        await updateContactInfo(contact);
+        const res = await updateContactInfo(contact);
+        if (!res.success) {
+            alert(res.error || "Failed to update contact info");
+        }
         setSaving(false);
     };
 
     const handleAddImage = async () => {
         if (!newImageUrl.trim()) return;
-        await addHeroImage(newImageUrl.trim());
-        setNewImageUrl("");
-        await fetchData();
+        const res = await addHeroImage(newImageUrl.trim());
+        if (res.success) {
+            setNewImageUrl("");
+            await fetchData();
+        } else {
+            alert(res.error || "Failed to add hero image");
+        }
     };
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,8 +68,12 @@ export default function AdminSettings() {
 
     const handleDeleteImage = async (url: string) => {
         if (confirm("Remove this hero image?")) {
-            await deleteHeroImage(url);
-            await fetchData();
+            const res = await deleteHeroImage(url);
+            if (res.success) {
+                await fetchData();
+            } else {
+                alert(res.error || "Failed to delete hero image");
+            }
         }
     };
 

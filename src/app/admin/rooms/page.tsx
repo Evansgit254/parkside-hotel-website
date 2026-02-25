@@ -56,24 +56,38 @@ export default function AdminRooms() {
         }
     };
 
+    const [error, setError] = useState<string | null>(null);
+
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
+        setError(null);
+
+        let res;
         if (editForm.id === "NEW") {
             const { id, ...roomData } = editForm;
-            await createRoom(roomData);
+            res = await createRoom(roomData);
         } else {
-            await updateRoom(editForm.id, editForm);
+            res = await updateRoom(editForm.id, editForm);
         }
-        await fetchRooms();
-        setIsModalOpen(false);
+
+        if (res.success) {
+            await fetchRooms();
+            setIsModalOpen(false);
+        } else {
+            setError(res.error || "Failed to save room details.");
+        }
         setIsSaving(false);
     };
 
     const handleDelete = async (id: string) => {
         if (confirm("Are you sure you want to delete this room?")) {
-            await deleteRoom(id);
-            await fetchRooms();
+            const res = await deleteRoom(id);
+            if (res.success) {
+                await fetchRooms();
+            } else {
+                alert(res.error || "Failed to delete room.");
+            }
         }
     };
 
@@ -142,6 +156,7 @@ export default function AdminRooms() {
                 title={editForm.id === "NEW" ? "New Room" : `Edit — ${editForm.name}`}
                 onSubmit={handleSave}
                 loading={isSaving}
+                error={error}
             >
                 <div className={styles.formGrid}>
                     <div className={styles.formGroup}>

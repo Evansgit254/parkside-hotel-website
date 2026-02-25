@@ -51,24 +51,37 @@ export default function AdminFacilities() {
         }
     };
 
+    const [error, setError] = useState<string | null>(null);
+
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
+        setError(null);
+        let res;
         if (editForm.id === "NEW") {
             const { id, ...facilityData } = editForm;
-            await addFacility(facilityData);
+            res = await addFacility(facilityData);
         } else {
-            await updateFacility(editForm.id, editForm);
+            res = await updateFacility(editForm.id, editForm);
         }
-        await fetchFacilities();
-        setIsModalOpen(false);
+
+        if (res.success) {
+            await fetchFacilities();
+            setIsModalOpen(false);
+        } else {
+            setError(res.error || "Failed to save facility.");
+        }
         setIsSaving(false);
     };
 
     const handleDelete = async (id: string) => {
         if (confirm("Delete this facility? This cannot be undone.")) {
-            await deleteFacility(id);
-            await fetchFacilities();
+            const res = await deleteFacility(id);
+            if (res.success) {
+                await fetchFacilities();
+            } else {
+                alert(res.error || "Failed to delete facility.");
+            }
         }
     };
 
@@ -154,6 +167,7 @@ export default function AdminFacilities() {
                 title={editForm.id === "NEW" ? "New Facility" : `Edit — ${editForm.title}`}
                 onSubmit={handleSave}
                 loading={isSaving}
+                error={error}
             >
                 <div className={styles.formGrid}>
                     {/* Image Upload */}

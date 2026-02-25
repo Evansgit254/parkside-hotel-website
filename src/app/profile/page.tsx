@@ -123,9 +123,13 @@ export default function ProfilePage() {
                                                             const type = confirm("Would you like to MODIFY or CANCEL this reservation?\n\nOK for Modify, Cancel for Cancellation") ? 'modify' : 'cancel';
                                                             const reason = prompt(`Please specify the reason for ${type}:`);
                                                             if (reason) {
-                                                                requestBookingAction(booking.id, type as any, reason).then(() => {
-                                                                    alert("Your request has been sent to our concierge team.");
-                                                                    location.reload();
+                                                                requestBookingAction(booking.id, type as any, reason).then((res) => {
+                                                                    if (res.success) {
+                                                                        alert("Your request has been sent to our concierge team.");
+                                                                        location.reload();
+                                                                    } else {
+                                                                        alert(res.error || "Failed to submit request.");
+                                                                    }
                                                                 });
                                                             }
                                                         }}

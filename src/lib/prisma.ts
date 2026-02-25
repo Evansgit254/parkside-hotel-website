@@ -6,18 +6,33 @@ const globalForPrisma = globalThis as unknown as {
     prisma: PrismaClient | undefined;
 };
 
-function createPrismaClient() {
+export function isDatabaseConfigured() {
     const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) return false;
 
-    if (!connectionString) {
-        // During build time / no DB configured — return a client that will throw on actual queries
-        console.warn("DATABASE_URL not set. Prisma client may fail at query time.");
+    // Check for common placeholders
+    const placeholders = [
+        "USER:PASSWORD",
+        "localhost/placeholder",
+        "HOST:PORT",
+        "YOUR_CONNECTION_STRING",
+        "@HOST:",
+        ":5432/"
+    ];
+
+    return !placeholders.some(p => connectionString.includes(p));
+}
+
+function createPrismaClient() {
+    if (!isDatabaseConfigured()) {
+        console.warn("⚠️ DATABASE_URL is not configured or using placeholder values. Prisma queries will fallback to static data in server actions.");
+        // We still return a client so imports don't break, but actions will avoid calling it
         const pool = new Pool({ connectionString: "postgresql://localhost/placeholder" });
         const adapter = new PrismaPg(pool);
         return new PrismaClient({ adapter } as any);
     }
 
-    const pool = new Pool({ connectionString });
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
     const adapter = new PrismaPg(pool);
     return new PrismaClient({ adapter } as any);
 }

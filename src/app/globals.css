@@ -54,6 +54,16 @@ html {
   /* Transitions */
   --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Semantic Mapping (Fallback) */
+  --primary: var(--gold);
+  --secondary: var(--gold-dark);
+  --foreground: var(--ivory);
+  --foreground-soft: var(--text-on-dark-soft);
+  --background: var(--charcoal);
+  --background-alt: var(--charcoal-soft);
+  --border: var(--border-dark);
+  --surface: var(--surface-dark);
 }
 
 /* === RESET & BASE === */

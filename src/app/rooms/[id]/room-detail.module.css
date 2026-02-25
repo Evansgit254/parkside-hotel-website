@@ -200,21 +200,21 @@
 .bookButton {
     width: 100%;
     padding: 1.25rem;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-    color: #fff;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    color: var(--charcoal);
     border: none;
     border-radius: 12px;
     font-weight: 800;
     font-size: 1rem;
     cursor: pointer;
     transition: transform 0.2s ease, opacity 0.2s ease;
-    box-shadow: 0 10px 20px rgba(0, 102, 51, 0.15);
+    box-shadow: 0 10px 20px rgba(201, 168, 76, 0.15);
 }
 
 .bookButton:hover {
     transform: translateY(-2px);
     opacity: 0.95;
-    background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+    background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
 }
 
 .conciergeInfo {
@@ -267,9 +267,10 @@
     border-radius: 32px;
     width: 100%;
     max-width: 550px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-light);
     position: relative;
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1);
+    color: var(--charcoal);
 }
 
 .closeModal {
@@ -278,7 +279,7 @@
     right: 1.5rem;
     background: none;
     border: none;
-    color: var(--foreground);
+    color: var(--charcoal);
     font-size: 2rem;
     cursor: pointer;
     opacity: 0.5;
@@ -298,7 +299,7 @@
 }
 
 .modalSubtitle {
-    color: var(--foreground-soft);
+    color: var(--text-secondary);
     margin-bottom: 2rem;
     font-weight: 600;
 }
@@ -319,7 +320,7 @@
     display: block;
     font-size: 0.8rem;
     font-weight: 700;
-    color: var(--foreground-soft);
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: 0.5rem;
@@ -328,10 +329,10 @@
 .input {
     width: 100%;
     padding: 1rem;
-    background: var(--background-alt);
-    border: 1px solid var(--border);
+    background: var(--ivory-deep);
+    border: 1px solid var(--border-light);
     border-radius: 12px;
-    color: var(--foreground);
+    color: var(--charcoal);
     font-weight: 500;
 }
 
@@ -343,15 +344,15 @@
 .submitButton {
     width: 100%;
     padding: 1.25rem;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-    color: #fff;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    color: var(--charcoal);
     border: none;
     border-radius: 12px;
     font-weight: 800;
     font-size: 1rem;
     cursor: pointer;
     margin-top: 1rem;
-    box-shadow: 0 10px 20px rgba(0, 102, 51, 0.15);
+    box-shadow: 0 10px 20px rgba(201, 168, 76, 0.15);
 }
 
 @media (max-width: 968px) {

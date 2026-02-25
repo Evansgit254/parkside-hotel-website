@@ -27,8 +27,11 @@ export default function PromotionsAdmin() {
         setLoading(false);
     }
 
+    const [error, setError] = useState<string | null>(null);
+
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        setError(null);
         const res = await addPromotion({
             code: newPromo.code,
             discount: parseFloat(newPromo.discount) || 0,
@@ -39,6 +42,8 @@ export default function PromotionsAdmin() {
             setPromotions([...promotions, res.promotion]);
             setNewPromo({ title: "", code: "", discount: "", expiry: "", description: "" });
             setIsAdding(false);
+        } else {
+            setError(res.error || "Failed to add promotion");
         }
     }
 
@@ -47,6 +52,8 @@ export default function PromotionsAdmin() {
         const res = await deletePromotion(id);
         if (res.success) {
             setPromotions(promotions.filter(p => p.id !== id));
+        } else {
+            alert(res.error || "Failed to delete promotion");
         }
     }
 
@@ -70,6 +77,11 @@ export default function PromotionsAdmin() {
             {isAdding && (
                 <div className={styles.formCard}>
                     <h3 className={styles.cardTitle}>Create New Campaign</h3>
+                    {error && (
+                        <div className={styles.error} style={{ marginBottom: '1.5rem', borderRadius: '8px' }}>
+                            {error}
+                        </div>
+                    )}
                     <form onSubmit={handleSubmit} className={styles.grid}>
                         <div className={styles.formGroup}>
                             <label className={styles.label}>Campaign Title</label>

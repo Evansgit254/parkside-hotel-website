@@ -4,14 +4,16 @@ export const dynamic = "force-dynamic";
 import { useState, useEffect } from "react";
 import { getSiteData, getGalleryItems, addGalleryItem, deleteGalleryItem, uploadImage, updateGalleryOrder } from "../../actions";
 import styles from "../admin.module.css";
-import { Plus, Trash2, Image as ImageIcon, Video, Upload, Grid, List, Save, X, ExternalLink, Move } from "lucide-react";
+import { Plus, Trash2, Image as ImageIcon, Video, Upload, Grid, List, Save, X, ExternalLink, Move, Loader2 } from "lucide-react";
+import { GalleryItem } from "@prisma/client";
+
+import MediaUpload from "../components/MediaUpload";
 
 export default function GalleryAdmin() {
-    const [items, setItems] = useState<any[]>([]);
+    const [items, setItems] = useState<GalleryItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [isAdding, setIsAdding] = useState(false);
     const [newItem, setNewItem] = useState({ url: "", type: "image", title: "" });
-    const [isUploading, setIsUploading] = useState(false);
     const [activeTab, setActiveTab] = useState<"image" | "video">("image");
 
     useEffect(() => {
@@ -19,37 +21,28 @@ export default function GalleryAdmin() {
     }, []);
 
     const loadItems = async () => {
-        // First try to get from dedicated GalleryItem table
         const galleryItems = await getGalleryItems();
-        if (galleryItems && galleryItems.length > 0) {
+        if (galleryItems) {
             setItems(galleryItems);
-        } else {
-            // Fallback: check site data if we haven't migrated yet
-            const data = await getSiteData();
-            if (data && data.galleryVideos) {
-                // This is a temporary measure during transition
-                setItems(data.galleryVideos.map((v: any, i: number) => ({
-                    id: `legacy-${i}`,
-                    url: v.url,
-                    type: "video",
-                    title: v.title,
-                    order: i
-                })));
-            }
         }
         setLoading(false);
     };
+
+    const [error, setError] = useState<string | null>(null);
 
     const handleAdd = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newItem.url) return;
 
         setLoading(true);
+        setError(null);
         const res = await addGalleryItem(newItem);
         if (res.success) {
             await loadItems();
             setIsAdding(false);
             setNewItem({ url: "", type: "image", title: "" });
+        } else {
+            setError(res.error || "Failed to add item to the gallery.");
         }
         setLoading(false);
     };
@@ -59,93 +52,80 @@ export default function GalleryAdmin() {
         const res = await deleteGalleryItem(id);
         if (res.success) {
             setItems(items.filter(item => item.id !== id));
-        }
-    };
-
-    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        setIsUploading(true);
-        try {
-            const formData = new FormData();
-            formData.append("file", file);
-            const { url } = await uploadImage(formData);
-            setNewItem({ ...newItem, url, type: "image" });
-        } catch (error) {
-            console.error("Upload failed", error);
-        } finally {
-            setIsUploading(false);
+        } else {
+            alert(res.error || "Failed to delete item.");
         }
     };
 
     const filteredItems = items.filter(item => item.type === activeTab);
 
-    if (loading && items.length === 0) return <div className={styles.loading}>Opening Vault...</div>;
+    if (loading && items.length === 0) return (
+        <div className={styles.loadingWrapper}>
+            <Loader2 className={styles.spinner} size={40} />
+            <p>Accessing Royal Vault...</p>
+        </div>
+    );
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>
+            <div className={styles.sectionHeader}>
                 <div className={styles.sectionTitleGroup}>
-                    <span className={styles.sectionEyebrow}>Visual Collection</span>
-                    <h1 className={styles.sectionTitle}>Gallery Management</h1>
-                    <p className={styles.sectionSubtitle}>Manage the visual storytelling assets across the estate.</p>
+                    <span className={styles.sectionEyebrow}>Estate Visuals</span>
+                    <h1 className={styles.sectionTitle}>Gallery Collection</h1>
+                    <p className={styles.sectionSubtitle}>Manage the luxury storytelling assets of Parkside Villa.</p>
                 </div>
                 <button className={styles.addButton} onClick={() => setIsAdding(true)}>
-                    <Plus size={16} /> Add Media
+                    <Plus size={16} /> Curate Asset
                 </button>
             </div>
 
-            <div className={styles.tabsContainer}>
+            <div className={styles.mediaTabsWrapper}>
                 <button
-                    className={`${styles.tab} ${activeTab === 'image' ? styles.tabActive : ''}`}
+                    className={`${styles.mediaTab} ${activeTab === 'image' ? styles.mediaTabActive : ''}`}
                     onClick={() => setActiveTab('image')}
                 >
                     <ImageIcon size={16} /> Photography
                 </button>
                 <button
-                    className={`${styles.tab} ${activeTab === 'video' ? styles.tabActive : ''}`}
+                    className={`${styles.mediaTab} ${activeTab === 'video' ? styles.mediaTabActive : ''}`}
                     onClick={() => setActiveTab('video')}
                 >
                     <Video size={16} /> Cinematography
                 </button>
             </div>
 
-            <div className={styles.galleryGrid}>
+            <div className={styles.luxuryGrid}>
                 {filteredItems.map((item) => (
-                    <div key={item.id} className={styles.mediaCard}>
-                        {item.type === 'image' ? (
-                            <div className={styles.mediaPreview}>
+                    <div key={item.id} className={styles.luxuryMediaCard}>
+                        <div className={styles.mediaPreview}>
+                            {item.type === 'image' ? (
                                 <img src={item.url} alt="" />
-                            </div>
-                        ) : (
-                            <div className={styles.mediaPreview}>
-                                <div className={styles.videoOverlay}>
-                                    <Video size={32} />
-                                </div>
-                                <img src={`https://img.youtube.com/vi/${item.url.split('v=')[1] || item.url.split('/').pop()}/0.jpg`} alt="" />
-                            </div>
-                        )}
-                        <div className={styles.mediaInfo}>
-                            <div className={styles.mediaTitle}>{item.title || "Untitled Media"}</div>
-                            <div className={styles.mediaUrl}>{item.url}</div>
-                            <div className={styles.mediaActions}>
-                                <button className={styles.deleteBtn} onClick={() => handleDelete(item.id)}>
+                            ) : (
+                                <>
+                                    <div className={styles.videoPlayOverlay}><Video size={24} /></div>
+                                    <img src={`https://img.youtube.com/vi/${item.url.split('v=')[1] || item.url.split('/').pop()}/0.jpg`} alt="" />
+                                </>
+                            )}
+                            <div className={styles.mediaMetaOverlay}>
+                                <button className={styles.mediaDeleteBtn} onClick={() => handleDelete(item.id)}>
                                     <Trash2 size={14} />
                                 </button>
-                                <a href={item.url} target="_blank" className={styles.externalBtn}>
-                                    <ExternalLink size={14} />
-                                </a>
                             </div>
+                        </div>
+                        <div className={styles.luxuryMediaInfo}>
+                            <h4 className={styles.luxuryMediaTitle}>{item.title || "Untitled Masterpiece"}</h4>
+                            <p className={styles.luxuryMediaUrl}>{item.url}</p>
                         </div>
                     </div>
                 ))}
 
                 {filteredItems.length === 0 && (
-                    <div className={styles.emptyState}>
-                        <ImageIcon size={48} className={styles.emptyIcon} />
-                        <h3>No Media Found</h3>
-                        <p>Begin curated your visual collection by adding high-resolution content.</p>
+                    <div className={styles.emptyGalleryState}>
+                        <div className={styles.emptyIconCircle}>
+                            <ImageIcon size={32} />
+                        </div>
+                        <h3>The Gallery is Empty</h3>
+                        <p>No curated {activeTab}s have been added to this collection yet.</p>
                     </div>
                 )}
             </div>
@@ -155,66 +135,60 @@ export default function GalleryAdmin() {
                     <div className={styles.modalContent}>
                         <div className={styles.modalHeader}>
                             <div>
-                                <h3 className={styles.modalTitle}>Add Curated Media</h3>
-                                <p className={styles.modalSub}>Incorporate new visual elements into your gallery.</p>
+                                <h3 className={styles.modalTitle}>Curate New Asset</h3>
+                                <p className={styles.modalSub}>Integrate professional imagery or cinematography into the estate gallery.</p>
                             </div>
-                            <button onClick={() => setIsAdding(false)} className={styles.closeBtn}><X size={20} /></button>
+                            <button onClick={() => setIsAdding(false)} className={styles.modalClose}><X size={20} /></button>
                         </div>
-                        <form onSubmit={handleAdd} className={styles.modalForm}>
+                        {error && (
+                            <div className={styles.error} style={{ margin: '1rem 2rem 0', borderRadius: '8px' }}>
+                                {error}
+                            </div>
+                        )}
+                        <form onSubmit={handleAdd} className={styles.modalBody}>
                             <div className={styles.formGrid}>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Media Type</label>
-                                    <div className={styles.typeSelector}>
+                                <div className={styles.formSection}>
+                                    <label className={styles.label}>Resource Title</label>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        placeholder="e.g. Presidential Suite - Night View"
+                                        value={newItem.title}
+                                        onChange={e => setNewItem(prev => ({ ...prev, title: e.target.value }))}
+                                    />
+                                </div>
+
+                                <MediaUpload
+                                    label="Visual Asset Source"
+                                    value={newItem.url}
+                                    onChange={(url) => setNewItem(prev => ({ ...prev, url }))}
+                                    placeholder={newItem.type === 'image' ? "https://..." : "https://youtube.com/watch?v=..."}
+                                />
+
+                                <div className={styles.formSection}>
+                                    <label className={styles.label}>Resource Environment</label>
+                                    <div className={styles.compactTypeSelector}>
                                         <button
                                             type="button"
                                             className={`${styles.typeBtn} ${newItem.type === 'image' ? styles.typeBtnActive : ''}`}
                                             onClick={() => setNewItem({ ...newItem, type: 'image' })}
                                         >
-                                            <ImageIcon size={14} /> Image
+                                            <ImageIcon size={14} /> Photography
                                         </button>
                                         <button
                                             type="button"
                                             className={`${styles.typeBtn} ${newItem.type === 'video' ? styles.typeBtnActive : ''}`}
                                             onClick={() => setNewItem({ ...newItem, type: 'video' })}
                                         >
-                                            <Video size={14} /> Video
+                                            <Video size={14} /> Cinematography
                                         </button>
-                                    </div>
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Resource Title</label>
-                                    <input
-                                        type="text"
-                                        className={styles.input}
-                                        placeholder="e.g. Sunset over the Infinity Pool"
-                                        value={newItem.title}
-                                        onChange={e => setNewItem({ ...newItem, title: e.target.value })}
-                                    />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>{newItem.type === 'image' ? 'Image Resource' : 'Video URL (YouTube/Vimeo)'}</label>
-                                    <div className={styles.inputWithAction}>
-                                        <input
-                                            type="text"
-                                            required
-                                            className={styles.input}
-                                            placeholder={newItem.type === 'image' ? "https://..." : "https://youtube.com/watch?v=..."}
-                                            value={newItem.url}
-                                            onChange={e => setNewItem({ ...newItem, url: e.target.value })}
-                                        />
-                                        {newItem.type === 'image' && (
-                                            <label className={styles.uploadMini}>
-                                                <Upload size={14} />
-                                                <input type="file" hidden onChange={handleFileUpload} accept="image/*" />
-                                            </label>
-                                        )}
                                     </div>
                                 </div>
                             </div>
                             <div className={styles.modalFooter}>
-                                <button type="button" onClick={() => setIsAdding(false)} className={styles.secondaryBtn}>Cancel</button>
-                                <button type="submit" className={styles.saveButton} disabled={loading}>
-                                    <Save size={16} /> {loading ? "Adding..." : "Add to Gallery"}
+                                <button type="button" onClick={() => setIsAdding(false)} className={styles.secondaryBtn}>Back</button>
+                                <button type="submit" className={styles.saveButton} disabled={loading || !newItem.url}>
+                                    <Save size={16} /> {loading ? "Adding..." : "Add to Collection"}
                                 </button>
                             </div>
                         </form>

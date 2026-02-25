@@ -21,15 +21,23 @@ export default function AdminLeads() {
     useEffect(() => { fetchLeads(); }, []);
 
     const handleStatusChange = async (id: number, status: string) => {
-        await updateLeadStatus(id, status);
-        await fetchLeads();
+        const res = await updateLeadStatus(id, status);
+        if (res.success) {
+            await fetchLeads();
+        } else {
+            alert(res.error || "Failed to update status");
+        }
     };
 
     const handleDelete = async (id: number) => {
         setIsDeleting(true);
-        await deleteLead(id);
-        setConfirmDeleteId(null);
-        await fetchLeads();
+        const res = await deleteLead(id);
+        if (res.success) {
+            setConfirmDeleteId(null);
+            await fetchLeads();
+        } else {
+            alert(res.error || "Failed to delete enquiry");
+        }
         setIsDeleting(false);
     };
 

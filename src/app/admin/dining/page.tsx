@@ -38,35 +38,50 @@ export default function AdminDining() {
         fetchMenu();
     }, []);
 
+    const [error, setError] = useState<string | null>(null);
+
     // Category Handlers
     const handleAddCategory = () => {
         setCategoryForm({ id: "NEW", name: "" });
+        setError(null);
         setIsCategoryModalOpen(true);
     };
 
     const handleEditCategory = (category: any) => {
         setCategoryForm({ id: category.id, name: category.name });
+        setError(null);
         setIsCategoryModalOpen(true);
     };
 
     const handleSaveCategory = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
+        setError(null);
+        let res;
         if (categoryForm.id === "NEW") {
-            await createDiningCategory({ name: categoryForm.name, items: [] });
+            res = await createDiningCategory({ name: categoryForm.name, items: [] });
         } else {
             const category = menu.find(c => c.id === categoryForm.id);
-            await updateDiningCategory(categoryForm.id, { ...category, name: categoryForm.name });
+            res = await updateDiningCategory(categoryForm.id, { ...category, name: categoryForm.name });
         }
-        await fetchMenu();
-        setIsCategoryModalOpen(false);
+
+        if (res.success) {
+            await fetchMenu();
+            setIsCategoryModalOpen(false);
+        } else {
+            setError(res.error || "Failed to save category.");
+        }
         setIsSaving(false);
     };
 
     const handleDeleteCategory = async (categoryId: string) => {
         if (confirm("Are you sure you want to delete this category and all its items?")) {
-            await deleteDiningCategory(categoryId);
-            await fetchMenu();
+            const res = await deleteDiningCategory(categoryId);
+            if (res.success) {
+                await fetchMenu();
+            } else {
+                alert(res.error || "Failed to delete category.");
+            }
         }
     };
 
@@ -86,6 +101,7 @@ export default function AdminDining() {
     const handleSaveItem = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
+        setError(null);
         const category = menu.find(c => c.id === itemFormState.categoryId);
         if (!category) return;
 
@@ -98,9 +114,13 @@ export default function AdminDining() {
             updatedItems[itemFormState.itemIdx as number] = newItem;
         }
 
-        await updateDiningCategory(itemFormState.categoryId, { ...category, items: updatedItems });
-        await fetchMenu();
-        setIsItemModalOpen(false);
+        const res = await updateDiningCategory(itemFormState.categoryId, { ...category, items: updatedItems });
+        if (res.success) {
+            await fetchMenu();
+            setIsItemModalOpen(false);
+        } else {
+            setError(res.error || "Failed to save menu item.");
+        }
         setIsSaving(false);
     };
 
@@ -108,8 +128,12 @@ export default function AdminDining() {
         if (confirm("Are you sure you want to delete this item?")) {
             const category = menu.find(c => c.id === categoryId);
             const updatedItems = category.items.filter((_: any, idx: number) => idx !== itemIdx);
-            await updateDiningCategory(categoryId, { ...category, items: updatedItems });
-            await fetchMenu();
+            const res = await updateDiningCategory(categoryId, { ...category, items: updatedItems });
+            if (res.success) {
+                await fetchMenu();
+            } else {
+                alert(res.error || "Failed to delete item.");
+            }
         }
     };
 
@@ -181,6 +205,7 @@ export default function AdminDining() {
                 title={categoryForm.id === "NEW" ? "Add Category" : "Edit Category"}
                 onSubmit={handleSaveCategory}
                 loading={isSaving}
+                error={error}
             >
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Category Name</label>
@@ -201,6 +226,7 @@ export default function AdminDining() {
                 title={itemFormState.itemIdx === "NEW" ? "Add New Dish" : `Edit ${itemFormState.name}`}
                 onSubmit={handleSaveItem}
                 loading={isSaving}
+                error={error}
             >
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Dish Name</label>
