@@ -41,7 +41,7 @@ export async function getSiteData() {
         subscribers,
         promotions,
         users,
-        galleryVideos
+        galleryItems
     ] = await Promise.all([
         prisma.heroImage.findMany({ orderBy: { order: "asc" } }),
         prisma.room.findMany({ orderBy: { createdAt: "asc" } }),
@@ -54,13 +54,13 @@ export async function getSiteData() {
         prisma.subscriber.findMany(),
         prisma.promotion.findMany({ orderBy: { createdAt: "desc" } }),
         prisma.user.findMany(),
-        Promise.resolve([]) // GalleryVideos stored in Facility/json for now
+        prisma.galleryItem.findMany({ orderBy: { order: "asc" } })
     ]);
 
     // Map DB rows to the shape the UI already expects
     return {
-        heroImages: heroImages.map((h) => h.url),
-        rooms: rooms.map((r) => ({
+        heroImages: heroImages.map((h: any) => h.url),
+        rooms: rooms.map((r: any) => ({
             id: r.slug,
             name: r.name,
             desc: r.desc,
@@ -74,15 +74,16 @@ export async function getSiteData() {
         menuCategories,
         contactInfo: contactInfoRow ?? {},
         blogPosts,
-        leads: leads.map((l) => ({
+        leads: leads.map((l: any) => ({
             ...l,
             id: l.id,
             room: l.roomSlug ?? "",
         })),
-        subscribers: subscribers.map((s) => s.email),
+        subscribers: subscribers.map((s: any) => s.email),
         promotions,
-        users: users.map(({ password: _, ...u }) => u),
-        galleryVideos,
+        users: users.map(({ password: _, ...u }: any) => u),
+        galleryItems: galleryItems,
+        galleryVideos: galleryItems.filter((i: any) => i.type === "video"),
     };
 }
 
@@ -495,6 +496,76 @@ export async function getUserBookings(userId: string) {
         where: { email: user.email },
         orderBy: { createdAt: "desc" },
     });
+}
+
+// ─────────────────────────────────────────────
+// BLOG POSTS
+// ─────────────────────────────────────────────
+
+export async function createBlogPost(post: any) {
+    const newPost = await prisma.blogPost.create({
+        data: {
+            id: post.id || post.title.toLowerCase().replace(/\s+/g, "-"),
+            title: post.title,
+            excerpt: post.excerpt,
+            content: post.content,
+            date: post.date || new Date().toISOString().split("T")[0],
+            author: post.author || "Parkside Villa",
+            category: post.category,
+            image: post.image,
+        },
+    });
+    revalidateAll();
+    return { success: true, post: newPost };
+}
+
+export async function updateBlogPost(id: string, post: any) {
+    await prisma.blogPost.update({
+        where: { id },
+        data: post,
+    });
+    revalidateAll();
+    return { success: true };
+}
+
+export async function deleteBlogPost(id: string) {
+    await prisma.blogPost.delete({ where: { id } });
+    revalidateAll();
+    return { success: true };
+}
+
+// ─────────────────────────────────────────────
+// GALLERY
+// ─────────────────────────────────────────────
+
+export async function getGalleryItems() {
+    return prisma.galleryItem.findMany({ orderBy: { order: "asc" } });
+}
+
+export async function addGalleryItem(item: { url: string; type: string; title?: string }) {
+    const count = await prisma.galleryItem.count();
+    const newItem = await prisma.galleryItem.create({
+        data: { ...item, order: count },
+    });
+    revalidateAll();
+    return { success: true, item: newItem };
+}
+
+export async function deleteGalleryItem(id: string) {
+    await prisma.galleryItem.delete({ where: { id } });
+    revalidateAll();
+    return { success: true };
+}
+
+export async function updateGalleryOrder(items: { id: string; order: number }[]) {
+    for (const item of items) {
+        await prisma.galleryItem.update({
+            where: { id: item.id },
+            data: { order: item.order },
+        });
+    }
+    revalidateAll();
+    return { success: true };
 }
 
 // Legacy compat — some admin pages still call updateSiteData directly for bulk ops

@@ -38,8 +38,21 @@ export default function GalleryPage() {
                 });
             }
 
-            // Extract from Videos
-            if (data.galleryVideos) {
+            // Extract from dedicated Gallery table
+            if (data.galleryItems) {
+                data.galleryItems.forEach((item: any) => {
+                    allImages.push({
+                        url: item.url,
+                        category: item.type === 'video' ? "Videos" : "Guest Gallery",
+                        caption: item.title,
+                        type: item.type,
+                        thumbnail: item.type === 'video' ? `https://img.youtube.com/vi/${item.url.split('v=')[1] || item.url.split('/').pop()}/0.jpg` : undefined
+                    });
+                });
+            }
+
+            // Extract from Videos (Legacy/Backwards compatibility)
+            if (data.galleryVideos && (!data.galleryItems || data.galleryItems.length === 0)) {
                 data.galleryVideos.forEach((vid: any) => {
                     allImages.push({
                         url: vid.url,
@@ -56,7 +69,7 @@ export default function GalleryPage() {
         });
     }, []);
 
-    const categories = ["All", "Property", "Accommodation", "Facilities", "Videos"];
+    const categories = ["All", "Property", "Accommodation", "Facilities", "Videos", "Guest Gallery"];
 
     const filteredMedia = activeFilter === "All"
         ? media

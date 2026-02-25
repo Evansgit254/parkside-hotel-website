@@ -13,7 +13,9 @@ import {
     Star,
     Waves,
     ChevronRight,
-    Tag
+    Tag,
+    Edit3,
+    Image as ImageIcon
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -56,6 +58,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: "Facilities", href: "/admin/facilities", icon: Waves },
         { name: "Enquiries & Reservations", href: "/admin/leads", icon: MessageSquare },
         { name: "Promotions & Offers", href: "/admin/promotions", icon: Tag },
+        { name: "Blog Posts", href: "/admin/blog", icon: Edit3 },
+        { name: "Gallery", href: "/admin/gallery", icon: ImageIcon },
         { name: "Testimonials", href: "/admin/testimonials", icon: Star },
         { name: "Settings", href: "/admin/settings", icon: Settings },
     ];

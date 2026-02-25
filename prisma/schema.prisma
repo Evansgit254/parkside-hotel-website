@@ -90,6 +90,14 @@ model HeroImage {
   order Int    @default(0)
 }
 
+model GalleryItem {
+  id    String @id @default(cuid())
+  url   String
+  type  String // "image" or "video"
+  title String?
+  order Int    @default(0)
+}
+
 model Promotion {
   id        String    @id @default(cuid())
   code      String    @unique
