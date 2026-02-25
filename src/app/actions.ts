@@ -584,11 +584,12 @@ export async function deletePromotion(id: string) {
 }
 
 // ─────────────────────────────────────────────
-// UPLOAD (unchanged — local FS / blob storage for files)
+// UPLOAD (Cloudinary Integration)
 // ─────────────────────────────────────────────
 
-import fs from "fs/promises";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
+
+// Cloudinary configures itself automatically if CLOUDINARY_URL is present in the environment variables.
 
 export async function uploadImage(formData: FormData) {
     const file = formData.get("file") as File;
@@ -596,17 +597,21 @@ export async function uploadImage(formData: FormData) {
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const filename = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
 
-    try {
-        await fs.access(uploadDir);
-    } catch {
-        await fs.mkdir(uploadDir, { recursive: true });
-    }
-
-    await fs.writeFile(path.join(uploadDir, filename), buffer);
-    return { url: `/uploads/${filename}` };
+    return new Promise<{ url: string }>((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+            { folder: "parkside_villa" },
+            (error, result) => {
+                if (error) {
+                    console.error("Cloudinary upload error:", error);
+                    return reject(new Error("Image upload failed"));
+                }
+                if (!result) return reject(new Error("Upload failed, no result"));
+                resolve({ url: result.secure_url });
+            }
+        );
+        uploadStream.end(buffer);
+    });
 }
 
 // ─────────────────────────────────────────────
