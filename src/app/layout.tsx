@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import ClientBranding from "./components/ClientBranding";
+import { CurrencyProvider } from "./context/CurrencyContext";
+import LiveChatWrapper from "./components/LiveChatWrapper";
+import Script from "next/script";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -43,9 +46,40 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
-        <ClientBranding>
-          {children}
-        </ClientBranding>
+        <CurrencyProvider>
+          <ClientBranding>
+            {children}
+          </ClientBranding>
+          <LiveChatWrapper />
+        </CurrencyProvider>
+
+        {/* Global Google Translate Scripts */}
+        <Script
+          src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+          strategy="afterInteractive"
+        />
+        <Script id="google-translate-config" strategy="afterInteractive">
+          {`
+            function googleTranslateElementInit() {
+              if (typeof google !== 'undefined' && google.translate) {
+                new google.translate.TranslateElement({
+                  pageLanguage: 'en',
+                  layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                  autoDisplay: false
+                }, 'google_translate_element');
+                
+                // Also initialize the admin one if it exists
+                if (document.getElementById('google_translate_admin')) {
+                  new google.translate.TranslateElement({
+                    pageLanguage: 'en',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                    autoDisplay: false
+                  }, 'google_translate_admin');
+                }
+              }
+            }
+          `}
+        </Script>
       </body>
     </html>
   );

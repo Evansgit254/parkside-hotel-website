@@ -4,7 +4,8 @@ import { rooms as initialRooms, facilities as initialFacilities, testimonials as
 import {
   Hotel, Users, Utensils, Waves, Wine,
   Phone, Mail, MessageSquare, Instagram, Facebook, Linkedin,
-  Calendar, MapPin, ChevronRight, ChevronLeft, ArrowUpRight
+  Calendar, MapPin, ChevronRight, ChevronLeft, ArrowUpRight,
+  CreditCard, Smartphone, Check, Loader2, Shield
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
@@ -15,6 +16,8 @@ import { getSiteData, addLead } from "./actions";
 import { useRouter } from "next/navigation";
 import Magnetic from "./components/Magnetic";
 import Schema from "./components/Schema";
+import { useCurrency } from "./context/CurrencyContext";
+import ReviewForm from "./components/ReviewForm";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
@@ -27,6 +30,7 @@ const stagger: Variants = {
 
 export default function Home() {
   const router = useRouter();
+  const { formatPrice } = useCurrency();
   const [siteData, setSiteData] = useState<any>({
     rooms: initialRooms,
     facilities: initialFacilities,
@@ -54,8 +58,31 @@ export default function Home() {
   const [bookingData, setBookingData] = useState({
     name: "", email: "", phone: "",
     checkIn: "", checkOut: "", guests: "2 Adults",
-    roomType: "Any Room"
+    roomType: "Any Room", maxPrice: 400,
+    paymentMethod: "", mpesaPhone: ""
   });
+
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+
+  const [paymentStep, setPaymentStep] = useState<"method" | "mpesa" | "card" | "success" | null>(null);
+  const [mpesaTimer, setMpesaTimer] = useState(0);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (mpesaTimer > 0) {
+      interval = setInterval(() => {
+        setMpesaTimer(prev => prev - 1);
+      }, 1000);
+    } else if (mpesaTimer === 0 && paymentStep === "mpesa") {
+      setPaymentStep("success");
+      setBookingStatus("Payment Successful!");
+      setTimeout(() => {
+        setBookingStatus(""); setIsBookingModalOpen(false); setBookingStep(1); setPaymentStep(null);
+        setBookingData({ name: "", email: "", phone: "", checkIn: "", checkOut: "", guests: "2 Adults", roomType: "Any Room", maxPrice: 400, paymentMethod: "", mpesaPhone: "" });
+      }, 3000);
+    }
+    return () => clearInterval(interval);
+  }, [mpesaTimer, paymentStep]);
 
   useEffect(() => {
     const stored = localStorage.getItem("recentRooms");
@@ -98,7 +125,7 @@ export default function Home() {
             <Image
               src={heroImages[currentSlide] || initialHeroImages[0]}
               alt="Parkside Villa Kitui"
-              fill priority
+              fill priority quality={90}
               className={styles.imageReveal}
               style={{ objectFit: "cover" }}
             />
@@ -190,18 +217,20 @@ export default function Home() {
               <option>2 Adults, 1 Child</option>
             </select>
           </div>
-          <div className={styles.bookingField}>
-            <span className={styles.bookingLabel}>Room Type</span>
-            <select
-              className={styles.bookingInput}
-              value={bookingData.roomType}
-              onChange={(e) => setBookingData({ ...bookingData, roomType: e.target.value })}
-            >
-              <option>Any Room</option>
-              <option>Executive Suite</option>
-              <option>Deluxe Garden Room</option>
-              <option>Superior Twin</option>
-            </select>
+          <div className={`${styles.bookingField} ${styles.priceRangeContainer}`}>
+            <div className={styles.priceRangeHeader}>
+              <span>Max Price</span>
+              <span>{formatPrice(bookingData.maxPrice)}</span>
+            </div>
+            <input
+              type="range"
+              min="50"
+              max="500"
+              step="10"
+              className={styles.rangeSlider}
+              value={bookingData.maxPrice}
+              onChange={(e) => setBookingData({ ...bookingData, maxPrice: parseInt(e.target.value) })}
+            />
           </div>
           <button className={styles.bookingSubmit} onClick={handleBookingSubmit}>
             Check Availability
@@ -237,39 +266,47 @@ export default function Home() {
         </div>
 
         <div className={styles.roomGrid}>
-          {rooms.slice(0, 4).map((room: any, idx: number) => (
-            <motion.div
-              key={room.id}
-              className={styles.roomCard}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.8, delay: idx * 0.1 }}
-              onClick={() => router.push(`/rooms/${room.id}`)}
-            >
-              <Image
-                src={room.image} alt={room.name}
-                fill sizes="(max-width: 768px) 100vw, 50vw"
-                className={styles.roomImage}
-                style={{ objectFit: "cover" }}
-              />
-              {room.tag && <span className={styles.roomTag}>{room.tag}</span>}
-              <div className={styles.roomInfo}>
-                <h3 className={styles.roomType}>{room.name}</h3>
-                <p className={styles.roomDesc}>{room.desc}</p>
-                <div className={styles.roomPrice}>
-                  <span className={styles.roomPriceValue}>{room.price} <small style={{ fontSize: '0.7em', opacity: 0.6, fontFamily: 'var(--font-sans)', letterSpacing: '0.1em' }}>/ NIGHT</small></span>
-                  <button
-                    className={styles.buttonPrimary}
-                    style={{ padding: '0.6rem 1.25rem', fontSize: '0.5625rem' }}
-                    onClick={(e) => { e.stopPropagation(); setSelectedRoom(room); setIsBookingModalOpen(true); }}
-                  >
-                    <span>Reserve</span>
-                  </button>
+          {rooms
+            .filter((room: any) => {
+              const price = typeof room.price === 'string' ? parseFloat(room.price.replace(/[^0-9.]/g, '')) : room.price;
+              const matchesPrice = price <= bookingData.maxPrice;
+              const matchesType = bookingData.roomType === "Any Room" || room.name.toLowerCase().includes(bookingData.roomType.toLowerCase());
+              return matchesPrice && matchesType;
+            })
+            .slice(0, 4)
+            .map((room: any, idx: number) => (
+              <motion.div
+                key={room.id}
+                className={styles.roomCard}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.8, delay: idx * 0.1 }}
+                onClick={() => router.push(`/rooms/${room.id}`)}
+              >
+                <Image
+                  src={room.image} alt={room.name}
+                  fill sizes="(max-width: 768px) 100vw, 50vw"
+                  className={styles.roomImage}
+                  style={{ objectFit: "cover" }}
+                />
+                {room.tag && <span className={styles.roomTag}>{room.tag}</span>}
+                <div className={styles.roomInfo}>
+                  <h3 className={styles.roomType}>{room.name}</h3>
+                  <p className={styles.roomDesc}>{room.desc}</p>
+                  <div className={styles.roomPrice}>
+                    <span className={styles.roomPriceValue}>{formatPrice(room.price)} <small style={{ fontSize: '0.7em', opacity: 0.6, fontFamily: 'var(--font-sans)', letterSpacing: '0.1em' }}>/ NIGHT</small></span>
+                    <button
+                      className={styles.buttonPrimary}
+                      style={{ padding: '0.6rem 1.25rem', fontSize: '0.5625rem' }}
+                      onClick={(e) => { e.stopPropagation(); setSelectedRoom(room); setIsBookingModalOpen(true); }}
+                    >
+                      <span>Reserve</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
         </div>
       </section>
 
@@ -396,8 +433,40 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
+
+          <motion.div
+            className={styles.reviewCTA}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <button onClick={() => setIsReviewModalOpen(true)} className={styles.buttonSecondary}>
+              Write a Review
+            </button>
+          </motion.div>
         </div>
       </section>
+
+      {/* ── REVIEW MODAL ── */}
+      <AnimatePresence>
+        {isReviewModalOpen && (
+          <motion.div
+            className={styles.modalOverlay}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setIsReviewModalOpen(false)}
+          >
+            <motion.div
+              style={{ width: '100%', maxWidth: '600px', padding: '0 2rem' }}
+              onClick={e => e.stopPropagation()}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <ReviewForm onClose={() => setIsReviewModalOpen(false)} />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── RECENTLY VIEWED ── */}
       {recentRooms.length > 0 && (
@@ -417,7 +486,7 @@ export default function Home() {
                 </div>
                 <div className={styles.recentInfo}>
                   <span className={styles.recentName}>{r.name}</span>
-                  <span className={styles.recentPrice}>{r.price} / NIGHT</span>
+                  <span className={styles.recentPrice}>{formatPrice(r.price)} / NIGHT</span>
                 </div>
               </Link>
             ))}
@@ -578,30 +647,55 @@ export default function Home() {
               <div style={{ display: 'flex', gap: '4px', marginBottom: '2rem' }}>
                 <div style={{ flex: 1, height: '2px', background: bookingStep >= 1 ? 'var(--gold)' : 'var(--border-dark)' }} />
                 <div style={{ flex: 1, height: '2px', background: bookingStep >= 2 ? 'var(--gold)' : 'var(--border-dark)' }} />
+                <div style={{ flex: 1, height: '2px', background: bookingStep >= 3 ? 'var(--gold)' : 'var(--border-dark)' }} />
               </div>
 
               <span className={styles.badge} style={{ marginBottom: '1rem', display: 'flex' }}>
-                Step {bookingStep} of 2
+                Step {bookingStep} of 3
               </span>
               <h3 className={styles.modalTitle}>{selectedRoom.name}</h3>
-              <p className={styles.modalSubtitle}>{selectedRoom.price} · PER NIGHT</p>
+              <p className={styles.modalSubtitle}>{formatPrice(selectedRoom.price)} · PER NIGHT</p>
 
               <form
                 onSubmit={async (e) => {
                   e.preventDefault();
                   if (bookingStep === 1) { setBookingStep(2); return; }
-                  setBookingStatus("Processing...");
-                  await addLead({
-                    name: bookingData.name, email: bookingData.email,
-                    phone: bookingData.phone,
-                    date: `${bookingData.checkIn} to ${bookingData.checkOut}`,
-                    room: selectedRoom.name, guests: bookingData.guests,
-                  });
-                  setBookingStatus("Reservation Confirmed!");
-                  setTimeout(() => {
-                    setBookingStatus(""); setIsBookingModalOpen(false); setBookingStep(1);
-                    setBookingData({ name: "", email: "", phone: "", checkIn: "", checkOut: "", guests: "2 Adults", roomType: "Any Room" });
-                  }, 2500);
+                  if (bookingStep === 2) { setBookingStep(3); setPaymentStep("method"); return; }
+
+                  if (bookingStep === 3) {
+                    if (paymentStep === "method") {
+                      if (bookingData.paymentMethod === "mpesa") {
+                        setPaymentStep("mpesa");
+                        setMpesaTimer(10); // 10 second wait for STK push
+                        return;
+                      } else if (bookingData.paymentMethod === "card") {
+                        setPaymentStep("card");
+                        return;
+                      }
+                    }
+
+                    if (paymentStep === "card") {
+                      setBookingStatus("Processing Card...");
+                      await new Promise(r => setTimeout(r, 2000));
+                      setPaymentStep("success");
+                      setBookingStatus("Payment Successful!");
+                    }
+                  }
+
+                  if (paymentStep === "success" || !paymentStep) {
+                    setBookingStatus("Finalizing Booking...");
+                    await addLead({
+                      name: bookingData.name, email: bookingData.email,
+                      phone: bookingData.phone,
+                      date: `${bookingData.checkIn} to ${bookingData.checkOut}`,
+                      room: selectedRoom.name, guests: bookingData.guests,
+                    });
+                    setBookingStatus("Reservation Confirmed!");
+                    setTimeout(() => {
+                      setBookingStatus(""); setIsBookingModalOpen(false); setBookingStep(1); setPaymentStep(null);
+                      setBookingData({ name: "", email: "", phone: "", checkIn: "", checkOut: "", guests: "2 Adults", roomType: "Any Room", maxPrice: 400, paymentMethod: "", mpesaPhone: "" });
+                    }, 2500);
+                  }
                 }}
               >
                 <AnimatePresence mode="wait">
@@ -651,12 +745,118 @@ export default function Home() {
                       <div style={{ display: 'flex', gap: '1rem' }}>
                         <button type="button" onClick={() => setBookingStep(1)} className={styles.buttonSecondary}>Back</button>
                         <Magnetic>
-                          <button type="submit" disabled={!!bookingStatus} className={styles.buttonPrimary} style={{ flex: 2 }}>
-                            <span>{bookingStatus || "Confirm Reservation"}</span>
-                            {!bookingStatus && <ArrowUpRight size={14} />}
+                          <button type="submit" className={styles.buttonPrimary} style={{ flex: 2 }}>
+                            <span>Continue to Payment</span> <ArrowUpRight size={14} />
                           </button>
                         </Magnetic>
                       </div>
+                    </motion.div>
+                  )}
+
+                  {bookingStep === 3 && (
+                    <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                      {paymentStep === "method" && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                          <p className={styles.formLabel} style={{ marginBottom: '-0.5rem' }}>SELECT PAYMENT METHOD</p>
+                          <div
+                            onClick={() => setBookingData({ ...bookingData, paymentMethod: 'mpesa' })}
+                            className={`${styles.paymentOption} ${bookingData.paymentMethod === 'mpesa' ? styles.paymentOptionActive : ''}`}
+                          >
+                            <Smartphone size={20} />
+                            <div style={{ flex: 1 }}>
+                              <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>M-Pesa STK Push</p>
+                              <p style={{ fontSize: '0.625rem', opacity: 0.6 }}>Instant payment via your Safaricom line</p>
+                            </div>
+                            {bookingData.paymentMethod === 'mpesa' && <Check size={16} color="var(--gold)" />}
+                          </div>
+
+                          <div
+                            onClick={() => setBookingData({ ...bookingData, paymentMethod: 'card' })}
+                            className={`${styles.paymentOption} ${bookingData.paymentMethod === 'card' ? styles.paymentOptionActive : ''}`}
+                          >
+                            <CreditCard size={20} />
+                            <div style={{ flex: 1 }}>
+                              <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>Credit/Debit Card</p>
+                              <p style={{ fontSize: '0.625rem', opacity: 0.6 }}>Visa, Mastercard, & American Express</p>
+                            </div>
+                            {bookingData.paymentMethod === 'card' && <Check size={16} color="var(--gold)" />}
+                          </div>
+
+                          <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                            <button type="button" onClick={() => { setBookingStep(2); setPaymentStep(null); }} className={styles.buttonSecondary}>Back</button>
+                            <button type="submit" disabled={!bookingData.paymentMethod} className={styles.buttonPrimary} style={{ flex: 2 }}>
+                              <span>Proceed to Pay</span> <ArrowUpRight size={14} />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {paymentStep === "mpesa" && (
+                        <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+                          <div style={{ marginBottom: '1.5rem', position: 'relative', display: 'inline-block' }}>
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                              style={{ width: '64px', height: '64px', border: '2px solid rgba(201,168,76,0.2)', borderTop: '2px solid var(--gold)', borderRadius: '50%' }}
+                            />
+                            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', fontWeight: 600, color: 'var(--gold)' }}>
+                              {mpesaTimer}s
+                            </div>
+                          </div>
+                          <h4 style={{ fontWeight: 600, marginBottom: '0.5rem' }}>Requesting Payment...</h4>
+                          <p style={{ fontSize: '0.75rem', opacity: 0.7, maxWidth: '240px', margin: '0 auto' }}>
+                            An STK push has been sent to your phone. Please enter your M-Pesa PIN to complete.
+                          </p>
+                          <button type="button" onClick={() => setPaymentStep("method")} className={styles.buttonSecondary} style={{ marginTop: '2rem' }}>Cancel</button>
+                        </div>
+                      )}
+
+                      {paymentStep === "card" && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                          <div className={styles.formGroup}>
+                            <label className={styles.formLabel}>CARD NUMBER</label>
+                            <div style={{ position: 'relative' }}>
+                              <input type="text" placeholder="**** **** **** 4242" className={styles.input} required />
+                              <CreditCard size={14} style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }} />
+                            </div>
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                            <div className={styles.formGroup}>
+                              <label className={styles.formLabel}>EXPIRY</label>
+                              <input type="text" placeholder="MM/YY" className={styles.input} required />
+                            </div>
+                            <div className={styles.formGroup}>
+                              <label className={styles.formLabel}>CVV</label>
+                              <div style={{ position: 'relative' }}>
+                                <input type="password" placeholder="***" className={styles.input} required />
+                                <Shield size={14} style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }} />
+                              </div>
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                            <button type="button" onClick={() => setPaymentStep("method")} className={styles.buttonSecondary}>Back</button>
+                            <button type="submit" disabled={!!bookingStatus} className={styles.buttonPrimary} style={{ flex: 2 }}>
+                              <Loader2 size={14} style={{ display: bookingStatus ? 'inline-block' : 'none', marginRight: '0.5rem' }} className={styles.spin} />
+                              <span>{bookingStatus || `Pay ${formatPrice(selectedRoom.price)}`}</span>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {paymentStep === "success" && (
+                        <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+                          <motion.div
+                            initial={{ scale: 0 }} animate={{ scale: 1 }}
+                            style={{ width: '64px', height: '64px', background: 'rgba(201,168,76,0.1)', border: '1px solid var(--gold)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: 'var(--gold)' }}
+                          >
+                            <Check size={32} />
+                          </motion.div>
+                          <h4 style={{ fontWeight: 600, marginBottom: '0.5rem' }}>Payment Successful</h4>
+                          <p style={{ fontSize: '0.75rem', opacity: 0.7 }}>
+                            Your transaction has been processed securely. We are finalizing your reservation now.
+                          </p>
+                        </div>
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>

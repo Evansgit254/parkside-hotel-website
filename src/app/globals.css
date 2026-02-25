@@ -185,3 +185,56 @@ a {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--gold-dark);
 }
+
+/* === GOOGLE TRANSLATE OVERRIDES === */
+/* Hide the top translation banner and prevent body shift */
+.skiptranslate iframe.goog-te-banner-frame {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+#goog-gt-tt {
+  display: none !important;
+}
+
+/* Style the Google Translate dropdown to match the luxury theme */
+#google_translate_element select,
+.goog-te-combo {
+  background-color: rgba(28, 28, 26, 0.9) !important;
+  color: var(--gold) !important;
+  border: 1px solid var(--gold-border) !important;
+  border-radius: 4px !important;
+  padding: 0.5rem 1rem !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  outline: none !important;
+  transition: all 0.3s var(--ease-luxury) !important;
+}
+
+#google_translate_element select:hover,
+.goog-te-combo:hover {
+  background-color: var(--gold) !important;
+  color: var(--charcoal) !important;
+  border-color: var(--gold) !important;
+}
+
+/* Hide the Google logo and extra text */
+.goog-logo-link,
+.goog-te-gadget span {
+  display: none !important;
+}
+
+.goog-te-gadget {
+  color: transparent !important;
+  font-size: 0 !important;
+}
+
+.goog-te-gadget .goog-te-combo {
+  margin: 0 !important;
+}

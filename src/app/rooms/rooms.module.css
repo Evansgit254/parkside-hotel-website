@@ -1,0 +1,572 @@
+.pageWrapper {
+    background: var(--charcoal);
+    min-height: 100vh;
+    color: var(--ivory);
+    font-family: var(--font-body);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* HERO */
+.hero {
+    height: 50vh;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-image: url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=2070');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.heroOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+            rgba(15, 15, 14, 0.6) 0%,
+            rgba(15, 15, 14, 0.2) 25%,
+            transparent 50%,
+            rgba(15, 15, 14, 0.8) 100%);
+}
+
+.heroContent {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 800px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: var(--gold);
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+.title {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+}
+
+.subtitle {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--text-on-dark-soft);
+}
+
+/* FILTERS */
+.filterSection {
+    background: var(--surface-dark);
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--border-dark);
+    position: sticky;
+    top: 64px;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.filterBar {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.filterGroup {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.filterLabel {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.filterInput,
+.filterSelect {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-dark);
+    padding: 0.875rem 1.25rem;
+    color: var(--ivory);
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.filterInput:focus,
+.filterSelect:focus {
+    border-color: var(--gold);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.filterSelect option {
+    background: var(--surface-dark);
+    color: var(--ivory);
+    padding: 10px;
+}
+
+.rangeInput {
+    width: 100%;
+    accent-color: var(--gold);
+    height: 4px;
+    background: var(--border-dark);
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+/* GRID */
+.gridSection {
+    padding: 6rem 0;
+}
+
+.roomGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 3rem;
+}
+
+.roomCard {
+    background: var(--surface-dark);
+    border: 1px solid var(--border-dark);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+.roomCard:hover {
+    border-color: var(--gold-border);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.imageWrapper {
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+}
+
+.roomImage {
+    object-fit: cover;
+    transition: transform 0.8s ease;
+}
+
+.roomCard:hover .roomImage {
+    transform: scale(1.05);
+}
+
+.roomTag {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 5;
+    background: var(--gold);
+    color: var(--charcoal);
+    padding: 0.35rem 1rem;
+    border-radius: 4px;
+    font-size: 0.625rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.imageOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(28, 28, 26, 0.8), transparent);
+}
+
+.roomContent {
+    padding: 2.5rem;
+}
+
+.roomHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.roomName {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+.priceInfo {
+    text-align: right;
+}
+
+.priceValue {
+    display: block;
+    color: var(--gold);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.perNight {
+    font-size: 0.65rem;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.roomDesc {
+    color: var(--text-on-dark-soft);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.amenitiesShort {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.amenity {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-on-dark-soft);
+}
+
+.cardActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detailsLink {
+    color: var(--ivory);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.detailsLink:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+}
+
+.bookBtn {
+    background: var(--gold);
+    color: var(--charcoal);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.bookBtn:hover {
+    background: var(--ivory);
+    transform: translateY(-2px);
+}
+
+/* MODAL */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.modalContent {
+    background: var(--surface-dark);
+    width: 100%;
+    max-width: 500px;
+    padding: 3rem;
+    border-radius: 20px;
+    border: 1px solid var(--border-dark);
+    position: relative;
+}
+
+.closeModal {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--text-on-dark-soft);
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.closeModal:hover {
+    color: var(--gold);
+}
+
+.progressContainer {
+    height: 2px;
+    background: var(--border-dark);
+    margin-bottom: 2rem;
+}
+
+.progressBar {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.4s ease;
+}
+
+.stepBadge {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+}
+
+.modalTitle {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.modalSubtitle {
+    font-size: 0.9rem;
+    color: var(--text-on-dark-soft);
+    margin-bottom: 2.5rem;
+}
+
+/* FORMS */
+.formGroup {
+    margin-bottom: 1.5rem;
+}
+
+.formLabel {
+    display: block;
+    font-size: 0.625rem;
+    color: var(--text-on-dark-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.75rem;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-dark);
+    padding: 1rem;
+    color: var(--ivory);
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.input:focus {
+    border-color: var(--gold);
+}
+
+.buttonPrimary {
+    width: 100%;
+    background: var(--gold);
+    color: var(--charcoal);
+    padding: 1.125rem;
+    border: none;
+    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.buttonSecondary {
+    flex: 1;
+    background: transparent;
+    color: var(--ivory);
+    padding: 1.125rem;
+    border: 1px solid var(--border-dark);
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+}
+
+.modalActions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* PAYMENT */
+.paymentMethodList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.paymentOption {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-dark);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.paymentOptionActive {
+    border-color: var(--gold);
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.paymentTitle {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.paymentDesc {
+    font-size: 0.625rem;
+    opacity: 0.6;
+}
+
+/* STATUS */
+.statusView {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.timerCircle {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(212, 175, 55, 0.2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+}
+
+.timerText {
+    position: absolute;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.successIcon {
+    width: 64px;
+    height: 64px;
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.statusTitle {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.statusDesc {
+    color: var(--text-on-dark-soft);
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+}
+
+/* HELPERS */
+.inputWithIcon {
+    position: relative;
+}
+
+.inputIcon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--gold);
+    background: var(--charcoal);
+}
+
+@media (max-width: 768px) {
+    .roomGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .modalContent {
+        padding: 2rem;
+    }
+}

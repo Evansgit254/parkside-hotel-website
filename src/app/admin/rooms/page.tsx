@@ -5,8 +5,10 @@ import styles from "../admin.module.css";
 import { getSiteData, updateRoom, createRoom, deleteRoom, uploadImage } from "../../actions";
 import { Edit2, Trash2, Plus, Upload, Image as ImageIcon, X } from "lucide-react";
 import AdminModal from "../../components/AdminModal";
+import { useCurrency } from "../../context/CurrencyContext";
 
 export default function AdminRooms() {
+    const { formatPrice } = useCurrency();
     const [rooms, setRooms] = useState<any[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editForm, setEditForm] = useState<any>({ id: "", name: "", desc: "", price: "", image: "", tag: "" });
@@ -119,7 +121,7 @@ export default function AdminRooms() {
                             )}
                         </div>
 
-                        <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.125rem', color: '#C9A84C', fontWeight: 400 }}>{room.price}</div>
+                        <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.125rem', color: '#C9A84C', fontWeight: 400 }}>{formatPrice(room.price)}</div>
 
                         <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
                             <button onClick={() => handleEdit(room)} className={styles.actionBtn} title="Edit">

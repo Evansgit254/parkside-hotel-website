@@ -2,50 +2,64 @@
 
 import { useEffect, useState } from "react";
 import { getSiteData } from "../actions";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import styles from "./gallery.module.css";
 import Image from "next/image";
+import { Play } from "lucide-react";
 
 export default function GalleryPage() {
-    const [images, setImages] = useState<{ url: string; category: string; caption?: string }[]>([]);
+    const [media, setMedia] = useState<{ url: string; category: string; caption?: string; type: 'image' | 'video'; thumbnail?: string }[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("All");
 
     useEffect(() => {
         getSiteData().then(data => {
-            const allImages: { url: string; category: string; caption?: string }[] = [];
+            const allImages: any[] = [];
 
             // Extract from Hero
             if (data.heroImages) {
                 data.heroImages.forEach((img: string) =>
-                    allImages.push({ url: img, category: "Property", caption: "Parkside Villa Architecture" })
+                    allImages.push({ url: img, category: "Property", caption: "Parkside Villa Architecture", type: 'image' })
                 );
             }
 
             // Extract from Rooms
             if (data.rooms) {
                 data.rooms.forEach((room: any) => {
-                    if (room.image) allImages.push({ url: room.image, category: "Accommodation", caption: room.name });
+                    if (room.image) allImages.push({ url: room.image, category: "Accommodation", caption: room.name, type: 'image' });
                 });
             }
 
             // Extract from Facilities
             if (data.facilities) {
                 data.facilities.forEach((fac: any) => {
-                    if (fac.image) allImages.push({ url: fac.image, category: "Facilities", caption: fac.title });
+                    if (fac.image) allImages.push({ url: fac.image, category: "Facilities", caption: fac.title, type: 'image' });
                 });
             }
 
-            setImages(allImages);
+            // Extract from Videos
+            if (data.galleryVideos) {
+                data.galleryVideos.forEach((vid: any) => {
+                    allImages.push({
+                        url: vid.url,
+                        category: "Videos",
+                        caption: vid.title,
+                        type: 'video',
+                        thumbnail: vid.thumbnail
+                    });
+                });
+            }
+
+            setMedia(allImages);
             setLoading(false);
         });
     }, []);
 
-    const categories = ["All", "Property", "Accommodation", "Facilities"];
+    const categories = ["All", "Property", "Accommodation", "Facilities", "Videos"];
 
-    const filteredImages = activeFilter === "All"
-        ? images
-        : images.filter(img => img.category === activeFilter);
+    const filteredMedia = activeFilter === "All"
+        ? media
+        : media.filter(m => m.category === activeFilter);
 
     if (loading) return <div className={styles.loading}>Curating Gallery...</div>;
 
@@ -87,25 +101,40 @@ export default function GalleryPage() {
                     layout
                     className={styles.masonryGrid}
                 >
-                    {filteredImages.map((img, index) => (
-                        <motion.div
-                            layout
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            transition={{ duration: 0.5 }}
-                            key={index}
-                            className={styles.imageCard}
-                        >
-                            <div className={styles.imageWrapper}>
-                                <div className={styles.imageElement} style={{ backgroundImage: `url(${img.url})` }} />
-                                <div className={styles.overlay}>
-                                    {img.caption && <h3 className={styles.caption}>{img.caption}</h3>}
-                                    <span className={styles.catLabel}>{img.category}</span>
+                    <AnimatePresence>
+                        {filteredMedia.map((item, index) => (
+                            <motion.div
+                                layout
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.5 }}
+                                key={`${item.url}-${index}`}
+                                className={styles.imageCard}
+                                onClick={() => {
+                                    if (item.type === 'video') {
+                                        window.open(item.url, '_blank');
+                                    }
+                                }}
+                            >
+                                <div className={styles.imageWrapper}>
+                                    <div
+                                        className={styles.imageElement}
+                                        style={{ backgroundImage: `url(${item.type === 'video' ? item.thumbnail : item.url})` }}
+                                    />
+                                    {item.type === 'video' && (
+                                        <div className={styles.playOverlay}>
+                                            <Play fill="white" size={48} />
+                                        </div>
+                                    )}
+                                    <div className={styles.overlay}>
+                                        {item.caption && <h3 className={styles.caption}>{item.caption}</h3>}
+                                        <span className={styles.catLabel}>{item.category}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </motion.div>
-                    ))}
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
                 </motion.div>
             </section>
         </div>

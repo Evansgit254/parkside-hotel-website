@@ -12,7 +12,8 @@ import {
     Settings,
     Star,
     Waves,
-    ChevronRight
+    ChevronRight,
+    Tag
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -54,6 +55,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: "Dining", href: "/admin/dining", icon: Utensils },
         { name: "Facilities", href: "/admin/facilities", icon: Waves },
         { name: "Enquiries & Reservations", href: "/admin/leads", icon: MessageSquare },
+        { name: "Promotions & Offers", href: "/admin/promotions", icon: Tag },
         { name: "Testimonials", href: "/admin/testimonials", icon: Star },
         { name: "Settings", href: "/admin/settings", icon: Settings },
     ];
@@ -112,6 +114,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         <span className={styles.topBarBreadcrumb}>{currentPage}</span>
                     </div>
                     <div className={styles.topBarRight}>
+                        <div id="google_translate_admin" className={styles.adminTranslate}></div>
                         <span className={styles.topBarTime}>{currentTime}</span>
                     </div>
                 </div>

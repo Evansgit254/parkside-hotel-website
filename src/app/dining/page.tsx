@@ -10,6 +10,7 @@ import { getSiteData } from "../actions";
 import { ChevronLeft, Utensils, Salad, IceCream } from "lucide-react";
 import { useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { useCurrency } from "../context/CurrencyContext";
 
 interface MenuItem {
     name: string;
@@ -24,6 +25,7 @@ interface MenuCategory {
 }
 
 export default function Dining() {
+    const { formatPrice } = useCurrency();
     const [menuCategories, setMenuCategories] = useState<any[]>(initialMenu);
 
     useEffect(() => {
@@ -151,7 +153,7 @@ export default function Dining() {
                                         >
                                             <div className={styles.itemHeader}>
                                                 <span className={styles.itemName}>{item.name}</span>
-                                                <span className={styles.itemPrice}>{item.price}</span>
+                                                <span className={styles.itemPrice}>{formatPrice(item.price)}</span>
                                             </div>
                                             <p className={styles.itemDesc}>{item.desc}</p>
                                         </motion.div>

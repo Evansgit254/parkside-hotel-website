@@ -1,0 +1,148 @@
+.formCard {
+    background: var(--surface-dark);
+    border: 1px solid var(--border-dark);
+    padding: 3rem;
+    border-radius: 24px;
+    position: relative;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+}
+
+.closeBtn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--text-on-dark-soft);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.closeBtn:hover {
+    color: var(--gold);
+}
+
+.formHeader {
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.formTitle {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.formSubtitle {
+    color: var(--text-on-dark-soft);
+    font-size: 0.875rem;
+}
+
+.ratingGroup {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.stars {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 0.75rem;
+}
+
+.starBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.starBtn:hover {
+    transform: scale(1.2);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.formGroup {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.label {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.input {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-dark);
+    padding: 1rem;
+    color: var(--ivory);
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input:focus {
+    border-color: var(--gold);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.submitBtn {
+    width: 100%;
+    margin-top: 1rem;
+    background: var(--gold);
+    color: var(--charcoal);
+    border: none;
+    padding: 1.125rem;
+    border-radius: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.submitBtn:hover:not(:disabled) {
+    background: var(--ivory);
+    transform: translateY(-2px);
+}
+
+.submitBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.successState {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.successIcon {
+    width: 80px;
+    height: 80px;
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+}

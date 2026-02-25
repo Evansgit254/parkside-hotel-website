@@ -5,8 +5,10 @@ import styles from "../admin.module.css";
 import { getSiteData, updateDiningCategory, createDiningCategory, deleteDiningCategory } from "../../actions";
 import { Edit2, Trash2, Plus, Utensils, Coffee, Cake, LogOut } from "lucide-react";
 import AdminModal from "../../components/AdminModal";
+import { useCurrency } from "../../context/CurrencyContext";
 
 export default function AdminDining() {
+    const { formatPrice } = useCurrency();
     const [menu, setMenu] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
@@ -148,7 +150,7 @@ export default function AdminDining() {
                                             <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#fff' }}>{item.name}</div>
                                             <div style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.4)', marginTop: '0.25rem' }}>{item.desc}</div>
                                         </div>
-                                        <div style={{ fontWeight: 700, color: 'var(--gold)', fontSize: '1.1rem', textAlign: 'center' }}>{item.price}</div>
+                                        <div style={{ fontWeight: 700, color: 'var(--gold)', fontSize: '1.1rem', textAlign: 'center' }}>{formatPrice(item.price)}</div>
                                         <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
                                             <button onClick={() => handleEditItem(category.id, idx)} className={styles.actionBtn} title="Edit Item"><Edit2 size={16} /></button>
                                             <button onClick={() => handleDeleteItem(category.id, idx)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete Item"><Trash2 size={16} /></button>

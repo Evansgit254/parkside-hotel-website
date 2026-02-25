@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import styles from "../admin.module.css";
 import { getSiteData, updateTestimonial, deleteTestimonial, addTestimonial } from "../../actions";
-import { Edit2, Trash2, Plus, Star, Quote } from "lucide-react";
+import { Edit2, Trash2, Plus, Star, Quote, CheckCircle2 } from "lucide-react";
 import AdminModal from "../../components/AdminModal";
 
 export default function AdminTestimonials() {
@@ -70,12 +70,36 @@ export default function AdminTestimonials() {
 
             <div style={{ display: 'grid', gap: '2rem', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))' }}>
                 {testimonials.map((testi) => (
-                    <div key={testi.id} className={styles.card} style={{ display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
+                    <div key={testi.id} className={styles.card} style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        border: testi.status === 'Pending' ? '1px solid var(--gold)' : undefined
+                    }}>
+                        {testi.status === 'Pending' && (
+                            <div style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                background: 'var(--gold)',
+                                color: '#000',
+                                fontSize: '0.65rem',
+                                fontWeight: 800,
+                                textAlign: 'center',
+                                padding: '2px 0',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.1em'
+                            }}>
+                                Pending Approval
+                            </div>
+                        )}
                         <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', opacity: 0.05, color: '#fff' }}>
                             <Quote size={80} />
                         </div>
 
-                        <div style={{ display: 'flex', gap: '0.35rem', marginBottom: '1.5rem', color: 'var(--gold)' }}>
+                        <div style={{ display: 'flex', gap: '0.35rem', marginBottom: '1.5rem', color: 'var(--gold)', marginTop: testi.status === 'Pending' ? '1rem' : 0 }}>
                             {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
                         </div>
 
@@ -91,6 +115,20 @@ export default function AdminTestimonials() {
                                 <div style={{ fontSize: '0.8125rem', color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: '0.25rem' }}>{testi.title}</div>
                             </div>
                             <div style={{ display: 'flex', gap: '0.75rem' }}>
+                                {testi.status === 'Pending' && (
+                                    <button
+                                        onClick={async () => {
+                                            await updateTestimonial(testi.id, { ...testi, status: 'Active' });
+                                            const data = await getSiteData();
+                                            setTestimonials(data.testimonials);
+                                        }}
+                                        className={styles.actionBtn}
+                                        style={{ color: '#4ade80' }}
+                                        title="Approve"
+                                    >
+                                        <CheckCircle2 size={16} />
+                                    </button>
+                                )}
                                 <button onClick={() => handleEdit(testi)} className={styles.actionBtn} title="Edit">
                                     <Edit2 size={16} />
                                 </button>

@@ -4,8 +4,9 @@ import styles from "./admin.module.css";
 import {
     Users, Hotel, Utensils, MessageSquare,
     TrendingUp, Clock, ArrowUpRight, Calendar,
-    Star, ChefHat, CheckCircle
+    Star, ChefHat, CheckCircle, BarChart3, Globe, RefreshCw, Loader2
 } from "lucide-react";
+import { useState } from "react";
 
 export default function AdminDashboard() {
     const stats = [
@@ -134,6 +135,81 @@ export default function AdminDashboard() {
                     </div>
                 </div>
             </div>
+
+            {/* Simulated Analytics - Revenue & Traffic */}
+            <div className={styles.panelDark} style={{ marginTop: '2rem' }}>
+                <div className={styles.panelHeader}>
+                    <div>
+                        <h2 className={styles.panelTitle}>Estate Intelligence</h2>
+                        <p className={styles.panelSub}>Monthly revenue and traffic conversion</p>
+                    </div>
+                    <div style={{ display: 'flex', gap: '1rem' }}>
+                        <div className={styles.analyticsStat}>
+                            <span className={styles.statLabel}>Revenue</span>
+                            <span className={styles.statValue}>$4,250.00</span>
+                        </div>
+                        <div className={styles.analyticsStat}>
+                            <span className={styles.statLabel}>Conversion</span>
+                            <span className={styles.statValue}>4.8%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={styles.barChart}>
+                    {[80, 45, 90, 65, 100, 75, 55].map((val, i) => (
+                        <div key={i} className={styles.barWrapper}>
+                            <div className={styles.bar} style={{ height: `${val}%` }}>
+                                <div className={styles.barTooltip}>\${val * 100}</div>
+                            </div>
+                            <span className={styles.barLabel}>{['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i]}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* OTA Sync Module (Simulated) */}
+            <section className={styles.otaContainer} style={{ marginTop: '2rem' }}>
+                <div className={styles.otaHeader}>
+                    <div className={styles.otaInfo}>
+                        <Globe size={24} className="gold-text" />
+                        <div>
+                            <h3 className={styles.otaTitle}>Global Inventory Sync</h3>
+                            <p className={styles.otaDesc}>Synchronize your availability with Booking.com, Expedia, and Airbnb.</p>
+                        </div>
+                    </div>
+                    <OtaSyncButton />
+                </div>
+            </section>
         </>
+    );
+}
+
+function OtaSyncButton() {
+    const [syncing, setSyncing] = useState(false);
+    const [lastSync, setLastSync] = useState("Never");
+
+    const handleSync = () => {
+        setSyncing(true);
+        setTimeout(() => {
+            setSyncing(false);
+            setLastSync(new Date().toLocaleTimeString());
+            alert("Inventory synchronized successfully across all connected OTAs.");
+        }, 2000);
+    };
+
+    return (
+        <div style={{ textAlign: 'right' }}>
+            <button
+                onClick={handleSync}
+                disabled={syncing}
+                className={styles.otaButton}
+            >
+                {syncing ? <Loader2 className={styles.spinner} size={18} /> : <RefreshCw size={18} />}
+                {syncing ? "Synchronizing..." : "Sync Availability"}
+            </button>
+            <p style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', marginTop: '0.5rem' }}>
+                Last sync: {lastSync}
+            </p>
+        </div>
     );
 }

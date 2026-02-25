@@ -6,143 +6,96 @@
   ],
   "rooms": [
     {
-      "id": "executive-suite",
-      "name": "Executive Suite",
+      "id": "executive-suites",
+      "name": "Executive Suites",
       "desc": "Spacious living area, king-sized bed, and premium amenities for the discerning traveler.",
       "price": "$150",
       "image": "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=2024",
-      "tag": "Best Seller"
+      "tag": "Best Seller",
+      "capacity": 2
     },
     {
-      "id": "deluxe-garden-room",
-      "name": "Deluxe Garden Room",
-      "desc": "Peaceful views of our lush gardens with a private balcony and modern comforts.",
+      "id": "deluxe-suites",
+      "name": "Deluxe Suites",
+      "desc": "Peaceful views focused on comfort and elegance with modern amenities.",
       "price": "$120",
-      "image": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=2074"
+      "image": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=2074",
+      "capacity": 2
     },
     {
-      "id": "superior-twin-room",
-      "name": "Superior Twin Room",
-      "desc": "Elegant design with two comfortable beds, perfect for business colleagues or friends.",
+      "id": "highrise-suites",
+      "name": "Highrise Suites",
+      "desc": "Panoramic views of the surroundings with elevated luxury and elegant design.",
       "price": "$100",
-      "image": "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&q=80&w=2074"
+      "image": "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&q=80&w=2074",
+      "capacity": 4
     },
     {
-      "name": "Test Room 1771879896736",
-      "desc": "This is a test room description.",
-      "price": "$999",
-      "image": "https://images.unsplash.com/photo-1590490360182-c33d57733427",
-      "tag": "Test Tag",
-      "id": "test-room-1771879896736"
-    },
-    {
-      "name": "Test Room 1771879961706",
-      "desc": "This is a test room description.",
-      "price": "$999",
-      "image": "https://images.unsplash.com/photo-1590490360182-c33d57733427",
-      "tag": "Test Tag",
-      "id": "test-room-1771879961706"
-    },
-    {
-      "name": "Test Room 1771880005166",
-      "desc": "This is a test room description.",
-      "price": "$999",
-      "image": "https://images.unsplash.com/photo-1590490360182-c33d57733427",
-      "tag": "",
-      "id": "test-room-1771880005166"
-    },
-    {
-      "name": "Test Room 1771880067987",
-      "desc": "This is a test room description.",
-      "price": "$999",
-      "image": "https://images.unsplash.com/photo-1590490360182-c33d57733427",
-      "tag": "",
-      "id": "test-room-1771880067987"
-    },
-    {
-      "name": "Test Room 1771883418777",
-      "desc": "Test description",
-      "price": "$888",
-      "image": "https://images.unsplash.com/photo-1590490360182-c33d57733427",
-      "tag": "",
-      "id": "test-room-1771883418777"
+      "id": "cottages",
+      "name": "Cottages",
+      "desc": "Feature backyard balconies, high-speed Wi-Fi, television, and hot showers. Designed for extra privacy and groups.",
+      "price": "$200",
+      "image": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=2070",
+      "tag": "Private",
+      "capacity": 4
     }
   ],
   "facilities": [
     {
       "id": "conference",
       "title": "Conference Halls",
-      "desc": "Modern M.I.C.E facilities with high-speed internet and AV equipment.",
+      "desc": "Modern M.I.C.E facilities with high-speed internet. Amboseli, Nzambani, Syokimau, Highrise, and Masai Mara halls.",
       "icon": "Users",
       "image": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=2069",
       "features": [
-        "24/7 Access",
-        "World-class Service",
-        "Prime Location"
+        "Amboseli & Nzambani Halls",
+        "Syokimau & Highrise Halls",
+        "Masai Mara Hall"
       ],
       "highlights": [
-        "Bespoke guest relations management",
-        "Premium infrastructure and amenities",
-        "Curated environment for groups and individuals",
+        "Theatre, U-shape & Classroom setups",
+        "Corporate meetings & Team building",
+        "Curated environment for groups",
         "High-speed connectivity and support",
-        "Exceptional attention to detail"
+        "Weddings & private parties"
       ]
     },
     {
       "id": "dining",
-      "title": "Fine Dining",
-      "desc": "A culinary journey featuring local delicacies and international favorites.",
+      "title": "Dining & Bars",
+      "desc": "A culinary journey featuring the Main Restaurant, VIP Lounge, and Open Bar & Restaurant.",
       "icon": "Utensils",
       "image": "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=2070",
       "features": [
-        "Reservations Required",
-        "Award-winning Chefs",
-        "Extensive Wine List"
+        "Main Restaurant",
+        "VIP Lounge",
+        "Open Bar & Restaurant"
       ],
       "highlights": [
-        "Farm-to-table organic ingredients",
-        "Intimate ambiance and lighting",
-        "Signature tasting menus",
-        "Private dining rooms available",
-        "Sommelier on staff"
+        "International and local Kamba cuisine",
+        "Over 50 wine selections & single malts",
+        "Traditional English afternoon teas",
+        "Signature indoor barbeque",
+        "24-hour room service"
       ]
     },
     {
       "id": "pool",
-      "title": "Infinity Pool",
-      "desc": "Relax and unwind in our temperature-controlled swimming pool.",
+      "title": "Swimming Pool & Gardens",
+      "desc": "Relax in our central swimming pool or unwind in the lush gardens and kids zone.",
       "icon": "Waves",
       "image": "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&q=80&w=2070",
       "features": [
-        "Temperature Controlled",
-        "Poolside Bar",
-        "Towel Service"
+        "Swimming Pool",
+        "Kids Zone",
+        "Lush Gardens"
       ],
       "highlights": [
-        "Panoramic views of the landscape",
-        "Comfortable lounger seating",
-        "Full-service cabanas",
-        "Curated poolside menu",
-        "Adult-only hours available"
-      ]
-    },
-    {
-      "id": "lounge",
-      "title": "VIP Lounge",
-      "desc": "Exclusive space for private meetings and premium relaxation.",
-      "icon": "Wine",
-      "image": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=2069",
-      "features": [
-        "Members Only",
-        "Premium Spirits",
-        "Concierge Service"
-      ],
-      "highlights": [
-        "Exclusive single-malt whiskies",
-        "Discreet private meeting nooks",
-        "High-definition screens for sports",
-        "Premium cigar humidor",
-        "Personalized butler service"
+        "Dedicated children's activities area",
+        "Extensive relaxation gardens",
+        "Poolside service and bar",
+        "Ample and secure parking space",
+        "Pool Tables for recreation"
       ]
     }
   ],
@@ -239,7 +192,9 @@
     "social": {
       "facebook": "https://facebook.com/parksidevillakitui",
       "instagram": "https://instagram.com/parksidevillakitui",
-      "linkedin": "https://linkedin.com/company/parksidevillakitui"
+      "linkedin": "https://linkedin.com/company/parksidevillakitui",
+      "tiktok": "https://tiktok.com/@parksidevillakitui",
+      "whatsapp": "https://wa.me/254701023026"
     }
   },
   "blogPosts": [
@@ -262,6 +217,15 @@
       "image": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=1000"
     }
   ],
+  "galleryVideos": [
+    {
+      "id": "villa-tour",
+      "title": "Parkside Villa Virtual Tour",
+      "url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "thumbnail": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=1000"
+    }
+  ],
+  "users": [],
   "leads": [
     {
       "name": "Lead Test 1771883689975",
@@ -449,6 +413,23 @@
       "id": 1771881209712,
       "time": "Just now",
       "status": "Pending"
+    }
+  ],
+  "subscribers": [
+    "test@example.com",
+    "jetski@example.com",
+    "new_user_yc4jol@example.com",
+    "test2@example.com"
+  ],
+  "promotions": [
+    {
+      "title": "Summer Special",
+      "code": "SUMMER20",
+      "discount": "20",
+      "expiry": "2026-08-31",
+      "description": "",
+      "id": "1771973275955",
+      "createdAt": "2026-02-24T22:47:55.955Z"
     }
   ]
 }
