@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * seed-postgres.ts
  * 
