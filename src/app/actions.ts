@@ -85,7 +85,7 @@ export async function getSiteData() {
             facilities: facilities as Facility[],
             testimonials: testimonials as Testimonial[],
             menuCategories: menuCategories as MenuCategory[],
-            contactInfo: (contactInfoRow as ContactInfo) ?? {},
+            contactInfo: contactInfoRow ? { ...(contactInfoRow as ContactInfo), social: (contactInfoRow as ContactInfo).social || {} } : getStaticSiteData().contactInfo,
             blogPosts: blogPosts as BlogPost[],
             leads: leads.map((l: Lead) => ({
                 ...l,
