@@ -113,8 +113,8 @@ function getStaticSiteData() {
         menuCategories: staticData.menuCategories,
         contactInfo: staticData.contactInfo,
         blogPosts: [
-            { id: "1", title: "The Art of Kenyan Hospitality", author: "Editorial Team", date: "2025-05-10", category: "Lifestyle", content: "...", excerpt: "...", image: "https://images.unsplash.com/photo-1566073771259-6a8506099945" },
-            { id: "2", title: "Culinary Excellence at Parkside", author: "Master Chef", date: "2025-05-12", category: "Dining", content: "...", excerpt: "...", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836" }
+            { id: "1", title: "The Art of Kenyan Hospitality", author: "Editorial Team", date: "2025-05-10", category: "Lifestyle", content: "...", excerpt: "...", image: "https://images.unsplash.com/photo-1566073771259-6a8506099945", createdAt: new Date() },
+            { id: "2", title: "Culinary Excellence at Parkside", author: "Master Chef", date: "2025-05-12", category: "Dining", content: "...", excerpt: "...", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836", createdAt: new Date() }
         ],
         leads: [],
         subscribers: [],
