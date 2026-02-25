@@ -119,3 +119,9 @@ model ContactInfo {
   address  String
   social   Json    @default("{}")
 }
+
+model SiteContent {
+  key       String   @id
+  value     Json     @default("{}")
+  updatedAt DateTime @updatedAt
+}

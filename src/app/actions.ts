@@ -5,7 +5,8 @@ import { prisma, isDatabaseConfigured } from "../lib/prisma";
 import { NotificationService } from "./services/mailService";
 import {
     Room, Lead, User, Testimonial, BlogPost, Facility,
-    MenuCategory, HeroImage, GalleryItem, Promotion, Subscriber, ContactInfo
+    MenuCategory, HeroImage, GalleryItem, Promotion, Subscriber, ContactInfo,
+    SiteContent
 } from "@prisma/client";
 
 // ─────────────────────────────────────────────
@@ -54,7 +55,8 @@ export async function getSiteData() {
             subscribers,
             promotions,
             users,
-            galleryItems
+            galleryItems,
+            siteContentRows
         ] = await Promise.all([
             prisma.heroImage.findMany({ orderBy: { order: "asc" } }),
             prisma.room.findMany({ orderBy: { createdAt: "asc" } }),
@@ -67,8 +69,14 @@ export async function getSiteData() {
             prisma.subscriber.findMany(),
             prisma.promotion.findMany({ orderBy: { createdAt: "desc" } }),
             prisma.user.findMany(),
-            prisma.galleryItem.findMany({ orderBy: { order: "asc" } })
+            prisma.galleryItem.findMany({ orderBy: { order: "asc" } }),
+            prisma.siteContent.findMany()
         ]);
+
+        const content = siteContentRows.reduce((acc: any, row: SiteContent) => {
+            acc[row.key] = row.value;
+            return acc;
+        }, {});
 
         // Map DB rows to the shape the UI already expects
         return {
@@ -97,6 +105,7 @@ export async function getSiteData() {
             users: users.map(({ password: _, ...u }: any) => u),
             galleryItems: galleryItems as GalleryItem[],
             galleryVideos: galleryItems.filter((i: GalleryItem) => i.type === "video"),
+            content,
         };
     } catch (error) {
         console.error("Database connection failed, falling back to static data.", error);
@@ -121,7 +130,8 @@ function getStaticSiteData() {
         promotions: [],
         users: [],
         galleryItems: [],
-        galleryVideos: []
+        galleryVideos: [],
+        content: {}
     };
 }
 
@@ -800,4 +810,24 @@ export async function updateSiteData(_data: any) {
     // No-op in Prisma mode — individual actions handle their own updates
     revalidateAll();
     return { success: true };
+}
+
+// ─────────────────────────────────────────────
+// SITE CONTENT (Dynamic CMS)
+// ─────────────────────────────────────────────
+
+export async function updateSiteContent(key: string, value: any) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await prisma.siteContent.upsert({
+            where: { key },
+            update: { value },
+            create: { key, value },
+        });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating site content:", error);
+        return { success: false, error: "Database error" };
+    }
 }

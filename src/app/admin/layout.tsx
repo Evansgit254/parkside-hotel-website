@@ -15,7 +15,8 @@ import {
     ChevronRight,
     Tag,
     Edit3,
-    Image as ImageIcon
+    Image as ImageIcon,
+    FileText
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -61,6 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: "Blog Posts", href: "/admin/blog", icon: Edit3 },
         { name: "Gallery", href: "/admin/gallery", icon: ImageIcon },
         { name: "Testimonials", href: "/admin/testimonials", icon: Star },
+        { name: "Site Content", href: "/admin/content", icon: FileText },
         { name: "Settings", href: "/admin/settings", icon: Settings },
     ];
 
@@ -95,7 +97,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                     <div className={styles.navGroup}>
                         <span className={styles.navGroupLabel}>Content & Marketing</span>
-                        {navItems.slice(4, 9).map((item) => (
+                        {navItems.slice(4, 10).map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}

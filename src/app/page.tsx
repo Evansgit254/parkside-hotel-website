@@ -44,7 +44,11 @@ export default function Home() {
     getSiteData().then(data => { if (data) setSiteData(data); });
   }, []);
 
-  const { rooms, facilities, testimonials, contactInfo, heroImages } = siteData;
+  const { rooms, facilities, testimonials, contactInfo, heroImages, content } = siteData;
+
+  const heroKeys = content?.landing_hero || {};
+  const roomsKeys = content?.rooms_intro || {};
+  const facilitiesKeys = content?.facilities_intro || {};
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -142,27 +146,25 @@ export default function Home() {
           variants={stagger}
         >
           <motion.span variants={fadeUp} className={styles.badge}>
-            Refining Hospitality Since 2005
+            {heroKeys.badge || "Refining Hospitality Since 2005"}
           </motion.span>
 
           <motion.h1 variants={fadeUp} className={styles.title}>
-            Parkside Villa<br />
-            <em>Kitui</em>
+            {heroKeys.title || "Parkside Villa Kitui"}
           </motion.h1>
 
           <motion.p variants={fadeUp} className={styles.subtitle}>
-            An oasis of tranquility in the heart of Kenya. Discover luxury
-            accommodation, world-class conference facilities, and exceptional dining.
+            {heroKeys.subtitle || "An oasis of tranquility in the heart of Kenya. Discover luxury accommodation, world-class conference facilities, and exceptional dining."}
           </motion.p>
 
           <motion.div variants={fadeUp} className={styles.ctaGroup}>
             <Magnetic>
-              <a href="#accommodation" className={styles.buttonPrimary}>
+              <a href={heroKeys.cta1 || "#accommodation"} className={styles.buttonPrimary}>
                 <span>Reserve Your Stay</span>
                 <ArrowUpRight size={14} />
               </a>
             </Magnetic>
-            <a href="#conference" className={styles.buttonSecondary}>
+            <a href={heroKeys.cta2 || "#conference"} className={styles.buttonSecondary}>
               Explore Facilities
             </a>
           </motion.div>
@@ -247,9 +249,9 @@ export default function Home() {
             initial="hidden" whileInView="visible" viewport={{ once: true }}
             variants={stagger}
           >
-            <motion.span variants={fadeUp} className={styles.badge}>Curated Living</motion.span>
+            <motion.span variants={fadeUp} className={styles.badge}>{roomsKeys.badge || "Curated Living"}</motion.span>
             <motion.h2 variants={fadeUp} className={styles.roomsIntroTitle}>
-              Refined<br />Accommodation
+              {roomsKeys.title || "Refined Accommodation"}
             </motion.h2>
           </motion.div>
           <motion.div
@@ -258,7 +260,7 @@ export default function Home() {
             variants={stagger}
           >
             <motion.p variants={fadeUp} className={styles.roomsIntroDesc}>
-              Each room at Parkside Villa is a sanctuary — meticulously designed to blend contemporary elegance with the warmth of Kitui&apos;s cultural heritage.
+              {roomsKeys.desc || "Each room at Parkside Villa is a sanctuary — meticulously designed to blend contemporary elegance with the warmth of Kitui's cultural heritage."}
             </motion.p>
             <motion.a variants={fadeUp} href="/rooms" className={styles.buttonGhost}>
               View All Rooms <ArrowUpRight size={12} />
@@ -315,26 +317,40 @@ export default function Home() {
       <div className={styles.experienceStrip}>
         <div className={styles.experienceStripInner}>
           {[
-            { num: "20", suffix: "+", label: "Years of Excellence" },
-            { num: "4", suffix: "★", label: "Star Rating" },
-            { num: "500", suffix: "+", label: "Events Hosted" },
-            { num: "98", suffix: "%", label: "Guest Satisfaction" },
+            {
+              num: content?.experience_stats?.stat1_num ?? "20",
+              suffix: content?.experience_stats?.stat1_suffix ?? "+",
+              label: content?.experience_stats?.stat1_label ?? "Years of Excellence"
+            },
+            {
+              num: content?.experience_stats?.stat2_num ?? "4",
+              suffix: content?.experience_stats?.stat2_suffix ?? "★",
+              label: content?.experience_stats?.stat2_label ?? "Star Rating"
+            },
+            {
+              num: content?.experience_stats?.stat3_num ?? "500",
+              suffix: content?.experience_stats?.stat3_suffix ?? "+",
+              label: content?.experience_stats?.stat3_label ?? "Events Hosted"
+            },
+            {
+              num: content?.experience_stats?.stat4_num ?? "98",
+              suffix: content?.experience_stats?.stat4_suffix ?? "%",
+              label: content?.experience_stats?.stat4_label ?? "Guest Satisfaction"
+            },
           ].map((stat, i) => (
-            <div key={`stat-group-${i}`} style={{ display: 'contents' }}>
-              <motion.div
-                className={styles.experienceStat}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: i * 0.1 }}
-              >
-                <span className={styles.experienceStatNum}>
-                  {stat.num}<span>{stat.suffix}</span>
-                </span>
-                <span className={styles.experienceStatLabel}>{stat.label}</span>
-              </motion.div>
-              {i < 3 && <div className={styles.experienceDivider} />}
-            </div>
+            <motion.div
+              key={`stat-${i}`}
+              className={styles.experienceStat}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: i * 0.1 }}
+            >
+              <span className={styles.experienceStatNum}>
+                {stat.num}<span>{stat.suffix}</span>
+              </span>
+              <span className={styles.experienceStatLabel}>{stat.label}</span>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -347,12 +363,12 @@ export default function Home() {
             initial="hidden" whileInView="visible" viewport={{ once: true }}
             variants={stagger}
           >
-            <motion.span variants={fadeUp} className={styles.badge}>World-Class Services</motion.span>
+            <motion.span variants={fadeUp} className={styles.badge}>{facilitiesKeys.badge || "World-Class Services"}</motion.span>
             <motion.h2 variants={fadeUp} className={styles.facilitiesIntroTitle}>
-              Hotel<br />Facilities
+              {facilitiesKeys.title || "Hotel Facilities"}
             </motion.h2>
             <motion.p variants={fadeUp} className={styles.facilitiesIntroDesc}>
-              From cinematic conference halls to an immersive infinity pool, every experience at Parkside Villa is designed to exceed expectations.
+              {facilitiesKeys.desc || "From cinematic conference halls to an immersive infinity pool, every experience at Parkside Villa is designed to exceed expectations."}
             </motion.p>
             <motion.a variants={fadeUp} href="/facilities" className={styles.buttonGhost}>
               Discover All <ArrowUpRight size={12} />

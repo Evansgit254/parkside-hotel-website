@@ -8,10 +8,12 @@ import { getSiteData, subscribeNewsletter } from "../actions";
 
 export default function Footer() {
     const [contactInfo, setContactInfo] = useState<any>(null);
+    const [content, setContent] = useState<any>({});
 
     useEffect(() => {
         getSiteData().then(data => {
             if (data && data.contactInfo) setContactInfo(data.contactInfo);
+            if (data && data.content) setContent(data.content);
         });
     }, []);
 
@@ -24,7 +26,7 @@ export default function Footer() {
                     <div className={styles.footerBrand} style={{ gridColumn: 'span 2' }}>
                         <div className={styles.logo}>PARKSIDE VILLA</div>
                         <p className={styles.footerDesc} style={{ maxWidth: '100%' }}>
-                            Kitui's premier luxury destination. Stay updated on our exclusive offers and upcoming events by subscribing to our newsletter.
+                            {content.footer_about?.text || "Kitui's premier luxury destination. Stay updated on our exclusive offers and upcoming events by subscribing to our newsletter."}
                         </p>
 
                         <form className={styles.newsletterForm} onSubmit={async (e) => {
