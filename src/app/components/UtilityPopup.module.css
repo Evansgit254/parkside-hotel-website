@@ -1,0 +1,99 @@
+.popupWrapper {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 320px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.popupHeader {
+    background: var(--primary);
+    color: var(--white);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.popupTitle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.closeButton {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.popupBody {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.amenities {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: #111827;
+    line-height: 1.5;
+    margin: 0;
+    text-align: center;
+}
+
+.contactInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px dashed var(--border);
+}
+
+.contactInfo span {
+    font-size: 0.6875rem;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.contactInfo strong {
+    font-size: 1.125rem;
+    color: var(--primary);
+    font-family: var(--font-sans);
+}
+
+@media (max-width: 640px) {
+    .popupWrapper {
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+        width: auto;
+    }
+}

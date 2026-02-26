@@ -51,7 +51,7 @@
 }
 
 .backLink:hover {
-    color: var(--gold);
+    color: var(--secondary);
 }
 
 .tag {
@@ -59,7 +59,7 @@
     padding: 0.4rem 1rem;
     background: rgba(183, 148, 62, 0.2);
     border: 1px solid rgba(183, 148, 62, 0.3);
-    color: var(--gold);
+    color: var(--secondary);
     border-radius: 100px;
     font-size: 0.75rem;
     font-weight: 800;
@@ -69,12 +69,13 @@
 }
 
 .title {
-    font-family: var(--font-outfit);
+    font-family: var(--font-serif);
+    /* Updated to global serif font */
     font-size: 4.5rem;
-    font-weight: 800;
+    font-weight: 700;
     margin: 0;
     line-height: 1;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.01em;
 }
 
 .priceContainer {
@@ -87,7 +88,7 @@
 .price {
     font-size: 2.5rem;
     font-weight: 800;
-    color: var(--gold);
+    color: var(--secondary);
 }
 
 .perNight {
@@ -115,17 +116,19 @@
 }
 
 .cardTitle {
-    font-family: var(--font-outfit);
+    font-family: var(--font-serif);
     font-size: 2rem;
-    font-weight: 800;
+    font-weight: 700;
     margin-bottom: 1.5rem;
+    color: var(--primary);
 }
 
 .cardSubtitle {
-    font-family: var(--font-outfit);
+    font-family: var(--font-serif);
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
+    color: var(--primary);
 }
 
 .description {
@@ -150,7 +153,7 @@
 }
 
 .amenityIcon {
-    color: var(--gold);
+    color: var(--secondary);
 }
 
 .featuresList {
@@ -176,16 +179,16 @@
 }
 
 .bookingCard {
-    background: var(--gold);
+    background: var(--secondary);
     color: #000;
     padding: 3rem;
     border-radius: 24px;
 }
 
 .bookingTitle {
-    font-family: var(--font-outfit);
+    font-family: var(--font-serif);
     font-size: 1.75rem;
-    font-weight: 800;
+    font-weight: 700;
     margin-bottom: 0.5rem;
 }
 
@@ -200,8 +203,8 @@
 .bookButton {
     width: 100%;
     padding: 1.25rem;
-    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
-    color: var(--charcoal);
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--gold-dark) 100%);
+    color: var(--background-alt);
     border: none;
     border-radius: 12px;
     font-weight: 800;
@@ -214,7 +217,7 @@
 .bookButton:hover {
     transform: translateY(-2px);
     opacity: 0.95;
-    background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+    background: linear-gradient(135deg, var(--gold-dark) 0%, var(--secondary) 100%);
 }
 
 .conciergeInfo {
@@ -241,7 +244,7 @@
     font-family: var(--font-display);
     font-size: 2rem;
     font-weight: 800;
-    color: var(--gold);
+    color: var(--secondary);
     background: var(--background);
 }
 
@@ -270,7 +273,7 @@
     border: 1px solid var(--border-light);
     position: relative;
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1);
-    color: var(--charcoal);
+    color: var(--background-alt);
 }
 
 .closeModal {
@@ -279,7 +282,7 @@
     right: 1.5rem;
     background: none;
     border: none;
-    color: var(--charcoal);
+    color: var(--background-alt);
     font-size: 2rem;
     cursor: pointer;
     opacity: 0.5;
@@ -291,10 +294,11 @@
 }
 
 .modalTitle {
-    font-family: var(--font-outfit);
+    font-family: var(--font-serif);
     font-size: 2rem;
-    font-weight: 800;
-    color: var(--gold);
+    font-weight: 700;
+    color: var(--primary);
+    /* Changed from gold for better contrast on white background */
     margin-bottom: 0.5rem;
 }
 
@@ -332,20 +336,20 @@
     background: var(--ivory-deep);
     border: 1px solid var(--border-light);
     border-radius: 12px;
-    color: var(--charcoal);
+    color: var(--background-alt);
     font-weight: 500;
 }
 
 .input:focus {
     outline: none;
-    border-color: var(--gold);
+    border-color: var(--secondary);
 }
 
 .submitButton {
     width: 100%;
     padding: 1.25rem;
-    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
-    color: var(--charcoal);
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--gold-dark) 100%);
+    color: var(--background-alt);
     border: none;
     border-radius: 12px;
     font-weight: 800;

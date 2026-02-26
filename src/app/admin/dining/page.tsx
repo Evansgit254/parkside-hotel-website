@@ -144,7 +144,7 @@ export default function AdminDining() {
             <div className={styles.sectionHeader}>
                 <div>
                     <h1 className={styles.sectionTitle}>Dining & Cuisine</h1>
-                    <p style={{ color: 'rgba(255,255,255,0.5)', marginTop: '0.5rem' }}>Manage your gourmet menu categories and culinary delights</p>
+                    <p style={{ color: '#6B7280', marginTop: '0.5rem' }}>Manage your gourmet menu categories and culinary delights</p>
                 </div>
                 <button onClick={handleAddCategory} className={styles.loginButton}>
                     <Plus size={18} /> New Category
@@ -154,12 +154,12 @@ export default function AdminDining() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
                 {menu.map((category) => (
                     <div key={category.id} className={styles.card} style={{ padding: '0', overflow: 'hidden' }}>
-                        <div style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                        <div style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#F7F8FC', borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                <span style={{ padding: '0.75rem', background: 'rgba(183, 148, 62, 0.1)', color: 'var(--gold)', borderRadius: '12px' }}>
+                                <span style={{ padding: '0.75rem', background: 'rgba(74, 43, 102, 0.08)', color: 'var(--secondary)', borderRadius: '12px' }}>
                                     {category.name === 'Starters' ? <Coffee size={24} /> : category.name === 'Dessert' ? <Cake size={24} /> : <Utensils size={24} />}
                                 </span>
-                                <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#fff' }}>{category.name}</h3>
+                                <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#111827' }}>{category.name}</h3>
                             </div>
                             <div style={{ display: 'flex', gap: '0.75rem' }}>
                                 <button onClick={() => handleEditCategory(category)} className={styles.actionBtn} title="Edit Category"><Edit2 size={18} /></button>
@@ -172,10 +172,10 @@ export default function AdminDining() {
                                 category.items.map((item: any, idx: number) => (
                                     <div key={idx} className={styles.listItem} style={{ gridTemplateColumns: '1fr 120px 120px' }}>
                                         <div>
-                                            <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#fff' }}>{item.name}</div>
-                                            <div style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.4)', marginTop: '0.25rem' }}>{item.desc}</div>
+                                            <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#111827' }}>{item.name}</div>
+                                            <div style={{ fontSize: '0.9375rem', color: '#6B7280', marginTop: '0.25rem' }}>{item.desc}</div>
                                         </div>
-                                        <div style={{ fontWeight: 700, color: 'var(--gold)', fontSize: '1.1rem', textAlign: 'center' }}>{formatPrice(item.price)}</div>
+                                        <div style={{ fontWeight: 700, color: 'var(--secondary)', fontSize: '1.1rem', textAlign: 'center' }}>{formatPrice(item.price)}</div>
                                         <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
                                             <button onClick={() => handleEditItem(category.id, idx)} className={styles.actionBtn} title="Edit Item"><Edit2 size={16} /></button>
                                             <button onClick={() => handleDeleteItem(category.id, idx)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete Item"><Trash2 size={16} /></button>
@@ -183,14 +183,14 @@ export default function AdminDining() {
                                     </div>
                                 ))
                             ) : (
-                                <div style={{ padding: '3rem', textAlign: 'center', color: 'rgba(255,255,255,0.2)', fontSize: '0.9375rem' }}>
+                                <div style={{ padding: '3rem', textAlign: 'center', color: '#6B7280', fontSize: '0.9375rem' }}>
                                     No items in this category yet.
                                 </div>
                             )}
                         </div>
 
-                        <div style={{ padding: '1.5rem 2rem', background: 'rgba(255,255,255,0.01)' }}>
-                            <button onClick={() => handleAddItem(category.id)} style={{ width: '100%', padding: '1rem', background: 'transparent', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '12px', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 600, transition: 'all 0.2s ease' }} onMouseOver={e => e.currentTarget.style.borderColor = 'rgba(183,148,62,0.3)'} onMouseOut={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'}>
+                        <div style={{ padding: '1.5rem 2rem', background: '#F7F8FC' }}>
+                            <button onClick={() => handleAddItem(category.id)} style={{ width: '100%', padding: '1rem', background: 'transparent', border: '1px dashed rgba(0,0,0,0.12)', borderRadius: '12px', color: '#6B7280', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 600, transition: 'all 0.2s ease' }} onMouseOver={e => e.currentTarget.style.borderColor = 'rgba(183,148,62,0.3)'} onMouseOut={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'}>
                                 <Plus size={16} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Add new dish to {category.name}
                             </button>
                         </div>

@@ -62,7 +62,7 @@ export default function AdminTestimonials() {
             <div className={styles.sectionHeader}>
                 <div>
                     <h1 className={styles.sectionTitle}>Testimonials</h1>
-                    <p style={{ color: 'rgba(255,255,255,0.5)', marginTop: '0.5rem' }}>Curate the voices of your satisfied guests</p>
+                    <p style={{ color: '#6B7280', marginTop: '0.5rem' }}>Curate the voices of your satisfied guests</p>
                 </div>
                 <button onClick={handleAdd} className={styles.loginButton}>
                     <Plus size={18} /> Add Review
@@ -76,7 +76,7 @@ export default function AdminTestimonials() {
                         flexDirection: 'column',
                         position: 'relative',
                         overflow: 'hidden',
-                        border: testi.status === 'Pending' ? '1px solid var(--gold)' : undefined
+                        border: testi.status === 'Pending' ? '1px solid var(--secondary)' : undefined
                     }}>
                         {testi.status === 'Pending' && (
                             <div style={{
@@ -84,7 +84,7 @@ export default function AdminTestimonials() {
                                 top: 0,
                                 left: 0,
                                 right: 0,
-                                background: 'var(--gold)',
+                                background: 'var(--secondary)',
                                 color: '#000',
                                 fontSize: '0.65rem',
                                 fontWeight: 800,
@@ -96,24 +96,24 @@ export default function AdminTestimonials() {
                                 Pending Approval
                             </div>
                         )}
-                        <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', opacity: 0.05, color: '#fff' }}>
+                        <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', opacity: 0.05, color: '#111827' }}>
                             <Quote size={80} />
                         </div>
 
-                        <div style={{ display: 'flex', gap: '0.35rem', marginBottom: '1.5rem', color: 'var(--gold)', marginTop: testi.status === 'Pending' ? '1rem' : 0 }}>
+                        <div style={{ display: 'flex', gap: '0.35rem', marginBottom: '1.5rem', color: 'var(--secondary)', marginTop: testi.status === 'Pending' ? '1rem' : 0 }}>
                             {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
                         </div>
 
                         <div style={{ flex: 1 }}>
-                            <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.8)', fontStyle: 'italic', lineHeight: '1.7', marginBottom: '2rem' }}>
+                            <p style={{ fontSize: '1rem', color: '#6B7280', fontStyle: 'italic', lineHeight: '1.7', marginBottom: '2rem' }}>
                                 "{testi.text}"
                             </p>
                         </div>
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderTop: '1px solid rgba(0,0,0,0.07)', paddingTop: '1.5rem' }}>
                             <div>
-                                <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#fff' }}>{testi.name}</div>
-                                <div style={{ fontSize: '0.8125rem', color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: '0.25rem' }}>{testi.title}</div>
+                                <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#111827' }}>{testi.name}</div>
+                                <div style={{ fontSize: '0.8125rem', color: 'var(--secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: '0.25rem' }}>{testi.title}</div>
                             </div>
                             <div style={{ display: 'flex', gap: '0.75rem' }}>
                                 {testi.status === 'Pending' && (

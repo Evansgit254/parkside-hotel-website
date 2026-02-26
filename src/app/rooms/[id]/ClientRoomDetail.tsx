@@ -106,7 +106,7 @@ export default function ClientRoomDetail({ room }: { room: any }) {
                                         "Mini-bar with local and international curations"
                                     ].map((feature, i) => (
                                         <li key={i} className={styles.featureItem}>
-                                            <CheckCircle2 size={18} color="var(--gold)" />
+                                            <CheckCircle2 size={18} color="var(--secondary)" />
                                             {feature}
                                         </li>
                                     ))}

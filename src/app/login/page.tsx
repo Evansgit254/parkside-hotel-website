@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import styles from "./auth.module.css";
-import { Mail, Lock, Loader2, ArrowRight } from "lucide-react";
+import { Mail, Lock, Loader2, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -14,6 +14,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -70,13 +71,20 @@ export default function LoginPage() {
                         <div className={styles.inputWrapper}>
                             <Lock className={styles.inputIcon} size={18} />
                             <input
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                                 required
                                 placeholder="••••••••"
                                 className={styles.input}
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                             />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className={styles.passwordToggle}
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
                         </div>
                     </div>
 

@@ -30,7 +30,7 @@ test.describe('Parkside Villa Admin CRUD Operations', () => {
         await page.getByRole('button', { name: 'Save Changes' }).click();
         await expect(page.getByText(roomName)).toBeVisible({ timeout: 15000 });
 
-        const roomRow = page.locator('div[class*="listItem"]').filter({ hasText: roomName });
+        const roomRow = page.locator('div[class*="tableRow"]').filter({ hasText: roomName });
         await roomRow.getByRole('button', { name: 'Edit' }).click();
         await page.fill('input[placeholder="e.g. $150"]', '$888');
         await page.getByRole('button', { name: 'Save Changes' }).click();
@@ -92,7 +92,7 @@ test.describe('Parkside Villa Admin CRUD Operations', () => {
         await page.getByRole('button', { name: 'Save Changes' }).click();
         await expect(page.getByText(facTitle)).toBeVisible({ timeout: 15000 });
 
-        const facRow = page.locator('div[class*="listItem"]').filter({ hasText: facTitle });
+        const facRow = page.locator('div[class*="tableRow"]').filter({ hasText: facTitle });
         await facRow.getByRole('button', { name: 'Delete' }).click();
         await expect(page.getByText(facTitle)).not.toBeVisible({ timeout: 10000 });
         console.log('>>> [Facilities Test] SUCCESS.');
@@ -101,7 +101,7 @@ test.describe('Parkside Villa Admin CRUD Operations', () => {
     test('Leads Management', async ({ page }) => {
         console.log('>>> [Leads Test] Starting...');
         await page.goto('/', { waitUntil: 'domcontentloaded' });
-        await page.getByRole('button', { name: /Book Room/i }).first().click();
+        await page.getByRole('button', { name: /Reserve/i }).first().click();
 
         const timestamp = Date.now().toString();
         const testName = `Lead Test ${timestamp}`;
@@ -112,13 +112,22 @@ test.describe('Parkside Villa Admin CRUD Operations', () => {
         await page.locator('input[type="date"]').first().fill(today);
         await page.locator('input[type="date"]').last().fill(tomorrow);
 
-        await page.fill('input[placeholder="John Doe"]', testName);
-        await page.fill('input[placeholder="john@example.com"]', `test-${timestamp}@example.com`);
-        await page.fill('input[placeholder="+254 700 000000"]', '123456789');
-        await page.click('button:has-text("Confirm Booking")');
+        // Step 1 -> Step 2
+        await page.click('button:has-text("Continue")');
+
+        await page.fill('input[placeholder="Your full name"]', testName);
+        await page.fill('input[placeholder="your@email.com"]', `test-${timestamp}@example.com`);
+        await page.fill('input[placeholder="+254 700 000 000"]', '123456789');
+
+        // Step 2 -> Step 3
+        await page.click('button:has-text("Continue to Payment")');
+
+        // Step 3 (Payment) -> Complete
+        await page.click('div[class*="paymentOption"]'); // Select first option (M-Pesa)
+        await page.click('button:has-text("Proceed to Pay")');
 
         // Wait for success message to appear on public site
-        await expect(page.getByText(/Booking Confirmed/i)).toBeVisible({ timeout: 30000 });
+        await expect(page.getByText(/Reservation Confirmed/i)).toBeVisible({ timeout: 30000 });
 
         await page.goto('/admin/leads', { waitUntil: 'networkidle' });
 
@@ -135,7 +144,7 @@ test.describe('Parkside Villa Admin CRUD Operations', () => {
         await page.reload({ waitUntil: 'networkidle' });
         await expect(page.getByText(testName)).toBeVisible({ timeout: 45000 });
 
-        const leadRow = page.locator('div[class*="listItem"]').filter({ hasText: testName });
+        const leadRow = page.locator('div[class*="tableRow"]').filter({ hasText: testName });
         await leadRow.locator('select').selectOption('Confirmed');
         await expect(leadRow.locator('select')).toHaveValue('Confirmed', { timeout: 15000 });
 

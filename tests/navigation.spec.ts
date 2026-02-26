@@ -5,7 +5,8 @@ test.describe('Parkside Villa Kitui E2E Tests', () => {
     test('Homepage loads correctly and has title', async ({ page }) => {
         await page.goto('/');
         await expect(page).toHaveTitle(/Parkside Villa Kitui/);
-        await expect(page.getByText('Where Tradition Meets', { exact: false })).toBeVisible();
+        // Matches the default Hero title
+        await expect(page.getByText('Parkside Villa Kitui', { exact: false }).first()).toBeVisible();
     });
 
     test('Navigation links on homepage are visible', async ({ page }) => {
@@ -18,15 +19,16 @@ test.describe('Parkside Villa Kitui E2E Tests', () => {
         await expect(nav.getByRole('link', { name: 'Contact' })).toBeVisible();
     });
 
-    test('Room cards are visible and "Book Room" button opens a modal', async ({ page }) => {
+    test('Room cards are visible and "Reserve" button opens a modal', async ({ page }) => {
         await page.goto('/');
         await page.evaluate(() => {
             document.getElementById('accommodation')?.scrollIntoView();
         });
-        const bookButtons = page.getByRole('button', { name: /Book Room/i });
+        const bookButtons = page.getByRole('button', { name: /Reserve/i });
         await expect(bookButtons.first()).toBeVisible({ timeout: 10000 });
         await bookButtons.first().click();
-        await expect(page.getByText('Confirm Booking')).toBeVisible();
+        // Check for Step indicator instead of hardcoded title
+        await expect(page.getByText('Step 1 of 3')).toBeVisible();
     });
 
     test('Dining page navigation and content', async ({ page }) => {
@@ -43,9 +45,9 @@ test.describe('Parkside Villa Kitui E2E Tests', () => {
         });
         await page.waitForTimeout(500);
         await expect(page.getByText('Get In Touch')).toBeVisible();
-        await expect(page.getByPlaceholder('Your Name')).toBeVisible();
-        // Button text is "Submit Inquiry" (not "Send Message")
-        await expect(page.getByRole('button', { name: /Submit Inquiry/i })).toBeVisible();
+        await expect(page.getByPlaceholder('Your name')).toBeVisible();
+        // Button text is "Send Enquiry" (refactored for CMS)
+        await expect(page.getByRole('button', { name: /Send Enquiry/i })).toBeVisible();
     });
 
     test('Footer is visible with copyright text', async ({ page }) => {
@@ -56,7 +58,7 @@ test.describe('Parkside Villa Kitui E2E Tests', () => {
 
     test('Admin login page is accessible', async ({ page }) => {
         await page.goto('/admin/login');
-        await expect(page.getByText('Admin Access')).toBeVisible();
+        await expect(page.getByText('Secure Access')).toBeVisible();
         await expect(page.getByPlaceholder('admin@parksidevilla.com')).toBeVisible();
     });
 });

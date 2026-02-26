@@ -24,7 +24,7 @@ export default function Footer() {
             <div className={styles.contentContainer}>
                 <div className={styles.footerGrid}>
                     <div className={styles.footerBrand} style={{ gridColumn: 'span 2' }}>
-                        <div className={styles.logo}>PARKSIDE VILLA</div>
+                        <div className={styles.footerLogo}>PARKSIDE VILLA</div>
                         <p className={styles.footerDesc} style={{ maxWidth: '100%' }}>
                             {content.footer_about?.text || "Kitui's premier luxury destination. Stay updated on our exclusive offers and upcoming events by subscribing to our newsletter."}
                         </p>
@@ -61,7 +61,7 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h4 className={styles.footerTitle}>Quick Links</h4>
+                        <h4 className={styles.footerTitle}>{content.footer_titles?.col1 || "Quick Links"}</h4>
                         <div className={styles.footerLinks}>
                             <a href="/#accommodation">Accommodation</a>
                             <a href="/#conference">Conference</a>
@@ -74,7 +74,7 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h4 className={styles.footerTitle}>Our Pillars</h4>
+                        <h4 className={styles.footerTitle}>{content.footer_titles?.col2 || "Our Pillars"}</h4>
                         <div className={styles.footerLinks}>
                             <a href="/#accommodation">Luxury Rooms</a>
                             <a href="/#conference">Event Space</a>
@@ -84,11 +84,9 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h4 className={styles.footerTitle}>Visit Us</h4>
+                        <h4 className={styles.footerTitle}>{content.footer_titles?.col3 || "Visit Us"}</h4>
                         <div className={styles.footerLinks}>
-                            <span style={{ color: '#fff' }}>Parkside Villa, Kitui</span>
-                            <span>P.O. Box 1234-90200</span>
-                            <span>Kitui, Kenya</span>
+                            <span style={{ color: 'var(--text-secondary)' }}>{contactInfo.address || "Parkside Villa, Kitui"}</span>
                         </div>
                     </div>
                 </div>

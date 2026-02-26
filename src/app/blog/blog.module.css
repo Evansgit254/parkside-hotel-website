@@ -1,7 +1,7 @@
 .pageWrapper {
     min-height: 100vh;
-    background: var(--charcoal);
-    color: var(--text-on-dark);
+    background: var(--background-alt);
+    color: var(--foreground);
     font-family: var(--font-body);
 }
 
@@ -37,7 +37,7 @@
     padding: 0.5rem 1.25rem;
     background: rgba(212, 175, 55, 0.1);
     border: 1px solid rgba(212, 175, 55, 0.3);
-    color: var(--gold);
+    color: var(--secondary);
     border-radius: 100px;
     font-size: 0.8rem;
     font-weight: 700;
@@ -58,12 +58,12 @@
 .subtitle {
     font-size: 1.125rem;
     line-height: 1.8;
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
 }
 
 .blogSection {
     padding: 6rem 2rem;
-    background: var(--charcoal);
+    background: var(--background-alt);
 }
 
 .container {
@@ -78,7 +78,7 @@
 }
 
 .blogCard {
-    background: var(--surface-dark);
+    background: #FFFFFF;
     border: 1px solid var(--border-dark);
     border-radius: 16px;
     overflow: hidden;
@@ -117,7 +117,7 @@
     right: 1rem;
     background: rgba(28, 28, 26, 0.85);
     backdrop-filter: blur(8px);
-    color: var(--gold);
+    color: var(--secondary);
     padding: 0.4rem 1rem;
     border-radius: 100px;
     font-size: 0.75rem;
@@ -125,7 +125,7 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.15em;
-    border: 1px solid var(--border-gold);
+    border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .cardContent {
@@ -140,7 +140,7 @@
     gap: 1.5rem;
     margin-bottom: 1.5rem;
     font-size: 0.875rem;
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
 }
 
 .metaItem {
@@ -164,11 +164,11 @@
 }
 
 .cardTitle a:hover {
-    color: var(--gold);
+    color: var(--secondary);
 }
 
 .cardExcerpt {
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
     line-height: 1.7;
     margin-bottom: 2rem;
     flex: 1;
@@ -177,7 +177,7 @@
 .readMore {
     display: inline-flex;
     align-items: center;
-    color: var(--gold);
+    color: var(--secondary);
     text-decoration: none;
     font-family: var(--font-sans);
     font-weight: 500;
@@ -196,10 +196,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-outfit);
+    font-family: var(--font-serif);
     font-size: 2rem;
-    font-weight: 800;
-    color: var(--gold);
+    font-weight: 700;
+    color: var(--secondary);
     background: #050505;
 }
 

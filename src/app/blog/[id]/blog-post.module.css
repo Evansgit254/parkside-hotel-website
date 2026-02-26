@@ -1,5 +1,5 @@
 .pageWrapper {
-    background: var(--charcoal);
+    background: var(--background-alt);
     min-height: 100vh;
     color: var(--ivory);
     font-family: var(--font-body);
@@ -10,7 +10,7 @@
     top: 0;
     left: 0;
     height: 3px;
-    background: var(--gold);
+    background: var(--secondary);
     z-index: 1000;
 }
 
@@ -52,7 +52,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
     text-decoration: none;
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -62,7 +62,7 @@
 }
 
 .backLink:hover {
-    color: var(--gold);
+    color: var(--secondary);
 }
 
 .categoryBadge {
@@ -70,7 +70,7 @@
     padding: 0.5rem 1rem;
     background: rgba(201, 168, 76, 0.1);
     border: 1px solid rgba(201, 168, 76, 0.3);
-    color: var(--gold);
+    color: var(--secondary);
     border-radius: 4px;
     font-size: 0.7rem;
     font-weight: 700;
@@ -91,7 +91,7 @@
 .metaData {
     display: flex;
     gap: 2.5rem;
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
 }
 
 .metaItem {
@@ -133,7 +133,7 @@
 .postBody h3 {
     font-family: var(--font-serif);
     font-size: 2rem;
-    color: var(--gold);
+    color: var(--secondary);
     margin: 4rem 0 1.5rem;
 }
 
@@ -143,7 +143,7 @@
 
 .postBody blockquote {
     background: rgba(201, 168, 76, 0.05);
-    border-left: 2px solid var(--gold);
+    border-left: 2px solid var(--secondary);
     padding: 2.5rem 3rem;
     font-family: var(--font-serif);
     font-size: 1.75rem;
@@ -166,7 +166,7 @@
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
 }
 
 .shareButtons {
@@ -189,8 +189,8 @@
 }
 
 .shareBtn:hover {
-    border-color: var(--gold);
-    color: var(--gold);
+    border-color: var(--secondary);
+    color: var(--secondary);
     transform: translateY(-3px);
 }
 
@@ -210,7 +210,7 @@
     font-size: 0.875rem;
     text-transform: uppercase;
     letter-spacing: 0.2em;
-    color: var(--gold);
+    color: var(--secondary);
     margin-bottom: 2rem;
     display: flex;
     align-items: center;
@@ -261,16 +261,16 @@
 }
 
 .relatedCard:hover .relatedTitle {
-    color: var(--gold);
+    color: var(--secondary);
 }
 
 .relatedDate {
     font-size: 0.8rem;
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
 }
 
 .subscribeCard {
-    background: var(--surface-dark);
+    background: #FFFFFF;
     border: 1px solid var(--border-dark);
     padding: 3rem;
     border-radius: 12px;
@@ -285,7 +285,7 @@
 
 .subscribeCard p {
     font-size: 0.9rem;
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
     margin-bottom: 2rem;
     line-height: 1.6;
 }
@@ -302,14 +302,14 @@
 }
 
 .sidebarInput:focus {
-    border-color: var(--gold);
+    border-color: var(--secondary);
 }
 
 .sidebarButton {
     width: 100%;
     padding: 1rem;
-    background: var(--gold);
-    color: var(--charcoal);
+    background: var(--secondary);
+    color: var(--background-alt);
     border: none;
     font-weight: 700;
     text-transform: uppercase;
@@ -327,7 +327,7 @@
 }
 
 .ctaContent span {
-    color: var(--gold);
+    color: var(--secondary);
     text-transform: uppercase;
     letter-spacing: 0.3em;
     font-size: 0.75rem;
@@ -352,7 +352,7 @@
 
 .ctaLink:hover {
     gap: 1.5rem;
-    color: var(--gold);
+    color: var(--secondary);
 }
 
 /* LOADING */
@@ -364,14 +364,14 @@
     justify-content: center;
     gap: 2rem;
     background: #050505;
-    color: var(--gold);
+    color: var(--secondary);
 }
 
 .spinner {
     width: 40px;
     height: 40px;
     border: 3px solid rgba(201, 168, 76, 0.1);
-    border-top: 3px solid var(--gold);
+    border-top: 3px solid var(--secondary);
     border-radius: 50%;
 }
 

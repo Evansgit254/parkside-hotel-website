@@ -80,11 +80,11 @@ export default function FacilityDetail() {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            style={{ background: 'var(--surface)', border: '1px solid var(--border-gold)', borderRadius: '24px', padding: '3rem', width: '100%', maxWidth: '520px', position: 'relative' }}
+                            style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '24px', padding: '3rem', width: '100%', maxWidth: '520px', position: 'relative' }}
                         >
                             <button
                                 onClick={() => setShowInquiryForm(false)}
-                                style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'rgba(255,255,255,0.05)', border: 'none', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff' }}
+                                style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'rgba(0,0,0,0.05)', border: 'none', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#6B7280' }}
                             >
                                 <X size={18} />
                             </button>
@@ -93,12 +93,12 @@ export default function FacilityDetail() {
                                 <div style={{ textAlign: 'center', padding: '2rem 0' }}>
                                     <CheckCircle2 size={64} color="#10b981" style={{ margin: '0 auto 1.5rem' }} />
                                     <h3 style={{ fontFamily: 'var(--font-outfit)', fontSize: '1.75rem', fontWeight: 800, marginBottom: '1rem' }}>Inquiry Sent!</h3>
-                                    <p style={{ color: 'rgba(255,255,255,0.6)' }}>Our team will be in touch with you shortly.</p>
+                                    <p style={{ color: '#6B7280' }}>Our team will be in touch with you shortly.</p>
                                 </div>
                             ) : (
                                 <>
                                     <h3 style={{ fontFamily: 'var(--font-outfit)', fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Send Inquiry</h3>
-                                    <p style={{ color: 'rgba(255,255,255,0.5)', marginBottom: '2rem' }}>Inquiring about: <strong style={{ color: 'var(--gold)' }}>{facility.title}</strong></p>
+                                    <p style={{ color: '#6B7280', marginBottom: '2rem' }}>Inquiring about: <strong style={{ color: 'var(--secondary)' }}>{facility.title}</strong></p>
 
                                     <form onSubmit={handleInquirySubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                                         <input
@@ -106,7 +106,7 @@ export default function FacilityDetail() {
                                             placeholder="Your Full Name"
                                             value={formData.name}
                                             onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                            style={{ padding: '1rem 1.25rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '12px', color: '#fff', fontSize: '1rem', fontFamily: 'var(--font-sans)', outline: 'none' }}
+                                            style={{ padding: '1rem 1.25rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '12px', color: '#111827', fontSize: '1rem', fontFamily: 'var(--font-sans)', outline: 'none' }}
                                         />
                                         <input
                                             required
@@ -114,25 +114,25 @@ export default function FacilityDetail() {
                                             placeholder="Email Address"
                                             value={formData.email}
                                             onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                            style={{ padding: '1rem 1.25rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '12px', color: '#fff', fontSize: '1rem', fontFamily: 'var(--font-sans)', outline: 'none' }}
+                                            style={{ padding: '1rem 1.25rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '12px', color: '#111827', fontSize: '1rem', fontFamily: 'var(--font-sans)', outline: 'none' }}
                                         />
                                         <input
                                             placeholder="Phone Number (optional)"
                                             value={formData.phone}
                                             onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                                            style={{ padding: '1rem 1.25rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '12px', color: '#fff', fontSize: '1rem', fontFamily: 'var(--font-sans)', outline: 'none' }}
+                                            style={{ padding: '1rem 1.25rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '12px', color: '#111827', fontSize: '1rem', fontFamily: 'var(--font-sans)', outline: 'none' }}
                                         />
                                         <textarea
                                             placeholder="Your message or requirements..."
                                             value={formData.message}
                                             onChange={e => setFormData({ ...formData, message: e.target.value })}
                                             rows={3}
-                                            style={{ padding: '1rem 1.25rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '12px', color: '#fff', fontSize: '1rem', fontFamily: 'var(--font-sans)', outline: 'none', resize: 'vertical' }}
+                                            style={{ padding: '1rem 1.25rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '12px', color: '#111827', fontSize: '1rem', fontFamily: 'var(--font-sans)', outline: 'none', resize: 'vertical' }}
                                         />
                                         <button
                                             type="submit"
                                             disabled={isSending}
-                                            style={{ padding: '1rem', background: 'var(--gold)', color: '#000', border: '2px solid var(--gold)', borderRadius: '12px', fontWeight: 800, fontSize: '1rem', cursor: isSending ? 'not-allowed' : 'pointer', opacity: isSending ? 0.7 : 1, display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'center' }}
+                                            style={{ padding: '1rem', background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: '12px', fontWeight: 800, fontSize: '1rem', cursor: isSending ? 'not-allowed' : 'pointer', opacity: isSending ? 0.7 : 1, display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'center' }}
                                         >
                                             <Send size={18} />
                                             {isSending ? "Sending..." : "Send Inquiry"}

@@ -3,6 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { prisma, isDatabaseConfigured } from "../lib/prisma";
 import { NotificationService } from "./services/mailService";
+import bcrypt from "bcrypt";
+import { signToken, getAuthSession as getAuthSessionLib } from "../lib/auth";
+import { cookies } from "next/headers";
+
+export async function getAuthSession() {
+    return await getAuthSessionLib();
+}
 import {
     Room, Lead, User, Testimonial, BlogPost, Facility,
     MenuCategory, HeroImage, GalleryItem, Promotion, Subscriber, ContactInfo,
@@ -29,6 +36,26 @@ function revalidateAll() {
     revalidatePath("/admin/testimonials");
     revalidatePath("/admin/blog");
     revalidatePath("/admin/gallery");
+}
+
+// ─────────────────────────────────────────────
+// AUTHORIZATION HELPERS
+// ─────────────────────────────────────────────
+
+async function requireAdmin() {
+    const session = await getAuthSession();
+    if (!session || session.role !== "admin") {
+        throw new Error("Unauthorized: Admin access required");
+    }
+    return session;
+}
+
+async function requireUser() {
+    const session = await getAuthSession();
+    if (!session) {
+        throw new Error("Unauthorized: User access required");
+    }
+    return session;
 }
 
 // ─────────────────────────────────────────────
@@ -186,24 +213,26 @@ export async function addLead(lead: {
 export async function updateLeadStatus(id: number, status: string) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.lead.update({ where: { id }, data: { status } });
         revalidatePath("/admin/leads");
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error updating lead status:", error);
-        return { success: false, error: "Database error" };
+        return { success: false, error: error.message || "Database error" };
     }
 }
 
 export async function deleteLead(id: number) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.lead.delete({ where: { id } });
         revalidatePath("/admin/leads");
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error deleting lead:", error);
-        return { success: false, error: "Database error" };
+        return { success: false, error: error.message || "Database error" };
     }
 }
 
@@ -240,6 +269,7 @@ export async function createRoom(newRoom: {
 }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         const slug = newRoom.id ?? newRoom.name.toLowerCase().replace(/\s+/g, "-");
         await prisma.room.create({
             data: {
@@ -263,6 +293,7 @@ export async function createRoom(newRoom: {
 export async function updateRoom(roomId: string, updatedRoom: Partial<Room>) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.room.update({
             where: { slug: roomId },
             data: {
@@ -285,6 +316,7 @@ export async function updateRoom(roomId: string, updatedRoom: Partial<Room>) {
 export async function deleteRoom(roomId: string) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.room.delete({ where: { slug: roomId } });
         revalidateAll();
         return { success: true };
@@ -325,6 +357,7 @@ export async function addTestimonial(t: {
 export async function updateTestimonial(id: number, updatedData: Partial<Testimonial>) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.testimonial.update({
             where: { id },
             data: {
@@ -345,6 +378,7 @@ export async function updateTestimonial(id: number, updatedData: Partial<Testimo
 export async function deleteTestimonial(id: number) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.testimonial.delete({ where: { id } });
         revalidateAll();
         return { success: true };
@@ -370,6 +404,7 @@ export async function submitPublicReview(review: { name: string; title: string; 
 export async function createDiningCategory(newCategory: { name: string; items?: any[]; order?: number; id?: string }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         const id = newCategory.id ?? newCategory.name.toLowerCase().replace(/\s+/g, "-");
         await prisma.menuCategory.create({
             data: { id, name: newCategory.name, items: newCategory.items ?? [], order: newCategory.order ?? 0 },
@@ -385,6 +420,7 @@ export async function createDiningCategory(newCategory: { name: string; items?: 
 export async function updateDiningCategory(categoryId: string, updatedCategory: { name: string; items: any[] }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.menuCategory.update({
             where: { id: categoryId },
             data: { name: updatedCategory.name, items: updatedCategory.items ?? [] },
@@ -400,6 +436,7 @@ export async function updateDiningCategory(categoryId: string, updatedCategory: 
 export async function deleteDiningCategory(categoryId: string) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.menuCategory.delete({ where: { id: categoryId } });
         revalidateAll();
         return { success: true };
@@ -416,6 +453,7 @@ export async function deleteDiningCategory(categoryId: string) {
 export async function addFacility(f: Partial<Facility> & { title: string; desc: string; icon: string }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         const id = f.id ?? f.title.toLowerCase().replace(/\s+/g, "-");
         await prisma.facility.create({
             data: { id, title: f.title, desc: f.desc, icon: f.icon, image: f.image ?? null, features: f.features ?? [], highlights: f.highlights ?? [] },
@@ -431,6 +469,7 @@ export async function addFacility(f: Partial<Facility> & { title: string; desc: 
 export async function updateFacility(facilityId: string, updatedFacility: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.facility.update({
             where: { id: facilityId },
             data: {
@@ -453,6 +492,7 @@ export async function updateFacility(facilityId: string, updatedFacility: any) {
 export async function deleteFacility(facilityId: string) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.facility.delete({ where: { id: facilityId } });
         revalidateAll();
         return { success: true };
@@ -469,6 +509,7 @@ export async function deleteFacility(facilityId: string) {
 export async function addHeroImage(imageUrl: string) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         const count = await prisma.heroImage.count();
         await prisma.heroImage.create({ data: { url: imageUrl, order: count } });
         revalidateAll();
@@ -482,6 +523,7 @@ export async function addHeroImage(imageUrl: string) {
 export async function deleteHeroImage(imageUrl: string) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.heroImage.deleteMany({ where: { url: imageUrl } });
         revalidateAll();
         return { success: true };
@@ -498,6 +540,7 @@ export async function deleteHeroImage(imageUrl: string) {
 export async function updateContactInfo(contactInfo: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.contactInfo.upsert({
             where: { id: 1 },
             update: {
@@ -564,6 +607,7 @@ export async function addPromotion(promotion: {
 }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         const newPromotion = await prisma.promotion.create({
             data: {
                 code: promotion.code,
@@ -584,6 +628,7 @@ export async function addPromotion(promotion: {
 export async function deletePromotion(id: string) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.promotion.delete({ where: { id } });
         revalidatePath("/admin/promotions");
         return { success: true };
@@ -602,6 +647,7 @@ import { v2 as cloudinary } from "cloudinary";
 // Cloudinary configures itself automatically if CLOUDINARY_URL is present in the environment variables.
 
 export async function uploadImage(formData: FormData) {
+    await requireAdmin();
     const file = formData.get("file") as File;
     if (!file) throw new Error("No file uploaded");
 
@@ -632,15 +678,53 @@ export async function loginUser(email: string, password: string) {
     if (!isDatabaseConfigured()) return { success: false, message: "Server maintains local legacy mode. Database authentication unavailable." };
     try {
         const user = await prisma.user.findUnique({ where: { email } });
-        if (!user || user.password !== password) {
+        if (!user) {
             return { success: false, message: "Invalid email or password" };
         }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return { success: false, message: "Invalid email or password" };
+        }
+
         const { password: _, ...safeUser } = user;
         return { success: true, user: safeUser };
     } catch (error) {
         console.error("Login error:", error);
         return { success: false, message: "An unexpected error occurred during login" };
     }
+}
+
+export async function loginAdmin(email: string, password: string) {
+    const adminEmail = process.env.ADMIN_EMAIL || "admin@parksidevilla.com";
+    const adminPass = process.env.ADMIN_PASSWORD || "parkside2025";
+
+    if (email === adminEmail && password === adminPass) {
+        const token = await signToken({ email, role: "admin" });
+        const cookieStore = await cookies();
+        cookieStore.set("admin_session", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            maxAge: 60 * 60 * 2 // 2 hours
+        });
+        return { success: true };
+    }
+
+    return { success: false, message: "Invalid administrative credentials" };
+}
+
+export async function logoutAdmin() {
+    const cookieStore = await cookies();
+    cookieStore.set("admin_session", "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 0
+    });
+    return { success: true };
 }
 
 export async function registerUser(user: {
@@ -653,8 +737,9 @@ export async function registerUser(user: {
         const existing = await prisma.user.findUnique({ where: { email: user.email } });
         if (existing) return { success: false, message: "Email already registered" };
 
+        const hashedPassword = await bcrypt.hash(user.password, 10);
         const newUser = await prisma.user.create({
-            data: { name: user.name, email: user.email, password: user.password },
+            data: { name: user.name, email: user.email, password: hashedPassword },
         });
         const { password: _, ...safeUser } = newUser;
         return { success: true, user: safeUser };
@@ -667,6 +752,9 @@ export async function registerUser(user: {
 export async function updateProfile(userId: string, updates: { name?: string; email?: string }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        const session = await requireUser();
+        // Ensure user can only update their own profile
+        if (session.id !== userId) throw new Error("Unauthorized");
         await prisma.user.update({
             where: { id: userId },
             data: updates,
@@ -681,8 +769,9 @@ export async function updateProfile(userId: string, updates: { name?: string; em
 export async function getUserBookings(userId: string) {
     if (!isDatabaseConfigured()) return [];
     try {
+        const session = await requireUser();
         const user = await prisma.user.findUnique({ where: { id: userId } });
-        if (!user) return [];
+        if (!user || user.id !== session.id) return [];
         return await prisma.lead.findMany({
             where: { email: user.email },
             orderBy: { createdAt: "desc" },
@@ -700,6 +789,7 @@ export async function getUserBookings(userId: string) {
 export async function createBlogPost(post: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         const newPost = await prisma.blogPost.create({
             data: {
                 id: post.id || post.title.toLowerCase().replace(/\s+/g, "-"),
@@ -723,6 +813,7 @@ export async function createBlogPost(post: any) {
 export async function updateBlogPost(id: string, post: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.blogPost.update({
             where: { id },
             data: post,
@@ -738,6 +829,7 @@ export async function updateBlogPost(id: string, post: any) {
 export async function deleteBlogPost(id: string) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.blogPost.delete({ where: { id } });
         revalidateAll();
         return { success: true };
@@ -764,6 +856,7 @@ export async function getGalleryItems() {
 export async function addGalleryItem(item: { url: string; type: string; title?: string }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         const count = await prisma.galleryItem.count();
         const newItem = await prisma.galleryItem.create({
             data: { ...item, order: count },
@@ -779,6 +872,7 @@ export async function addGalleryItem(item: { url: string; type: string; title?: 
 export async function deleteGalleryItem(id: string) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.galleryItem.delete({ where: { id } });
         revalidateAll();
         return { success: true };
@@ -791,6 +885,7 @@ export async function deleteGalleryItem(id: string) {
 export async function updateGalleryOrder(items: { id: string; order: number }[]) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         for (const item of items) {
             await prisma.galleryItem.update({
                 where: { id: item.id },
@@ -819,6 +914,7 @@ export async function updateSiteData(_data: any) {
 export async function updateSiteContent(key: string, value: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.siteContent.upsert({
             where: { key },
             update: { value },

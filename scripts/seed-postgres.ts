@@ -10,10 +10,21 @@
  */
 
 import { PrismaClient } from "@prisma/client";
-import * as fs from "fs";
-import * as path from "path";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
-const prisma = new PrismaClient();
+function getPrisma() {
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString || connectionString.includes("USER:PASSWORD")) {
+        console.warn("⚠️ DATABASE_URL not configured. Seeding may fail.");
+        return new PrismaClient();
+    }
+    const pool = new Pool({ connectionString });
+    const adapter = new PrismaPg(pool);
+    return new PrismaClient({ adapter } as any);
+}
+
+const prisma = getPrisma();
 
 async function main() {
     const dataPath = path.join(process.cwd(), "src/data/site-data.json");
@@ -171,17 +182,19 @@ async function main() {
     }
     console.log(`  ✓ ${data.subscribers?.length ?? 0} subscribers`);
 
-    // 10. Users (skip passwords in plain text — keep existing ones only)
+    // 10. Users
     console.log("→ Seeding users...");
+    const bcrypt = require("bcrypt");
     for (const user of data.users || []) {
         if (!user.email) continue;
         const exists = await prisma.user.findUnique({ where: { email: user.email } });
         if (!exists) {
+            const hashedPassword = await bcrypt.hash(user.password ?? "changeme123", 10);
             await prisma.user.create({
                 data: {
                     name: user.name ?? "Guest",
                     email: user.email,
-                    password: user.password ?? "changeme123",
+                    password: hashedPassword,
                 },
             });
         }

@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Playfair_Display, Mulish } from "next/font/google";
 import "./globals.css";
 import ClientBranding from "./components/ClientBranding";
 import { CurrencyProvider } from "./context/CurrencyContext";
 import LiveChatWrapper from "./components/LiveChatWrapper";
+import UtilityPopup from "./components/UtilityPopup";
 import Script from "next/script";
 
-const inter = Inter({
-  variable: "--font-inter",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
 });
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const mulish = Mulish({
+  variable: "--font-mulish",
   subsets: ["latin"],
 });
 
@@ -45,10 +46,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
+      <body className={`${playfair.variable} ${mulish.variable}`} suppressHydrationWarning>
         <CurrencyProvider>
           <ClientBranding>
             {children}
+            <UtilityPopup />
           </ClientBranding>
           <LiveChatWrapper />
         </CurrencyProvider>

@@ -116,19 +116,19 @@ export default function AdminRooms() {
 
                 {rooms.map((room) => (
                     <div key={room.id} className={styles.tableRow} style={{ gridTemplateColumns: '100px 1fr 120px 80px' }}>
-                        <div style={{ width: '80px', height: '56px', overflow: 'hidden', background: 'rgba(255,255,255,0.03)' }}>
+                        <div style={{ width: '80px', height: '56px', overflow: 'hidden', background: '#F7F8FC' }}>
                             {room.image ? (
                                 <img src={room.image} alt={room.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             ) : (
-                                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.1)' }}>
+                                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6B7280' }}>
                                     <ImageIcon size={20} />
                                 </div>
                             )}
                         </div>
 
                         <div>
-                            <div style={{ fontWeight: 500, fontSize: '0.9375rem', marginBottom: '0.25rem', color: 'rgba(255,255,255,0.85)' }}>{room.name}</div>
-                            <div style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.3)', lineHeight: '1.5', maxWidth: '480px' }}>{room.desc}</div>
+                            <div style={{ fontWeight: 500, fontSize: '0.9375rem', marginBottom: '0.25rem', color: '#6B7280' }}>{room.name}</div>
+                            <div style={{ fontSize: '0.8125rem', color: '#6B7280', lineHeight: '1.5', maxWidth: '480px' }}>{room.desc}</div>
                             {room.tag && (
                                 <div style={{ marginTop: '0.5rem' }}>
                                     <span className={`${styles.badge} ${styles.badgeGold}`}>{room.tag}</span>
@@ -166,8 +166,8 @@ export default function AdminRooms() {
                             style={{
                                 width: '100%',
                                 height: '200px',
-                                background: 'rgba(255,255,255,0.02)',
-                                border: '1px dashed rgba(255,255,255,0.1)',
+                                background: '#F7F8FC',
+                                border: '1px dashed rgba(0,0,0,0.12)',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
@@ -190,8 +190,8 @@ export default function AdminRooms() {
                                 </>
                             ) : (
                                 <>
-                                    <Upload size={24} color="rgba(255,255,255,0.2)" />
-                                    <span style={{ color: 'rgba(255,255,255,0.3)', marginTop: '0.75rem', fontSize: '0.8125rem' }}>
+                                    <Upload size={24} color="rgba(0,0,0,0.25)" />
+                                    <span style={{ color: '#6B7280', marginTop: '0.75rem', fontSize: '0.8125rem' }}>
                                         {isUploading ? "Uploading..." : "Click to upload room image"}
                                     </span>
                                 </>

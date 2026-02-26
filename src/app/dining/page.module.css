@@ -16,7 +16,7 @@
     overflow: hidden;
     padding: 0 2rem;
     text-align: center;
-    background: var(--charcoal);
+    background: var(--background-alt);
 }
 
 .heroOverlay {
@@ -145,26 +145,27 @@
 .filterBtn {
     padding: 0.6rem 1.5rem;
     background: transparent;
-    border: 1px solid var(--border-gold);
-    color: var(--text-on-dark-soft);
-    font-size: 0.875rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #6B7280;
+    font-size: 0.8rem;
     font-family: var(--font-sans);
     text-transform: uppercase;
     letter-spacing: 0.15em;
     cursor: pointer;
     transition: all 0.3s ease;
-    border-radius: 4px;
+    border-radius: 100px;
 }
 
 .filterBtn:hover {
-    border-color: var(--gold);
-    color: var(--gold);
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 .filterActive {
-    background: var(--gold-muted);
-    border-color: var(--gold);
-    color: var(--gold);
+    background: rgba(20, 75, 54, 0.08);
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 600;
 }
 
 .menuGrid {
@@ -177,10 +178,11 @@
 .categoryTitle {
     font-family: var(--font-serif);
     font-size: 2.5rem;
-    font-weight: 500;
+    font-weight: 600;
+    color: #111827;
     margin-bottom: 2.5rem;
     padding-bottom: 1.25rem;
-    border-bottom: 1px solid var(--border-gold);
+    border-bottom: 2px solid rgba(20, 75, 54, 0.15);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -197,17 +199,18 @@
     flex-direction: column;
     gap: 0.5rem;
     padding: 1.5rem;
-    background: var(--surface-dark);
-    border: 1px solid var(--border-dark);
-    border-radius: 12px;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 14px;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .menuItem:hover {
-    background: var(--surface-mid);
-    border-color: var(--border-gold);
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    background: #FDFBF8;
+    border-color: rgba(20, 75, 54, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
 
 .itemHeader {
@@ -219,20 +222,20 @@
 
 .itemName {
     font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--ivory);
+    font-weight: 700;
+    color: #111827;
 }
 
 .itemPrice {
     font-weight: 700;
-    color: var(--gold);
+    color: var(--secondary);
     font-family: var(--font-serif);
     font-size: 1.25rem;
 }
 
 .itemDesc {
     font-size: 0.875rem;
-    color: var(--text-on-dark-soft);
+    color: #6B7280;
     line-height: 1.6;
 }
 
@@ -249,7 +252,47 @@
 }
 
 @media (max-width: 768px) {
+    .hero {
+        height: 50vh;
+        min-height: 350px;
+    }
+
+    .title {
+        font-size: 3rem;
+    }
+
+    .section {
+        padding: 4rem 1.5rem;
+    }
+
     .menuGrid {
         grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .categoryTitle {
+        font-size: 1.75rem;
+    }
+
+    .menuItem {
+        padding: 1.25rem;
+    }
+
+    .dynamicHeader {
+        padding: 0 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 2.25rem;
+    }
+
+    .categoryTitle {
+        font-size: 1.5rem;
+    }
+
+    .itemName {
+        font-size: 1rem;
     }
 }

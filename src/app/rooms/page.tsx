@@ -345,7 +345,7 @@ export default function RoomsPage() {
                                                             <p className={styles.paymentTitle}>M-Pesa STK Push</p>
                                                             <p className={styles.paymentDesc}>Payment via Safaricom line</p>
                                                         </div>
-                                                        {bookingData.paymentMethod === 'mpesa' && <Check size={16} color="var(--gold)" />}
+                                                        {bookingData.paymentMethod === 'mpesa' && <Check size={16} color="var(--secondary)" />}
                                                     </div>
 
                                                     <div
@@ -357,7 +357,7 @@ export default function RoomsPage() {
                                                             <p className={styles.paymentTitle}>Credit/Debit Card</p>
                                                             <p className={styles.paymentDesc}>Visa, Mastercard, AMEX</p>
                                                         </div>
-                                                        {bookingData.paymentMethod === 'card' && <Check size={16} color="var(--gold)" />}
+                                                        {bookingData.paymentMethod === 'card' && <Check size={16} color="var(--secondary)" />}
                                                     </div>
 
                                                     <div
@@ -369,7 +369,7 @@ export default function RoomsPage() {
                                                             <p className={styles.paymentTitle}>PayPal / International</p>
                                                             <p className={styles.paymentDesc}>Secure checkout via PayPal</p>
                                                         </div>
-                                                        {bookingData.paymentMethod === 'paypal' && <Check size={16} color="var(--gold)" />}
+                                                        {bookingData.paymentMethod === 'paypal' && <Check size={16} color="var(--secondary)" />}
                                                     </div>
 
                                                     <div
@@ -381,7 +381,7 @@ export default function RoomsPage() {
                                                             <p className={styles.paymentTitle}>Corporate Cheque</p>
                                                             <p className={styles.paymentDesc}>For corporate and group bookings</p>
                                                         </div>
-                                                        {bookingData.paymentMethod === 'cheque' && <Check size={16} color="var(--gold)" />}
+                                                        {bookingData.paymentMethod === 'cheque' && <Check size={16} color="var(--secondary)" />}
                                                     </div>
 
                                                     <div className={styles.modalActions}>

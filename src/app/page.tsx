@@ -534,7 +534,7 @@ export default function Home() {
                   <span className={styles.contactLabel}>{item.label}</span>
                   <span className={styles.contactText}>
                     {item.link
-                      ? <a href={item.link} style={{ color: 'var(--gold)' }}>{item.text}</a>
+                      ? <a href={item.link} style={{ color: 'var(--secondary)' }}>{item.text}</a>
                       : item.text
                     }
                   </span>
@@ -665,9 +665,9 @@ export default function Home() {
 
               {/* Progress */}
               <div style={{ display: 'flex', gap: '4px', marginBottom: '2rem' }}>
-                <div style={{ flex: 1, height: '2px', background: bookingStep >= 1 ? 'var(--gold)' : 'var(--border-dark)' }} />
-                <div style={{ flex: 1, height: '2px', background: bookingStep >= 2 ? 'var(--gold)' : 'var(--border-dark)' }} />
-                <div style={{ flex: 1, height: '2px', background: bookingStep >= 3 ? 'var(--gold)' : 'var(--border-dark)' }} />
+                <div style={{ flex: 1, height: '2px', background: bookingStep >= 1 ? 'var(--secondary)' : 'var(--border-dark)' }} />
+                <div style={{ flex: 1, height: '2px', background: bookingStep >= 2 ? 'var(--secondary)' : 'var(--border-dark)' }} />
+                <div style={{ flex: 1, height: '2px', background: bookingStep >= 3 ? 'var(--secondary)' : 'var(--border-dark)' }} />
               </div>
 
               <span className={styles.badge} style={{ marginBottom: '1rem', display: 'flex' }}>
@@ -787,7 +787,7 @@ export default function Home() {
                               <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>M-Pesa STK Push</p>
                               <p style={{ fontSize: '0.625rem', opacity: 0.6 }}>Instant payment via your Safaricom line</p>
                             </div>
-                            {bookingData.paymentMethod === 'mpesa' && <Check size={16} color="var(--gold)" />}
+                            {bookingData.paymentMethod === 'mpesa' && <Check size={16} color="var(--secondary)" />}
                           </div>
 
                           <div
@@ -799,7 +799,7 @@ export default function Home() {
                               <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>Credit/Debit Card</p>
                               <p style={{ fontSize: '0.625rem', opacity: 0.6 }}>Visa, Mastercard, & American Express</p>
                             </div>
-                            {bookingData.paymentMethod === 'card' && <Check size={16} color="var(--gold)" />}
+                            {bookingData.paymentMethod === 'card' && <Check size={16} color="var(--secondary)" />}
                           </div>
 
                           <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
@@ -817,9 +817,9 @@ export default function Home() {
                             <motion.div
                               animate={{ rotate: 360 }}
                               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                              style={{ width: '64px', height: '64px', border: '2px solid rgba(201,168,76,0.2)', borderTop: '2px solid var(--gold)', borderRadius: '50%' }}
+                              style={{ width: '64px', height: '64px', border: '2px solid rgba(201,168,76,0.2)', borderTop: '2px solid var(--secondary)', borderRadius: '50%' }}
                             />
-                            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', fontWeight: 600, color: 'var(--gold)' }}>
+                            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', fontWeight: 600, color: 'var(--secondary)' }}>
                               {mpesaTimer}s
                             </div>
                           </div>
@@ -867,7 +867,7 @@ export default function Home() {
                         <div style={{ textAlign: 'center', padding: '1rem 0' }}>
                           <motion.div
                             initial={{ scale: 0 }} animate={{ scale: 1 }}
-                            style={{ width: '64px', height: '64px', background: 'rgba(201,168,76,0.1)', border: '1px solid var(--gold)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: 'var(--gold)' }}
+                            style={{ width: '64px', height: '64px', background: 'rgba(201,168,76,0.1)', border: '1px solid var(--secondary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: 'var(--secondary)' }}
                           >
                             <Check size={32} />
                           </motion.div>

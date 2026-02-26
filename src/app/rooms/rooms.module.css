@@ -1,5 +1,5 @@
 .pageWrapper {
-    background: var(--charcoal);
+    background: var(--background-alt);
     min-height: 100vh;
     color: var(--ivory);
     font-family: var(--font-body);
@@ -47,7 +47,7 @@
     padding: 0.5rem 1.25rem;
     background: rgba(212, 175, 55, 0.1);
     border: 1px solid rgba(212, 175, 55, 0.3);
-    color: var(--gold);
+    color: var(--secondary);
     border-radius: 100px;
     font-size: 0.8rem;
     font-weight: 700;
@@ -67,12 +67,12 @@
 .subtitle {
     font-size: 1.125rem;
     line-height: 1.8;
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
 }
 
 /* FILTERS */
 .filterSection {
-    background: var(--surface-dark);
+    background: #FFFFFF;
     padding: 2.5rem 0;
     border-bottom: 1px solid var(--border-dark);
     position: sticky;
@@ -101,7 +101,7 @@
     font-size: 0.625rem;
     text-transform: uppercase;
     letter-spacing: 0.15em;
-    color: var(--gold);
+    color: var(--secondary);
     font-weight: 600;
 }
 
@@ -120,19 +120,19 @@
 
 .filterInput:focus,
 .filterSelect:focus {
-    border-color: var(--gold);
+    border-color: var(--secondary);
     background: rgba(255, 255, 255, 0.05);
 }
 
 .filterSelect option {
-    background: var(--surface-dark);
+    background: #FFFFFF;
     color: var(--ivory);
     padding: 10px;
 }
 
 .rangeInput {
     width: 100%;
-    accent-color: var(--gold);
+    accent-color: var(--secondary);
     height: 4px;
     background: var(--border-dark);
     border-radius: 2px;
@@ -151,7 +151,7 @@
 }
 
 .roomCard {
-    background: var(--surface-dark);
+    background: #FFFFFF;
     border: 1px solid var(--border-dark);
     border-radius: 16px;
     overflow: hidden;
@@ -185,8 +185,8 @@
     top: 1.5rem;
     left: 1.5rem;
     z-index: 5;
-    background: var(--gold);
-    color: var(--charcoal);
+    background: var(--secondary);
+    color: var(--background-alt);
     padding: 0.35rem 1rem;
     border-radius: 4px;
     font-size: 0.625rem;
@@ -224,7 +224,7 @@
 
 .priceValue {
     display: block;
-    color: var(--gold);
+    color: var(--secondary);
     font-size: 1.5rem;
     font-weight: 700;
 }
@@ -237,7 +237,7 @@
 }
 
 .roomDesc {
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
     line-height: 1.7;
     margin-bottom: 2rem;
     font-size: 0.95rem;
@@ -254,7 +254,7 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.75rem;
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
 }
 
 .cardActions {
@@ -273,13 +273,13 @@
 }
 
 .detailsLink:hover {
-    color: var(--gold);
-    border-color: var(--gold);
+    color: var(--secondary);
+    border-color: var(--secondary);
 }
 
 .bookBtn {
-    background: var(--gold);
-    color: var(--charcoal);
+    background: var(--secondary);
+    color: var(--background-alt);
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 4px;
@@ -310,7 +310,7 @@
 }
 
 .modalContent {
-    background: var(--surface-dark);
+    background: #FFFFFF;
     width: 100%;
     max-width: 500px;
     padding: 3rem;
@@ -325,14 +325,14 @@
     right: 1.5rem;
     background: none;
     border: none;
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
     font-size: 2rem;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 .closeModal:hover {
-    color: var(--gold);
+    color: var(--secondary);
 }
 
 .progressContainer {
@@ -343,14 +343,14 @@
 
 .progressBar {
     height: 100%;
-    background: var(--gold);
+    background: var(--secondary);
     transition: width 0.4s ease;
 }
 
 .stepBadge {
     display: block;
     font-size: 0.7rem;
-    color: var(--gold);
+    color: var(--secondary);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-bottom: 1rem;
@@ -364,7 +364,7 @@
 
 .modalSubtitle {
     font-size: 0.9rem;
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
     margin-bottom: 2.5rem;
 }
 
@@ -376,7 +376,7 @@
 .formLabel {
     display: block;
     font-size: 0.625rem;
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
     text-transform: uppercase;
     letter-spacing: 0.15em;
     margin-bottom: 0.75rem;
@@ -400,13 +400,13 @@
 }
 
 .input:focus {
-    border-color: var(--gold);
+    border-color: var(--secondary);
 }
 
 .buttonPrimary {
     width: 100%;
-    background: var(--gold);
-    color: var(--charcoal);
+    background: var(--secondary);
+    color: var(--background-alt);
     padding: 1.125rem;
     border: none;
     border-radius: 4px;
@@ -456,7 +456,7 @@
 }
 
 .paymentOptionActive {
-    border-color: var(--gold);
+    border-color: var(--secondary);
     background: rgba(212, 175, 55, 0.1);
 }
 
@@ -490,21 +490,21 @@
     width: 100%;
     height: 100%;
     border: 2px solid rgba(212, 175, 55, 0.2);
-    border-top-color: var(--gold);
+    border-top-color: var(--secondary);
     border-radius: 50%;
 }
 
 .timerText {
     position: absolute;
     font-weight: 700;
-    color: var(--gold);
+    color: var(--secondary);
 }
 
 .successIcon {
     width: 64px;
     height: 64px;
     background: rgba(212, 175, 55, 0.1);
-    color: var(--gold);
+    color: var(--secondary);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -518,7 +518,7 @@
 }
 
 .statusDesc {
-    color: var(--text-on-dark-soft);
+    color: var(--foreground-soft);
     font-size: 0.875rem;
     margin-bottom: 2rem;
 }
@@ -557,16 +557,65 @@
     justify-content: center;
     font-family: var(--font-serif);
     font-size: 2rem;
-    color: var(--gold);
-    background: var(--charcoal);
+    color: var(--secondary);
+    background: var(--background-alt);
 }
 
 @media (max-width: 768px) {
     .roomGrid {
         grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .roomContent {
+        padding: 1.5rem;
+    }
+
+    .roomName {
+        font-size: 1.5rem;
+    }
+
+    .amenitiesShort {
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
     }
 
     .modalContent {
-        padding: 2rem;
+        padding: 1.5rem;
+        margin: 1rem;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .modalTitle {
+        font-size: 1.5rem;
+    }
+
+    .modalActions {
+        flex-direction: column;
+    }
+
+    .detailsLink {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sectionTitle {
+        font-size: 2.5rem;
+    }
+
+    .roomHeader {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .priceInfo {
+        text-align: left;
     }
 }

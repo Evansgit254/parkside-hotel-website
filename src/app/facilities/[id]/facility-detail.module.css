@@ -61,7 +61,7 @@
 }
 
 .backLink:hover {
-    color: var(--gold);
+    color: var(--secondary);
 }
 
 .iconWrapper {
@@ -73,16 +73,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--gold);
+    color: var(--secondary);
     margin-bottom: 2rem;
 }
 
 .title {
-    font-family: var(--font-outfit);
+    font-family: var(--font-serif);
     font-size: 4rem;
-    font-weight: 800;
+    font-weight: 700;
     margin: 0;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
 }
 
 .tagline {
@@ -107,9 +107,10 @@
 }
 
 .sectionHeading {
-    font-family: var(--font-outfit);
+    font-family: var(--font-serif);
     font-size: 2.25rem;
-    font-weight: 800;
+    font-weight: 700;
+    color: var(--primary);
     margin-bottom: 1.5rem;
 }
 
@@ -134,7 +135,7 @@
 }
 
 .featureIcon {
-    color: var(--gold);
+    color: var(--secondary);
     opacity: 0.8;
 }
 
@@ -155,9 +156,10 @@
 }
 
 .subHeading {
-    font-family: var(--font-outfit);
+    font-family: var(--font-serif);
     font-size: 1.5rem;
     font-weight: 700;
+    color: var(--primary);
     margin-bottom: 2rem;
 }
 
@@ -192,9 +194,9 @@
 }
 
 .actionTitle {
-    font-family: var(--font-outfit);
+    font-family: var(--font-serif);
     font-size: 1.75rem;
-    font-weight: 800;
+    font-weight: 700;
     margin-bottom: 1rem;
 }
 
@@ -212,15 +214,16 @@
 
 .primaryBtn {
     padding: 1.25rem;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%);
     color: #fff;
     border: none;
     border-radius: 12px;
-    font-weight: 800;
+    font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 10px 20px rgba(0, 102, 51, 0.15);
+    box-shadow: 0 10px 20px rgba(122, 40, 50, 0.15);
+    /* Maroon shadow */
 }
 
 .secondaryBtn {
@@ -229,22 +232,22 @@
     color: var(--primary);
     border: 2px solid var(--primary);
     border-radius: 12px;
-    font-weight: 800;
+    font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .primaryBtn:hover {
-    background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%);
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(92, 24, 92, 0.3);
+    box-shadow: 0 10px 25px rgba(122, 40, 50, 0.3);
 }
 
 .secondaryBtn:hover {
-    background: var(--accent-purple);
-    border-color: var(--secondary);
-    color: var(--secondary);
+    background: var(--forest-green-muted);
+    border-color: var(--primary);
+    color: var(--primary);
     transform: translateY(-2px);
 }
 
@@ -292,7 +295,7 @@
     font-family: var(--font-display);
     font-size: 2rem;
     font-weight: 800;
-    color: var(--gold);
+    color: var(--secondary);
     background: var(--background);
 }
 

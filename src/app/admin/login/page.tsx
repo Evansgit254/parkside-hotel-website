@@ -4,13 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "../admin.module.css";
 import { motion } from "framer-motion";
-import { Lock, Mail, ChevronRight, ShieldCheck } from "lucide-react";
+import { Lock, Mail, ChevronRight, ShieldCheck, Eye, EyeOff } from "lucide-react";
+import { loginAdmin } from "../../actions";
 
 export default function AdminLogin() {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -18,14 +20,17 @@ export default function AdminLogin() {
         setIsLoading(true);
         setError("");
 
-        // Artificial delay for premium feel
-        await new Promise(resolve => setTimeout(resolve, 800));
-
-        if (email === "admin@parksidevilla.com" && password === "parkside2025") {
-            document.cookie = "admin_session=true; path=/";
-            router.push("/admin");
-        } else {
-            setError("The credentials provided do not match our records.");
+        try {
+            const res = await loginAdmin(email, password);
+            if (res.success) {
+                router.push("/admin");
+                // The server action handles the cookie now
+            } else {
+                setError(res.message || "Invalid credentials");
+                setIsLoading(false);
+            }
+        } catch (err) {
+            setError("A system error occurred. Please try again later.");
             setIsLoading(false);
         }
     };
@@ -82,14 +87,36 @@ export default function AdminLogin() {
                         <label className={styles.label}>
                             <Lock size={14} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} /> Access Password
                         </label>
-                        <input
-                            type="password"
-                            className={styles.input}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="••••••••"
-                            required
-                        />
+                        <div style={{ position: 'relative' }}>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                className={styles.input}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="••••••••"
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                style={{
+                                    position: 'absolute',
+                                    right: '1rem',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    background: 'none',
+                                    border: 'none',
+                                    color: '#9CA3AF',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: '0.25rem'
+                                }}
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
                     </div>
 
                     <button type="submit" disabled={isLoading} className={styles.loginButton} style={{ marginTop: '1rem' }}>
@@ -102,7 +129,7 @@ export default function AdminLogin() {
                 </form>
 
                 <div style={{ marginTop: '3rem', textAlign: 'center' }}>
-                    <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                    <p style={{ fontSize: '0.75rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                         PARKSIDE VILLA &copy; 2025
                     </p>
                 </div>

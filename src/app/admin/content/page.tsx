@@ -147,11 +147,22 @@ const contentSchema = [
             { name: "hours", label: "Opening Hours", type: "text", default: "Reception 24/7 · Dining 06:00–23:00" },
             { name: "form_placeholder", label: "Form Placeholder", type: "text", default: "How can we assist you?" }
         ]
+    },
+    {
+        key: "footer_titles",
+        label: "Footer Columns",
+        description: "Titles for the columns in the website footer.",
+        icon: LayoutTemplate,
+        fields: [
+            { name: "col1", label: "Column 1 Title", type: "text", default: "Quick Links" },
+            { name: "col2", label: "Column 2 Title", type: "text", default: "Our Pillars" },
+            { name: "col3", label: "Column 3 Title", type: "text", default: "Visit Us" }
+        ]
     }
 ];
 
 const TABS = [
-    { id: "page-copy", label: "Page Copy", keys: ["landing_hero", "rooms_intro", "dining_intro", "facilities_intro", "brand_quote", "testimonials_intro", "recent_rooms", "contact_section", "footer_about"] },
+    { id: "page-copy", label: "Page Copy", keys: ["landing_hero", "rooms_intro", "dining_intro", "facilities_intro", "brand_quote", "testimonials_intro", "recent_rooms", "contact_section", "footer_about", "footer_titles"] },
     { id: "pages", label: "Page Headers", keys: ["gallery_intro", "blog_intro"] },
     { id: "stats", label: "Statistics", keys: ["experience_stats"] },
     { id: "contact", label: "Contact Info", keys: [] },
@@ -244,7 +255,7 @@ export default function AdminContent() {
     if (loading) return (
         <div className={styles.loadingWrapper}>
             <Loader2 className={styles.spinner} size={36} />
-            <p style={{ marginTop: '1rem', color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+            <p style={{ marginTop: '1rem', color: '#6B7280', fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
                 Loading Content Vault
             </p>
         </div>
@@ -292,7 +303,7 @@ export default function AdminContent() {
             {/* ── Tab Bar ── */}
             <div style={{
                 display: 'flex', gap: '0', marginBottom: '2rem',
-                borderBottom: '1px solid rgba(255,255,255,0.06)',
+                borderBottom: '1px solid rgba(0,0,0,0.07)',
             }}>
                 {TABS.map(tab => (
                     <button
@@ -303,7 +314,7 @@ export default function AdminContent() {
                             background: 'none', border: 'none', cursor: 'pointer',
                             fontSize: '0.75rem', letterSpacing: '0.12em', textTransform: 'uppercase',
                             fontFamily: 'Inter, sans-serif', fontWeight: 500,
-                            color: activeTab === tab.id ? '#C9A84C' : 'rgba(255,255,255,0.35)',
+                            color: activeTab === tab.id ? '#144B36' : '#6B7280',
                             borderBottom: activeTab === tab.id ? '2px solid #C9A84C' : '2px solid transparent',
                             transition: 'all 0.2s ease',
                             marginBottom: '-1px',
@@ -316,10 +327,10 @@ export default function AdminContent() {
 
             {/* ── Content: Page Copy + Stats (two-panel layout) ── */}
             {activeTab !== "contact" && (
-                <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '1px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.05)', minHeight: '500px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '1px', background: '#F7F8FC', border: '1px solid rgba(0,0,0,0.07)', minHeight: '500px' }}>
 
                     {/* Left: section list */}
-                    <div style={{ background: '#111110', padding: '0.5rem 0' }}>
+                    <div style={{ background: '#F7F8FC', padding: '0.5rem 0', borderRight: '1px solid rgba(0,0,0,0.07)' }}>
                         {currentTabSections.map(section => {
                             const Icon = section.icon;
                             const isActive = activeSection === section.key;
@@ -332,21 +343,21 @@ export default function AdminContent() {
                                         padding: '0.875rem 1.25rem',
                                         display: 'flex', alignItems: 'center', gap: '0.75rem',
                                         cursor: 'pointer',
-                                        borderLeft: isActive ? '2px solid #C9A84C' : '2px solid transparent',
-                                        background: isActive ? 'rgba(201,168,76,0.06)' : 'transparent',
+                                        borderLeft: isActive ? '3px solid #144B36' : '3px solid transparent',
+                                        background: isActive ? 'rgba(20,75,54,0.06)' : 'transparent',
                                         transition: 'all 0.2s ease',
                                     }}
                                 >
-                                    <Icon size={15} color={isActive ? '#C9A84C' : 'rgba(255,255,255,0.3)'} style={{ flexShrink: 0 }} />
+                                    <Icon size={15} color={isActive ? '#144B36' : '#6B7280'} style={{ flexShrink: 0 }} />
                                     <span style={{
                                         fontSize: '0.8125rem', letterSpacing: '0.02em',
-                                        color: isActive ? '#E8E3DA' : 'rgba(255,255,255,0.4)',
+                                        color: isActive ? '#111827' : '#6B7280',
                                         fontWeight: isActive ? 500 : 400,
                                         flex: 1,
                                     }}>
                                         {section.label}
                                     </span>
-                                    {isActive && <ChevronRight size={14} color="#C9A84C" />}
+                                    {isActive && <ChevronRight size={14} color="#144B36" />}
                                 </button>
                             );
                         })}
@@ -354,24 +365,24 @@ export default function AdminContent() {
 
                     {/* Right: active section editor */}
                     {activeSchemaSection && (
-                        <div style={{ background: '#131312', padding: '2rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+                        <div style={{ background: '#FFFFFF', padding: '2rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
                             {/* Section heading */}
-                            <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '1.5rem' }}>
+                            <div style={{ borderBottom: '1px solid rgba(0,0,0,0.07)', paddingBottom: '1.5rem' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
                                     <div style={{
                                         width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.2)',
+                                        background: 'rgba(20,75,54,0.08)', border: '1px solid rgba(20,75,54,0.15)', borderRadius: '8px',
                                     }}>
-                                        <activeSchemaSection.icon size={15} color="#C9A84C" />
+                                        <activeSchemaSection.icon size={15} color="#144B36" />
                                     </div>
                                     <h2 style={{
-                                        fontFamily: 'Cormorant Garamond, serif', fontSize: '1.5rem', fontWeight: 400,
-                                        color: '#E8E3DA', margin: 0, letterSpacing: '-0.01em',
+                                        fontFamily: 'Cormorant Garamond, serif', fontSize: '1.5rem', fontWeight: 700,
+                                        color: '#111827', margin: 0, letterSpacing: '-0.01em',
                                     }}>
                                         {activeSchemaSection.label}
                                     </h2>
                                 </div>
-                                <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.3)', margin: 0, lineHeight: 1.6 }}>
+                                <p style={{ fontSize: '0.8125rem', color: '#6B7280', margin: 0, lineHeight: 1.6 }}>
                                     {activeSchemaSection.description}
                                 </p>
                             </div>
@@ -383,7 +394,7 @@ export default function AdminContent() {
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem 2rem' }}>
                                         {[1, 2, 3, 4].map(n => (
                                             <div key={n} style={{
-                                                background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
+                                                background: '#F7F8FC', border: '1px solid rgba(0,0,0,0.07)',
                                                 padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.875rem',
                                             }}>
                                                 <span style={{
@@ -440,7 +451,7 @@ export default function AdminContent() {
                             </div>
 
                             {/* Save row */}
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid rgba(0,0,0,0.07)', paddingTop: '1.5rem' }}>
                                 <button
                                     className={styles.addButton}
                                     onClick={() => handleSave(activeSchemaSection.key)}
@@ -460,19 +471,19 @@ export default function AdminContent() {
 
             {/* ── Contact Info Tab ── */}
             {activeTab === "contact" && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: '#F7F8FC', border: '1px solid rgba(0,0,0,0.07)' }}>
                     {/* Basic Info */}
-                    <div style={{ background: '#131312', padding: '2rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '1.25rem' }}>
+                    <div style={{ background: '#FFFFFF', padding: '2rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        <div style={{ borderBottom: '1px solid rgba(0,0,0,0.07)', paddingBottom: '1.25rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.375rem' }}>
                                 <div style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.2)' }}>
                                     <Phone size={15} color="#C9A84C" />
                                 </div>
-                                <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.5rem', fontWeight: 400, color: '#E8E3DA', margin: 0 }}>
+                                <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.5rem', fontWeight: 700, color: '#111827', margin: 0 }}>
                                     Contact Details
                                 </h2>
                             </div>
-                            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.3)', margin: 0 }}>Phone, email, WhatsApp, and address.</p>
+                            <p style={{ fontSize: '0.8125rem', color: '#6B7280', margin: 0 }}>Phone, email, WhatsApp, and address.</p>
                         </div>
 
                         {contactFields.filter(f => f.group === 'Basic').map(field => (
@@ -490,12 +501,12 @@ export default function AdminContent() {
                     </div>
 
                     {/* Social Links */}
-                    <div style={{ background: '#111110', padding: '2rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '1.25rem' }}>
-                            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.5rem', fontWeight: 400, color: '#E8E3DA', margin: '0 0 0.375rem', letterSpacing: '-0.01em' }}>
+                    <div style={{ background: '#F7F8FC', padding: '2rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', borderLeft: '1px solid rgba(0,0,0,0.07)' }}>
+                        <div style={{ borderBottom: '1px solid rgba(0,0,0,0.07)', paddingBottom: '1.25rem' }}>
+                            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.5rem', fontWeight: 700, color: '#111827', margin: '0 0 0.375rem', letterSpacing: '-0.01em' }}>
                                 Social Media
                             </h2>
-                            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.3)', margin: 0 }}>Links shown in footer and contact section.</p>
+                            <p style={{ fontSize: '0.8125rem', color: '#6B7280', margin: 0 }}>Links shown in footer and contact section.</p>
                         </div>
 
                         {contactFields.filter(f => f.group === 'Social').map(field => (
@@ -512,7 +523,7 @@ export default function AdminContent() {
                         ))}
 
                         {/* Save */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem', marginTop: 'auto' }}>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid rgba(0,0,0,0.07)', paddingTop: '1.5rem', marginTop: 'auto' }}>
                             <button
                                 className={styles.addButton}
                                 onClick={handleContactSave}

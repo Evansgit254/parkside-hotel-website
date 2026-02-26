@@ -47,7 +47,7 @@ export default function AdminLeads() {
         Pending: styles.badgePending,
     };
 
-    if (loading) return <div style={{ padding: "3rem", color: "rgba(255,255,255,0.3)", fontSize: "0.875rem" }}>Loading enquiries...</div>;
+    if (loading) return <div style={{ padding: "3rem", color: "#6B7280", fontSize: "0.875rem" }}>Loading enquiries...</div>;
 
     return (
         <>
@@ -61,7 +61,7 @@ export default function AdminLeads() {
                 {/* Live count */}
                 <div style={{ textAlign: 'right' }}>
                     <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2.5rem', fontWeight: 400, color: '#E8E3DA', lineHeight: 1 }}>{leads.length}</div>
-                    <div style={{ fontSize: '0.5625rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginTop: '0.25rem' }}>Total Enquiries</div>
+                    <div style={{ fontSize: '0.5625rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#6B7280', marginTop: '0.25rem' }}>Total Enquiries</div>
                 </div>
             </div>
 
@@ -75,7 +75,7 @@ export default function AdminLeads() {
                 </div>
 
                 {leads.length === 0 ? (
-                    <div style={{ padding: '5rem 2rem', textAlign: 'center', color: 'rgba(255,255,255,0.15)', fontSize: '0.875rem', letterSpacing: '0.05em' }}>
+                    <div style={{ padding: '5rem 2rem', textAlign: 'center', color: '#6B7280', fontSize: '0.875rem', letterSpacing: '0.05em' }}>
                         No pending enquiries at this time.
                     </div>
                 ) : (
@@ -100,12 +100,12 @@ export default function AdminLeads() {
                                             <User size={16} />
                                         </div>
                                         <div>
-                                            <div style={{ fontWeight: 500, fontSize: '0.9375rem', color: 'rgba(255,255,255,0.85)', marginBottom: '0.35rem' }}>{lead.name}</div>
+                                            <div style={{ fontWeight: 500, fontSize: '0.9375rem', color: '#6B7280', marginBottom: '0.35rem' }}>{lead.name}</div>
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: '#6B7280' }}>
                                                     <Mail size={11} /> {lead.email}
                                                 </div>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: '#6B7280' }}>
                                                     <Phone size={11} /> {lead.phone}
                                                 </div>
                                             </div>
@@ -117,11 +117,11 @@ export default function AdminLeads() {
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: '#C9A84C', marginBottom: '0.35rem' }}>
                                             <BedDouble size={14} /> {lead.room}
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: '#6B7280' }}>
                                             <Calendar size={11} /> {lead.date}
                                         </div>
                                         {lead.guests && (
-                                            <div style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.2)', marginTop: '0.2rem', letterSpacing: '0.05em' }}>{lead.guests}</div>
+                                            <div style={{ fontSize: '0.6875rem', color: '#6B7280', marginTop: '0.2rem', letterSpacing: '0.05em' }}>{lead.guests}</div>
                                         )}
                                     </div>
 
@@ -161,7 +161,7 @@ export default function AdminLeads() {
                                     </div>
 
                                     {/* Received time */}
-                                    <div style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'flex-start', gap: '0.375rem' }}>
+                                    <div style={{ fontSize: '0.6875rem', color: '#6B7280', display: 'flex', alignItems: 'flex-start', gap: '0.375rem' }}>
                                         <Clock size={11} style={{ marginTop: '1px', flexShrink: 0 }} /> {lead.time}
                                     </div>
 
@@ -192,9 +192,9 @@ export default function AdminLeads() {
                                         justifyContent: 'space-between',
                                         gap: '1rem'
                                     }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.8125rem', color: 'rgba(255,255,255,0.5)' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.8125rem', color: '#6B7280' }}>
                                             <AlertTriangle size={15} color="#ef4444" />
-                                            Remove enquiry from <strong style={{ color: 'rgba(255,255,255,0.8)' }}>&nbsp;{lead.name}</strong>? This cannot be undone.
+                                            Remove enquiry from <strong style={{ color: '#6B7280' }}>&nbsp;{lead.name}</strong>? This cannot be undone.
                                         </div>
                                         <div style={{ display: 'flex', gap: '0.5rem', flexShrink: 0 }}>
                                             <button onClick={() => setConfirmDeleteId(null)} className={styles.actionBtn} style={{ padding: '0.5rem 1rem', width: 'auto' }}>
@@ -207,7 +207,7 @@ export default function AdminLeads() {
                                                     padding: '0.5rem 1rem',
                                                     background: '#ef4444',
                                                     border: 'none',
-                                                    color: '#fff',
+                                                    color: '#111827',
                                                     cursor: 'pointer',
                                                     fontSize: '0.625rem',
                                                     letterSpacing: '0.15em',

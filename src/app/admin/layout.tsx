@@ -16,24 +16,31 @@ import {
     Tag,
     Edit3,
     Image as ImageIcon,
-    FileText
+    FileText,
+    Menu,
+    X
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { logoutAdmin } from "../actions";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [currentTime, setCurrentTime] = useState("");
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
-        const isAuth = document.cookie.includes("admin_session=true");
-        if (!isAuth && pathname !== "/admin/login") {
-            router.push("/admin/login");
-        } else {
+        // We rely on middleware for route protection. 
+        // If the layout is rendering for a non-login page, we are authenticated.
+        if (pathname !== "/admin/login") {
             setIsAuthenticated(true);
         }
-    }, [pathname, router]);
+    }, [pathname]);
+
+    useEffect(() => {
+        setIsSidebarOpen(false);
+    }, [pathname]);
 
     useEffect(() => {
         const update = () => {
@@ -44,8 +51,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         return () => clearInterval(t);
     }, []);
 
-    const handleLogout = () => {
-        document.cookie = "admin_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    const handleLogout = async () => {
+        await logoutAdmin();
         router.push("/admin/login");
     };
 
@@ -71,11 +78,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     return (
         <div className={styles.adminContainer}>
+            {/* Sidebar Overlay */}
+            {isSidebarOpen && (
+                <div
+                    className={styles.sidebarOverlay}
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className={styles.sidebar}>
+            <aside className={`${styles.sidebar} ${isSidebarOpen ? styles.sidebarOpen : ""}`}>
                 <div className={styles.sidebarHeader}>
                     <div className={styles.sidebarBrandGroup}>
-                        <span className={styles.sidebarBrand}>Parkside Villa</span>
+                        <div className={styles.sidebarTitleRow}>
+                            <span className={styles.sidebarBrand}>Parkside Villa</span>
+                            <button
+                                className={styles.mobileCloseBtn}
+                                onClick={() => setIsSidebarOpen(false)}
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
                         <span className={styles.sidebarSubtitle}>Management Console</span>
                     </div>
                 </div>
@@ -144,6 +167,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 {/* Top Bar */}
                 <div className={styles.topBar}>
                     <div className={styles.topBarLeft}>
+                        <button
+                            className={styles.hamburgerBtn}
+                            onClick={() => setIsSidebarOpen(true)}
+                        >
+                            <Menu size={20} />
+                        </button>
                         <div className={styles.breadcrumb}>
                             <span className={styles.breadcrumbTitle}>Admin</span>
                             <ChevronRight size={14} className={styles.breadcrumbSep} />

@@ -87,7 +87,7 @@ export default function AdminFacilities() {
 
     const Icons: Record<string, any> = { Users, Utensils, Waves, Wine, Hotel };
 
-    if (loading) return <div style={{ padding: "3rem", color: "rgba(255,255,255,0.3)", fontSize: "0.875rem" }}>Loading facilities...</div>;
+    if (loading) return <div style={{ padding: "3rem", color: "#6B7280", fontSize: "0.875rem" }}>Loading facilities...</div>;
 
     return (
         <>
@@ -111,7 +111,7 @@ export default function AdminFacilities() {
                 </div>
 
                 {facilities.length === 0 ? (
-                    <div style={{ padding: '4rem 2rem', textAlign: 'center', color: 'rgba(255,255,255,0.15)', fontSize: '0.875rem', letterSpacing: '0.05em' }}>
+                    <div style={{ padding: '4rem 2rem', textAlign: 'center', color: '#6B7280', fontSize: '0.875rem', letterSpacing: '0.05em' }}>
                         No facilities added yet.
                     </div>
                 ) : (
@@ -121,11 +121,11 @@ export default function AdminFacilities() {
                             <div key={facility.id} className={styles.tableRow} style={{ gridTemplateColumns: '100px 1fr auto 80px' }}>
 
                                 {/* Image thumbnail with icon overlay */}
-                                <div style={{ position: 'relative', width: '80px', height: '56px', overflow: 'hidden', background: 'rgba(255,255,255,0.03)' }}>
+                                <div style={{ position: 'relative', width: '80px', height: '56px', overflow: 'hidden', background: '#F7F8FC' }}>
                                     {facility.image ? (
                                         <img src={facility.image} alt={facility.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                     ) : (
-                                        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.1)' }}>
+                                        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6B7280' }}>
                                             <ImageIcon size={20} />
                                         </div>
                                     )}
@@ -136,8 +136,8 @@ export default function AdminFacilities() {
 
                                 {/* Title + description */}
                                 <div>
-                                    <div style={{ fontWeight: 500, fontSize: '0.9375rem', color: 'rgba(255,255,255,0.85)', marginBottom: '0.25rem' }}>{facility.title}</div>
-                                    <div style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.3)', lineHeight: '1.5', maxWidth: '500px' }}>{facility.desc}</div>
+                                    <div style={{ fontWeight: 500, fontSize: '0.9375rem', color: '#6B7280', marginBottom: '0.25rem' }}>{facility.title}</div>
+                                    <div style={{ fontSize: '0.8125rem', color: '#6B7280', lineHeight: '1.5', maxWidth: '500px' }}>{facility.desc}</div>
                                 </div>
 
                                 {/* Meta badges */}
@@ -177,8 +177,8 @@ export default function AdminFacilities() {
                             onClick={() => fileInputRef.current?.click()}
                             style={{
                                 width: '100%', height: '180px',
-                                background: 'rgba(255,255,255,0.02)',
-                                border: '1px dashed rgba(255,255,255,0.1)',
+                                background: '#F7F8FC',
+                                border: '1px dashed rgba(0,0,0,0.12)',
                                 display: 'flex', flexDirection: 'column',
                                 alignItems: 'center', justifyContent: 'center',
                                 cursor: 'pointer', overflow: 'hidden', position: 'relative',
@@ -197,8 +197,8 @@ export default function AdminFacilities() {
                                 </>
                             ) : (
                                 <>
-                                    <Upload size={24} color="rgba(255,255,255,0.2)" />
-                                    <span style={{ color: 'rgba(255,255,255,0.3)', marginTop: '0.75rem', fontSize: '0.8125rem' }}>
+                                    <Upload size={24} color="rgba(0,0,0,0.25)" />
+                                    <span style={{ color: '#6B7280', marginTop: '0.75rem', fontSize: '0.8125rem' }}>
                                         {isUploading ? "Uploading..." : "Click to upload facility image"}
                                     </span>
                                 </>

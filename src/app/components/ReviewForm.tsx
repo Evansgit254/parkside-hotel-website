@@ -64,7 +64,7 @@ export default function ReviewForm({ onClose }: { onClose?: () => void }) {
                                             <Star
                                                 size={24}
                                                 fill={(hoveredRating || rating) >= s ? "#d4af37" : "transparent"}
-                                                color={(hoveredRating || rating) >= s ? "#d4af37" : "rgba(255,255,255,0.2)"}
+                                                color={(hoveredRating || rating) >= s ? "#d4af37" : "#D1D5DB"}
                                             />
                                         </button>
                                     ))}

@@ -95,7 +95,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Agenda */}
-                <div className={styles.panelDark} style={{ borderLeft: "1px solid rgba(255,255,255,0.04)" }}>
+                <div className={styles.panelDark} style={{ borderLeft: "1px solid rgba(0,0,0,0.07)" }}>
                     <div className={styles.panelHeader}>
                         <div>
                             <h2 className={styles.panelTitle}>Today&apos;s Agenda</h2>
@@ -111,7 +111,7 @@ export default function AdminDashboard() {
                                 ? { color: "#ef4444", borderColor: "rgba(239,68,68,0.2)", background: "rgba(239,68,68,0.06)" }
                                 : item.status === "Pending"
                                     ? { color: "#f59e0b", borderColor: "rgba(245,158,11,0.2)", background: "rgba(245,158,11,0.06)" }
-                                    : { color: "rgba(255,255,255,0.3)", borderColor: "rgba(255,255,255,0.08)", background: "transparent" };
+                                    : { color: "#6B7280", bordercolor: "#6B7280", background: "transparent" };
 
                             return (
                                 <div key={i} className={styles.agendaItem}>
@@ -207,7 +207,7 @@ function OtaSyncButton() {
                 {syncing ? <Loader2 className={styles.spinner} size={18} /> : <RefreshCw size={18} />}
                 {syncing ? "Synchronizing..." : "Sync Availability"}
             </button>
-            <p style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', marginTop: '0.5rem' }}>
+            <p style={{ fontSize: '0.65rem', color: '#6B7280', marginTop: '0.5rem' }}>
                 Last sync: {lastSync}
             </p>
         </div>
