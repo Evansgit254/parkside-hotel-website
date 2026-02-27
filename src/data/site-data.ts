@@ -47,7 +47,7 @@ export const facilities = [
         title: "Conference Halls",
         desc: "Modern M.I.C.E facilities with high-speed internet. Amboseli, Nzambani, Syokimau, Highrise, and Masai Mara halls.",
         icon: "Users",
-        image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=2069",
+        image: "/conference_hero.png",
         features: [
             "Amboseli & Nzambani Halls",
             "Syokimau & Highrise Halls",
