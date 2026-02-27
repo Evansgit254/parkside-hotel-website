@@ -27,24 +27,51 @@ export function isDatabaseConfigured() {
 }
 
 function createPrismaClient() {
-    if (!isDatabaseConfigured()) {
-        console.warn("⚠️ DATABASE_URL is not configured or using placeholder values. Prisma queries will fallback to static data in server actions.");
-        // We still return a client so imports don't break, but actions will avoid calling it
-        const pool = new Pool({ connectionString: "postgresql://localhost/placeholder" });
-        const adapter = new PrismaPg(pool);
+    const connectionString = process.env.DATABASE_URL;
+    const isConfigured = isDatabaseConfigured();
+
+    console.log(`[Prisma] Connection state: ${connectionString ? 'detected' : 'MISSING'}`);
+    console.log(`[Prisma] isDatabaseConfigured: ${isConfigured}`);
+
+    if (!isConfigured || !connectionString) {
+        console.warn("⚠️ DATABASE_URL not configured. Falling back to static data.");
+        const fallbackPool = new Pool({
+            connectionString: "postgresql://localhost/no_db",
+            password: "none"
+        });
+        const adapter = new PrismaPg(fallbackPool);
         return new PrismaClient({ adapter } as any);
     }
 
-    const connectionString = process.env.DATABASE_URL;
+    // Robust Pool initialization for Neon/SCRAM
+    try {
+        const url = new URL(connectionString);
+        const poolConfig: any = {
+            user: url.username,
+            password: decodeURIComponent(url.password),
+            host: url.hostname,
+            port: url.port ? parseInt(url.port) : 5432,
+            database: url.pathname.slice(1),
+            max: 1,
+            ssl: connectionString.includes('sslmode=verify-full')
+                ? { rejectUnauthorized: true }
+                : connectionString.includes('sslmode=require') || connectionString.includes('sslmode=true')
+                    ? { rejectUnauthorized: false }
+                    : false
+        };
 
-    // For Neon/Vercel, we often need to ensure the pool handles the connection string correctly
-    const pool = new Pool({
-        connectionString,
-        max: 1 // Keep it low for serverless/pooled environments
-    });
+        console.log(`[Prisma] Manual parse success for host: ${poolConfig.host}`);
 
-    const adapter = new PrismaPg(pool);
-    return new PrismaClient({ adapter } as any);
+        const pool = new Pool(poolConfig);
+        const adapter = new PrismaPg(pool);
+        return new PrismaClient({ adapter } as any);
+    } catch (parseError) {
+        console.error("[Prisma] Failed to manually parse connection string:", parseError);
+        // Fallback to driver parsing if manual fails
+        const pool = new Pool({ connectionString, max: 1 });
+        const adapter = new PrismaPg(pool);
+        return new PrismaClient({ adapter } as any);
+    }
 }
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();
