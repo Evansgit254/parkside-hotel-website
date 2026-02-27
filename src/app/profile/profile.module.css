@@ -1,17 +1,17 @@
 .profilePage {
     min-height: 100vh;
-    background: #0f0f0e;
-    color: #f7f3ed;
-    font-family: var(--font-outfit), sans-serif;
-    padding: 6rem 2rem 2rem;
+    background: var(--background);
+    color: var(--text-primary);
+    font-family: var(--font-body), sans-serif;
+    padding: 8rem 2rem 4rem;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 3rem;
+    grid-template-columns: 320px 1fr;
+    gap: 4rem;
 }
 
 .loading {
@@ -19,8 +19,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #0f0f0e;
-    color: #d4af37;
+    background: var(--background);
+    color: var(--primary);
     font-family: var(--font-serif), serif;
     font-size: 1.5rem;
     letter-spacing: 0.1em;
@@ -28,113 +28,130 @@
 
 /* Sidebar */
 .sidebar {
-    background: rgba(28, 28, 26, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--white);
+    border: 1px solid var(--border-light);
     border-radius: 2rem;
-    padding: 2.5rem;
+    padding: 3rem 2.5rem;
     height: fit-content;
     position: sticky;
-    top: 6rem;
+    top: 8rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
 }
 
 .userBrief {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
 }
 
 .avatarWrapper {
     position: relative;
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     margin: 0 auto 1.5rem;
 }
 
 .avatar {
     width: 100%;
     height: 100%;
-    background: rgba(212, 175, 55, 0.1);
-    border: 1px solid #d4af37;
+    background: var(--forest-green-muted);
+    border: 1px solid var(--forest-green-border);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #d4af37;
+    color: var(--primary);
 }
 
 .avatarEdit {
     position: absolute;
-    bottom: 0;
-    right: 0;
-    background: #d4af37;
-    color: #0f0f0e;
-    width: 24px;
-    height: 24px;
+    bottom: 4px;
+    right: 4px;
+    background: var(--primary);
+    color: #FFFFFF;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    border: none;
+    border: 2px solid var(--white);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.avatarEdit:hover {
+    transform: scale(1.1);
+    background: var(--secondary);
 }
 
 .userName {
     font-family: var(--font-serif), serif;
     font-size: 1.5rem;
     margin-bottom: 0.25rem;
+    color: var(--primary);
+    font-weight: 700;
 }
 
 .userEmail {
-    color: rgba(247, 243, 237, 0.5);
+    color: var(--text-secondary);
     font-size: 0.875rem;
 }
 
 .sideNav {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
 }
 
 .navBtn {
     background: transparent;
     border: none;
-    border-radius: 1rem;
-    padding: 1rem;
-    color: rgba(247, 243, 237, 0.6);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    color: var(--text-secondary);
     text-align: left;
     display: flex;
     align-items: center;
-    gap: 0.875rem;
+    gap: 1rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
+    transition: all 0.3s var(--ease-luxury);
+    font-weight: 600;
+    font-size: 0.9375rem;
 }
 
 .navBtn:hover {
-    background: rgba(255, 255, 255, 0.03);
-    color: #f7f3ed;
+    background: var(--surface-mid);
+    color: var(--primary);
 }
 
 .navBtn.active {
-    background: rgba(212, 175, 55, 0.1);
-    color: #d4af37;
+    background: var(--forest-green-muted);
+    color: var(--primary);
 }
 
 .divider {
     border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    margin: 1rem 0;
+    border-top: 1px solid var(--border-light);
+    margin: 1.5rem 0;
 }
 
 .logoutBtn {
     background: transparent;
     border: none;
-    padding: 1rem;
-    color: #f87171;
+    padding: 1rem 1.25rem;
+    color: #ef4444;
     display: flex;
     align-items: center;
-    gap: 0.875rem;
+    gap: 1rem;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    transition: all 0.2s ease;
+}
+
+.logoutBtn:hover {
+    background: rgba(239, 68, 68, 0.05);
 }
 
 /* Main Content */
@@ -146,127 +163,140 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
 }
 
 .panelTitle {
     font-family: var(--font-serif), serif;
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 4vw, 3rem);
     letter-spacing: -0.02em;
+    color: var(--primary);
+    font-weight: 700;
 }
 
 .buttonGold {
-    background: #d4af37;
-    color: #0f0f0e;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--forest-green-light) 100%);
+    color: #FFFFFF;
     border: none;
-    border-radius: 1rem;
-    padding: 0.875rem 1.5rem;
+    border-radius: 12px;
+    padding: 1rem 2rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s var(--ease-luxury);
+    box-shadow: 0 10px 20px rgba(20, 75, 54, 0.15);
 }
 
 .buttonGold:hover {
-    background: #f7f3ed;
     transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(20, 75, 54, 0.25);
 }
 
 /* Bookings */
 .bookingGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2.5rem;
 }
 
 .bookingCard {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 1.5rem;
-    padding: 2rem;
-    transition: all 0.3s ease;
+    background: var(--white);
+    border: 1px solid var(--border-light);
+    border-radius: 24px;
+    padding: 2.5rem;
+    transition: all 0.4s var(--ease-luxury);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
 }
 
 .bookingCard:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(212, 175, 55, 0.2);
-    transform: translateY(-4px);
+    border-color: var(--forest-green-border);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(20, 75, 54, 0.06);
 }
 
 .bookingStatus {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
 }
 
 .statusBadgeConfirmed {
-    background: rgba(74, 222, 128, 0.1);
-    color: #4ade80;
-    padding: 0.4rem 0.8rem;
+    background: rgba(34, 197, 94, 0.08);
+    color: #16a34a;
+    padding: 0.5rem 1rem;
     border-radius: 2rem;
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 800;
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.5rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
 }
 
 .statusBadgePending {
-    background: rgba(212, 175, 55, 0.1);
-    color: #d4af37;
-    padding: 0.4rem 0.8rem;
+    background: var(--forest-green-muted);
+    color: var(--primary);
+    padding: 0.5rem 1rem;
     border-radius: 2rem;
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 800;
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.5rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
 }
 
 .roomName {
     font-family: var(--font-serif), serif;
     font-size: 1.5rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+    font-weight: 700;
 }
 
 .bookingDate,
 .bookingGuests {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    color: rgba(247, 243, 237, 0.6);
-    font-size: 0.875rem;
-    margin-bottom: 0.5rem;
+    gap: 0.875rem;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    margin-bottom: 0.75rem;
 }
 
 .bookingActions {
     margin-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid var(--border-light);
     padding-top: 1.5rem;
 }
 
 .actionLink {
     background: transparent;
     border: none;
-    color: #d4af37;
-    font-size: 0.8125rem;
-    font-weight: 600;
+    color: var(--secondary);
+    font-size: 0.875rem;
+    font-weight: 700;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.actionLink:hover {
+    color: var(--primary);
 }
 
 .emptyState {
     text-align: center;
-    padding: 5rem 2rem;
-    color: rgba(247, 243, 237, 0.3);
+    padding: 6rem 2rem;
+    color: var(--text-muted);
 }
 
 .emptyState h3 {
-    color: #f7f3ed;
+    color: var(--primary);
     margin: 1.5rem 0 0.5rem;
+    font-size: 1.5rem;
+    font-family: var(--font-serif), serif;
 }
 
 /* Settings */
@@ -274,21 +304,22 @@
     max-width: 500px;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 2.5rem;
 }
 
 .inputGroup {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.875rem;
 }
 
 .label {
-    color: rgba(247, 243, 237, 0.7);
-    font-size: 0.75rem;
-    font-weight: 600;
+    color: var(--primary);
+    font-size: 0.6875rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
+    padding-left: 0.25rem;
 }
 
 .inputWrapper {
@@ -297,44 +328,67 @@
 
 .input {
     width: 100%;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1rem;
-    padding: 1rem;
-    color: #f7f3ed;
+    background: var(--white);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 1.125rem;
+    color: var(--text-primary);
     font-size: 1rem;
     outline: none;
+    transition: all 0.3s var(--ease-luxury);
+}
+
+.input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--forest-green-muted);
 }
 
 .input:disabled {
-    opacity: 0.5;
+    background: var(--surface-mid);
+    color: var(--text-muted);
     cursor: not-allowed;
 }
 
 .insideBtn {
     position: absolute;
-    right: 0.75rem;
+    right: 0.875rem;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(212, 175, 55, 0.1);
+    background: var(--forest-green-muted);
     border: none;
-    color: #d4af37;
-    width: 30px;
-    height: 30px;
-    border-radius: 0.5rem;
+    color: var(--primary);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.insideBtn:hover {
+    background: var(--primary);
+    color: #FFFFFF;
 }
 
 @media (max-width: 968px) {
+    .profilePage {
+        padding-top: 6rem;
+    }
+
     .container {
         grid-template-columns: 1fr;
+        gap: 2.5rem;
     }
 
     .sidebar {
         position: static;
         width: 100%;
+        padding: 2.5rem 1.5rem;
+    }
+
+    .panelTitle {
+        font-size: 2.25rem;
     }
 }
