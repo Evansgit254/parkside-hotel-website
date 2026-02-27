@@ -147,7 +147,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--foreground-soft);
     font-weight: 500;
 }
 
@@ -167,7 +167,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-secondary);
     font-weight: 500;
 }
 
@@ -178,8 +178,8 @@
 }
 
 .bookingCard {
-    background: var(--secondary);
-    color: #000;
+    background: var(--purple);
+    color: var(--white);
     padding: 3rem;
     border-radius: 24px;
 }
@@ -189,6 +189,7 @@
     font-size: 1.75rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
+    color: var(--white) !important;
 }
 
 .bookingSubtitle {
@@ -232,7 +233,8 @@
     gap: 0.75rem;
     font-size: 0.85rem;
     font-weight: 700;
-    opacity: 0.8;
+    color: var(--white);
+    opacity: 0.9;
 }
 
 .loading {
