@@ -62,8 +62,15 @@ html {
   --font-sans: var(--font-mulish), 'Inter', sans-serif;
 
   /* Layout */
-  --max-width: 1320px;
-  --section-gap: 8rem;
+  --max-width: 1400px;
+  --section-gap: clamp(4rem, 10vw, 8rem);
+  --container-padding: clamp(1.5rem, 5vw, 4rem);
+
+  /* Breakpoints */
+  --mobile: 480px;
+  --tablet: 768px;
+  --desktop: 1024px;
+  --wide: 1440px;
 
   /* Transitions */
   --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
@@ -137,6 +144,33 @@ p {
   font-family: var(--font-body);
   line-height: 1.75;
   color: var(--text-secondary);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+}
+
+/* === UTILITY CLASSES === */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+}
+
+.hidden {
+  display: none !important;
 }
 
 a {

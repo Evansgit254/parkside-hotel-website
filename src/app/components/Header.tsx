@@ -13,9 +13,10 @@ const navLinks = [
         href: "/rooms",
         label: "Accommodation",
         subLinks: [
-            { href: "/rooms/executive-suite", label: "Executive suites" },
-            { href: "/rooms/deluxe-garden-room", label: "Deluxe suites" },
-            { href: "/rooms/superior-twin-room", label: "Superior Twin Room" },
+            { href: "/rooms/executive-suites", label: "Executive suites" },
+            { href: "/rooms/deluxe-suites", label: "Deluxe suites" },
+            { href: "/rooms/highrise-suites", label: "Highrise suites" },
+            { href: "/rooms/cottages", label: "Cottages" },
             { href: "/rooms", label: "All Accommodations" },
         ]
     },
@@ -23,21 +24,19 @@ const navLinks = [
         href: "/facilities/conference",
         label: "Conference",
         subLinks: [
-            { href: "/facilities/conference#amboseli", label: "Amboseli Hall" },
-            { href: "/facilities/conference#nzambani", label: "Nzambani Hall" },
-            { href: "/facilities/conference#syokimau", label: "Syokimau Hall" },
-            { href: "/facilities/conference#highrise", label: "Highrise hall" },
-            { href: "/facilities/conference#masaimara", label: "Masai Mara hall" },
+            { href: "/facilities/conference#amboseli-nzambani-halls", label: "Amboseli & Nzambani" },
+            { href: "/facilities/conference#syokimau-highrise-halls", label: "Syokimau & Highrise" },
+            { href: "/facilities/conference#masai-mara-hall", label: "Masai Mara Hall" },
         ]
     },
     {
-        href: "/facilities",
+        href: "/facilities/pool",
         label: "Facilities",
         subLinks: [
-            { href: "/facilities/pool", label: "Swimming pool" },
-            { href: "/facilities/kids", label: "Kids Zone" },
-            { href: "/facilities/pool-table", label: "Pool Table" },
-            { href: "/facilities/business", label: "Business centre & gift shop" },
+            { href: "/facilities/pool#swimming-pool", label: "Swimming Pool" },
+            { href: "/facilities/pool#kids-zone", label: "Kids Zone" },
+            { href: "/facilities/pool#pool-tables-for-recreation", label: "Pool Table" },
+            { href: "/facilities/pool#lush-gardens", label: "Lush Gardens" },
         ]
     },
     { href: "/gallery", label: "Gallery" },
@@ -47,9 +46,8 @@ const navLinks = [
         label: "Dining",
         subLinks: [
             { href: "/dining#menu", label: "Our Menu" },
-            { href: "/facilities/lounge", label: "VIP Lounge" },
-            { href: "/dining#bar", label: "Open Bar & restaurant" },
-            { href: "/dining#pool-view", label: "Pool View Restaurant" },
+            { href: "/facilities/dining#vip-lounge", label: "VIP Lounge" },
+            { href: "/facilities/dining#open-bar-restaurant", label: "Open Bar & restaurant" },
         ]
     },
     { href: "/#contact", label: "Contact" },

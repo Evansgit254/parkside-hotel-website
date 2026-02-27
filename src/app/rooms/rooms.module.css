@@ -8,7 +8,7 @@
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 var(--container-padding);
 }
 
 /* HERO */
@@ -84,7 +84,7 @@
 
 .filterBar {
     display: flex;
-    gap: 3rem;
+    gap: 1.5rem;
     align-items: flex-end;
     flex-wrap: wrap;
 }
@@ -146,8 +146,8 @@
 
 .roomGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 3rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: clamp(1.5rem, 4vw, 3rem);
 }
 
 .roomCard {
@@ -207,9 +207,17 @@
 
 .roomHeader {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
     margin-bottom: 1.5rem;
+}
+
+@media (min-width: 480px) {
+    .roomHeader {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
 }
 
 .roomName {

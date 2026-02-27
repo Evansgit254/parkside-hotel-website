@@ -18,7 +18,7 @@
     left: 0;
     width: 100%;
     z-index: 200;
-    padding: 0 1rem;
+    padding: 0 var(--container-padding);
     height: 80px;
     display: flex;
     align-items: center;
@@ -170,7 +170,7 @@
 .nav a {
     font-family: var(--font-sans);
     font-size: 0.625rem;
-    font-weight: 500;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: rgba(255, 255, 255, 0.88);
@@ -329,8 +329,9 @@
 .heroContent {
     position: relative;
     z-index: 10;
-    padding: 0 4rem 7rem;
-    max-width: 1100px;
+    padding: var(--container-padding);
+    padding-bottom: clamp(4rem, 15vw, 7rem);
+    max-width: 1200px;
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -348,6 +349,15 @@
     align-items: center;
     gap: 1rem;
     width: fit-content;
+}
+
+.testimonialsTitle::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--secondary);
+    margin-top: 2rem;
 }
 
 .badge::before {
@@ -399,8 +409,9 @@
 .ctaGroup {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: clamp(1rem, 5vw, 2rem);
     margin-top: 1.5rem;
+    flex-wrap: wrap;
 }
 
 /* === BUTTONS === */
@@ -455,33 +466,37 @@
     align-items: center;
     gap: 0.75rem;
     padding: 1rem 2.5rem;
-    background: transparent;
-    color: var(--secondary);
+    background: var(--secondary);
+    color: var(--white);
     font-family: var(--font-sans);
     font-size: 0.625rem;
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    border: 1px solid var(--purple-border);
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.45s var(--ease-luxury);
 }
 
 .hero .buttonSecondary {
+    background: var(--secondary);
     color: var(--white);
-    border-color: rgba(255, 255, 255, 0.3);
+    border-color: var(--secondary);
 }
 
 .hero .buttonSecondary:hover {
-    border-color: var(--white);
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--purple-light);
+    border-color: var(--purple-light);
     color: var(--white);
+    transform: translateY(-2px);
 }
 
 .buttonSecondary:hover {
-    border-color: var(--secondary);
-    color: var(--secondary);
-    background: var(--purple-muted);
+    background: var(--purple-light);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(74, 43, 102, 0.2);
 }
 
 .buttonGhost {
@@ -518,18 +533,31 @@
     max-width: var(--max-width);
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(4, 1fr) auto;
-    /* fields separated by ::after borders */
+    grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 768px) {
+    .bookingBar {
+        grid-template-columns: repeat(4, 1fr) auto;
+    }
 }
 
 .bookingField {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding: 1.75rem 2.5rem;
-    border-right: 1px solid var(--border-dark);
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--border-light);
     cursor: pointer;
     transition: background 0.3s ease;
+}
+
+@media (min-width: 768px) {
+    .bookingField {
+        padding: 1.75rem 2.5rem;
+        border: none;
+        border-right: 1px solid var(--border-dark);
+    }
 }
 
 .bookingField:hover {
@@ -572,17 +600,26 @@
 }
 
 .bookingSubmit {
-    padding: 0 3rem;
+    grid-column: span 2;
+    padding: 1.25rem 3rem;
     background: var(--primary);
-    color: var(--text-primary);
+    color: var(--white);
     font-family: var(--font-sans);
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     border: none;
     cursor: pointer;
     transition: background 0.3s ease;
     white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+    .bookingSubmit {
+        grid-column: auto;
+        padding: 0 3rem;
+        font-size: 0.625rem;
+    }
 }
 
 .bookingSubmit:hover {
@@ -642,7 +679,7 @@
 
 /* === SECTION SYSTEM === */
 .section {
-    padding: 8rem 3rem;
+    padding: var(--section-gap) var(--container-padding);
     width: 100%;
     position: relative;
     scroll-margin-top: 64px;
@@ -658,23 +695,15 @@
     margin-bottom: 5rem;
 }
 
-.sectionEyebrow {
-    font-family: var(--font-sans);
-    font-size: 0.625rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
 .sectionEyebrow::before {
     content: '';
     width: 32px;
     height: 1px;
-    background: var(--primary);
+    background: var(--secondary);
+}
+
+.sectionEyebrow {
+    color: var(--secondary);
 }
 
 .sectionTitle {
@@ -763,11 +792,19 @@
 
 .roomsIntro {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-    align-items: end;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: flex-start;
     max-width: var(--max-width);
     margin: 0 auto 5rem;
+}
+
+@media (min-width: 768px) {
+    .roomsIntro {
+        grid-template-columns: 1fr 1fr;
+        gap: 6rem;
+        align-items: end;
+    }
 }
 
 .roomsIntroText {
@@ -789,52 +826,77 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    align-items: flex-end;
+    align-items: flex-start;
     padding-top: 1rem;
 }
 
+@media (min-width: 768px) {
+    .roomsIntroRight {
+        align-items: flex-end;
+    }
+}
+
 .roomsIntroDesc {
-    text-align: right;
+    text-align: left;
     color: var(--text-secondary);
     font-size: 0.9375rem;
     line-height: 1.8;
     max-width: 360px;
 }
 
+@media (min-width: 768px) {
+    .roomsIntroDesc {
+        text-align: right;
+    }
+}
+
 /* Bento Grid - World Class */
 .roomGrid {
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr;
-    grid-auto-rows: 340px;
-    gap: 4px;
+    grid-template-columns: 1fr;
+    gap: 2rem;
     max-width: var(--max-width);
     margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+    .roomGrid {
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: repeat(2, 400px);
+    }
 }
 
 .roomCard {
     position: relative;
     overflow: hidden;
+    border-radius: 20px;
     background: var(--surface-card);
-    cursor: pointer;
-    min-height: 340px;
+    transition: all 0.6s var(--ease-luxury);
+    grid-column: span 1;
+    min-height: 400px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
-.roomCard:nth-child(1) {
-    grid-row: span 2;
-    min-height: 684px;
-}
+@media (min-width: 1024px) {
+    .roomCard:nth-child(1) {
+        grid-column: span 8;
+        grid-row: span 1;
+    }
 
-.roomCard:nth-child(2) {
-    grid-column: span 1;
-}
+    .roomCard:nth-child(2) {
+        grid-column: span 4;
+        grid-row: span 1;
+    }
 
-.roomCard:nth-child(3) {
-    grid-column: span 1;
-}
+    .roomCard:nth-child(3) {
+        grid-column: span 4;
+        grid-row: span 1;
+    }
 
-.roomCard:nth-child(4) {
-    grid-column: span 2;
+    .roomCard:nth-child(4) {
+        grid-column: span 8;
+        grid-row: span 1;
+    }
 }
 
 .roomImage {
@@ -896,24 +958,25 @@
 
 .roomPriceValue {
     font-family: var(--font-serif);
-    font-size: 1.25rem;
-    color: var(--primary) !important;
-    font-weight: 400;
+    font-size: 1.375rem;
+    color: var(--white) !important;
+    font-weight: 600;
+    letter-spacing: 0.02em;
 }
 
 .roomTag {
     position: absolute;
     top: 1.5rem;
     left: 1.5rem;
-    padding: 0.375rem 0.875rem;
-    background: var(--primary);
-    color: var(--text-primary);
-    font-family: var(--font-sans);
-    font-size: 0.5625rem;
-    font-weight: 400;
-    letter-spacing: 0.2em;
+    z-index: 5;
+    background: var(--secondary);
+    color: var(--white);
+    padding: 0.35rem 1rem;
+    border-radius: 4px;
+    font-size: 0.625rem;
+    font-weight: 800;
     text-transform: uppercase;
-    z-index: 10;
+    letter-spacing: 0.1em;
 }
 
 /* === EXPERIENCE STRIP — Between Rooms and Facilities === */
@@ -964,8 +1027,7 @@
 
 .experienceStatNum span {
     font-size: 2rem;
-    color: var(--forest-green);
-    /* Use the legacy green for subtle accents */
+    color: var(--secondary);
 }
 
 .experienceStatLabel {
@@ -1052,14 +1114,14 @@
 .facilityNum {
     font-family: var(--font-serif);
     font-size: 0.875rem;
-    color: var(--primary);
+    color: var(--secondary);
     font-style: italic;
 }
 
 .facilityIcon {
     width: 24px;
     height: 24px;
-    color: var(--primary);
+    color: var(--secondary);
     opacity: 0.6;
     transition: opacity 0.3s ease;
 }
@@ -1078,7 +1140,7 @@
     font-family: var(--font-serif);
     font-size: 1.375rem;
     font-weight: 700;
-    color: var(--primary);
+    color: var(--secondary);
     letter-spacing: -0.01em;
 }
 
@@ -1089,7 +1151,7 @@
 }
 
 .facilityArrow {
-    color: var(--primary);
+    color: var(--secondary);
     opacity: 0;
     transform: translateX(-8px);
     transition: all 0.35s var(--ease-luxury);
@@ -1118,6 +1180,19 @@
     gap: 4rem;
     align-items: end;
     margin-bottom: 5rem;
+}
+
+.testimonialGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+}
+
+@media (min-width: 1024px) {
+    .testimonialGrid {
+        grid-template-columns: 1.2fr 1.8fr;
+        gap: 6rem;
+    }
 }
 
 .testimonialsTitle {
@@ -1160,7 +1235,7 @@
     font-family: var(--font-serif);
     font-size: 5rem;
     line-height: 0.8;
-    color: var(--primary);
+    color: var(--secondary);
     opacity: 0.35;
     display: block;
 }
@@ -1241,7 +1316,7 @@
     font-family: var(--font-serif);
     font-size: clamp(2.5rem, 4vw, 4.5rem);
     font-weight: 700;
-    color: var(--primary);
+    color: var(--secondary);
     letter-spacing: -0.01em;
     line-height: 1.05;
 }
@@ -1263,7 +1338,7 @@
     font-size: 0.5625rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--primary);
+    color: var(--secondary);
 }
 
 .contactText {
@@ -1300,7 +1375,7 @@
     font-size: 0.5625rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--primary);
+    color: var(--secondary);
 }
 
 .input {
@@ -1324,7 +1399,7 @@
 }
 
 .input:focus {
-    border-bottom-color: var(--primary);
+    border-bottom-color: var(--secondary);
 }
 
 .textarea {
@@ -1342,10 +1417,23 @@
 
 .footerGrid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 5rem;
+    grid-template-columns: 1fr;
+    gap: 3rem;
     max-width: var(--max-width);
     margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .footerGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .footerGrid {
+        grid-template-columns: 1.5fr 1fr 1fr 1fr;
+        gap: 4rem;
+    }
 }
 
 .footerBrand {
@@ -1401,16 +1489,23 @@
 
 .footerBottom {
     max-width: var(--max-width);
-    margin: 5rem auto 0;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border-light);
-    /* Changed to light border */
+    margin: 4rem auto 0;
+    padding-top: 2.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 1.5rem;
     align-items: center;
     font-size: 0.75rem;
     color: var(--text-muted);
     letter-spacing: 0.05em;
+}
+
+@media (min-width: 768px) {
+    .footerBottom {
+        flex-direction: row;
+        justify-content: space-between;
+    }
 }
 
 .footerSocial {
@@ -1428,13 +1523,25 @@
 }
 
 /* === CONCIERGE / CHAT === */
+.iconBadge {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: var(--purple-muted);
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
 .conciergeBtn {
     position: fixed;
     bottom: 2.5rem;
     right: 2.5rem;
     width: 54px;
     height: 54px;
-    background: var(--primary);
+    background: var(--secondary);
     color: var(--text-primary);
     border: none;
     border-radius: 50%;
@@ -1443,12 +1550,12 @@
     justify-content: center;
     cursor: pointer;
     z-index: 300;
-    box-shadow: 0 8px 30px rgba(201, 168, 76, 0.35);
+    box-shadow: 0 8px 30px rgba(74, 43, 102, 0.35);
     transition: all 0.35s var(--ease-luxury);
 }
 
 .conciergeBtn:hover {
-    background: var(--primary);
+    background: var(--secondary);
     transform: scale(1.08);
 }
 
@@ -1479,7 +1586,7 @@
     font-family: var(--font-serif);
     font-size: 0.75rem;
     letter-spacing: 0.1em;
-    color: var(--primary);
+    color: var(--secondary);
     display: flex;
     flex-direction: column;
 }
@@ -1520,7 +1627,7 @@
     font-size: 0.875rem;
     line-height: 1.7;
     color: var(--foreground-soft);
-    border-left: 2px solid var(--primary);
+    border-left: 2px solid var(--secondary);
 }
 
 .conciergeOptions {
@@ -1544,9 +1651,9 @@
 }
 
 .optionBtn:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    background: var(--gold-muted);
+    border-color: var(--secondary);
+    color: var(--secondary);
+    background: var(--purple-muted);
 }
 
 /* === BOOKING MODAL === */
@@ -1599,7 +1706,7 @@
     font-family: var(--font-serif);
     font-size: 2rem;
     font-weight: 700;
-    color: var(--primary);
+    color: var(--secondary);
     /* Adjusted for light background */
     margin-bottom: 0.5rem;
     letter-spacing: -0.01em;
@@ -1607,7 +1714,7 @@
 
 .modalSubtitle {
     font-size: 0.875rem;
-    color: var(--primary);
+    color: var(--secondary);
     font-family: var(--font-sans);
     letter-spacing: 0.1em;
     margin-bottom: 2.5rem;
@@ -1671,7 +1778,7 @@
     font-size: 0.625rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--primary);
+    color: var(--secondary);
 }
 
 /* === NEWSLETTER === */
@@ -1682,30 +1789,30 @@
 }
 
 .newsletterInput {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--white);
+    border: 1px solid var(--secondary);
     border-right: none;
-    color: var(--white);
+    color: var(--text-primary);
     padding: 0.75rem 1rem;
     font-family: var(--font-body);
     font-size: 0.875rem;
     width: 100%;
     outline: none;
-    transition: border-color 0.4s ease;
+    transition: all 0.4s ease;
 }
 
 .newsletterInput::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-muted);
 }
 
 .newsletterInput:focus {
-    border-color: var(--primary);
+    border-color: var(--secondary);
 }
 
 .newsletterBtn {
-    background: var(--primary);
-    color: var(--text-primary);
-    border: 1px solid var(--primary);
+    background: var(--secondary);
+    color: var(--white);
+    border: 1px solid var(--secondary);
     padding: 0 1.25rem;
     font-family: var(--font-sans);
     font-size: 0.6875rem;
@@ -1716,8 +1823,9 @@
 }
 
 .newsletterBtn:hover {
-    background: transparent;
-    color: var(--primary);
+    background: var(--purple-light);
+    border-color: var(--purple-light);
+    color: var(--white);
 }
 
 /* === BRAND DIVIDER SECTION === */

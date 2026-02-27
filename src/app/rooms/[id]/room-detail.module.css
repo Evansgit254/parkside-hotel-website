@@ -33,7 +33,7 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 var(--container-padding);
     position: relative;
     z-index: 10;
 }
@@ -70,11 +70,10 @@
 
 .title {
     font-family: var(--font-serif);
-    /* Updated to global serif font */
-    font-size: 4.5rem;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
     font-weight: 700;
     margin: 0;
-    line-height: 1;
+    line-height: 1.1;
     letter-spacing: -0.01em;
 }
 
@@ -111,7 +110,7 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 24px;
-    padding: 3rem;
+    padding: clamp(1.5rem, 5vw, 3rem);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
@@ -266,7 +265,7 @@
 
 .modalContent {
     background: #fff;
-    padding: 3rem;
+    padding: clamp(1.5rem, 5vw, 3rem);
     border-radius: 32px;
     width: 100%;
     max-width: 550px;
@@ -316,8 +315,14 @@
 
 .formGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 1.5rem;
+}
+
+@media (min-width: 480px) {
+    .formGrid {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
 .label {

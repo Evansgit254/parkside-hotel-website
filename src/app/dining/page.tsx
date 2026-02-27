@@ -99,7 +99,7 @@ export default function Dining() {
                 </div>
             </section>
 
-            <section className={styles.section}>
+            <section className={styles.section} id="menu">
                 <motion.div
                     {...fadeInUp}
                     style={{ textAlign: 'center', marginBottom: '3rem' }}

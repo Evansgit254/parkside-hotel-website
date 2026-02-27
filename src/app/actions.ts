@@ -572,9 +572,14 @@ export async function updateContactInfo(contactInfo: any) {
 // ─────────────────────────────────────────────
 
 export async function subscribeNewsletter(email: string) {
-    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    if (!email || !email.includes("@")) return { success: false, error: "Valid email required" };
+
+    if (!isDatabaseConfigured()) {
+        console.warn(`Newsletter subscription (Demo Mode): ${email}`);
+        return { success: true, demoMode: true };
+    }
+
     try {
-        if (!email || !email.includes("@")) return { success: false, error: "Valid email required" };
         const existing = await prisma.subscriber.findUnique({ where: { email } });
         if (existing) return { success: true, alreadyExists: true };
         await prisma.subscriber.create({ data: { email } });

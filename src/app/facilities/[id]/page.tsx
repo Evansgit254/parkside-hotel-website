@@ -183,7 +183,7 @@ export default function FacilityDetail() {
                                 {facility.features && facility.features.length > 0 && (
                                     <div className={styles.featuresGrid}>
                                         {facility.features.map((feature: string, i: number) => (
-                                            <div key={i} className={styles.featureBox}>
+                                            <div key={i} className={styles.featureBox} id={feature.toLowerCase().replace(/[^a-z0-9]+/g, '-')}>
                                                 <ShieldCheck size={24} className={styles.featureIcon} />
                                                 <span className={styles.featureTitle}>{feature}</span>
                                             </div>
@@ -197,7 +197,7 @@ export default function FacilityDetail() {
                                     <h3 className={styles.subHeading}>Service Highlights</h3>
                                     <div className={styles.highlightsList}>
                                         {facility.highlights.map((item: string, i: number) => (
-                                            <div key={i} className={styles.highlightItem}>
+                                            <div key={i} className={styles.highlightItem} id={item.toLowerCase().replace(/[^a-z0-9]+/g, '-')}>
                                                 <CheckCircle2 size={18} className={styles.checkIcon} />
                                                 <span>{item}</span>
                                             </div>

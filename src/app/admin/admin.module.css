@@ -315,7 +315,7 @@
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    padding: 0 3rem;
+    padding: 0 var(--container-padding);
     height: 64px;
     display: flex;
     align-items: center;
@@ -370,7 +370,8 @@
 }
 
 .pageContent {
-    padding: 2.5rem 3rem;
+    padding: var(--container-padding);
+    padding-top: 1.5rem;
     flex: 1;
 }
 
@@ -2310,5 +2311,29 @@
         grid-template-columns: 1fr !important;
         gap: 0.5rem;
         padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .topBarRight {
+        gap: 0.5rem;
+    }
+
+    .statusGroup {
+        gap: 0.5rem;
+    }
+
+    .liveIndicator {
+        display: none;
+    }
+
+    .topBarTime {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.65rem;
+    }
+
+    .breadcrumbSep,
+    .breadcrumbTitle {
+        display: none;
     }
 }
