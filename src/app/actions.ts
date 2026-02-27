@@ -147,12 +147,13 @@ export async function getDashboardStats() {
             leads: 0,
             menus: 0,
             testimonials: 0,
-            recentLeads: [],
+            recentActivity: [],
+            agenda: [],
         };
     }
 
     try {
-        const [rooms, leads, menus, testimonials, recentLeads] = await Promise.all([
+        const [roomCount, leadCount, menuCount, testimonialCount, recentLeads, recentTestimonials, upcomingLeads] = await Promise.all([
             prisma.room.count(),
             prisma.lead.count(),
             prisma.menuCategory.count(),
@@ -161,26 +162,63 @@ export async function getDashboardStats() {
                 take: 5,
                 orderBy: { createdAt: "desc" },
                 include: { room: true }
+            }),
+            prisma.testimonial.findMany({
+                take: 5,
+                orderBy: { createdAt: "desc" }
+            }),
+            prisma.lead.findMany({
+                where: {
+                    date: { not: null },
+                    status: "Pending" // Only show actionable tasks
+                },
+                take: 5,
+                orderBy: { createdAt: "asc" },
+                include: { room: true }
             })
         ]);
 
-        return {
-            rooms,
-            leads,
-            menus,
-            testimonials,
-            recentLeads: recentLeads.map(l => ({
-                id: l.id,
+        // Merge and format activity
+        const activities = [
+            ...recentLeads.map(l => ({
+                id: `lead-${l.id}`,
                 type: "Lead",
                 user: l.name,
                 action: `Requested ${l.room?.name || "a room"} booking`,
                 time: l.time || "Just now",
-                color: "#C9A84C"
+                color: "#C9A84C",
+                timestamp: l.createdAt
+            })),
+            ...recentTestimonials.map(t => ({
+                id: `test-${t.id}`,
+                type: "Review",
+                user: t.name,
+                action: `Left a ${t.status === 'Active' ? 'published' : 'pending'} endorsement`,
+                time: "Recently",
+                color: "#10b981",
+                timestamp: t.createdAt
             }))
+        ].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()).slice(0, 5);
+
+        // Format Agenda
+        const agenda = upcomingLeads.map(l => ({
+            task: `${l.room?.name || "Suite"} Check-in`,
+            desc: `Prep for ${l.name}`,
+            time: l.date || "TBD",
+            status: "Pending"
+        }));
+
+        return {
+            rooms: roomCount,
+            leads: leadCount,
+            menus: menuCount,
+            testimonials: testimonialCount,
+            recentActivity: activities,
+            agenda: agenda
         };
     } catch (error) {
         console.error("Error fetching dashboard stats:", error);
-        return { rooms: 0, leads: 0, menus: 0, testimonials: 0, recentLeads: [] };
+        return { rooms: 0, leads: 0, menus: 0, testimonials: 0, recentActivity: [], agenda: [] };
     }
 }
 

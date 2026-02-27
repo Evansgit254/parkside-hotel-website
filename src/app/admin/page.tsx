@@ -27,17 +27,8 @@ export default function AdminDashboard() {
         { name: "Menu Items", value: liveStats?.menus?.toString() || "0", label: "Dining Curations", icon: Utensils, color: "#f59e0b" },
     ];
 
-    const recentActivity = liveStats?.recentLeads?.length > 0 ? liveStats.recentLeads : [
-        { id: 1, type: "Lead", user: "John Doe", action: "Requested Executive Suite booking", time: "2h ago", icon: Calendar, color: "#f59e0b" },
-        { id: 2, type: "Review", user: "Alice Smith", action: "Left a 5-star endorsement", time: "5h ago", icon: Star, color: "#C9A84C" },
-        { id: 3, type: "Dining", user: "Chef de Cuisine", action: "Updated Saturday specials menu", time: "Yesterday", icon: ChefHat, color: "#10b981" },
-    ];
-
-    const agenda = [
-        { task: "VIP Arrival Check-in", desc: "Executive Suite prep for Mr. Karanja", time: "11:30 AM", status: "Priority" },
-        { task: "Menu Sign-off", desc: "Approve Saturday evening curations", time: "02:00 PM", status: "Pending" },
-        { task: "Facility Audit", desc: "Weekly review of Wellness Center", time: "04:30 PM", status: "Routine" },
-    ];
+    const recentActivity = liveStats?.recentActivity || [];
+    const agenda = liveStats?.agenda || [];
 
     return (
         <>
@@ -83,25 +74,31 @@ export default function AdminDashboard() {
                         <span className={styles.liveIndicator}>Live</span>
                     </div>
 
-                    <div>
-                        {recentActivity.map((a: any) => (
-                            <div key={a.id} className={styles.activityItem}>
-                                <div className={styles.activityIconBox} style={{ color: a.color }}>
-                                    {a.icon ? <a.icon size={14} /> : <Calendar size={14} />}
-                                </div>
-                                <div>
-                                    <div
-                                        className={styles.activityTag}
-                                        style={{ color: a.color, borderColor: a.color }}
-                                    >
-                                        {a.type}
+                    <div className={styles.activityFeed}>
+                        {recentActivity.length > 0 ? (
+                            recentActivity.map((a: any) => (
+                                <div key={a.id} className={styles.activityItem}>
+                                    <div className={styles.activityIconBox} style={{ color: a.color }}>
+                                        {a.type === "Lead" ? <Calendar size={14} /> : <Star size={14} />}
                                     </div>
-                                    <div className={styles.activityUser}>{a.user}</div>
-                                    <div className={styles.activityDesc}>{a.action}</div>
+                                    <div className={styles.activityContent}>
+                                        <div
+                                            className={styles.activityTag}
+                                            style={{ color: a.color, borderColor: a.color }}
+                                        >
+                                            {a.type}
+                                        </div>
+                                        <div className={styles.activityUser}>{a.user}</div>
+                                        <div className={styles.activityDesc}>{a.action}</div>
+                                    </div>
+                                    <div className={styles.activityTime}>{a.time}</div>
                                 </div>
-                                <div className={styles.activityTime}>{a.time}</div>
+                            ))
+                        ) : (
+                            <div className={styles.emptyFeed}>
+                                <p>No recent activity detected.</p>
                             </div>
-                        ))}
+                        )}
                     </div>
                 </div>
 
@@ -114,35 +111,41 @@ export default function AdminDashboard() {
                         </div>
                     </div>
 
-                    <div>
-                        {agenda.map((item, i) => {
-                            const isPriority = item.status === "Priority";
-                            const dotColor = isPriority ? "#ef4444" : "#C9A84C";
-                            const badgeColor = isPriority
-                                ? { color: "#ef4444", borderColor: "rgba(239,68,68,0.2)", background: "rgba(239,68,68,0.06)" }
-                                : item.status === "Pending"
-                                    ? { color: "#f59e0b", borderColor: "rgba(245,158,11,0.2)", background: "rgba(245,158,11,0.06)" }
-                                    : { color: "#6B7280", bordercolor: "#6B7280", background: "transparent" };
+                    <div className={styles.agendaFeed}>
+                        {agenda.length > 0 ? (
+                            agenda.map((item: any, i: number) => {
+                                const isPriority = item.status === "Priority";
+                                const dotColor = isPriority ? "#ef4444" : "#C9A84C";
+                                const badgeColor = isPriority
+                                    ? { color: "#ef4444", borderColor: "rgba(239,68,68,0.2)", background: "rgba(239,68,68,0.06)" }
+                                    : item.status === "Pending"
+                                        ? { color: "#f59e0b", borderColor: "rgba(245,158,11,0.2)", background: "rgba(245,158,11,0.06)" }
+                                        : { color: "#6B7280", bordercolor: "#6B7280", background: "transparent" };
 
-                            return (
-                                <div key={i} className={styles.agendaItem}>
-                                    <div className={styles.agendaDot} style={{ background: dotColor }} />
-                                    <div className={styles.agendaContent}>
-                                        <div className={styles.agendaTask}>{item.task}</div>
-                                        <div className={styles.agendaDesc}>{item.desc}</div>
-                                        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginTop: "0.5rem" }}>
-                                            <span className={styles.agendaTime}>{item.time}</span>
-                                            <span
-                                                className={styles.agendaBadge}
-                                                style={badgeColor}
-                                            >
-                                                {item.status}
-                                            </span>
+                                return (
+                                    <div key={i} className={styles.agendaItem}>
+                                        <div className={styles.agendaDot} style={{ background: dotColor }} />
+                                        <div className={styles.agendaContent}>
+                                            <div className={styles.agendaTask}>{item.task}</div>
+                                            <div className={styles.agendaDesc}>{item.desc}</div>
+                                            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginTop: "0.5rem" }}>
+                                                <span className={styles.agendaTime}>{item.time}</span>
+                                                <span
+                                                    className={styles.agendaBadge}
+                                                    style={badgeColor}
+                                                >
+                                                    {item.status}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })
+                        ) : (
+                            <div className={styles.emptyFeed}>
+                                <p>No scheduled check-ins for today.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
