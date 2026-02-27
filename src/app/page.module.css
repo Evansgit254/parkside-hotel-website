@@ -587,14 +587,19 @@
     width: 100%;
     cursor: pointer;
     outline: none;
-    appearance: none;
-    -webkit-appearance: none;
 }
 
-/* Ensure the calendar icon is visible on the dark background */
+/* Hide native calendar icon but keep it clickable */
 .bookingInput::-webkit-calendar-picker-indicator {
-    filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(10deg) brightness(1.2) contrast(1.1);
+    position: absolute;
+    top: 50%;
+    right: 1.5rem;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    opacity: 0;
     cursor: pointer;
+    z-index: 2;
 }
 
 .bookingInput option {
@@ -1399,6 +1404,21 @@
 
 .input::placeholder {
     color: var(--text-muted);
+}
+
+.inputWithIcon {
+    position: relative;
+    width: 100%;
+}
+
+.inputIcon {
+    position: absolute;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--secondary);
+    pointer-events: none;
+    opacity: 0.7;
 }
 
 .input:focus {

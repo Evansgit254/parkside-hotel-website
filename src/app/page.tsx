@@ -192,21 +192,27 @@ export default function Home() {
         <div className={styles.bookingBar}>
           <div className={styles.bookingField}>
             <span className={styles.bookingLabel}>Check-in</span>
-            <input
-              type="date"
-              className={styles.bookingInput}
-              value={bookingData.checkIn}
-              onChange={(e) => setBookingData({ ...bookingData, checkIn: e.target.value })}
-            />
+            <div className={styles.inputWithIcon}>
+              <input
+                type="date"
+                className={styles.bookingInput}
+                value={bookingData.checkIn}
+                onChange={(e) => setBookingData({ ...bookingData, checkIn: e.target.value })}
+              />
+              <Calendar size={14} className={styles.inputIcon} />
+            </div>
           </div>
           <div className={styles.bookingField}>
             <span className={styles.bookingLabel}>Check-out</span>
-            <input
-              type="date"
-              className={styles.bookingInput}
-              value={bookingData.checkOut}
-              onChange={(e) => setBookingData({ ...bookingData, checkOut: e.target.value })}
-            />
+            <div className={styles.inputWithIcon}>
+              <input
+                type="date"
+                className={styles.bookingInput}
+                value={bookingData.checkOut}
+                onChange={(e) => setBookingData({ ...bookingData, checkOut: e.target.value })}
+              />
+              <Calendar size={14} className={styles.inputIcon} />
+            </div>
           </div>
           <div className={styles.bookingField}>
             <span className={styles.bookingLabel}>Guests</span>
@@ -596,8 +602,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
-      <Footer />
 
       {/* ── BOOKING MODAL ── */}
       <AnimatePresence>
@@ -680,7 +684,10 @@ export default function Home() {
                         ].map(f => (
                           <div key={`booking-step1-${f.name}`} className={styles.formGroup}>
                             <label className={styles.formLabel}>{f.label}</label>
-                            <input type={f.type} required value={f.value} onChange={e => f.onChange(e.target.value)} className={styles.input} />
+                            <div className={styles.inputWithIcon}>
+                              <input type={f.type} required value={f.value} onChange={e => f.onChange(e.target.value)} className={styles.input} />
+                              {f.type === 'date' && <Calendar size={14} className={styles.inputIcon} />}
+                            </div>
                           </div>
                         ))}
                       </div>

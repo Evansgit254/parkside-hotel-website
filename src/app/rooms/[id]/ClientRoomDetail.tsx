@@ -189,11 +189,17 @@ export default function ClientRoomDetail({ room }: { room: any }) {
                                 <div className={styles.formGrid}>
                                     <div>
                                         <label className={styles.label}>Check In *</label>
-                                        <input type="date" required value={bookingData.checkIn} onChange={e => setBookingData({ ...bookingData, checkIn: e.target.value })} className={styles.input} />
+                                        <div className={styles.inputWithIcon}>
+                                            <input type="date" required value={bookingData.checkIn} onChange={e => setBookingData({ ...bookingData, checkIn: e.target.value })} className={styles.input} />
+                                            <Calendar size={14} className={styles.inputIcon} />
+                                        </div>
                                     </div>
                                     <div>
                                         <label className={styles.label}>Check Out *</label>
-                                        <input type="date" required value={bookingData.checkOut} onChange={e => setBookingData({ ...bookingData, checkOut: e.target.value })} className={styles.input} />
+                                        <div className={styles.inputWithIcon}>
+                                            <input type="date" required value={bookingData.checkOut} onChange={e => setBookingData({ ...bookingData, checkOut: e.target.value })} className={styles.input} />
+                                            <Calendar size={14} className={styles.inputIcon} />
+                                        </div>
                                     </div>
                                 </div>
 

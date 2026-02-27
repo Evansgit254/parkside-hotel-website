@@ -290,11 +290,17 @@ export default function RoomsPage() {
                                             <div className={styles.formGrid}>
                                                 <div className={styles.formGroup}>
                                                     <label className={styles.formLabel}>CHECK IN</label>
-                                                    <input type="date" required value={bookingData.checkIn} onChange={e => setBookingData({ ...bookingData, checkIn: e.target.value })} className={styles.input} />
+                                                    <div className={styles.inputWithIcon}>
+                                                        <input type="date" required value={bookingData.checkIn} onChange={e => setBookingData({ ...bookingData, checkIn: e.target.value })} className={styles.input} />
+                                                        <Calendar size={14} className={styles.inputIcon} />
+                                                    </div>
                                                 </div>
                                                 <div className={styles.formGroup}>
                                                     <label className={styles.formLabel}>CHECK OUT</label>
-                                                    <input type="date" required value={bookingData.checkOut} onChange={e => setBookingData({ ...bookingData, checkOut: e.target.value })} className={styles.input} />
+                                                    <div className={styles.inputWithIcon}>
+                                                        <input type="date" required value={bookingData.checkOut} onChange={e => setBookingData({ ...bookingData, checkOut: e.target.value })} className={styles.input} />
+                                                        <Calendar size={14} className={styles.inputIcon} />
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div className={styles.formGroup}>

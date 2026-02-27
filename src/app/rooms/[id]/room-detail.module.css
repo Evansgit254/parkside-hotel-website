@@ -272,7 +272,7 @@
     border: 1px solid var(--border-light);
     position: relative;
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1);
-    color: var(--background-alt);
+    color: var(--text-primary);
 }
 
 .closeModal {
@@ -281,7 +281,7 @@
     right: 1.5rem;
     background: none;
     border: none;
-    color: var(--background-alt);
+    color: var(--text-primary);
     font-size: 2rem;
     cursor: pointer;
     opacity: 0.5;
@@ -338,10 +338,10 @@
 .input {
     width: 100%;
     padding: 1rem;
-    background: var(--ivory-deep);
+    background: rgba(0, 0, 0, 0.04);
     border: 1px solid var(--border-light);
     border-radius: 12px;
-    color: var(--background-alt);
+    color: var(--text-primary);
     font-weight: 500;
 }
 
