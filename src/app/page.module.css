@@ -1406,6 +1406,18 @@
     color: var(--text-muted);
 }
 
+.input::-webkit-calendar-picker-indicator {
+    position: absolute;
+    top: 50%;
+    right: 1.25rem;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
 .inputWithIcon {
     position: relative;
     width: 100%;

@@ -2,7 +2,7 @@
 export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
-import { getSiteData, getGalleryItems, addGalleryItem, deleteGalleryItem, uploadImage, updateGalleryOrder } from "../../actions";
+import { getSiteData, getGalleryItems, addGalleryItem, deleteGalleryItem, uploadImage, updateGalleryOrder, updateGalleryItem } from "../../actions";
 import styles from "../admin.module.css";
 import { Plus, Trash2, Edit2, Image as ImageIcon, Video, Upload, Grid, List, Save, X, ExternalLink, Move, Loader2 } from "lucide-react";
 import { GalleryItem } from "@prisma/client";

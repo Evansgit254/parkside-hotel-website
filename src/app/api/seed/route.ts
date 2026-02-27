@@ -91,8 +91,25 @@ export async function GET() {
         // 7. SITE CONTENT
         await prisma.siteContent.upsert({
             where: { key: "landing_hero" },
-            update: { value: { title: "Parkside Villa Kitui", subtitle: "An oasis of tranquility" } as any },
+            update: { value: { title: "Parkside Villa Kitui", subtitle: "An oasis of tranquility in the heart of Kenya." } as any },
             create: { key: "landing_hero", value: { title: "Parkside Villa Kitui", subtitle: "An oasis of tranquility" } as any }
+        });
+
+        // 8. GALLERY
+        await prisma.galleryItem.deleteMany({ where: { title: { in: ["Luxury Entrance", "Poolside Zen", "Virtual Tour"] } } });
+        await prisma.galleryItem.createMany({
+            data: [
+                { url: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=1000", type: "image", title: "Luxury Entrance", order: 1 },
+                { url: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&q=80&w=1000", type: "image", title: "Poolside Zen", order: 2 },
+                { url: "https://www.youtube.com/embed/dQw4w9WgXcQ", type: "video", title: "Virtual Tour", order: 3 }
+            ]
+        });
+
+        // 9. PROMOTIONS
+        await prisma.promotion.upsert({
+            where: { code: "SUMMER20" },
+            update: { discount: 20, type: "percentage", validTo: new Date("2026-08-31") },
+            create: { code: "SUMMER20", discount: 20, type: "percentage", validTo: new Date("2026-08-31") }
         });
 
         return NextResponse.json({ success: true, message: "Seed completed!" });

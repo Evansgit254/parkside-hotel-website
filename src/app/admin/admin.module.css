@@ -109,10 +109,10 @@
 }
 
 .navGroupLabel {
-    font-size: 0.5rem;
-    letter-spacing: 0.25em;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.35);
+    color: rgba(255, 255, 255, 0.45);
     padding: 0 0.625rem;
     margin-bottom: 0.5rem;
     display: block;
@@ -124,9 +124,9 @@
     gap: 0.875rem;
     padding: 0.75rem 0.875rem;
     border-radius: 8px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.75);
     text-decoration: none;
-    font-size: 0.8125rem;
+    font-size: 0.9rem;
     font-weight: 500;
     letter-spacing: 0.01em;
     transition: all 0.2s ease;
@@ -244,25 +244,26 @@
 .logoutBtn {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.75rem;
-    padding: 0.75rem 0.875rem;
+    padding: 0.875rem;
     border-radius: 6px;
-    color: rgba(239, 68, 68, 0.45);
+    color: #ef4444;
     text-decoration: none;
-    font-size: 0.8125rem;
-    font-weight: 500;
+    font-size: 0.9rem;
+    font-weight: 600;
     transition: all 0.2s ease;
     cursor: pointer;
-    border: 1px solid rgba(239, 68, 68, 0.1);
-    background: rgba(239, 68, 68, 0.02);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    background: rgba(239, 68, 68, 0.05);
     width: 100%;
     margin-top: 0.5rem;
 }
 
 .logoutBtn:hover {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.08);
-    border-color: rgba(239, 68, 68, 0.2);
+    color: #ffffff;
+    background: #ef4444;
+    border-color: #ef4444;
 }
 
 .breadcrumb {
@@ -2349,6 +2350,23 @@
         grid-template-columns: 1fr !important;
         gap: 0.5rem;
         padding: 1.5rem;
+    }
+
+    .articleCard {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .articleThumb {
+        width: 100%;
+        height: 200px;
+    }
+
+    .articleActions {
+        opacity: 1;
+        transform: none;
+        justify-content: flex-start;
     }
 
     .panelHeader {
