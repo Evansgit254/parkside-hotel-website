@@ -169,7 +169,7 @@ export default function AdminDashboard() {
                     </div>
                 </div>
 
-                <div className={styles.barChart}>
+                <div className={styles.analyticsChart}>
                     {[80, 45, 90, 65, 100, 75, 55].map((val, i) => (
                         <div key={i} className={styles.barWrapper}>
                             <div className={styles.bar} style={{ height: `${val}%` }}>
