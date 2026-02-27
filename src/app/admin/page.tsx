@@ -159,21 +159,23 @@ export default function AdminDashboard() {
                     </div>
                     <div className={styles.panelHeaderGroup}>
                         <div className={styles.analyticsStat}>
-                            <span className={styles.statLabel}>Revenue</span>
-                            <span className={styles.statValue}>$4,250.00</span>
+                            <span className={styles.statLabel}>Est. Revenue</span>
+                            <span className={styles.statValue}>{liveStats?.analytics?.revenue || "$0.00"}</span>
                         </div>
                         <div className={styles.analyticsStat}>
                             <span className={styles.statLabel}>Conversion</span>
-                            <span className={styles.statValue}>4.8%</span>
+                            <span className={styles.statValue}>{liveStats?.analytics?.conversion || "0.0%"}</span>
                         </div>
                     </div>
                 </div>
 
                 <div className={styles.analyticsChart}>
-                    {[80, 45, 90, 65, 100, 75, 55].map((val, i) => (
+                    {(liveStats?.analytics?.chartData || [0, 0, 0, 0, 0, 0, 0]).map((val: number, i: number) => (
                         <div key={i} className={styles.barWrapper}>
-                            <div className={styles.bar} style={{ height: `${val}%` }}>
-                                <div className={styles.barTooltip}>\${val * 100}</div>
+                            <div className={styles.bar} style={{ height: `${Math.max(val, 2)}%` }}>
+                                <div className={styles.barTooltip}>
+                                    {liveStats?.analytics?.rawCounts?.[i] || 0} Enquiries
+                                </div>
                             </div>
                             <span className={styles.barLabel}>{['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i]}</span>
                         </div>

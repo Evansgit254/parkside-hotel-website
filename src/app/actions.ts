@@ -149,6 +149,11 @@ export async function getDashboardStats() {
             testimonials: 0,
             recentActivity: [],
             agenda: [],
+            analytics: {
+                revenue: "$0.00",
+                conversion: "0.0%",
+                chartData: [0, 0, 0, 0, 0, 0, 0]
+            }
         };
     }
 
@@ -208,17 +213,58 @@ export async function getDashboardStats() {
             status: "Pending"
         }));
 
+        // Calculate Analytics (Last 7 Days)
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        const last7DaysLeads = await prisma.lead.findMany({
+            where: { createdAt: { gte: sevenDaysAgo } },
+            include: { room: true }
+        });
+
+        // Group by Day (0=Sun, 1=Mon, ..., 6=Sat)
+        const chartData = [0, 0, 0, 0, 0, 0, 0];
+        let totalPotentialRevenue = 0;
+
+        last7DaysLeads.forEach(l => {
+            const day = l.createdAt.getDay();
+            chartData[day]++;
+
+            // Extract numeric price from "$150"
+            const priceStr = l.room?.price?.replace(/[^0-9.]/g, '') || "0";
+            totalPotentialRevenue += parseFloat(priceStr);
+        });
+
+        // Reorder chartData to start from Monday (1, 2, 3, 4, 5, 6, 0)
+        const orderedChartData = [chartData[1], chartData[2], chartData[3], chartData[4], chartData[5], chartData[6], chartData[0]];
+
+        // Scale chart data to percentages (0-100) for the UI bars
+        const maxEnquiries = Math.max(...orderedChartData, 1);
+        const scaledChartData = orderedChartData.map(val => (val / maxEnquiries) * 100);
+
+        // Conversion Rate: Total Leads / (Rooms * 10) (Simplified metric for demo)
+        const conversionRate = ((leadCount / (roomCount * 5 || 1)) * 100).toFixed(1);
+
         return {
             rooms: roomCount,
             leads: leadCount,
             menus: menuCount,
             testimonials: testimonialCount,
             recentActivity: activities,
-            agenda: agenda
+            agenda: agenda,
+            analytics: {
+                revenue: `$${totalPotentialRevenue.toLocaleString()}`,
+                conversion: `${conversionRate}%`,
+                chartData: scaledChartData,
+                rawCounts: orderedChartData
+            }
         };
     } catch (error) {
         console.error("Error fetching dashboard stats:", error);
-        return { rooms: 0, leads: 0, menus: 0, testimonials: 0, recentActivity: [], agenda: [] };
+        return {
+            rooms: 0, leads: 0, menus: 0, testimonials: 0, recentActivity: [], agenda: [],
+            analytics: { revenue: "$0", conversion: "0%", chartData: [0, 0, 0, 0, 0, 0, 0] }
+        };
     }
 }
 
