@@ -84,7 +84,7 @@ export default function AdminDashboard() {
                     </div>
 
                     <div>
-                        {recentActivity.map((a) => (
+                        {recentActivity.map((a: any) => (
                             <div key={a.id} className={styles.activityItem}>
                                 <div className={styles.activityIconBox} style={{ color: a.color }}>
                                     {a.icon ? <a.icon size={14} /> : <Calendar size={14} />}

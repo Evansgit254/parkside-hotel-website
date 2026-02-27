@@ -351,9 +351,9 @@ export async function updateRoom(roomId: string, updatedRoom: Partial<Room>) {
         });
         revalidateAll();
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error updating room:", error);
-        return { success: false, error: "Database error" };
+        return { success: false, error: error.message || "Database error" };
     }
 }
 
@@ -364,9 +364,9 @@ export async function deleteRoom(roomId: string) {
         await prisma.room.delete({ where: { slug: roomId } });
         revalidateAll();
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error deleting room:", error);
-        return { success: false, error: "Database error" };
+        return { success: false, error: error.message || "Database error" };
     }
 }
 
@@ -413,9 +413,9 @@ export async function updateTestimonial(id: number, updatedData: Partial<Testimo
         });
         revalidateAll();
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error updating testimonial:", error);
-        return { success: false, error: "Database error" };
+        return { success: false, error: error.message || "Database error" };
     }
 }
 
@@ -471,9 +471,9 @@ export async function updateDiningCategory(categoryId: string, updatedCategory: 
         });
         revalidateAll();
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error updating dining category:", error);
-        return { success: false, error: "Database error" };
+        return { success: false, error: error.message || "Database error" };
     }
 }
 
@@ -527,9 +527,9 @@ export async function updateFacility(facilityId: string, updatedFacility: any) {
         });
         revalidateAll();
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error updating facility:", error);
-        return { success: false, error: "Database error" };
+        return { success: false, error: error.message || "Database error" };
     }
 }
 

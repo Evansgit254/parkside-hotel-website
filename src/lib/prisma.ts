@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const globalForPrisma = globalThis as unknown as {
     prisma: PrismaClient | undefined;
@@ -32,7 +35,14 @@ function createPrismaClient() {
         return new PrismaClient({ adapter } as any);
     }
 
-    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const connectionString = process.env.DATABASE_URL;
+
+    // For Neon/Vercel, we often need to ensure the pool handles the connection string correctly
+    const pool = new Pool({
+        connectionString,
+        max: 1 // Keep it low for serverless/pooled environments
+    });
+
     const adapter = new PrismaPg(pool);
     return new PrismaClient({ adapter } as any);
 }
