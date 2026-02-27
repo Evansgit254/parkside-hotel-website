@@ -550,6 +550,13 @@
     margin-bottom: 1.75rem;
     padding-bottom: 1.25rem;
     border-bottom: 1px solid var(--admin-border);
+    gap: 1.5rem;
+}
+
+.panelHeaderGroup {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
 }
 
 .panelTitle {
@@ -2309,6 +2316,31 @@
         grid-template-columns: 1fr !important;
         gap: 0.5rem;
         padding: 1.5rem;
+    }
+
+    .panelHeader {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .panelHeaderGroup {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .otaHeader {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 1.5rem;
+    }
+
+    .otaActionWrapper {
+        width: 100%;
+        text-align: left !important;
+    }
+
+    .otaActionWrapper>div {
+        text-align: left !important;
     }
 }
 

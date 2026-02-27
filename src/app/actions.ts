@@ -140,6 +140,50 @@ export async function getSiteData() {
     }
 }
 
+export async function getDashboardStats() {
+    if (!isDatabaseConfigured()) {
+        return {
+            rooms: 0,
+            leads: 0,
+            menus: 0,
+            testimonials: 0,
+            recentLeads: [],
+        };
+    }
+
+    try {
+        const [rooms, leads, menus, testimonials, recentLeads] = await Promise.all([
+            prisma.room.count(),
+            prisma.lead.count(),
+            prisma.menuCategory.count(),
+            prisma.testimonial.count(),
+            prisma.lead.findMany({
+                take: 5,
+                orderBy: { createdAt: "desc" },
+                include: { room: true }
+            })
+        ]);
+
+        return {
+            rooms,
+            leads,
+            menus,
+            testimonials,
+            recentLeads: recentLeads.map(l => ({
+                id: l.id,
+                type: "Lead",
+                user: l.name,
+                action: `Requested ${l.room?.name || "a room"} booking`,
+                time: l.time || "Just now",
+                color: "#C9A84C"
+            }))
+        };
+    } catch (error) {
+        console.error("Error fetching dashboard stats:", error);
+        return { rooms: 0, leads: 0, menus: 0, testimonials: 0, recentLeads: [] };
+    }
+}
+
 function getStaticSiteData() {
     return {
         heroImages: staticData.heroImages,

@@ -6,17 +6,28 @@ import {
     TrendingUp, Clock, ArrowUpRight, Calendar,
     Star, ChefHat, CheckCircle, BarChart3, Globe, RefreshCw, Loader2
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getDashboardStats } from "../actions";
 
 export default function AdminDashboard() {
+    const [liveStats, setLiveStats] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        getDashboardStats().then(data => {
+            setLiveStats(data);
+            setLoading(false);
+        });
+    }, []);
+
     const stats = [
         { name: "Global Reach", value: "1,280", label: "Monthly Visits", icon: TrendingUp, color: "#3b82f6" },
-        { name: "Reservations", value: "12", label: "Pending Enquiries", icon: MessageSquare, color: "#C9A84C" },
-        { name: "Accommodations", value: "8", label: "Active Suites", icon: Hotel, color: "#10b981" },
-        { name: "Menu Items", value: "24", label: "Dining Curations", icon: Utensils, color: "#f59e0b" },
+        { name: "Reservations", value: liveStats?.leads?.toString() || "0", label: "Pending Enquiries", icon: MessageSquare, color: "#C9A84C" },
+        { name: "Accommodations", value: liveStats?.rooms?.toString() || "0", label: "Active Suites", icon: Hotel, color: "#10b981" },
+        { name: "Menu Items", value: liveStats?.menus?.toString() || "0", label: "Dining Curations", icon: Utensils, color: "#f59e0b" },
     ];
 
-    const recentActivity = [
+    const recentActivity = liveStats?.recentLeads?.length > 0 ? liveStats.recentLeads : [
         { id: 1, type: "Lead", user: "John Doe", action: "Requested Executive Suite booking", time: "2h ago", icon: Calendar, color: "#f59e0b" },
         { id: 2, type: "Review", user: "Alice Smith", action: "Left a 5-star endorsement", time: "5h ago", icon: Star, color: "#C9A84C" },
         { id: 3, type: "Dining", user: "Chef de Cuisine", action: "Updated Saturday specials menu", time: "Yesterday", icon: ChefHat, color: "#10b981" },
@@ -76,7 +87,7 @@ export default function AdminDashboard() {
                         {recentActivity.map((a) => (
                             <div key={a.id} className={styles.activityItem}>
                                 <div className={styles.activityIconBox} style={{ color: a.color }}>
-                                    <a.icon size={14} />
+                                    {a.icon ? <a.icon size={14} /> : <Calendar size={14} />}
                                 </div>
                                 <div>
                                     <div
@@ -143,7 +154,7 @@ export default function AdminDashboard() {
                         <h2 className={styles.panelTitle}>Estate Intelligence</h2>
                         <p className={styles.panelSub}>Monthly revenue and traffic conversion</p>
                     </div>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div className={styles.panelHeaderGroup}>
                         <div className={styles.analyticsStat}>
                             <span className={styles.statLabel}>Revenue</span>
                             <span className={styles.statValue}>$4,250.00</span>
@@ -177,7 +188,9 @@ export default function AdminDashboard() {
                             <p className={styles.otaDesc}>Synchronize your availability with Booking.com, Expedia, and Airbnb.</p>
                         </div>
                     </div>
-                    <OtaSyncButton />
+                    <div className={styles.otaActionWrapper}>
+                        <OtaSyncButton />
+                    </div>
                 </div>
             </section>
         </>
