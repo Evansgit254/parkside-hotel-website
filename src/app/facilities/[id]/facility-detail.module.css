@@ -309,18 +309,22 @@
 
 @media (max-width: 968px) {
     .hero {
-        flex-direction: column-reverse;
+        flex-direction: column;
         height: auto;
+        gap: 0;
     }
 
     .heroImage {
-        height: 40vh;
+        height: 50vh;
         flex: none;
-        width: 100%;
+        width: calc(100% - 2rem);
+        margin: 1rem;
+        border-radius: 20px;
+        aspect-ratio: 16/9;
     }
 
     .heroOverlay {
-        background: linear-gradient(to top, rgba(10, 10, 10, 0.8) 0%, transparent 100%);
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
     }
 
     .heroContent {
