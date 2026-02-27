@@ -104,8 +104,8 @@ export default function Dining() {
                     {...fadeInUp}
                     style={{ textAlign: 'center', marginBottom: '3rem' }}
                 >
-                    <span className="gold-text" style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 600 }}>Explore Our Flavors</span>
-                    <h2 style={{ fontSize: '2.5rem', marginTop: '1rem' }}>Exquisite Flavor Selections</h2>
+                    <span className="gold-text" style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 600 }}>{content.dining_menu?.eyebrow || "Explore Our Flavors"}</span>
+                    <h2 style={{ fontSize: '2.5rem', marginTop: '1rem' }}>{content.dining_menu?.title || "Exquisite Flavor Selections"}</h2>
 
                     {/* Category Filter */}
                     <div className={styles.filterBar}>

@@ -112,6 +112,7 @@ const contentSchema = [
         description: "Heading and subtitle for the main Gallery page.",
         icon: Star,
         fields: [
+            { name: "badge", label: "Page Badge", type: "text", default: "Visual Experience" },
             { name: "title", label: "Page Title", type: "text", default: "Visual Gallery" },
             { name: "subtitle", label: "Page Subtitle", type: "textarea", default: "A visual journey through the estate, capturing moments of luxury and tranquility." }
         ]
@@ -122,6 +123,7 @@ const contentSchema = [
         description: "Heading and subtitle for the Editorial / Blog page.",
         icon: Star,
         fields: [
+            { name: "badge", label: "Page Badge", type: "text", default: "Our Journal" },
             { name: "title", label: "Page Title", type: "text", default: "Editorial" },
             { name: "subtitle", label: "Page Subtitle", type: "textarea", default: "Stories, insights, and updates from the heart of Parkside Villa." }
         ]
@@ -158,13 +160,35 @@ const contentSchema = [
             { name: "col2", label: "Column 2 Title", type: "text", default: "Our Pillars" },
             { name: "col3", label: "Column 3 Title", type: "text", default: "Visit Us" }
         ]
+    },
+    {
+        key: "dining_menu",
+        label: "Dining Menu Section",
+        description: "Titles for the full menu section on the Dining page.",
+        icon: Star,
+        fields: [
+            { name: "eyebrow", label: "Section Eyebrow", type: "text", default: "Explore Our Flavors" },
+            { name: "title", label: "Section Title", type: "text", default: "Exquisite Flavor Selections" }
+        ]
+    },
+    {
+        key: "concierge_messages",
+        label: "Concierge Bot",
+        description: "The responses provided by the virtual concierge assistant.",
+        icon: Star,
+        fields: [
+            { name: "welcome", label: "Step 0: Welcome Message", type: "textarea", default: "Welcome to Parkside Villa. I'm your personal digital concierge. How may I assist you today?" },
+            { name: "rooms", label: "Step 1: Accommodation Message", type: "textarea", default: "Our rooms range from the Deluxe Garden Room to the Presidential Executive Suite. Each is a sanctuary of comfort." },
+            { name: "dining", label: "Step 2: Dining Message", type: "textarea", default: "Our kitchen is led by experienced chefs offering both local Kenyan cuisine and international favorites. Available from 06:00 to 23:00." }
+        ]
     }
 ];
 
 const TABS = [
-    { id: "page-copy", label: "Page Copy", keys: ["landing_hero", "rooms_intro", "dining_intro", "facilities_intro", "brand_quote", "testimonials_intro", "recent_rooms", "contact_section", "footer_about", "footer_titles"] },
+    { id: "page-copy", label: "Page Copy", keys: ["landing_hero", "rooms_intro", "dining_intro", "facilities_intro", "brand_quote", "testimonials_intro", "recent_rooms", "contact_section", "footer_about", "footer_titles", "dining_menu"] },
     { id: "pages", label: "Page Headers", keys: ["gallery_intro", "blog_intro"] },
     { id: "stats", label: "Statistics", keys: ["experience_stats"] },
+    { id: "concierge", label: "Concierge", keys: ["concierge_messages"] },
     { id: "contact", label: "Contact Info", keys: [] },
 ];
 

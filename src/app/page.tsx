@@ -19,6 +19,7 @@ import Magnetic from "./components/Magnetic";
 import Schema from "./components/Schema";
 import { useCurrency } from "./context/CurrencyContext";
 import ReviewForm from "./components/ReviewForm";
+import Footer from "./components/Footer";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
@@ -596,56 +597,7 @@ export default function Home() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className={styles.footer}>
-        <div className={styles.footerGrid}>
-          <div className={styles.footerBrand}>
-            <span className={styles.footerLogo}>Parkside Villa</span>
-            <p className={styles.footerDesc}>
-              Kitui&apos;s premier destination for luxury accommodation, fine dining, and world-class conference facilities. An experience beyond expectation.
-            </p>
-            <div className={styles.footerSocial}>
-              {contactInfo.social?.facebook && <a href={contactInfo.social.facebook} target="_blank" rel="noreferrer"><Facebook size={16} /></a>}
-              {contactInfo.social?.instagram && <a href={contactInfo.social.instagram} target="_blank" rel="noreferrer"><Instagram size={16} /></a>}
-              {contactInfo.social?.linkedin && <a href={contactInfo.social.linkedin} target="_blank" rel="noreferrer"><Linkedin size={16} /></a>}
-            </div>
-          </div>
-
-          <div>
-            <p className={styles.footerTitle}>Explore</p>
-            <div className={styles.footerLinks}>
-              <Link href="/#accommodation">Accommodation</Link>
-              <Link href="/facilities">Facilities</Link>
-              <Link href="/dining">Dining & Bar</Link>
-              <Link href="/gallery">Gallery</Link>
-              <Link href="/blog">Journal</Link>
-            </div>
-          </div>
-
-          <div>
-            <p className={styles.footerTitle}>Experience</p>
-            <div className={styles.footerLinks}>
-              <Link href="/facilities/conference">Conference</Link>
-              <Link href="/facilities/pool">Infinity Pool</Link>
-              <Link href="/facilities/lounge">VIP Lounge</Link>
-              <Link href="/facilities/dining">Fine Dining</Link>
-            </div>
-          </div>
-
-          <div>
-            <p className={styles.footerTitle}>Contact</p>
-            <div className={styles.footerLinks}>
-              <a href={`tel:${contactInfo.phone}`}>{contactInfo.phone}</a>
-              <a href={`mailto:${contactInfo.email}`}>{contactInfo.email}</a>
-              <span style={{ color: 'var(--text-on-dark-soft)', fontSize: '0.875rem', fontWeight: 300 }}>{contactInfo.address}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.footerBottom}>
-          <span>© {new Date().getFullYear()} Parkside Villa Kitui. All rights reserved.</span>
-          <span style={{ letterSpacing: '0.1em' }}>EXCELLENCE IN HOSPITALITY</span>
-        </div>
-      </footer>
+      <Footer />
 
       {/* ── BOOKING MODAL ── */}
       <AnimatePresence>
@@ -905,9 +857,9 @@ export default function Home() {
             </div>
             <div className={styles.conciergeBody}>
               <div className={styles.aiMessage}>
-                {conciergeStep === 0 && "Welcome to Parkside Villa. I'm your personal digital concierge. How may I assist you today?"}
-                {conciergeStep === 1 && "Our rooms range from the Deluxe Garden Room to the Presidential Executive Suite. Each is a sanctuary of comfort."}
-                {conciergeStep === 2 && "Our kitchen is led by experienced chefs offering both local Kenyan cuisine and international favorites. Available from 06:00 to 23:00."}
+                {conciergeStep === 0 && (content.concierge_messages?.welcome || "Welcome to Parkside Villa. I'm your personal digital concierge. How may I assist you today?")}
+                {conciergeStep === 1 && (content.concierge_messages?.rooms || "Our rooms range from the Deluxe Garden Room to the Presidential Executive Suite. Each is a sanctuary of comfort.")}
+                {conciergeStep === 2 && (content.concierge_messages?.dining || "Our kitchen is led by experienced chefs offering both local Kenyan cuisine and international favorites. Available from 06:00 to 23:00.")}
               </div>
               <div className={styles.conciergeOptions}>
                 {conciergeStep === 0 && (<>
