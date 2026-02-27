@@ -10,11 +10,15 @@ import Script from "next/script";
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
 });
 
 const mulish = Mulish({
   variable: "--font-mulish",
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
