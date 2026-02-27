@@ -854,18 +854,16 @@
 .actionBtn {
     display: flex;
     align-items: center;
-    gap: 0.625rem;
-    padding: 0.75rem 1.5rem;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
     background: var(--admin-green-bg);
     color: var(--admin-green);
     border: 1px solid rgba(20, 75, 54, 0.2);
-    border-radius: 10px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.25s ease;
-    width: fit-content;
+    flex-shrink: 0;
 }
 
 .actionBtn:hover {

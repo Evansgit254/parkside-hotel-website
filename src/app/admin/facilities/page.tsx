@@ -103,7 +103,7 @@ export default function AdminFacilities() {
             </div>
 
             <div className={styles.tableContainer}>
-                <div className={styles.tableHeader} style={{ gridTemplateColumns: '100px 1fr auto 80px' }}>
+                <div className={styles.tableHeader} style={{ gridTemplateColumns: '100px 1fr auto 120px' }}>
                     <div>Preview</div>
                     <div>Details</div>
                     <div>Meta</div>
@@ -118,7 +118,7 @@ export default function AdminFacilities() {
                     facilities.map((facility) => {
                         const IconComponent = Icons[facility.icon] || Hotel;
                         return (
-                            <div key={facility.id} className={styles.tableRow} style={{ gridTemplateColumns: '100px 1fr auto 80px' }}>
+                            <div key={facility.id} className={styles.tableRow} style={{ gridTemplateColumns: '100px 1fr auto 120px' }}>
 
                                 {/* Image thumbnail with icon overlay */}
                                 <div style={{ position: 'relative', width: '80px', height: '56px', overflow: 'hidden', background: '#F7F8FC' }}>
