@@ -771,6 +771,34 @@ export async function deletePromotion(id: string) {
     }
 }
 
+export async function updatePromotion(id: string, promotion: {
+    code: string;
+    discount: number;
+    type?: string;
+    validFrom?: string;
+    validTo?: string;
+}) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await requireAdmin();
+        const updated = await prisma.promotion.update({
+            where: { id },
+            data: {
+                code: promotion.code,
+                discount: promotion.discount,
+                type: promotion.type ?? "percentage",
+                validFrom: promotion.validFrom ? new Date(promotion.validFrom) : null,
+                validTo: promotion.validTo ? new Date(promotion.validTo) : null,
+            },
+        });
+        revalidatePath("/admin/promotions");
+        return { success: true, promotion: updated };
+    } catch (error) {
+        console.error("Error updating promotion:", error);
+        return { success: false, error: "Database error" };
+    }
+}
+
 // ─────────────────────────────────────────────
 // UPLOAD (Cloudinary Integration)
 // ─────────────────────────────────────────────
@@ -1011,6 +1039,26 @@ export async function deleteGalleryItem(id: string) {
         return { success: true };
     } catch (error) {
         console.error("Error deleting gallery item:", error);
+        return { success: false, error: "Database error" };
+    }
+}
+
+export async function updateGalleryItem(id: string, item: { url: string; type: string; title?: string }) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await requireAdmin();
+        const updated = await prisma.galleryItem.update({
+            where: { id },
+            data: {
+                url: item.url,
+                type: item.type,
+                title: item.title,
+            },
+        });
+        revalidateAll();
+        return { success: true, item: updated };
+    } catch (error) {
+        console.error("Error updating gallery item:", error);
         return { success: false, error: "Database error" };
     }
 }

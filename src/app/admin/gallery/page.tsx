@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 import { useState, useEffect } from "react";
 import { getSiteData, getGalleryItems, addGalleryItem, deleteGalleryItem, uploadImage, updateGalleryOrder } from "../../actions";
 import styles from "../admin.module.css";
-import { Plus, Trash2, Image as ImageIcon, Video, Upload, Grid, List, Save, X, ExternalLink, Move, Loader2 } from "lucide-react";
+import { Plus, Trash2, Edit2, Image as ImageIcon, Video, Upload, Grid, List, Save, X, ExternalLink, Move, Loader2 } from "lucide-react";
 import { GalleryItem } from "@prisma/client";
 
 import MediaUpload from "../components/MediaUpload";
@@ -12,8 +12,8 @@ import MediaUpload from "../components/MediaUpload";
 export default function GalleryAdmin() {
     const [items, setItems] = useState<GalleryItem[]>([]);
     const [loading, setLoading] = useState(true);
-    const [isAdding, setIsAdding] = useState(false);
-    const [newItem, setNewItem] = useState({ url: "", type: "image", title: "" });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editForm, setEditForm] = useState({ id: "", url: "", type: "image", title: "" });
     const [activeTab, setActiveTab] = useState<"image" | "video">("image");
 
     useEffect(() => {
@@ -30,19 +30,36 @@ export default function GalleryAdmin() {
 
     const [error, setError] = useState<string | null>(null);
 
-    const handleAdd = async (e: React.FormEvent) => {
+    const handleEdit = (item: GalleryItem) => {
+        setEditForm({ id: item.id, url: item.url, type: item.type, title: item.title || "" });
+        setIsModalOpen(true);
+    };
+
+    const handleAdd = () => {
+        setEditForm({ id: "", url: "", type: "image", title: "" });
+        setIsModalOpen(true);
+    };
+
+    const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!newItem.url) return;
+        if (!editForm.url) return;
 
         setLoading(true);
         setError(null);
-        const res = await addGalleryItem(newItem);
+
+        let res;
+        if (editForm.id) {
+            res = await updateGalleryItem(editForm.id, editForm);
+        } else {
+            res = await addGalleryItem(editForm);
+        }
+
         if (res.success) {
             await loadItems();
-            setIsAdding(false);
-            setNewItem({ url: "", type: "image", title: "" });
+            setIsModalOpen(false);
+            setEditForm({ id: "", url: "", type: "image", title: "" });
         } else {
-            setError(res.error || "Failed to add item to the gallery.");
+            setError(res.error || "Failed to save item.");
         }
         setLoading(false);
     };
@@ -74,7 +91,7 @@ export default function GalleryAdmin() {
                     <h1 className={styles.sectionTitle}>Gallery Collection</h1>
                     <p className={styles.sectionSubtitle}>Manage the luxury storytelling assets of Parkside Villa.</p>
                 </div>
-                <button className={styles.addButton} onClick={() => setIsAdding(true)}>
+                <button className={styles.addButton} onClick={handleAdd}>
                     <Plus size={16} /> Curate Asset
                 </button>
             </div>
@@ -107,6 +124,9 @@ export default function GalleryAdmin() {
                                 </>
                             )}
                             <div className={styles.mediaMetaOverlay}>
+                                <button className={styles.mediaEditBtn} style={{ background: 'rgba(201,168,76,0.9)', color: '#000', border: 'none', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => handleEdit(item)}>
+                                    <Edit2 size={13} />
+                                </button>
                                 <button className={styles.mediaDeleteBtn} onClick={() => handleDelete(item.id)}>
                                     <Trash2 size={14} />
                                 </button>
@@ -130,22 +150,22 @@ export default function GalleryAdmin() {
                 )}
             </div>
 
-            {isAdding && (
+            {isModalOpen && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
                         <div className={styles.modalHeader}>
                             <div>
-                                <h3 className={styles.modalTitle}>Curate New Asset</h3>
+                                <h3 className={styles.modalTitle}>{editForm.id ? "Edit Curated Asset" : "Curate New Asset"}</h3>
                                 <p className={styles.modalSub}>Integrate professional imagery or cinematography into the estate gallery.</p>
                             </div>
-                            <button onClick={() => setIsAdding(false)} className={styles.modalClose}><X size={20} /></button>
+                            <button onClick={() => setIsModalOpen(false)} className={styles.modalClose}><X size={20} /></button>
                         </div>
                         {error && (
                             <div className={styles.error} style={{ margin: '1rem 2rem 0', borderRadius: '8px' }}>
                                 {error}
                             </div>
                         )}
-                        <form onSubmit={handleAdd} className={styles.modalBody}>
+                        <form onSubmit={handleSave} className={styles.modalBody}>
                             <div className={styles.formGrid}>
                                 <div className={styles.formSection}>
                                     <label className={styles.label}>Resource Title</label>
@@ -153,16 +173,16 @@ export default function GalleryAdmin() {
                                         type="text"
                                         className={styles.input}
                                         placeholder="e.g. Presidential Suite - Night View"
-                                        value={newItem.title}
-                                        onChange={e => setNewItem(prev => ({ ...prev, title: e.target.value }))}
+                                        value={editForm.title}
+                                        onChange={e => setEditForm(prev => ({ ...prev, title: e.target.value }))}
                                     />
                                 </div>
 
                                 <MediaUpload
                                     label="Visual Asset Source"
-                                    value={newItem.url}
-                                    onChange={(url) => setNewItem(prev => ({ ...prev, url }))}
-                                    placeholder={newItem.type === 'image' ? "https://..." : "https://youtube.com/watch?v=..."}
+                                    value={editForm.url}
+                                    onChange={(url) => setEditForm(prev => ({ ...prev, url }))}
+                                    placeholder={editForm.type === 'image' ? "https://..." : "https://youtube.com/watch?v=..."}
                                 />
 
                                 <div className={styles.formSection}>
@@ -170,15 +190,15 @@ export default function GalleryAdmin() {
                                     <div className={styles.compactTypeSelector}>
                                         <button
                                             type="button"
-                                            className={`${styles.typeBtn} ${newItem.type === 'image' ? styles.typeBtnActive : ''}`}
-                                            onClick={() => setNewItem({ ...newItem, type: 'image' })}
+                                            className={`${styles.typeBtn} ${editForm.type === 'image' ? styles.typeBtnActive : ''}`}
+                                            onClick={() => setEditForm({ ...editForm, type: 'image' })}
                                         >
                                             <ImageIcon size={14} /> Photography
                                         </button>
                                         <button
                                             type="button"
-                                            className={`${styles.typeBtn} ${newItem.type === 'video' ? styles.typeBtnActive : ''}`}
-                                            onClick={() => setNewItem({ ...newItem, type: 'video' })}
+                                            className={`${styles.typeBtn} ${editForm.type === 'video' ? styles.typeBtnActive : ''}`}
+                                            onClick={() => setEditForm({ ...editForm, type: 'video' })}
                                         >
                                             <Video size={14} /> Cinematography
                                         </button>
@@ -186,9 +206,9 @@ export default function GalleryAdmin() {
                                 </div>
                             </div>
                             <div className={styles.modalFooter}>
-                                <button type="button" onClick={() => setIsAdding(false)} className={styles.secondaryBtn}>Back</button>
-                                <button type="submit" className={styles.saveButton} disabled={loading || !newItem.url}>
-                                    <Save size={16} /> {loading ? "Adding..." : "Add to Collection"}
+                                <button type="button" onClick={() => setIsModalOpen(false)} className={styles.secondaryBtn}>Back</button>
+                                <button type="submit" className={styles.saveButton} disabled={loading || !editForm.url}>
+                                    <Save size={16} /> {loading ? "Saving..." : editForm.id ? "Save Changes" : "Add to Collection"}
                                 </button>
                             </div>
                         </form>
