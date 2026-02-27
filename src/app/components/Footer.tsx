@@ -51,12 +51,12 @@ export default function Footer() {
                             <button type="submit" className={styles.newsletterBtn}>Subscribe</button>
                         </form>
 
-                        <div className={styles.ctaGroup} style={{ justifyContent: 'flex-start', flexWrap: 'wrap', marginTop: '2.5rem' }}>
-                            {contactInfo.social?.facebook && <a href={contactInfo.social.facebook} target="_blank"><Facebook size={20} /></a>}
-                            {contactInfo.social?.instagram && <a href={contactInfo.social.instagram} target="_blank"><Instagram size={20} /></a>}
-                            {contactInfo.social?.linkedin && <a href={contactInfo.social.linkedin} target="_blank"><Linkedin size={20} /></a>}
-                            {contactInfo.social?.whatsapp && <a href={contactInfo.social.whatsapp} target="_blank"><MessageCircle size={20} /></a>}
-                            {contactInfo.social?.tiktok && <a href={contactInfo.social.tiktok} target="_blank"><PlaySquare size={20} /></a>}
+                        <div className={styles.footerSocial}>
+                            {contactInfo.social?.facebook && <a href={contactInfo.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Facebook size={20} /></a>}
+                            {contactInfo.social?.instagram && <a href={contactInfo.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Instagram size={20} /></a>}
+                            {contactInfo.social?.linkedin && <a href={contactInfo.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Linkedin size={20} /></a>}
+                            {contactInfo.social?.whatsapp && <a href={contactInfo.social.whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><MessageCircle size={20} /></a>}
+                            {contactInfo.social?.tiktok && <a href={contactInfo.social.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok"><PlaySquare size={20} /></a>}
                         </div>
                     </div>
 

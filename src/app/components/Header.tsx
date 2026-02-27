@@ -200,31 +200,59 @@ export default function Header() {
                         </div>
 
                         <nav className={styles.mobileNav}>
-                            {navLinks.map(link => (
-                                <div key={link.href}>
-                                    <Link
-                                        href={link.href}
-                                        className={`${styles.mobileNavLink} ${pathname === link.href ? styles.mobileNavLinkActive : ''}`}
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                    >
-                                        {link.label}
-                                    </Link>
-                                    {link.subLinks && (
-                                        <div className={styles.mobileSubNav}>
-                                            {link.subLinks.map(subLink => (
-                                                <Link
-                                                    key={subLink.href}
-                                                    href={subLink.href}
-                                                    className={styles.mobileSubNavLink}
-                                                    onClick={() => setIsMobileMenuOpen(false)}
+                            {navLinks.map(link => {
+                                const isOpen = activeDropdown === link.label;
+                                return (
+                                    <div key={link.href}>
+                                        {link.subLinks ? (
+                                            <button
+                                                className={`${styles.mobileNavLink} ${styles.mobileNavAccordion}`}
+                                                onClick={() => setActiveDropdown(isOpen ? null : link.label)}
+                                                aria-expanded={isOpen}
+                                            >
+                                                {link.label}
+                                                <ChevronDown
+                                                    size={16}
+                                                    className={styles.accordionChevron}
+                                                    style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                                                />
+                                            </button>
+                                        ) : (
+                                            <Link
+                                                href={link.href}
+                                                className={`${styles.mobileNavLink} ${pathname === link.href ? styles.mobileNavLinkActive : ''}`}
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                            >
+                                                {link.label}
+                                            </Link>
+                                        )}
+                                        <AnimatePresence>
+                                            {link.subLinks && isOpen && (
+                                                <motion.div
+                                                    initial={{ height: 0, opacity: 0 }}
+                                                    animate={{ height: 'auto', opacity: 1 }}
+                                                    exit={{ height: 0, opacity: 0 }}
+                                                    transition={{ duration: 0.25, ease: 'easeInOut' }}
+                                                    style={{ overflow: 'hidden' }}
                                                 >
-                                                    {subLink.label}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
+                                                    <div className={styles.mobileSubNav}>
+                                                        {link.subLinks.map(subLink => (
+                                                            <Link
+                                                                key={subLink.href}
+                                                                href={subLink.href}
+                                                                className={styles.mobileSubNavLink}
+                                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                            >
+                                                                {subLink.label}
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+                                );
+                            })}
                         </nav>
 
                         <div className={styles.mobileMenuFooter}>
