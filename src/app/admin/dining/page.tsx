@@ -168,7 +168,7 @@ export default function AdminDining() {
                         </div>
 
                         <div style={{ padding: '0 2rem' }}>
-                            {category.items.length > 0 ? (
+                            {Array.isArray(category.items) && category.items.length > 0 ? (
                                 category.items.map((item: any, idx: number) => (
                                     <div key={idx} className={styles.listItem} style={{ gridTemplateColumns: '1fr 120px 120px' }}>
                                         <div>

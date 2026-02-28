@@ -148,7 +148,7 @@ export default function Dining() {
                                     </div>
                                 </h3>
                                 <div className={styles.menuList}>
-                                    {category.items.map((item: MenuItem, idx: number) => (
+                                    {Array.isArray(category.items) && category.items.map((item: MenuItem, idx: number) => (
                                         <motion.div
                                             key={item.name}
                                             initial={{ opacity: 0, y: 10 }}

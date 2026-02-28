@@ -181,7 +181,7 @@ export default function FacilityDetail() {
                                 <h2 className={styles.sectionHeading}>About this Facility</h2>
                                 <p className={styles.description}>{facility.desc}</p>
 
-                                {facility.features && facility.features.length > 0 && (
+                                {Array.isArray(facility.features) && facility.features.length > 0 && (
                                     <div className={styles.featuresGrid}>
                                         {facility.features.map((feature: string, i: number) => (
                                             <div key={i} className={styles.featureBox} id={feature.toLowerCase().replace(/[^a-z0-9]+/g, '-')}>
@@ -193,7 +193,7 @@ export default function FacilityDetail() {
                                 )}
                             </div>
 
-                            {facility.highlights && facility.highlights.length > 0 && (
+                            {Array.isArray(facility.highlights) && facility.highlights.length > 0 && (
                                 <div className={styles.detailsCard}>
                                     <h3 className={styles.subHeading}>Service Highlights</h3>
                                     <div className={styles.highlightsList}>
