@@ -218,22 +218,22 @@ export default function FacilityDetail() {
                             {params?.id === 'conference' && conferenceHalls && conferenceHalls.length > 0 && (
                                 <div style={{ marginTop: '3rem' }}>
                                     <h3 className={styles.subHeading} style={{ marginBottom: '1.5rem', fontSize: '1.75rem', color: '#111827' }}>Available Halls</h3>
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '2.5rem' }}>
                                         {conferenceHalls.map((hall) => (
                                             <div key={hall.id} style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
-                                                <div style={{ height: '220px', background: '#f0f0f0', position: 'relative' }}>
+                                                <div style={{ height: '300px', background: '#f0f0f0', position: 'relative' }}>
                                                     {hall.image && <img src={hall.image} alt={hall.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
-                                                    <div style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'rgba(255,255,255,0.95)', padding: '0.4rem 0.75rem', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--primary)', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-                                                        <Users size={14} /> {hall.capacity} pax
+                                                    <div style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', background: 'rgba(255,255,255,0.95)', padding: '0.5rem 1rem', borderRadius: '100px', fontSize: '0.875rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary)', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
+                                                        <Users size={16} /> {hall.capacity} pax
                                                     </div>
                                                 </div>
-                                                <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                                    <h4 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: '#111827', marginBottom: '0.75rem', fontWeight: 700 }}>{hall.name}</h4>
-                                                    <p style={{ fontSize: '0.875rem', color: '#6B7280', lineHeight: 1.6, marginBottom: '1.5rem', flex: 1 }}>{hall.desc}</p>
+                                                <div style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                                                    <h4 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-serif)', color: '#111827', marginBottom: '1rem', fontWeight: 700 }}>{hall.name}</h4>
+                                                    <p style={{ fontSize: '1rem', color: '#6B7280', lineHeight: 1.6, marginBottom: '2rem', flex: 1 }}>{hall.desc}</p>
                                                     {hall.setups && hall.setups.length > 0 && (
-                                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: 'auto' }}>
+                                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem', marginTop: 'auto' }}>
                                                             {hall.setups.map((setup: string, i: number) => (
-                                                                <span key={i} style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', padding: '0.3rem 0.6rem', background: 'rgba(20, 75, 54, 0.05)', color: 'var(--primary)', borderRadius: '4px', fontWeight: 600 }}>{setup}</span>
+                                                                <span key={i} style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.08em', padding: '0.4rem 0.8rem', background: 'rgba(20, 75, 54, 0.05)', color: 'var(--primary)', borderRadius: '6px', fontWeight: 600 }}>{setup}</span>
                                                             ))}
                                                         </div>
                                                     )}
