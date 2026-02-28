@@ -18,7 +18,8 @@ import {
     Image as ImageIcon,
     FileText,
     Menu,
-    X
+    X,
+    Presentation
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { logoutAdmin } from "../actions";
@@ -62,6 +63,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const navItems = [
         { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
         { name: "Rooms", href: "/admin/rooms", icon: Hotel },
+        { name: "Conference Halls", href: "/admin/conference", icon: Presentation },
         { name: "Dining", href: "/admin/dining", icon: Utensils },
         { name: "Facilities", href: "/admin/facilities", icon: Waves },
         { name: "Enquiries & Reservations", href: "/admin/leads", icon: MessageSquare },
@@ -106,7 +108,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <nav className={styles.sidebarNav}>
                     <div className={styles.navGroup}>
                         <span className={styles.navGroupLabel}>Estate Management</span>
-                        {navItems.slice(0, 4).map((item) => (
+                        {navItems.slice(0, 5).map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}
@@ -120,7 +122,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                     <div className={styles.navGroup}>
                         <span className={styles.navGroupLabel}>Content & Marketing</span>
-                        {navItems.slice(4, 10).map((item) => (
+                        {navItems.slice(5, 11).map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}

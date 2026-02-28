@@ -1141,3 +1141,77 @@ export async function updateSiteContent(key: string, value: any) {
         return { success: false, error: "Database error" };
     }
 }
+
+// ─────────────────────────────────────────────
+// CONFERENCE HALLS
+// ─────────────────────────────────────────────
+
+export async function getConferenceHalls() {
+    if (!isDatabaseConfigured()) return [];
+    try {
+        return await prisma.conferenceHall.findMany({
+            orderBy: { createdAt: "asc" }
+        });
+    } catch (error) {
+        console.error("Error fetching conference halls:", error);
+        return [];
+    }
+}
+
+export async function createConferenceHall(data: any) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await requireAdmin();
+        const newHall = await prisma.conferenceHall.create({
+            data: {
+                slug: data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                name: data.name,
+                desc: data.desc,
+                image: data.image,
+                capacity: parseInt(data.capacity) || 50,
+                setups: data.setups || [],
+            }
+        });
+        revalidateAll();
+        return { success: true, hall: newHall };
+    } catch (error) {
+        console.error("Error creating conference hall:", error);
+        return { success: false, error: "Server error creating hall" };
+    }
+}
+
+export async function updateConferenceHall(id: string, data: any) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await requireAdmin();
+        const updatedHall = await prisma.conferenceHall.update({
+            where: { id },
+            data: {
+                name: data.name,
+                desc: data.desc,
+                image: data.image,
+                capacity: parseInt(data.capacity) || 50,
+                setups: data.setups,
+                ...(data.name && { slug: data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') })
+            }
+        });
+        revalidateAll();
+        return { success: true, hall: updatedHall };
+    } catch (error) {
+        console.error("Error updating conference hall:", error);
+        return { success: false, error: "Server error updating hall" };
+    }
+}
+
+export async function deleteConferenceHall(id: string) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await requireAdmin();
+        await prisma.conferenceHall.delete({ where: { id } });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting conference hall:", error);
+        return { success: false, error: "Server error deleting hall" };
+    }
+}

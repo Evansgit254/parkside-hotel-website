@@ -73,6 +73,17 @@ model Facility {
   highlights Json    @default("[]")
 }
 
+model ConferenceHall {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  desc      String
+  image     String
+  capacity  Int      @default(50)
+  setups    Json     @default("[]")
+  createdAt DateTime @default(now())
+}
+
 model MenuCategory {
   id    String @id
   name  String

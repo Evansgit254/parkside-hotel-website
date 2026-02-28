@@ -120,6 +120,23 @@ export async function GET(request: Request) {
             create: { code: "SUMMER20", discount: 20, type: "percentage", validTo: new Date("2026-08-31") }
         });
 
+        // 10. CONFERENCE HALLS
+        const halls = [
+            { slug: "amboseli-hall", name: "Amboseli Hall", desc: "A spacious and elegant hall perfect for large corporate events and seminars.", image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=1200", capacity: 200, setups: ["Theatre", "Classroom", "U-Shape"] },
+            { slug: "nzambani-hall", name: "Nzambani Hall", desc: "Modern meeting space equipped with state-of-the-art audiovisual technology.", image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&q=80&w=1200", capacity: 150, setups: ["Theatre", "Boardroom", "Classroom"] },
+            { slug: "syokimau-hall", name: "Syokimau Hall", desc: "Versatile venue ideal for mid-sized conferences and workshops.", image: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&q=80&w=1200", capacity: 100, setups: ["U-Shape", "Banquet", "Theatre"] },
+            { slug: "highrise-hall", name: "Highrise Hall", desc: "Intimate and professional setting for executive board meetings and private discussions.", image: "https://images.unsplash.com/photo-1577416412292-747c6607f055?auto=format&fit=crop&q=80&w=1200", capacity: 50, setups: ["Boardroom", "U-Shape"] },
+            { slug: "masai-mara-hall", name: "Masai Mara Hall", desc: "Expansive and grand hall designed for major exhibitions, galas, and summits.", image: "https://images.unsplash.com/photo-1431540015520-222a76203f19?auto=format&fit=crop&q=80&w=1200", capacity: 300, setups: ["Theatre", "Banquet", "Reception"] },
+        ];
+
+        for (const hall of halls) {
+            await prisma.conferenceHall.upsert({
+                where: { slug: hall.slug },
+                update: { ...hall, setups: hall.setups as any },
+                create: { ...hall, setups: hall.setups as any }
+            });
+        }
+
         return NextResponse.json({ success: true, message: "Seed completed!" });
     } catch (error: any) {
         console.error('API Seed Error:', error);
