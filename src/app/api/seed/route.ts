@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
     if (process.env.NODE_ENV === 'production' && !process.env.SEED_SECRET) {
         return NextResponse.json({ error: "Unauthorized endpoint in production" }, { status: 401 });
@@ -62,9 +64,9 @@ export async function GET(request: Request) {
         const facilities = [
             {
                 id: "conference", title: "Conference Halls", icon: "Users",
-                desc: "Modern M.I.C.E facilities with high-speed internet. Amboseli, Nzambani, Syokimau, Highrise, and Masai Mara halls.",
+                desc: "Modern M.I.C.E facilities with high-speed internet. Amboseli, Nzambani, Syokimau, Highrise, Masai Mara, and Longonot halls.",
                 image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=2069",
-                features: ["Amboseli & Nzambani Halls", "Syokimau & Highrise Halls", "Masai Mara Hall"],
+                features: ["Amboseli & Nzambani Halls", "Syokimau & Highrise Halls", "Masai Mara & Longonot Halls"],
                 highlights: ["Theatre, U-shape & Classroom setups", "Corporate meetings & Team building", "Curated environment for groups", "High-speed connectivity and support", "Weddings & private parties"]
             },
             {
@@ -126,7 +128,8 @@ export async function GET(request: Request) {
             { slug: "nzambani-hall", name: "Nzambani Hall", desc: "Modern meeting space equipped with state-of-the-art audiovisual technology.", image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&q=80&w=1200", capacity: 150, setups: ["Theatre", "Boardroom", "Classroom"] },
             { slug: "syokimau-hall", name: "Syokimau Hall", desc: "Versatile venue ideal for mid-sized conferences and workshops.", image: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&q=80&w=1200", capacity: 100, setups: ["U-Shape", "Banquet", "Theatre"] },
             { slug: "highrise-hall", name: "Highrise Hall", desc: "Intimate and professional setting for executive board meetings and private discussions.", image: "https://images.unsplash.com/photo-1577416412292-747c6607f055?auto=format&fit=crop&q=80&w=1200", capacity: 50, setups: ["Boardroom", "U-Shape"] },
-            { slug: "masai-mara-hall", name: "Masai Mara Hall", desc: "Expansive and grand hall designed for major exhibitions, galas, and summits.", image: "https://images.unsplash.com/photo-1431540015520-222a76203f19?auto=format&fit=crop&q=80&w=1200", capacity: 300, setups: ["Theatre", "Banquet", "Reception"] },
+            { slug: "masai-mara-hall", name: "Masai Mara Hall", desc: "Expansive and grand hall designed for major exhibitions, galas, and summits.", image: "/images/conference/masai_mara.png", capacity: 300, setups: ["Theatre", "Banquet", "Reception"] },
+            { slug: "longonot-hall", name: "Longonot Hall", desc: "State-of-the-art boardroom with panoramic views, perfect for high-level executive meetings.", image: "/images/conference/longonot.png", capacity: 30, setups: ["Boardroom"] },
         ];
 
         for (const hall of halls) {

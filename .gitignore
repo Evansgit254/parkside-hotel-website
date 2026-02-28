@@ -45,3 +45,6 @@ next-env.d.ts
 # Environment
 .env
 .env.local
+
+# Media
+PARKSIDE VILLA MEDIA/

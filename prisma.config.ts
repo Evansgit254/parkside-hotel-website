@@ -10,6 +10,6 @@ export default defineConfig({
     seed: 'npx ts-node --compiler-options {"module":"CommonJS"} scripts/seed.ts',
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    url: process.env["DATABASE_URL"]!,
   },
 });

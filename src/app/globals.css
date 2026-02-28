@@ -89,6 +89,23 @@ html {
   --surface-card: #FFFFFF;
   --surface-mid: #F9FAFB;
   /* Light surface instead of dark for contrast layering */
+
+  /* === ADMIN DASHBOARD VARIABLES === */
+  --admin-green: #144B36;
+  --admin-green-light: #1D6B4D;
+  --admin-green-muted: rgba(20, 75, 54, 0.08);
+  --admin-green-bg: rgba(20, 75, 54, 0.05);
+  --admin-purple: #4A2B66;
+  --admin-purple-light: #6A3E91;
+  --admin-purple-muted: rgba(74, 43, 102, 0.08);
+  --admin-white: #FFFFFF;
+  --admin-bg: #F7F8FC;
+  --admin-surface: #FFFFFF;
+  --admin-border: rgba(0, 0, 0, 0.07);
+  --admin-border-hover: rgba(74, 43, 102, 0.25);
+  --admin-text: #111827;
+  --admin-text-soft: #6B7280;
+  --admin-text-muted: #9CA3AF;
 }
 
 /* === RESET & BASE === */

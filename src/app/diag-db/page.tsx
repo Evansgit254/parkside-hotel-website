@@ -4,6 +4,7 @@ import { prisma, isDatabaseConfigured } from '../../lib/prisma';
 import styles from '../admin/admin.module.css';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export default async function DatabaseDiagnosticsPage() {
     const isConfigured = isDatabaseConfigured();

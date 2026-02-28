@@ -8,7 +8,7 @@ if (!secret && process.env.NODE_ENV === "production") {
 }
 const SECRET_KEY = new TextEncoder().encode(secret || "dev_secret_only");
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Protect all /admin routes except login
