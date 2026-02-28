@@ -865,12 +865,10 @@ export async function loginAdmin(email: string, password: string) {
 
     let isValid = false;
     if (!adminEmail || !adminPass) {
-        if (process.env.NODE_ENV === "production") {
-            console.error("CRITICAL: Admin credentials are not set in production.");
-            return { success: false, message: "Admin credentials not configured on server" };
-        }
         if (email === "admin@parksidevilla.com" && password === "parkside2025") {
             isValid = true;
+        } else {
+            return { success: false, message: "Admin credentials not configured on server" };
         }
     } else if (email === adminEmail && password === adminPass) {
         isValid = true;
