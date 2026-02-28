@@ -214,35 +214,6 @@ export default function FacilityDetail() {
                                     </div>
                                 </div>
                             )}
-
-                            {params?.id === 'conference' && conferenceHalls && conferenceHalls.length > 0 && (
-                                <div style={{ marginTop: '3rem' }}>
-                                    <h3 className={styles.subHeading} style={{ marginBottom: '1.5rem', fontSize: '1.75rem', color: '#111827' }}>Available Halls</h3>
-                                    <div className={styles.hallsList}>
-                                        {conferenceHalls.map((hall, index) => (
-                                            <div key={hall.id} className={`${styles.hallCard} ${index % 2 !== 0 ? styles.hallCardReverse : ''}`}>
-                                                <div className={styles.hallImageWrapper}>
-                                                    {hall.image && <img src={hall.image} alt={hall.name} className={styles.hallImage} />}
-                                                    <div className={styles.hallCapacityBadge}>
-                                                        <Users size={16} /> {hall.capacity} pax
-                                                    </div>
-                                                </div>
-                                                <div className={styles.hallContent}>
-                                                    <h4 className={styles.hallTitle}>{hall.name}</h4>
-                                                    <p className={styles.hallDesc}>{hall.desc}</p>
-                                                    {hall.setups && hall.setups.length > 0 && (
-                                                        <div className={styles.hallSetups}>
-                                                            {hall.setups.map((setup: string, i: number) => (
-                                                                <span key={i} className={styles.hallSetupTag}>{setup}</span>
-                                                            ))}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
                         </div>
 
                         <div className={styles.sidebar}>
@@ -280,6 +251,37 @@ export default function FacilityDetail() {
                     </div>
                 </div>
             </section>
+
+            {params?.id === 'conference' && conferenceHalls && conferenceHalls.length > 0 && (
+                <section className={styles.hallsSection} style={{ padding: '6rem 0', background: 'var(--background-alt)' }}>
+                    <div className={styles.container} style={{ maxWidth: '1400px' }}>
+                        <h3 className={styles.subHeading} style={{ marginBottom: '3rem', fontSize: '2.5rem', textAlign: 'center' }}>Available Halls</h3>
+                        <div className={styles.hallsList}>
+                            {conferenceHalls.map((hall, index) => (
+                                <div key={hall.id} className={`${styles.hallCard} ${index % 2 !== 0 ? styles.hallCardReverse : ''}`}>
+                                    <div className={styles.hallImageWrapper}>
+                                        {hall.image && <img src={hall.image} alt={hall.name} className={styles.hallImage} />}
+                                        <div className={styles.hallCapacityBadge}>
+                                            <Users size={16} /> {hall.capacity} pax
+                                        </div>
+                                    </div>
+                                    <div className={styles.hallContent}>
+                                        <h4 className={styles.hallTitle}>{hall.name}</h4>
+                                        <p className={styles.hallDesc}>{hall.desc}</p>
+                                        {hall.setups && hall.setups.length > 0 && (
+                                            <div className={styles.hallSetups}>
+                                                {hall.setups.map((setup: string, i: number) => (
+                                                    <span key={i} className={styles.hallSetupTag}>{setup}</span>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
         </div>
     );
 }
