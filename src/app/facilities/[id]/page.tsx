@@ -21,6 +21,7 @@ export default function FacilityDetail() {
     const [sent, setSent] = useState(false);
 
     useEffect(() => {
+        if (!params?.id) return;
         getSiteData().then(data => {
             const found = data.facilities.find((f: any) => f.id === params.id);
             if (found) {
@@ -31,7 +32,7 @@ export default function FacilityDetail() {
             setContactInfo(data.contactInfo || null);
             setLoading(false);
         });
-    }, [params.id, router]);
+    }, [params?.id, router]);
 
     const handleInquirySubmit = async (e: React.FormEvent) => {
         e.preventDefault();
