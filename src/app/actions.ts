@@ -6,6 +6,7 @@ import { NotificationService } from "./services/mailService";
 import bcrypt from "bcrypt";
 import { signToken, getAuthSession as getAuthSessionLib } from "../lib/auth";
 import { cookies } from "next/headers";
+import { z } from "zod";
 
 export async function getAuthSession() {
     return await getAuthSessionLib();
@@ -158,6 +159,7 @@ export async function getDashboardStats() {
     }
 
     try {
+        await requireAdmin();
         const [roomCount, leadCount, menuCount, testimonialCount, recentLeads, recentTestimonials, upcomingLeads] = await Promise.all([
             prisma.room.count(),
             prisma.lead.count(),
@@ -724,6 +726,7 @@ export async function subscribeNewsletter(email: string) {
 export async function getPromotions() {
     if (!isDatabaseConfigured()) return [];
     try {
+        await requireAdmin();
         return await prisma.promotion.findMany({ orderBy: { createdAt: "desc" } });
     } catch (error) {
         console.error("Error getting promotions:", error);
@@ -857,10 +860,23 @@ export async function loginUser(email: string, password: string) {
 }
 
 export async function loginAdmin(email: string, password: string) {
-    const adminEmail = process.env.ADMIN_EMAIL || "admin@parksidevilla.com";
-    const adminPass = process.env.ADMIN_PASSWORD || "parkside2025";
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPass = process.env.ADMIN_PASSWORD;
 
-    if (email === adminEmail && password === adminPass) {
+    let isValid = false;
+    if (!adminEmail || !adminPass) {
+        if (process.env.NODE_ENV === "production") {
+            console.error("CRITICAL: Admin credentials are not set in production.");
+            return { success: false, message: "Admin credentials not configured on server" };
+        }
+        if (email === "admin@parksidevilla.com" && password === "parkside2025") {
+            isValid = true;
+        }
+    } else if (email === adminEmail && password === adminPass) {
+        isValid = true;
+    }
+
+    if (isValid) {
         const token = await signToken({ email, role: "admin" });
         const cookieStore = await cookies();
         cookieStore.set("admin_session", token, {
@@ -947,20 +963,32 @@ export async function getUserBookings(userId: string) {
 // BLOG POSTS
 // ─────────────────────────────────────────────
 
+const BlogPostSchema = z.object({
+    id: z.string().optional(),
+    title: z.string().min(1),
+    excerpt: z.string(),
+    content: z.string(),
+    date: z.string().optional(),
+    author: z.string().optional(),
+    category: z.string(),
+    image: z.string()
+});
+
 export async function createBlogPost(post: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
+        const validPost = BlogPostSchema.parse(post);
         const newPost = await prisma.blogPost.create({
             data: {
-                id: post.id || post.title.toLowerCase().replace(/\s+/g, "-"),
-                title: post.title,
-                excerpt: post.excerpt,
-                content: post.content,
-                date: post.date || new Date().toISOString().split("T")[0],
-                author: post.author || "Parkside Villa",
-                category: post.category,
-                image: post.image,
+                id: validPost.id || validPost.title.toLowerCase().replace(/\s+/g, "-"),
+                title: validPost.title,
+                excerpt: validPost.excerpt,
+                content: validPost.content,
+                date: validPost.date || new Date().toISOString().split("T")[0],
+                author: validPost.author || "Parkside Villa",
+                category: validPost.category,
+                image: validPost.image,
             },
         });
         revalidateAll();
@@ -975,9 +1003,10 @@ export async function updateBlogPost(id: string, post: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
+        const validPost = BlogPostSchema.partial().parse(post);
         await prisma.blogPost.update({
             where: { id },
-            data: post,
+            data: validPost,
         });
         revalidateAll();
         return { success: true };
@@ -1092,10 +1121,16 @@ export async function updateSiteData(_data: any) {
 // SITE CONTENT (Dynamic CMS)
 // ─────────────────────────────────────────────
 
+const SiteContentSchema = z.object({
+    key: z.string().min(1),
+    value: z.any()
+});
+
 export async function updateSiteContent(key: string, value: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
+        SiteContentSchema.parse({ key, value });
         await prisma.siteContent.upsert({
             where: { key },
             update: { value },

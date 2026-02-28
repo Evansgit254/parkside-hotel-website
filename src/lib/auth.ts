@@ -1,9 +1,11 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const SECRET_KEY = new TextEncoder().encode(
-    process.env.JWT_SECRET || "parkside_villa_default_secret_key_2026_change_me"
-);
+const secret = process.env.JWT_SECRET;
+if (!secret && process.env.NODE_ENV === "production") {
+    console.error("CRITICAL: JWT_SECRET environment variable is missing in production.");
+}
+const SECRET_KEY = new TextEncoder().encode(secret || "dev_secret_only");
 
 export async function signToken(payload: any) {
     return await new SignJWT(payload)

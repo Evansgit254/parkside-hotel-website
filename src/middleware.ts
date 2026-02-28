@@ -2,9 +2,11 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const SECRET_KEY = new TextEncoder().encode(
-    process.env.JWT_SECRET || "parkside_villa_default_secret_key_2026_change_me"
-);
+const secret = process.env.JWT_SECRET;
+if (!secret && process.env.NODE_ENV === "production") {
+    console.error("CRITICAL: JWT_SECRET environment variable is missing in production.");
+}
+const SECRET_KEY = new TextEncoder().encode(secret || "dev_secret_only");
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;

@@ -1,7 +1,15 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET() {
+export async function GET(request: Request) {
+    if (process.env.NODE_ENV === 'production' && !process.env.SEED_SECRET) {
+        return NextResponse.json({ error: "Unauthorized endpoint in production" }, { status: 401 });
+    }
+    const authHeader = request.headers.get('authorization');
+    if (process.env.SEED_SECRET && authHeader !== `Bearer ${process.env.SEED_SECRET}`) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     console.log('🚀 Starting API Seed...');
 
     try {
