@@ -1280,7 +1280,7 @@
 /* === CONTACT SECTION === */
 /* Contact Section Fixes */
 .contactSection {
-    background: #050f0b;
+    background: #F8F6F0;
     padding: 10rem var(--container-padding);
     position: relative;
     overflow: hidden;
@@ -1295,11 +1295,11 @@
     font-family: var(--font-serif);
     font-size: 20vw;
     font-weight: 300;
-    color: var(--border-light);
+    color: var(--primary);
     white-space: nowrap;
     pointer-events: none;
     letter-spacing: -0.03em;
-    opacity: 0.6;
+    opacity: 0.05;
 }
 
 .contactInner {
