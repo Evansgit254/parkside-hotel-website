@@ -178,7 +178,7 @@ export const blogPosts = [
         date: "Feb 24, 2026",
         author: "Admin",
         category: "Hospitality",
-        image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373725/parkside-villa-media/EXTRA_PHOTOS/IMG_8556_ds9eib.jpg"
+        image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772447077/parkside-villa-media/Swimming_Pool/20220214_123402_fzdujd.jpg"
     },
     {
         id: "green-interior-design",
@@ -187,7 +187,7 @@ export const blogPosts = [
         date: "Feb 18, 2026",
         author: "Design Team",
         category: "Interior Design",
-        image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373754/parkside-villa-media/EXTRA_PHOTOS/IMG_8560_vlao4a.jpg"
+        image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772440903/parkside-villa-media/Front_Image_Or_Background_Image/IMG-20251119-WA0061_fvrbbk.jpg"
     }
 ];
 

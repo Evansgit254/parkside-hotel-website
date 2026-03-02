@@ -125,6 +125,34 @@ async function syncLive() {
         await prisma.conferenceHall.upsert({ where: { slug: hall.slug }, update: hall, create: hall });
     }
 
+    // 6. UPDATE BLOG POSTS
+    const blogPosts = [
+        {
+            id: "luxury-kitui-hospitality",
+            title: "Exploring Luxury in the Heart of Kitui",
+            excerpt: "Discover how Parkside Villa is redefining hospitality in the region with modern amenities and traditional charm.",
+            content: "Full content here...",
+            date: "Feb 24, 2026",
+            author: "Admin",
+            category: "Hospitality",
+            image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772447077/parkside-villa-media/Swimming_Pool/20220214_123402_fzdujd.jpg"
+        },
+        {
+            id: "green-interior-design",
+            title: "Green Interior Design Inspiration",
+            excerpt: "Bringing the lush gardens of Kitui inside. How we use natural elements to create a serene guest experience.",
+            content: "Full content here...",
+            date: "Feb 18, 2026",
+            author: "Design Team",
+            category: "Interior Design",
+            image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772440903/parkside-villa-media/Front_Image_Or_Background_Image/IMG-20251119-WA0061_fvrbbk.jpg"
+        }
+    ];
+    console.log('✍️ Updating Blog Posts...');
+    for (const post of blogPosts) {
+        await prisma.blogPost.upsert({ where: { id: post.id }, update: post, create: post });
+    }
+
     console.log('✅ Live Database Sync Complete!');
 }
 
