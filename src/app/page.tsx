@@ -498,7 +498,7 @@ export default function Home() {
           <div style={{ maxWidth: 'var(--max-width)', margin: '0 auto 2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <div>
               <span className={styles.badge} style={{ marginBottom: '1rem', display: 'flex' }}>{content?.recent_rooms?.badge || "Your Interests"}</span>
-              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', fontWeight: 600, color: 'var(--white)', letterSpacing: '-0.02em' }}>{content?.recent_rooms?.title || "Continue Exploring"}</h2>
+              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', fontWeight: 600, color: 'var(--primary)', letterSpacing: '-0.02em' }}>{content?.recent_rooms?.title || "Continue Exploring"}</h2>
             </div>
             <a href="#accommodation" className={styles.buttonGhost}>View All Rooms <ArrowUpRight size={12} /></a>
           </div>
