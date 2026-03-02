@@ -11,16 +11,16 @@ interface CurrencyContextType {
 }
 
 const CurrencyContext = createContext<CurrencyContextType>({
-    currency: "USD",
+    currency: "KES",
     toggleCurrency: () => { },
-    formatPrice: (price) => `$${price}`,
+    formatPrice: (price) => `KES ${price}`,
 });
 
 export const useCurrency = () => useContext(CurrencyContext);
 
 export const CurrencyProvider = ({ children }: { children: React.ReactNode }) => {
-    const [currency, setCurrency] = useState<Currency>("USD");
-    const EXCHANGE_RATE = 135; // Example: 1 USD = 135 KES
+    const [currency, setCurrency] = useState<Currency>("KES");
+    const EXCHANGE_RATE = 128; // Updated for current KES/USD parity
 
     // Hydrate from localStorage if available
     useEffect(() => {
@@ -37,12 +37,13 @@ export const CurrencyProvider = ({ children }: { children: React.ReactNode }) =>
     };
 
     const formatPrice = (priceInput: string | number) => {
-        const usdPrice = typeof priceInput === "string" ? parseFloat(priceInput.replace(/[^0-9.]/g, '')) : priceInput;
-        if (isNaN(usdPrice)) return typeof priceInput === "string" ? priceInput : "";
-        if (currency === "USD") {
-            return `$${usdPrice.toLocaleString()}`;
+        const kesPrice = typeof priceInput === "string" ? parseFloat(priceInput.replace(/[^0-9.]/g, '')) : priceInput;
+        if (isNaN(kesPrice)) return typeof priceInput === "string" ? priceInput : "";
+
+        if (currency === "KES") {
+            return `KES ${kesPrice.toLocaleString()}`;
         } else {
-            return `KES ${(usdPrice * EXCHANGE_RATE).toLocaleString()}`;
+            return `$${(kesPrice / EXCHANGE_RATE).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
         }
     };
 

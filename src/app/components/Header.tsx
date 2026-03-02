@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useCurrency } from "../context/CurrencyContext";
 import { User, X, Menu, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const navLinks = [
     {
@@ -111,7 +112,14 @@ export default function Header() {
                 <div className={styles.navContainer}>
                     <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
                         <div className={styles.logo}>
-                            PARKSIDE VILLA
+                            <Image
+                                src="/logo.jpg"
+                                alt="Parkside Villa Logo"
+                                width={120}
+                                height={40}
+                                className={styles.logoImage}
+                                priority
+                            />
                         </div>
                     </Link>
 
@@ -189,7 +197,7 @@ export default function Header() {
                         onClick={e => e.stopPropagation()}
                     >
                         <div className={styles.mobileMenuHeader}>
-                            <span className={styles.logo}>PARKSIDE VILLA</span>
+                            <Image src="/logo.jpg" alt="Logo" width={100} height={34} className={styles.logoImage} />
                             <button
                                 className={styles.mobileMenuClose}
                                 onClick={() => setIsMobileMenuOpen(false)}
@@ -268,9 +276,10 @@ export default function Header() {
                                 {currency}
                             </button>
                         </div>
-                    </div>
-                </div>
-            )}
+                    </div >
+                </div >
+            )
+            }
         </>
     );
 }

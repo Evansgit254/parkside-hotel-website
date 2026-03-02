@@ -1628,6 +1628,21 @@
     justify-content: space-between;
 }
 
+.logo {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.1em;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+}
+
+.logoImage {
+    object-fit: contain;
+    filter: brightness(0.9);
+}
+
 .aiAvatar {
     font-family: var(--font-serif);
     font-size: 0.75rem;

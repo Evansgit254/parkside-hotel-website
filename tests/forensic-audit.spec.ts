@@ -137,4 +137,25 @@ test.describe('Deep Forensic Audit', () => {
             expect(textColor).toBe('rgb(20, 75, 54)');
         }
     });
+
+    test('Luxury Section Forensic: Brand Logo Verification', async ({ page }) => {
+        await page.goto('/');
+        const logo = page.locator('header img[alt*="Logo"]').first();
+        await expect(logo).toBeVisible();
+        const src = await logo.getAttribute('src');
+        expect(src).toBe('/logo.jpg');
+    });
+
+    test('Luxury Section Forensic: KES Rate Verification', async ({ page }) => {
+        await page.goto('/rooms');
+        // Check for Executive Suites price (KES 8,000)
+        const executivePrice = page.locator('text=KES 8,000').first();
+        await expect(executivePrice).toBeVisible();
+
+        // Check for Standard Room (KES 1,700)
+        const standardRoom = page.locator('text=Standard Room').first();
+        await expect(standardRoom).toBeVisible();
+        const standardPrice = page.locator('text=KES 1,700').first();
+        await expect(standardPrice).toBeVisible();
+    });
 });

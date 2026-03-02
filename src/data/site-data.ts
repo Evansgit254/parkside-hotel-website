@@ -12,8 +12,8 @@ export const rooms = [
     {
         id: "executive-suites",
         name: "Executive Suites",
-        desc: "Spacious living area, king-sized bed, and premium amenities for the discerning traveler.",
-        price: "$150",
+        desc: "Spacious living area and king-sized bed. Rate: KES 8,000 (Single) / KES 10,000 (Double) per night.",
+        price: "8000",
         image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772376033/parkside-villa-media/EXTRA_PHOTOS/resized_0I2A0030_wlh5hx.jpg",
         tag: "Best Seller",
         capacity: 2
@@ -21,27 +21,43 @@ export const rooms = [
     {
         id: "deluxe-suites",
         name: "Deluxe Suites",
-        desc: "Peaceful views focused on comfort and elegance with modern amenities.",
-        price: "$120",
+        desc: "Peaceful views focused on comfort and elegance. Rate: KES 5,000 (Single) / KES 6,500 (Double) per night.",
+        price: "5000",
         image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772376080/parkside-villa-media/EXTRA_PHOTOS/resized_0I2A0050_xxgrnc.jpg",
         capacity: 2
     },
     {
+        id: "cottages",
+        name: "Cottages",
+        desc: "Backyard balconies and extra privacy. Rate: KES 2,800 (Single) / KES 4,300 (Double) per night.",
+        price: "2800",
+        image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772376067/parkside-villa-media/EXTRA_PHOTOS/resized_0I2A0041_yfxnuk.jpg",
+        tag: "Private",
+        capacity: 4
+    },
+    {
         id: "highrise-suites",
         name: "Highrise Suites",
-        desc: "Panoramic views of the surroundings with elevated luxury and elegant design.",
-        price: "$100",
+        desc: "Panoramic views with elevated luxury. Rate: KES 2,500 (Single) / KES 4,000 (Double) per night.",
+        price: "2500",
         image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772376103/parkside-villa-media/EXTRA_PHOTOS/resized_0I2A0054_otxvms.jpg",
         capacity: 4
     },
     {
-        id: "cottages",
-        name: "Cottages",
-        desc: "Feature backyard balconies, high-speed Wi-Fi, television, and hot showers. Designed for extra privacy and groups.",
-        price: "$200",
-        image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772376067/parkside-villa-media/EXTRA_PHOTOS/resized_0I2A0041_yfxnuk.jpg",
-        tag: "Private",
-        capacity: 4
+        id: "premium-standard",
+        name: "Premium Standard Room",
+        desc: "Enhanced comfort with modern amenities. Rate: KES 2,000 (Single) / KES 3,500 (Double) per night.",
+        price: "2000",
+        image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373725/parkside-villa-media/EXTRA_PHOTOS/IMG_8556_ds9eib.jpg",
+        capacity: 2
+    },
+    {
+        id: "standard-room",
+        name: "Standard Room",
+        desc: "Essential comfort for a restful stay. Rate: KES 1,700 (Single) / KES 3,200 (Double) per night.",
+        price: "1700",
+        image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373754/parkside-villa-media/EXTRA_PHOTOS/IMG_8560_vlao4a.jpg",
+        capacity: 2
     }
 ];
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Facebook, Instagram, Linkedin, MessageCircle, PlaySquare } from "lucide-react";
 import styles from "../page.module.css";
 import { useState, useEffect } from "react";
@@ -24,7 +25,9 @@ export default function Footer() {
             <div className={styles.contentContainer}>
                 <div className={styles.footerGrid}>
                     <div className={styles.footerBrand} style={{ gridColumn: 'span 2' }}>
-                        <div className={styles.footerLogo}>PARKSIDE VILLA</div>
+                        <div className={styles.footerLogo}>
+                            <Image src="/logo.jpg" alt="Parkside Villa Logo" width={140} height={48} />
+                        </div>
                         <p className={styles.footerDesc} style={{ maxWidth: '100%' }}>
                             {content.footer_about?.text || "Kitui's premier luxury destination. Stay updated on our exclusive offers and upcoming events by subscribing to our newsletter."}
                         </p>
