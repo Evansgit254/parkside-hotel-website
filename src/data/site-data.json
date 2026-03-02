@@ -1,8 +1,8 @@
 {
   "heroImages": [
-    "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&q=80&w=2080",
-    "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&q=80&w=2070",
-    "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=2070"
+    "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373650/parkside-villa-media/EXTRA_PHOTOS/IMG_8543_xxgwxl.jpg",
+    "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373714/parkside-villa-media/EXTRA_PHOTOS/IMG_8555_u1zu5r.jpg",
+    "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373779/parkside-villa-media/EXTRA_PHOTOS/IMG_8564_o4vaky.jpg"
   ],
   "rooms": [
     {
@@ -10,7 +10,7 @@
       "name": "Executive Suites",
       "desc": "Spacious living area, king-sized bed, and premium amenities for the discerning traveler.",
       "price": "$150",
-      "image": "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=2024",
+      "image": "https://res.cloudinary.com/dizwm3mic/image/upload/v1772376033/parkside-villa-media/EXTRA_PHOTOS/resized_0I2A0030_wlh5hx.jpg",
       "tag": "Best Seller",
       "capacity": 2
     },
@@ -19,7 +19,7 @@
       "name": "Deluxe Suites",
       "desc": "Peaceful views focused on comfort and elegance with modern amenities.",
       "price": "$120",
-      "image": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=2074",
+      "image": "https://res.cloudinary.com/dizwm3mic/image/upload/v1772376080/parkside-villa-media/EXTRA_PHOTOS/resized_0I2A0050_xxgrnc.jpg",
       "capacity": 2
     },
     {
@@ -27,7 +27,7 @@
       "name": "Highrise Suites",
       "desc": "Panoramic views of the surroundings with elevated luxury and elegant design.",
       "price": "$100",
-      "image": "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&q=80&w=2074",
+      "image": "https://res.cloudinary.com/dizwm3mic/image/upload/v1772376103/parkside-villa-media/EXTRA_PHOTOS/resized_0I2A0054_otxvms.jpg",
       "capacity": 4
     },
     {
@@ -35,7 +35,7 @@
       "name": "Cottages",
       "desc": "Feature backyard balconies, high-speed Wi-Fi, television, and hot showers. Designed for extra privacy and groups.",
       "price": "$200",
-      "image": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=2070",
+      "image": "https://res.cloudinary.com/dizwm3mic/image/upload/v1772376067/parkside-villa-media/EXTRA_PHOTOS/resized_0I2A0041_yfxnuk.jpg",
       "tag": "Private",
       "capacity": 4
     }
@@ -46,7 +46,7 @@
       "title": "Conference Halls",
       "desc": "Modern M.I.C.E facilities with high-speed internet. Amboseli, Nzambani, Syokimau, Highrise, and Masai Mara halls.",
       "icon": "Users",
-      "image": "/conference_hero.png",
+      "image": "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg",
       "features": [
         "Amboseli & Nzambani Halls",
         "Syokimau & Highrise Halls",
@@ -65,7 +65,7 @@
       "title": "Dining & Bars",
       "desc": "A culinary journey featuring the Main Restaurant, VIP Lounge, and Open Bar & Restaurant.",
       "icon": "Utensils",
-      "image": "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=2070",
+      "image": "https://res.cloudinary.com/dizwm3mic/image/upload/v1772371880/parkside-villa-media/Dining_and_Restaurant/20220322_124810_n3g83g.jpg",
       "features": [
         "Main Restaurant",
         "VIP Lounge",
@@ -84,7 +84,7 @@
       "title": "Swimming Pool & Gardens",
       "desc": "Relax in our central swimming pool or unwind in the lush gardens and kids zone.",
       "icon": "Waves",
-      "image": "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&q=80&w=2070",
+      "image": "https://res.cloudinary.com/dizwm3mic/image/upload/v1772447162/parkside-villa-media/Swimming_Pool/IMG-20251119-WA0051_lwmtna.jpg",
       "features": [
         "Swimming Pool",
         "Kids Zone",
@@ -178,7 +178,7 @@
         },
         {
           "name": "Cheesecake Excellence",
-          "desc": "Baked cheesecake with berry compote and white chocolate shavings.",
+          "desc": "Baked cheesecake with berry compCompote and white chocolate shavings.",
           "price": "$12"
         }
       ]
@@ -187,7 +187,7 @@
   "contactInfo": {
     "phone": "+254 700 000000",
     "email": "info@parksidevillakitui.com",
-    "whatsapp": "254386371367",
+    "whatsapp": "254700000000",
     "address": "Parkside Villa, Kitui - Kenya",
     "social": {
       "facebook": "https://facebook.com/parksidevillakitui",
@@ -205,7 +205,7 @@
       "date": "Feb 24, 2026",
       "author": "Admin",
       "category": "Hospitality",
-      "image": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&q=80&w=1000"
+      "image": "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373725/parkside-villa-media/EXTRA_PHOTOS/IMG_8556_ds9eib.jpg"
     },
     {
       "id": "green-interior-design",
@@ -214,7 +214,7 @@
       "date": "Feb 18, 2026",
       "author": "Design Team",
       "category": "Interior Design",
-      "image": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=1000"
+      "image": "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373754/parkside-villa-media/EXTRA_PHOTOS/IMG_8560_vlao4a.jpg"
     }
   ],
   "galleryVideos": [
@@ -222,214 +222,11 @@
       "id": "villa-tour",
       "title": "Parkside Villa Virtual Tour",
       "url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      "thumbnail": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=1000"
+      "thumbnail": "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373733/parkside-villa-media/EXTRA_PHOTOS/IMG_8557_ntfhqq.jpg"
     }
   ],
   "users": [],
-  "leads": [
-    {
-      "name": "Lead Test 1771883689975",
-      "email": "test-1771883689975@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771883691421,
-      "time": "Just now",
-      "status": "Confirmed"
-    },
-    {
-      "name": "Lead Test 1771883662060",
-      "email": "test-1771883662060@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771883663035,
-      "time": "Just now",
-      "status": "Confirmed"
-    },
-    {
-      "name": "Lead Test 1771883505876",
-      "email": "test-1771883505876@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771883507160,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Lead Test 1771883346165",
-      "email": "test-1771883346165@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771883347077,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Lead Test 1771883318284",
-      "email": "test-1771883318284@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771883320283,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Lead Test 1771883173291",
-      "email": "test-1771883173291@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771883174282,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Lead Test 1771883146245",
-      "email": "test-1771883146245@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771883147534,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Lead Test 1771883037160",
-      "email": "test-1771883037160@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771883038787,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Lead Test 1771882607333",
-      "email": "test-1771882607333@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771882608513,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Lead Test 1771882578838",
-      "email": "test-1771882578838@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771882580186,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Lead Test 1771882326106",
-      "email": "test-1771882326106@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771882327204,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Lead Test 1771882300073",
-      "email": "test-1771882300073@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771882300848,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Lead Test 1771882076601",
-      "email": "test-1771882076601@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771882077999,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Lead Test 1771882048654",
-      "email": "test-1771882048654@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771882049262,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Lead Test 1771881906863",
-      "email": "test-1771881906863@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771881908446,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Lead Test 1771881898408",
-      "email": "test-1771881898408@example.com",
-      "phone": "123456789",
-      "date": "2026-02-23 to 2026-02-24",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771881899166,
-      "time": "Just now",
-      "status": "Pending"
-    },
-    {
-      "name": "Debug Lead",
-      "email": "debug@example.com",
-      "phone": "123456789",
-      "date": "2026-02-25 to 2026-02-26",
-      "room": "Executive Suite",
-      "guests": "2 Adults, 0 Children",
-      "id": 1771881209712,
-      "time": "Just now",
-      "status": "Pending"
-    }
-  ],
-  "subscribers": [
-    "test@example.com",
-    "jetski@example.com",
-    "new_user_yc4jol@example.com",
-    "test2@example.com"
-  ],
-  "promotions": [
-    {
-      "title": "Summer Special",
-      "code": "SUMMER20",
-      "discount": "20",
-      "expiry": "2026-08-31",
-      "description": "",
-      "id": "1771973275955",
-      "createdAt": "2026-02-24T22:47:55.955Z"
-    }
-  ]
+  "leads": [],
+  "subscribers": [],
+  "promotions": []
 }
