@@ -48,3 +48,13 @@ next-env.d.ts
 
 # Media
 PARKSIDE VILLA MEDIA/
+
+# Playwright test artifacts
+/test-results/
+/playwright-report/
+
+# One-off scripts
+/scripts/
+
+# Root-level PDFs and uploaded assets
+*.pdf
