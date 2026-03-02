@@ -71,7 +71,14 @@ export default function FacilitiesPage() {
                                 >
                                     <div className={styles.imageWrapper}>
                                         {facility.image ? (
-                                            <div className={styles.cardImage} style={{ backgroundImage: `url(${facility.image})` }} />
+                                            <Image
+                                                src={(facility.image || '').replace('/upload/', '/upload/f_auto,q_auto/')}
+                                                alt={facility.title}
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                className={styles.cardImage}
+                                                priority={index < 2}
+                                            />
                                         ) : (
                                             <div className={styles.placeholderImage}>
                                                 <IconComponent size={64} className={styles.placeholderIcon} />

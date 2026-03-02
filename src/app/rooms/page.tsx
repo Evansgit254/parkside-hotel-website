@@ -172,7 +172,14 @@ export default function RoomsPage() {
                                 onClick={() => router.push(`/rooms/${room.id}`)}
                             >
                                 <div className={styles.imageWrapper}>
-                                    <Image src={room.image} alt={room.name} fill className={styles.roomImage} />
+                                    <Image
+                                        src={(room.image || '').replace('/upload/', '/upload/f_auto,q_auto/')}
+                                        alt={room.name}
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        className={styles.roomImage}
+                                        priority={index < 4}
+                                    />
                                     {room.tag && <span className={styles.roomTag}>{room.tag}</span>}
                                     <div className={styles.imageOverlay} />
                                 </div>

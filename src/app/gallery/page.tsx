@@ -139,9 +139,13 @@ export default function GalleryPage() {
                                 }}
                             >
                                 <div className={styles.imageWrapper}>
-                                    <div
+                                    <Image
+                                        src={((item.type === 'video' ? item.thumbnail : item.url) || '').replace('/upload/', '/upload/f_auto,q_auto/')}
+                                        alt={item.caption || "Parkside Villa Gallery"}
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                         className={styles.imageElement}
-                                        style={{ backgroundImage: `url(${item.type === 'video' ? item.thumbnail : item.url})` }}
+                                        priority={index < 6}
                                     />
                                     {item.type === 'video' && (
                                         <div className={styles.playOverlay}>
