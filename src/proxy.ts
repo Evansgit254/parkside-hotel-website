@@ -3,8 +3,10 @@ import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
 const secret = process.env.JWT_SECRET;
-if (!secret && process.env.NODE_ENV === "production") {
-    console.error("CRITICAL: JWT_SECRET environment variable is missing in production.");
+if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+        throw new Error("CRITICAL: JWT_SECRET environment variable is missing. Authentication cannot proceed.");
+    }
 }
 const SECRET_KEY = new TextEncoder().encode(secret || "dev_secret_only");
 
