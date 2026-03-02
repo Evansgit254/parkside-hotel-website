@@ -2061,25 +2061,39 @@
         grid-template-rows: auto;
     }
 
+    .recentSection .badge {
+        color: #E8CA6B !important;
+    }
+
     .recentSection .recentItem {
-        background: var(--white);
-        border: 1px solid rgba(20, 75, 54, 0.1);
+        background: var(--white) !important;
+        border: 1px solid rgba(20, 75, 54, 0.1) !important;
     }
 
     .recentSection .recentInfo {
-        background: var(--white);
-        padding: 2.5rem 2rem;
+        background: var(--white) !important;
+        padding: 2.5rem 2rem !important;
     }
 
     .recentSection .recentName {
-        color: var(--primary) !important;
-        font-weight: 600;
+        color: #144B36 !important;
+        font-weight: 600 !important;
     }
 
     .recentSection .recentPrice {
-        color: var(--text-secondary) !important;
-        font-weight: 500;
-        opacity: 0.8;
+        color: #4B5563 !important;
+        font-weight: 500 !important;
+        opacity: 1 !important;
+    }
+
+    .recentSection .buttonGhost {
+        color: #ffffff !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    .recentSection .buttonGhost:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-color: #ffffff !important;
     }
 
     .roomCard {
