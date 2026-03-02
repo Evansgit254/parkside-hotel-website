@@ -136,7 +136,11 @@ export async function getSiteData() {
             content,
         };
     } catch (error) {
-        console.error("Database connection failed, falling back to static data.", error);
+        console.error("CRITICAL: Database connection failed on Vercel.", {
+            error,
+            isConfigured: isDatabaseConfigured(),
+            node_env: process.env.NODE_ENV
+        });
         return getStaticSiteData();
     }
 }

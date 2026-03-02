@@ -12,7 +12,6 @@ export function isDatabaseConfigured() {
         "HOST:PORT",
         "YOUR_CONNECTION_STRING",
         "@HOST:",
-        ":5432/"
     ];
 
     return !placeholders.some(p => connectionString.includes(p));
