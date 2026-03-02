@@ -113,10 +113,10 @@ export default function Header() {
                     <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
                         <div className={styles.logo}>
                             <Image
-                                src="/logo.jpg"
-                                alt="Parkside Villa Logo"
-                                width={120}
-                                height={40}
+                                src="/logo.png"
+                                alt="Kitui Parkside Hotels"
+                                width={160}
+                                height={54}
                                 className={styles.logoImage}
                                 priority
                             />
@@ -197,7 +197,7 @@ export default function Header() {
                         onClick={e => e.stopPropagation()}
                     >
                         <div className={styles.mobileMenuHeader}>
-                            <Image src="/logo.jpg" alt="Logo" width={100} height={34} className={styles.logoImage} />
+                            <Image src="/logo.png" alt="Kitui Parkside Hotels" width={130} height={44} className={styles.logoImage} />
                             <button
                                 className={styles.mobileMenuClose}
                                 onClick={() => setIsMobileMenuOpen(false)}

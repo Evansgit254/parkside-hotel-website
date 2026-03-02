@@ -26,7 +26,7 @@ export default function Footer() {
                 <div className={styles.footerGrid}>
                     <div className={styles.footerBrand} style={{ gridColumn: 'span 2' }}>
                         <div className={styles.footerLogo}>
-                            <Image src="/logo.jpg" alt="Parkside Villa Logo" width={140} height={48} />
+                            <Image src="/logo.png" alt="Kitui Parkside Hotels" width={180} height={62} />
                         </div>
                         <p className={styles.footerDesc} style={{ maxWidth: '100%' }}>
                             {content.footer_about?.text || "Kitui's premier luxury destination. Stay updated on our exclusive offers and upcoming events by subscribing to our newsletter."}
