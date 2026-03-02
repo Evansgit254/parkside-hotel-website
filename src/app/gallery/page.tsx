@@ -42,10 +42,15 @@ export default function GalleryPage() {
             // Extract from dedicated Gallery table
             if (data.galleryItems) {
                 data.galleryItems.forEach((item: any) => {
+                    const titleParts = item.title?.split(" - ") || [];
+                    const folderRaw = titleParts[0] || "General";
+                    // Normalize folder name: Replace underscores with spaces, Title Case
+                    const folder = folderRaw.replace(/_/g, ' ').split(' ').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+
                     allImages.push({
                         url: item.url,
-                        category: item.type === 'video' ? "Videos" : "Guest Gallery",
-                        caption: item.title,
+                        category: item.type === 'video' ? "Videos" : folder,
+                        caption: titleParts[1] || item.title,
                         type: item.type,
                         thumbnail: item.type === 'video' ? `https://img.youtube.com/vi/${item.url.split('v=')[1] || item.url.split('/').pop()}/0.jpg` : undefined
                     });
@@ -71,7 +76,7 @@ export default function GalleryPage() {
         });
     }, []);
 
-    const categories = ["All", "Property", "Accommodation", "Facilities", "Videos", "Guest Gallery"];
+    const categories = ["All", ...Array.from(new Set(media.map(m => m.category))).sort()];
 
     const filteredMedia = activeFilter === "All"
         ? media

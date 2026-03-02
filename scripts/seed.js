@@ -8,9 +8,9 @@ async function main() {
 
     // 2. HERO IMAGES
     const heroImages = [
-        "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&q=80&w=2080",
-        "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&q=80&w=2070",
-        "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=2070"
+        "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373650/parkside-villa-media/EXTRA_PHOTOS/IMG_8543_xxgwxl.jpg",
+        "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373714/parkside-villa-media/EXTRA_PHOTOS/IMG_8555_u1zu5r.jpg",
+        "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373779/parkside-villa-media/EXTRA_PHOTOS/IMG_8564_o4vaky.jpg"
     ];
     for (const [i, url] of heroImages.entries()) {
         await prisma.heroImage.upsert({
@@ -25,25 +25,25 @@ async function main() {
         {
             id: "executive-suites", slug: "executive-suites", name: "Executive Suites",
             desc: "Spacious living area, king-sized bed, and premium amenities for the discerning traveler.",
-            price: "150", image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=2024",
+            price: "150", image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772376033/parkside-villa-media/EXTRA_PHOTOS/resized_0I2A0030_wlh5hx.jpg",
             tag: "Best Seller", capacity: 2
         },
         {
             id: "deluxe-suites", slug: "deluxe-suites", name: "Deluxe Suites",
             desc: "Peaceful views focused on comfort and elegance with modern amenities.",
-            price: "120", image: "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=2074",
+            price: "120", image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772376080/parkside-villa-media/EXTRA_PHOTOS/resized_0I2A0050_xxgrnc.jpg",
             capacity: 2
         },
         {
             id: "highrise-suites", slug: "highrise-suites", name: "Highrise Suites",
             desc: "Panoramic views of the surroundings with elevated luxury and elegant design.",
-            price: "100", image: "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&q=80&w=2074",
+            price: "100", image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772376103/parkside-villa-media/EXTRA_PHOTOS/resized_0I2A0054_otxvms.jpg",
             capacity: 4
         },
         {
             id: "cottages", slug: "cottages", name: "Cottages",
             desc: "Feature backyard balconies, high-speed Wi-Fi, television, and hot showers. Designed for extra privacy and groups.",
-            price: "200", image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=2070",
+            price: "200", image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772376067/parkside-villa-media/EXTRA_PHOTOS/resized_0I2A0041_yfxnuk.jpg",
             tag: "Private", capacity: 4
         }
     ];
@@ -56,21 +56,21 @@ async function main() {
         {
             id: "conference", title: "Conference Halls", icon: "Users",
             desc: "Modern M.I.C.E facilities with high-speed internet. Amboseli, Nzambani, Syokimau, Highrise, and Masai Mara halls.",
-            image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=2069",
+            image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg",
             features: ["Amboseli & Nzambani Halls", "Syokimau & Highrise Halls", "Masai Mara Hall"],
             highlights: ["Theatre, U-shape & Classroom setups", "Corporate meetings & Team building", "Curated environment for groups", "High-speed connectivity and support", "Weddings & private parties"]
         },
         {
             id: "dining", title: "Dining & Bars", icon: "Utensils",
             desc: "A culinary journey featuring the Main Restaurant, VIP Lounge, and Open Bar & Restaurant.",
-            image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=2070",
+            image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772371880/parkside-villa-media/Dining_and_Restaurant/20220322_124810_n3g83g.jpg",
             features: ["Main Restaurant", "VIP Lounge", "Open Bar & Restaurant"],
             highlights: ["International and local Kamba cuisine", "Over 50 wine selections & single malts", "Traditional English afternoon teas", "Signature indoor barbeque", "24-hour room service"]
         },
         {
             id: "pool", title: "Swimming Pool & Gardens", icon: "Waves",
             desc: "Relax in our central swimming pool or unwind in the lush gardens and kids zone.",
-            image: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&q=80&w=2070",
+            image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772447162/parkside-villa-media/Swimming_Pool/IMG-20251119-WA0051_lwmtna.jpg",
             features: ["Swimming Pool", "Kids Zone", "Lush Gardens"],
             highlights: ["Dedicated children's activities area", "Extensive relaxation gardens", "Poolside service and bar", "Ample and secure parking space", "Pool Tables for recreation"]
         }
@@ -132,7 +132,7 @@ async function main() {
 
     // 9. PROMOTIONS
     const promotions = [
-        { code: "SUMMER20", discount: 20, type: "percentage", title: "Summer Special", description: "Enjoy 20% off all bookings this summer!", validTo: new Date("2026-08-31") }
+        { code: "SUMMER20", discount: 20, type: "percentage", validTo: new Date("2026-08-31") }
     ];
     for (const p of promotions) {
         await prisma.promotion.upsert({ where: { code: p.code }, update: p, create: p });
