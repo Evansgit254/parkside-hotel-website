@@ -1876,38 +1876,39 @@
 
 /* === BRAND DIVIDER SECTION === */
 .brandQuote {
-    padding: 10rem 4rem;
-    background: #050f0b;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    padding: 10rem 4rem !important;
+    background: #050f0b !important;
+    text-align: center !important;
+    position: relative !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #ffffff !important;
 }
 
 .brandQuoteText {
-    font-family: var(--font-serif);
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    line-height: 1.2;
-    color: var(--white);
-    max-width: 900px;
-    position: relative;
-    z-index: 2;
-    font-weight: 300;
-    margin-bottom: 2rem;
+    font-family: var(--font-serif) !important;
+    font-size: clamp(2rem, 4vw, 3.5rem) !important;
+    line-height: 1.2 !important;
+    color: #ffffff !important;
+    max-width: 900px !important;
+    position: relative !important;
+    z-index: 2 !important;
+    font-weight: 300 !important;
+    margin-bottom: 2rem !important;
 }
 
 .brandQuoteAttr {
-    font-family: var(--font-sans);
-    font-size: 0.75rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--gold-light);
-    position: relative;
-    z-index: 2;
-    font-weight: 600;
+    font-family: var(--font-sans) !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.3em !important;
+    text-transform: uppercase !important;
+    color: #E8CA6B !important;
+    position: relative !important;
+    z-index: 2 !important;
+    font-weight: 600 !important;
 }
 
 /* === ANIMATIONS === */
