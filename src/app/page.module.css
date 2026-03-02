@@ -1904,7 +1904,7 @@
     font-size: 0.75rem;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--primary);
+    color: var(--gold-light);
     position: relative;
     z-index: 2;
     font-weight: 600;
@@ -2060,22 +2060,22 @@
         grid-template-rows: auto;
     }
 
-    .recentRooms .roomCard {
+    .recentSection .recentItem {
         background: var(--white);
         border: 1px solid rgba(20, 75, 54, 0.1);
     }
 
-    .recentRooms .roomInfo {
+    .recentSection .recentInfo {
         background: var(--white);
         padding: 2.5rem 2rem;
     }
 
-    .recentRooms .roomType {
+    .recentSection .recentName {
         color: var(--primary) !important;
         font-weight: 600;
     }
 
-    .recentRooms .roomPrice {
+    .recentSection .recentPrice {
         color: var(--text-secondary) !important;
         font-weight: 500;
         opacity: 0.8;

@@ -1,7 +1,7 @@
 .pageWrapper {
     background: var(--background-alt);
     min-height: 100vh;
-    color: var(--ivory);
+    color: var(--text-primary);
     font-family: var(--font-body);
 }
 
@@ -118,7 +118,7 @@
 .postBody {
     font-size: 1.125rem;
     line-height: 1.9;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-secondary);
 }
 
 .lead {
@@ -142,14 +142,14 @@
 }
 
 .postBody blockquote {
-    background: rgba(201, 168, 76, 0.08);
-    border-left: 3px solid var(--secondary);
+    background: rgba(20, 75, 54, 0.04);
+    border-left: 4px solid var(--primary);
     padding: 3rem 4rem;
     font-family: var(--font-serif);
     font-size: 2rem;
     line-height: 1.4;
     font-style: italic;
-    color: var(--white);
+    color: var(--primary);
     margin: 5rem 0;
 }
 
