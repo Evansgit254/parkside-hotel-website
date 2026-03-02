@@ -80,7 +80,7 @@ export default function Dining() {
                     initial={{ scale: 1.1, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1.2 }}
-                    src="https://res.cloudinary.com/dizwm3mic/image/upload/v1772371962/parkside-villa-media/Dining_and_Restaurant/20220322_130132_s1ptyd.jpg"
+                    src="https://res.cloudinary.com/dizwm3mic/image/upload/v1772446807/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0703_qptc5r.jpg"
                     alt="Fine Dining"
                     className={styles.heroImage}
                 />
