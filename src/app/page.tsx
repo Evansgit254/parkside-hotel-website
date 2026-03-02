@@ -119,7 +119,7 @@ export default function Home() {
 
       {/* ── HERO ── */}
       <section className={styles.hero}>
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           <motion.div
             key={currentSlide}
             initial={{ scale: 1.08, opacity: 0 }}
@@ -674,7 +674,7 @@ export default function Home() {
                   }
                 }}
               >
-                <AnimatePresence mode="wait">
+                <AnimatePresence>
                   {bookingStep === 1 && (
                     <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
