@@ -112,7 +112,7 @@ export default function Header() {
                         transition={{ duration: 1.2, ease: "easeOut" }}
                     >
                         <Image
-                            src="/logo_refined.png"
+                            src="/logo_final.png"
                             alt="Parkside Villa Kitui"
                             width={320}
                             height={100}
@@ -195,7 +195,7 @@ export default function Header() {
                         onClick={e => e.stopPropagation()}
                     >
                         <div className={styles.mobileMenuHeader}>
-                            <Image src="/logo_refined.png" alt="Parkside Villa Kitui" width={220} height={70} className={styles.logoImageFinal} />
+                            <Image src="/logo_final.png" alt="Parkside Villa Kitui" width={220} height={70} className={styles.logoImageFinal} />
                             <button
                                 className={styles.mobileMenuClose}
                                 onClick={() => setIsMobileMenuOpen(false)}
