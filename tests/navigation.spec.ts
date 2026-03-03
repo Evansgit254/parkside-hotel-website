@@ -24,11 +24,9 @@ test.describe('Parkside Villa Kitui E2E Tests', () => {
         await page.evaluate(() => {
             document.getElementById('accommodation')?.scrollIntoView();
         });
-        const roomCard = page.getByTestId('room-card').first();
-        await roomCard.hover();
-        const reserveBtn = page.getByRole('button', { name: /Reserve/i }).first();
-        await expect(reserveBtn).toBeAttached();
-        await reserveBtn.click({ force: true });
+        const bookButtons = page.getByRole('button', { name: /Reserve/i });
+        await expect(bookButtons.first()).toBeVisible({ timeout: 10000 });
+        await bookButtons.first().click();
         // Check for Step indicator instead of hardcoded title
         await expect(page.getByText('Step 1 of 3')).toBeVisible();
     });
@@ -47,7 +45,7 @@ test.describe('Parkside Villa Kitui E2E Tests', () => {
         });
         await page.waitForTimeout(500);
         await expect(page.getByText('Get In Touch')).toBeVisible();
-        await expect(page.getByPlaceholder('Your preferred name')).toBeVisible();
+        await expect(page.getByPlaceholder('Your name')).toBeVisible();
         // Button text is "Send Enquiry" (refactored for CMS)
         await expect(page.getByRole('button', { name: /Send Enquiry/i })).toBeVisible();
     });

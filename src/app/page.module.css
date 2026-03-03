@@ -945,51 +945,12 @@
 
 .roomImage {
     z-index: 0;
-    position: relative;
     transition: transform 0.9s var(--ease-luxury) !important;
     will-change: transform;
 }
 
 .roomCard:hover .roomImage {
     transform: scale(1.06) !important;
-}
-
-.roomOverlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(20, 75, 54, 0.4);
-    backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.4s var(--ease-luxury);
-    z-index: 2;
-}
-
-.roomCard:hover .roomOverlay {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.roomBtn {
-    background: var(--white);
-    color: var(--primary);
-    padding: 0.85rem 2rem;
-    font-family: var(--font-sans);
-    font-size: 0.625rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    border: none;
-    cursor: pointer;
-    transform: translateY(20px);
-    transition: all 0.5s var(--ease-luxury);
-}
-
-.roomCard:hover .roomBtn {
-    transform: translateY(0);
 }
 
 .roomInfo {
