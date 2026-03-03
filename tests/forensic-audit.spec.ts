@@ -143,7 +143,7 @@ test.describe('Deep Forensic Audit', () => {
         const logo = page.locator('header img[alt*="Logo"]').first();
         await expect(logo).toBeVisible();
         const src = await logo.getAttribute('src');
-        expect(src).toBe('/logo.jpg');
+        expect(src).toBe('/logo.png');
     });
 
     test('Luxury Section Forensic: KES Rate Verification', async ({ page }) => {

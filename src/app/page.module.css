@@ -1476,12 +1476,16 @@
 }
 
 .footerLogo {
-    font-family: var(--font-serif);
-    font-size: 1.5rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--secondary);
-    font-weight: 700;
+    height: 90px;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.footerLogo img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
 }
 
 .footerDesc {
@@ -1629,18 +1633,18 @@
 }
 
 .logo {
-    font-family: var(--font-serif);
-    font-weight: 700;
-    font-size: 1.25rem;
-    letter-spacing: 0.1em;
-    color: var(--primary);
     display: flex;
     align-items: center;
+    height: 100%;
 }
 
 .logoImage {
+    width: auto;
+    height: 100%;
+    max-height: 80px;
+    /* Force visibility */
     object-fit: contain;
-    filter: brightness(0.9);
+    transition: all 0.3s ease;
 }
 
 .aiAvatar {
@@ -2044,7 +2048,8 @@
 
 @media (max-width: 768px) {
     .header {
-        padding: 0 1.5rem;
+        padding: 0 1rem;
+        height: 70px;
     }
 
     .nav {
@@ -2097,6 +2102,28 @@
 
     .roomCard {
         height: 300px;
+    }
+
+    .navContainer {
+        gap: 0.5rem;
+    }
+
+    .headerActions {
+        gap: 0.6rem;
+    }
+
+    .logoImage {
+        width: 180px !important;
+        height: auto !important;
+    }
+
+    .currencyToggle {
+        padding: 0.25rem 0.6rem;
+        font-size: 0.65rem;
+    }
+
+    .profileLink {
+        gap: 0.25rem;
     }
 
     .roomCard:nth-child(1),

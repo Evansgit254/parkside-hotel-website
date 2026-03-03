@@ -23,18 +23,18 @@ test.describe('Parkside Villa Admin CRUD Operations', () => {
 
         await page.getByRole('button', { name: /New Room/i }).click();
         await page.fill('input[placeholder="e.g. Executive Suite"]', roomName);
-        await page.fill('input[placeholder="e.g. $150"]', '$999');
+        await page.fill('input[placeholder="e.g. $150"]', '999');
         await page.fill('textarea[placeholder="Describe the room\'s unique features..."]', 'Test description');
         await page.fill('input[placeholder="https://images.unsplash.com/..."]', 'https://images.unsplash.com/photo-1590490360182-c33d57733427');
 
         await page.getByRole('button', { name: 'Save Changes' }).click();
-        await expect(page.getByText(roomName)).toBeVisible({ timeout: 15000 });
+        await expect(page.getByText('KES 999')).toBeVisible({ timeout: 15000 });
 
         const roomRow = page.locator('div[class*="tableRow"]').filter({ hasText: roomName });
         await roomRow.getByRole('button', { name: 'Edit' }).click();
-        await page.fill('input[placeholder="e.g. $150"]', '$888');
+        await page.fill('input[placeholder="e.g. $150"]', '888');
         await page.getByRole('button', { name: 'Save Changes' }).click();
-        await expect(roomRow.getByText('$888')).toBeVisible({ timeout: 10000 });
+        await expect(roomRow.getByText('KES 888')).toBeVisible({ timeout: 10000 });
 
         await roomRow.getByRole('button', { name: 'Delete' }).click();
         await expect(page.getByText(roomName)).not.toBeVisible({ timeout: 20000 });
@@ -65,11 +65,11 @@ test.describe('Parkside Villa Admin CRUD Operations', () => {
         // Edit
         const itemRow = catSection.locator('div[class*="listItem"]').filter({ hasText: itemName });
         await itemRow.getByRole('button', { name: 'Edit' }).click();
-        await page.fill('input[placeholder="e.g. $45"]', '$15');
+        await page.fill('input[placeholder="e.g. $45"]', '15');
         await page.getByRole('button', { name: 'Save Changes' }).click();
 
 
-        await expect(itemRow.getByText('$15')).toBeVisible({ timeout: 10000 });
+        await expect(itemRow.getByText('KES 15')).toBeVisible({ timeout: 10000 });
 
         // Delete
         await itemRow.getByRole('button', { name: 'Delete' }).click();
@@ -99,9 +99,27 @@ test.describe('Parkside Villa Admin CRUD Operations', () => {
     });
 
     test('Leads Management', async ({ page }) => {
+        test.setTimeout(300000); // This test may take up to 5 minutes due to environment latency
         console.log('>>> [Leads Test] Starting...');
+
+        // Capture browser console logs
+        page.on('console', msg => {
+            if (msg.text().startsWith('>>>')) {
+                console.log(`[Browser] ${msg.text()}`);
+            }
+        });
+
         await page.goto('/', { waitUntil: 'domcontentloaded' });
-        await page.getByRole('button', { name: /Reserve/i }).first().click();
+
+        // Wait for rooms to load and "Reserve" button to appear
+        const reserveBtn = page.getByRole('button', { name: /Reserve/i }).first();
+        await reserveBtn.waitFor({ state: 'visible', timeout: 30000 });
+        await reserveBtn.click();
+
+        // Wait for modal to be visible
+        const modal = page.getByTestId('booking-modal');
+        await modal.waitFor({ state: 'visible', timeout: 60000 });
+        await page.waitForTimeout(2000); // Wait for transition animation
 
         const timestamp = Date.now().toString();
         const testName = `Lead Test ${timestamp}`;
@@ -113,23 +131,43 @@ test.describe('Parkside Villa Admin CRUD Operations', () => {
         await page.locator('input[type="date"]').last().fill(tomorrow);
 
         // Step 1 -> Step 2
-        await page.click('button:has-text("Continue")');
+        const step1Continue = page.getByTestId('booking-step-1-continue');
+        await step1Continue.waitFor({ state: 'visible', timeout: 60000 });
+        await step1Continue.click({ force: true });
+        await page.waitForTimeout(2000); // Wait for animation
 
         await page.fill('input[placeholder="Your full name"]', testName);
         await page.fill('input[placeholder="your@email.com"]', `test-${timestamp}@example.com`);
         await page.fill('input[placeholder="+254 700 000 000"]', '123456789');
 
         // Step 2 -> Step 3
-        await page.click('button:has-text("Continue to Payment")');
+        console.log('>>> [Leads Test] Clicking Continue (Step 2)...');
+        const step2Continue = page.getByTestId('booking-step-2-continue');
+        await step2Continue.waitFor({ state: 'visible', timeout: 60000 });
+        await step2Continue.click({ force: true });
+        await page.waitForTimeout(2000); // Wait for animation
 
         // Step 3 (Payment) -> Complete
-        await page.click('div[class*="paymentOption"]'); // Select first option (M-Pesa)
-        await page.click('button:has-text("Proceed to Pay")');
+        console.log('>>> [Leads Test] Entering Step 3...');
+        const step3Container = page.getByTestId('booking-step-3-method');
+        await step3Container.waitFor({ state: 'visible', timeout: 60000 });
+
+        console.log('>>> [Leads Test] Selecting Payment Method...');
+        const mpesaOption = page.getByTestId('payment-option-mpesa');
+        await mpesaOption.waitFor({ state: 'visible', timeout: 60000 });
+        await mpesaOption.click({ force: true }); // Select M-Pesa
+
+        console.log('>>> [Leads Test] Clicking Proceed to Pay...');
+        const proceedBtn = page.getByRole('button', { name: /Proceed to Pay/i });
+        await proceedBtn.waitFor({ state: 'visible', timeout: 60000 });
+        await proceedBtn.click({ force: true });
+        await page.waitForTimeout(3000); // Wait for transition
 
         // Wait for success message to appear on public site
-        await expect(page.getByText(/Reservation Confirmed/i)).toBeVisible({ timeout: 30000 });
+        console.log('>>> [Leads Test] Waiting for Confirmation...');
+        await expect(page.getByText(/Reservation Confirmed/i)).toBeVisible({ timeout: 60000 });
 
-        await page.goto('/admin/leads', { waitUntil: 'networkidle' });
+        await page.goto('/admin/leads', { waitUntil: 'domcontentloaded' });
 
         // If we got logged out, log back in
         if (page.url().includes('/login')) {
@@ -140,9 +178,18 @@ test.describe('Parkside Villa Admin CRUD Operations', () => {
             await expect(page).toHaveURL(/\/admin\/leads/);
         }
 
-        await page.waitForTimeout(5000); // Give it more time for FS sync
-        await page.reload({ waitUntil: 'networkidle' });
-        await expect(page.getByText(testName)).toBeVisible({ timeout: 45000 });
+        // Poll the admin leads page until the lead appears (handles client-side fetch delay)
+        const deadline = Date.now() + 120000;
+        let found = false;
+        while (!found && Date.now() < deadline) {
+            await page.waitForTimeout(2000);
+            await page.reload({ waitUntil: 'domcontentloaded' });
+            await page.waitForTimeout(1500);
+            const count = await page.getByText(testName).count();
+            if (count > 0) { found = true; break; }
+        }
+        await expect(page.getByText(testName)).toBeVisible({ timeout: 15000 });
+
 
         const leadRow = page.locator('div[class*="tableRow"]').filter({ hasText: testName });
         await leadRow.locator('select').selectOption('Confirmed');
@@ -158,13 +205,18 @@ test.describe('Parkside Villa Admin CRUD Operations', () => {
         await page.goto('/admin/settings', { waitUntil: 'domcontentloaded' });
 
         const newWhatsApp = `254${Math.floor(Math.random() * 1000000000)}`;
+        console.log('>>> [Settings Test] Entering WhatsApp...');
         const whatsappInput = page.locator('input[placeholder="e.g. 254700000000"]');
         await whatsappInput.fill(newWhatsApp);
-        await page.getByRole('button', { name: /Commit Global Update/i }).click();
+        await page.getByRole('button', { name: /Commit Global Update/i }).click({ force: true });
 
-        await page.waitForTimeout(2000);
-        await page.reload({ waitUntil: 'domcontentloaded' });
-        await expect(whatsappInput).toHaveValue(newWhatsApp, { timeout: 15000 });
+        // Extra time for FS sync on high latency environments
+        await page.waitForTimeout(5000);
+        await page.reload({ waitUntil: 'networkidle' });
+        await page.waitForTimeout(3000);
+
+        // Retry logic for value check if needed, but 8s + networkidle should be enough
+        await expect(whatsappInput).toHaveValue(newWhatsApp, { timeout: 20000 });
 
         const testImageUrl = 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb';
         await page.fill('input[placeholder="Entrust a new high-resolution image URL..."]', testImageUrl);

@@ -210,13 +210,13 @@ export default function AdminFacilities() {
                     {/* Title */}
                     <div className={styles.formGroup}>
                         <label className={styles.label}>Facility Title</label>
-                        <input className={styles.input} placeholder="e.g. Conference Hall" value={editForm.title} onChange={e => setEditForm({ ...editForm, title: e.target.value })} required />
+                        <input className={styles.input} placeholder="e.g. Infinity Lounge" value={editForm.title} onChange={e => setEditForm({ ...editForm, title: e.target.value })} required />
                     </div>
 
                     {/* Description */}
                     <div className={styles.formGroup}>
                         <label className={styles.label}>Description</label>
-                        <textarea className={styles.input} style={{ minHeight: '90px', resize: 'vertical' }} placeholder="What makes this facility special?" value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} required />
+                        <textarea className={styles.input} style={{ minHeight: '90px', resize: 'vertical' }} placeholder="What makes this facility special?..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} required />
                     </div>
 
                     {/* Features */}

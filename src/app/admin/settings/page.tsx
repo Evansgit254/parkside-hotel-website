@@ -30,7 +30,9 @@ export default function AdminSettings() {
         e.preventDefault();
         setSaving(true);
         const res = await updateContactInfo(contact);
-        if (!res.success) {
+        if (res.success) {
+            await fetchData();
+        } else {
             alert(res.error || "Failed to update contact info");
         }
         setSaving(false);
@@ -242,7 +244,7 @@ export default function AdminSettings() {
                             <input
                                 type="url"
                                 className={styles.input}
-                                placeholder="Or entrust a new image URL manually..."
+                                placeholder="Entrust a new high-resolution image URL..."
                                 value={newImageUrl}
                                 onChange={e => setNewImageUrl(e.target.value)}
                                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddImage())}

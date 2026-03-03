@@ -644,6 +644,13 @@ export async function addHeroImage(imageUrl: string) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
+
+        // Prevent duplicate hero images (P2002)
+        const existing = await prisma.heroImage.findUnique({
+            where: { url: imageUrl }
+        });
+        if (existing) return { success: true };
+
         const count = await prisma.heroImage.count();
         await prisma.heroImage.create({ data: { url: imageUrl, order: count } });
         revalidateAll();

@@ -64,13 +64,14 @@ export default function Home() {
   const [bookingData, setBookingData] = useState({
     name: "", email: "", phone: "",
     checkIn: "", checkOut: "", guests: "2 Adults",
-    roomType: "Any Room", maxPrice: 400,
+    roomType: "Any Room", maxPrice: 10000,
     paymentMethod: "", mpesaPhone: ""
   });
 
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   const [paymentStep, setPaymentStep] = useState<"method" | "mpesa" | "card" | "success" | null>(null);
+
   const [mpesaTimer, setMpesaTimer] = useState(0);
 
   useEffect(() => {
@@ -83,9 +84,8 @@ export default function Home() {
       setPaymentStep("success");
       setBookingStatus("Payment Successful!");
       setTimeout(() => {
-        setBookingStatus(""); setIsBookingModalOpen(false); setBookingStep(1); setPaymentStep(null);
-        setBookingData({ name: "", email: "", phone: "", checkIn: "", checkOut: "", guests: "2 Adults", roomType: "Any Room", maxPrice: 400, paymentMethod: "", mpesaPhone: "" });
-      }, 3000);
+        finalizeBooking();
+      }, 2000);
     }
     return () => clearInterval(interval);
   }, [mpesaTimer, paymentStep]);
@@ -111,6 +111,36 @@ export default function Home() {
   const handleBookingSubmit = () => {
     // Scroll to accommodation section
     document.getElementById('accommodation')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const finalizeBooking = async () => {
+    setBookingStatus("Finalizing Booking...");
+    try {
+      await addLead({
+        name: bookingData.name,
+        email: bookingData.email,
+        phone: bookingData.phone,
+        date: `${bookingData.checkIn} to ${bookingData.checkOut}`,
+        room: selectedRoom.name,
+        guests: bookingData.guests,
+      });
+      setBookingStatus("Reservation Confirmed!");
+      setTimeout(() => {
+        setBookingStatus("");
+        setIsBookingModalOpen(false);
+        setBookingStep(1);
+        setPaymentStep(null);
+        setBookingData({
+          name: "", email: "", phone: "",
+          checkIn: "", checkOut: "", guests: "2 Adults",
+          roomType: "Any Room", maxPrice: 10000,
+          paymentMethod: "", mpesaPhone: ""
+        });
+      }, 3500);
+    } catch (err) {
+      setBookingStatus("Error processing reservation");
+      setTimeout(() => setBookingStatus(""), 3000);
+    }
   };
 
   return (
@@ -234,9 +264,9 @@ export default function Home() {
             </div>
             <input
               type="range"
-              min="50"
-              max="500"
-              step="10"
+              min="500"
+              max="20000"
+              step="500"
               className={styles.rangeSlider}
               value={bookingData.maxPrice}
               onChange={(e) => setBookingData({ ...bookingData, maxPrice: parseInt(e.target.value) })}
@@ -613,6 +643,7 @@ export default function Home() {
           >
             <motion.div
               className={styles.modalContent}
+              data-testid="booking-modal"
               initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 30, opacity: 0 }}
               transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
               onClick={e => e.stopPropagation()}
@@ -633,10 +664,18 @@ export default function Home() {
               <p className={styles.modalSubtitle}>{formatPrice(selectedRoom.price)} · PER NIGHT</p>
 
               <form
+                noValidate
                 onSubmit={async (e) => {
                   e.preventDefault();
-                  if (bookingStep === 1) { setBookingStep(2); return; }
-                  if (bookingStep === 2) { setBookingStep(3); setPaymentStep("method"); return; }
+                  if (bookingStep === 1) {
+                    setBookingStep(2);
+                    return;
+                  }
+                  if (bookingStep === 2) {
+                    setBookingStep(3);
+                    setPaymentStep("method");
+                    return;
+                  }
 
                   if (bookingStep === 3) {
                     if (paymentStep === "method") {
@@ -655,22 +694,14 @@ export default function Home() {
                       await new Promise(r => setTimeout(r, 2000));
                       setPaymentStep("success");
                       setBookingStatus("Payment Successful!");
+                      setTimeout(() => {
+                        finalizeBooking();
+                      }, 1500);
                     }
                   }
 
                   if (paymentStep === "success" || !paymentStep) {
-                    setBookingStatus("Finalizing Booking...");
-                    await addLead({
-                      name: bookingData.name, email: bookingData.email,
-                      phone: bookingData.phone,
-                      date: `${bookingData.checkIn} to ${bookingData.checkOut}`,
-                      room: selectedRoom.name, guests: bookingData.guests,
-                    });
-                    setBookingStatus("Reservation Confirmed!");
-                    setTimeout(() => {
-                      setBookingStatus(""); setIsBookingModalOpen(false); setBookingStep(1); setPaymentStep(null);
-                      setBookingData({ name: "", email: "", phone: "", checkIn: "", checkOut: "", guests: "2 Adults", roomType: "Any Room", maxPrice: 400, paymentMethod: "", mpesaPhone: "" });
-                    }, 2500);
+                    finalizeBooking();
                   }
                 }}
               >
@@ -685,7 +716,13 @@ export default function Home() {
                           <div key={`booking-step1-${f.name}`} className={styles.formGroup}>
                             <label className={styles.formLabel}>{f.label}</label>
                             <div className={styles.inputWithIcon}>
-                              <input type={f.type} required value={f.value} onChange={e => f.onChange(e.target.value)} className={styles.input} />
+                              <input
+                                type={f.type}
+                                required
+                                value={f.value}
+                                onChange={e => f.onChange(e.target.value)}
+                                className={styles.input}
+                              />
                               {f.type === 'date' && <Calendar size={14} className={styles.inputIcon} />}
                             </div>
                           </div>
@@ -702,7 +739,7 @@ export default function Home() {
                         </select>
                       </div>
                       <Magnetic>
-                        <button type="submit" className={styles.buttonPrimary} style={{ width: '100%' }}>
+                        <button type="submit" data-testid="booking-step-1-continue" className={styles.buttonPrimary} style={{ width: '100%' }}>
                           <span>Continue</span> <ArrowUpRight size={14} />
                         </button>
                       </Magnetic>
@@ -718,13 +755,20 @@ export default function Home() {
                       ].map(f => (
                         <div key={`booking-step2-${f.name}`} className={styles.formGroup}>
                           <label className={styles.formLabel}>{f.label}</label>
-                          <input type={f.type} required placeholder={f.placeholder} value={f.value} onChange={e => f.onChange(e.target.value)} className={styles.input} />
+                          <input
+                            type={f.type}
+                            required
+                            placeholder={f.placeholder}
+                            value={f.value}
+                            onChange={e => f.onChange(e.target.value)}
+                            className={styles.input}
+                          />
                         </div>
                       ))}
                       <div style={{ display: 'flex', gap: '1rem' }}>
                         <button type="button" onClick={() => setBookingStep(1)} className={styles.buttonSecondary}>Back</button>
                         <Magnetic>
-                          <button type="submit" className={styles.buttonPrimary} style={{ flex: 2 }}>
+                          <button type="submit" data-testid="booking-step-2-continue" className={styles.buttonPrimary} style={{ flex: 2 }}>
                             <span>Continue to Payment</span> <ArrowUpRight size={14} />
                           </button>
                         </Magnetic>
@@ -735,11 +779,12 @@ export default function Home() {
                   {bookingStep === 3 && (
                     <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                       {paymentStep === "method" && (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                        <div data-testid="booking-step-3-method" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                           <p className={styles.formLabel} style={{ marginBottom: '-0.5rem' }}>SELECT PAYMENT METHOD</p>
                           <div
                             onClick={() => setBookingData({ ...bookingData, paymentMethod: 'mpesa' })}
                             className={`${styles.paymentOption} ${bookingData.paymentMethod === 'mpesa' ? styles.paymentOptionActive : ''}`}
+                            data-testid="payment-option-mpesa"
                           >
                             <Smartphone size={20} />
                             <div style={{ flex: 1 }}>
@@ -752,6 +797,7 @@ export default function Home() {
                           <div
                             onClick={() => setBookingData({ ...bookingData, paymentMethod: 'card' })}
                             className={`${styles.paymentOption} ${bookingData.paymentMethod === 'card' ? styles.paymentOptionActive : ''}`}
+                            data-testid="payment-option-card"
                           >
                             <CreditCard size={20} />
                             <div style={{ flex: 1 }}>
@@ -830,7 +876,7 @@ export default function Home() {
                           >
                             <Check size={32} />
                           </motion.div>
-                          <h4 style={{ fontWeight: 600, marginBottom: '0.5rem' }}>Payment Successful</h4>
+                          <h4 style={{ fontWeight: 600, marginBottom: '0.5rem' }}>{bookingStatus || "Payment Successful"}</h4>
                           <p style={{ fontSize: '0.75rem', opacity: 0.7 }}>
                             Your transaction has been processed securely. We are finalizing your reservation now.
                           </p>

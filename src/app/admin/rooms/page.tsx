@@ -201,13 +201,23 @@ export default function AdminRooms() {
                     </div>
 
                     <div className={styles.formGroup}>
+                        <label className={styles.label}>Or Image URL</label>
+                        <input
+                            className={styles.input}
+                            placeholder="https://images.unsplash.com/..."
+                            value={editForm.image}
+                            onChange={e => setEditForm({ ...editForm, image: e.target.value })}
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
                         <label className={styles.label}>Room Name</label>
                         <input className={styles.input} placeholder="e.g. Executive Suite" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} required />
                     </div>
 
                     <div className={styles.formGroup}>
                         <label className={styles.label}>Description</label>
-                        <textarea className={styles.input} style={{ minHeight: '90px', resize: 'vertical' }} placeholder="Describe the room's features..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} required />
+                        <textarea className={styles.input} style={{ minHeight: '90px', resize: 'vertical' }} placeholder="Describe the room's unique features..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} required />
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>

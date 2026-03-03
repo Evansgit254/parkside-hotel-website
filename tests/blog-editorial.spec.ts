@@ -38,15 +38,17 @@ test.describe('Parkside Villa Blog Editorial Suite E2E', () => {
         await page.fill('textarea[placeholder*="story of Parkside Villa"]', 'E2E Validation Narrative.');
 
         console.log('>>> [Blog Editorial Test] Attempting Publish...');
-        await page.getByRole('button', { name: /Publish Article/i }).click();
+        const publishBtn = page.getByRole('button', { name: /Publish Article/i });
+        await publishBtn.waitFor({ state: 'visible', timeout: 30000 });
+        await publishBtn.click({ force: true });
 
         // 4. Handle DB Hardening or Persistence
         console.log('>>> [Blog Editorial Test] Monitoring feedback...');
 
         const outcome = await Promise.race([
-            page.getByText(articleTitle).waitFor({ state: 'visible', timeout: 8000 }).then(() => 'persisted'),
-            page.getByText(/Database not configured/i).waitFor({ state: 'visible', timeout: 8000 }).then(() => 'hardened_alert'),
-            page.waitForTimeout(9000).then(() => 'timeout')
+            page.getByText(articleTitle).waitFor({ state: 'visible', timeout: 15000 }).then(() => 'persisted'),
+            page.getByText(/Database not configured/i).waitFor({ state: 'visible', timeout: 15000 }).then(() => 'hardened_alert'),
+            page.waitForTimeout(20000).then(() => 'timeout')
         ]);
 
         console.log(`>>> [Blog Editorial Test] Outcome: ${outcome}`);
@@ -55,10 +57,13 @@ test.describe('Parkside Villa Blog Editorial Suite E2E', () => {
             console.log('>>> [Blog Editorial Test] Success: DB hardening verified via luxury alert.');
             await expect(page.getByText(/Database not configured/i)).toBeVisible();
             // Close modal using Cancel Draft button
-            await page.getByText('Cancel Draft').click();
+            await page.getByText('Cancel Draft').click({ force: true });
         } else if (outcome === 'persisted') {
             console.log('>>> [Blog Editorial Test] Success: Article persisted.');
             await expect(page.getByText(articleTitle)).toBeVisible();
+        } else {
+            console.error('>>> [Blog Editorial Test] FAILURE: Test timed out waiting for outcome.');
+            throw new Error('Blog Publishing Outcome Timeout');
         }
 
         // 5. Search Bar UX

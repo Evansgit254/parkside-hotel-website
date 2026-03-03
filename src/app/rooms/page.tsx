@@ -35,7 +35,7 @@ export default function RoomsPage() {
 
     // Filtering State
     const [searchQuery, setSearchQuery] = useState("");
-    const [maxPrice, setMaxPrice] = useState(1000);
+    const [maxPrice, setMaxPrice] = useState(20000);
     const [guestFilter, setGuestFilter] = useState("Any");
     const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
 
@@ -127,12 +127,12 @@ export default function RoomsPage() {
                             />
                         </div>
                         <div className={styles.filterGroup}>
-                            <label className={styles.filterLabel}>Max Nightly Rate: ${maxPrice}</label>
+                            <label className={styles.filterLabel}>Max Nightly Rate: {formatPrice(maxPrice)}</label>
                             <input
                                 type="range"
-                                min="50"
-                                max="1000"
-                                step="50"
+                                min="500"
+                                max="20000"
+                                step="500"
                                 className={styles.rangeInput}
                                 value={maxPrice}
                                 onChange={(e) => setMaxPrice(parseInt(e.target.value))}

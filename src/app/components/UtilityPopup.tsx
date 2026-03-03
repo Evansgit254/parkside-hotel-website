@@ -4,23 +4,25 @@ import { useState, useEffect } from "react";
 import { X, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./UtilityPopup.module.css";
+import { usePathname } from "next/navigation";
 
 export default function UtilityPopup() {
     const [isVisible, setIsVisible] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
         // Show popup after a short delay on first visit per session
         const hasSeenPopup = sessionStorage.getItem("hasSeenUtilityPopup");
-        if (!hasSeenPopup) {
+        if (!hasSeenPopup && !pathname.startsWith("/admin")) {
             const timer = setTimeout(() => {
                 setIsVisible(true);
                 sessionStorage.setItem("hasSeenUtilityPopup", "true");
             }, 3000);
             return () => clearTimeout(timer);
         }
-    }, []);
+    }, [pathname]);
 
-    if (!isVisible) return null;
+    if (!isVisible || pathname.startsWith("/admin")) return null;
 
     return (
         <AnimatePresence>

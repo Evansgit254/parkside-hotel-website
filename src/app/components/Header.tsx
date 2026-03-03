@@ -114,9 +114,9 @@ export default function Header() {
                         <div className={styles.logo}>
                             <Image
                                 src="/logo.png"
-                                alt="Kitui Parkside Hotels"
-                                width={160}
-                                height={54}
+                                alt="Kitui Parkside Hotels Logo"
+                                width={240}
+                                height={82}
                                 className={styles.logoImage}
                                 priority
                             />
@@ -197,7 +197,7 @@ export default function Header() {
                         onClick={e => e.stopPropagation()}
                     >
                         <div className={styles.mobileMenuHeader}>
-                            <Image src="/logo.png" alt="Kitui Parkside Hotels" width={130} height={44} className={styles.logoImage} />
+                            <Image src="/logo.png" alt="Kitui Parkside Hotels" width={200} height={68} className={styles.logoImage} />
                             <button
                                 className={styles.mobileMenuClose}
                                 onClick={() => setIsMobileMenuOpen(false)}
