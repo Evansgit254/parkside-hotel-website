@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const secret = process.env.JWT_SECRET;
-const SECRET_KEY = new TextEncoder().encode(secret || "dev_secret_only");
+const SECRET_KEY = new TextEncoder().encode(
+    process.env.JWT_SECRET || "dev_secret_only"
+);
 
-
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Protect all /admin routes except login
+    // Protect all /admin routes except the login page
     if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
         const token = request.cookies.get("admin_session")?.value;
 
@@ -22,7 +22,7 @@ export async function proxy(request: NextRequest) {
             if (payload.role !== "admin") {
                 return NextResponse.redirect(new URL("/admin/login", request.url));
             }
-        } catch (error) {
+        } catch {
             return NextResponse.redirect(new URL("/admin/login", request.url));
         }
     }

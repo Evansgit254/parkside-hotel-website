@@ -63,30 +63,15 @@ export default function ClientBlogPost({ post, relatedPosts }: { post: any, rela
                     <div className={styles.postBody}>
                         <p className={styles.lead}>{post.excerpt}</p>
 
-                        <p>
-                            Nestled in the heart of Kitui, Parkside Villa stands as a beacon of luxury and refined hospitality.
-                            Our journey began with a vision to create an oasis where traditional African warmth meets
-                            contemporary world-class amenities.
-                        </p>
-
-                        <h3>Refining the Guest Experience</h3>
-                        <p>
-                            Every detail at Parkside Villa is meticulously curated to ensure our guests feel not just welcomed,
-                            but truly at home. From the locally sourced materials used in our furniture to the state-of-the-art
-                            technology in our executive suites, we believe that the true essence of luxury lies in the balance
-                            of heritage and innovation.
-                        </p>
-
-                        <blockquote>
-                            "Luxury is not just about the amenities, it's about the feeling of being somewhere where
-                            every detail has been thought of with you in mind."
-                        </blockquote>
-
-                        <p>
-                            As we continue to evolve, our commitment to excellence remains steadfast. Whether you are
-                            visiting for business in our high-tech conference halls or seeking a peaceful retreat in our
-                            lush gardens, Parkside Villa promises an experience that lingers long after you've checked out.
-                        </p>
+                        {post.content ? (
+                            post.content.split('\n').filter((p: string) => p.trim()).map((paragraph: string, i: number) => (
+                                <p key={i}>{paragraph}</p>
+                            ))
+                        ) : (
+                            <p style={{ color: 'var(--foreground-soft)', fontStyle: 'italic' }}>
+                                Full article content coming soon. Check back for updates.
+                            </p>
+                        )}
                     </div>
 
                     {/* SHARE SECTION */}

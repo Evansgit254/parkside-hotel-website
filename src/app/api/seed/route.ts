@@ -75,6 +75,13 @@ export async function GET(request: Request) {
                 image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772371880/parkside-villa-media/Dining_and_Restaurant/20220322_124810_n3g83g.jpg",
                 features: ["Main Restaurant", "VIP Lounge", "Open Bar & Restaurant"],
                 highlights: ["International and local Kamba cuisine", "Over 50 wine selections & single malts"]
+            },
+            {
+                id: "pool", title: "Swimming Pool & Gardens", icon: "Waves",
+                desc: "Relax in our central swimming pool or unwind in the lush gardens and kids zone.",
+                image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772447162/parkside-villa-media/Swimming_Pool/IMG-20251119-WA0051_lwmtna.jpg",
+                features: ["Swimming Pool", "Kids Zone", "Lush Gardens"],
+                highlights: ["Dedicated children's activities area", "Extensive relaxation gardens", "Poolside service and bar", "Ample and secure parking space", "Pool Tables for recreation"]
             }
         ];
         for (const f of facilities) {
