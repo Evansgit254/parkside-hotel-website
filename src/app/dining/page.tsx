@@ -1,5 +1,4 @@
 "use client";
-export const dynamic = "force-dynamic";
 
 import Image from "next/image";
 import styles from "./page.module.css";
@@ -75,15 +74,22 @@ export default function Dining() {
         <main className={styles.main} ref={containerRef}>
 
             <section className={styles.hero}>
-                <motion.img
-                    style={{ y: yParallax }}
+                <motion.div
+                    style={{ y: yParallax, height: '100%', width: '100%' }}
                     initial={{ scale: 1.1, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1.2 }}
-                    src="https://res.cloudinary.com/dizwm3mic/image/upload/v1772446807/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0703_qptc5r.jpg"
-                    alt="Fine Dining"
-                    className={styles.heroImage}
-                />
+                >
+                    <Image
+                        src="https://res.cloudinary.com/dizwm3mic/image/upload/v1772446807/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0703_qptc5r.jpg"
+                        alt="Fine Dining"
+                        fill
+                        priority
+                        quality={100}
+                        className={styles.heroImage}
+                        style={{ objectFit: 'cover' }}
+                    />
+                </motion.div>
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>
                     <motion.div

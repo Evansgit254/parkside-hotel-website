@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 import { getSiteData } from "../actions";
 import { motion } from "framer-motion";
 import { Calendar, User } from "lucide-react";

@@ -11,14 +11,14 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
   display: "swap",
-  preload: false,
+  preload: true,
 });
 
 const mulish = Mulish({
   variable: "--font-mulish",
   subsets: ["latin"],
   display: "swap",
-  preload: false,
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -40,7 +40,18 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://www.parksidevillakitui.com",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
   }
+};
+
+export const viewport = {
+  themeColor: "#050505",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({

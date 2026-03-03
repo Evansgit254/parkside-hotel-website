@@ -23,10 +23,12 @@ export default function ClientBlogPost({ post, relatedPosts }: { post: any, rela
             {/* HERO SECTION */}
             <section className={styles.hero}>
                 <Image
-                    src={post.image}
+                    src={post.image.replace('/upload/', '/upload/f_auto,q_auto:best/')}
                     alt={post.title}
                     fill
                     priority
+                    quality={100}
+                    sizes="100vw"
                     className={styles.heroImage}
                 />
                 <div className={styles.heroOverlay} />
@@ -106,7 +108,14 @@ export default function ClientBlogPost({ post, relatedPosts }: { post: any, rela
                             {relatedPosts.map((rPost: any) => (
                                 <Link key={rPost.id} href={`/blog/${rPost.id}`} className={styles.relatedCard}>
                                     <div className={styles.relatedImageWrapper}>
-                                        <Image src={rPost.image} alt={rPost.title} fill className={styles.relatedImage} />
+                                        <Image
+                                            src={rPost.image.replace('/upload/', '/upload/f_auto,q_auto:best/')}
+                                            alt={rPost.title}
+                                            fill
+                                            quality={100}
+                                            sizes="(max-width: 768px) 100vw, 300px"
+                                            className={styles.relatedImage}
+                                        />
                                     </div>
                                     <h5 className={styles.relatedTitle}>{rPost.title}</h5>
                                     <span className={styles.relatedDate}>{rPost.date}</span>

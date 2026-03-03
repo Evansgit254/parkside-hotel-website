@@ -1,5 +1,4 @@
 "use client";
-export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
 import { getSiteData } from "../actions";
@@ -140,10 +139,11 @@ export default function GalleryPage() {
                             >
                                 <div className={styles.imageWrapper}>
                                     <Image
-                                        src={((item.type === 'video' ? item.thumbnail : item.url) || '').replace('/upload/', '/upload/f_auto,q_auto/')}
+                                        src={((item.type === 'video' ? item.thumbnail : item.url) || '').replace('/upload/', '/upload/f_auto,q_auto:best/')}
                                         alt={item.caption || "Parkside Villa Gallery"}
                                         fill
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        quality={100}
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                         className={styles.imageElement}
                                         priority={index < 6}
                                     />

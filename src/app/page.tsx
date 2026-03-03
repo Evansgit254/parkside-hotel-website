@@ -1,5 +1,4 @@
 "use client";
-export const dynamic = "force-dynamic";
 
 import { rooms as initialRooms, facilities as initialFacilities, testimonials as initialTestimonials, contactInfo as initialContactInfo, heroImages as initialHeroImages } from "../data/site-data";
 import {
