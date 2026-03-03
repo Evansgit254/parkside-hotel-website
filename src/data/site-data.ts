@@ -2,10 +2,7 @@ export const heroImages = [
     "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446784/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0700_msl6ip.jpg",
     "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446787/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0698_zmv8bg.jpg",
     "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg",
-    "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446807/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0703_qptc5r.jpg",
-    "https://res.cloudinary.com/dizwm3mic/image/upload/v1772440903/parkside-villa-media/Front_Image_Or_Background_Image/IMG-20251119-WA0061_fvrbbk.jpg",
-    "https://res.cloudinary.com/dizwm3mic/image/upload/v1772440910/parkside-villa-media/Front_Image_Or_Background_Image/IMG-20251119-WA0063_scwv0p.jpg",
-    "https://res.cloudinary.com/dizwm3mic/image/upload/v1772440897/parkside-villa-media/Front_Image_Or_Background_Image/IMG-20251119-WA0049_fpldl2.jpg"
+    "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446807/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0703_qptc5r.jpg"
 ];
 
 export const rooms = [

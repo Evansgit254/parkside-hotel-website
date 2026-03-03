@@ -71,6 +71,8 @@ export async function getSiteData() {
     }
 
     try {
+        const timeout = (ms: number) => new Promise((_, reject) => setTimeout(() => reject(new Error("Database timeout")), ms));
+
         const [
             heroImages,
             rooms,
@@ -85,44 +87,55 @@ export async function getSiteData() {
             users,
             galleryItems,
             siteContentRows
-        ] = await Promise.all([
-            prisma.heroImage.findMany({ orderBy: { order: "asc" } }),
-            prisma.room.findMany({ orderBy: { createdAt: "asc" } }),
-            prisma.facility.findMany(),
-            prisma.testimonial.findMany({ orderBy: { createdAt: "asc" } }),
-            prisma.menuCategory.findMany({ orderBy: { order: "asc" } }),
-            prisma.contactInfo.findUnique({ where: { id: 1 } }),
-            prisma.blogPost.findMany({ orderBy: { createdAt: "desc" } }),
-            prisma.lead.findMany({ orderBy: { createdAt: "desc" } }),
-            prisma.subscriber.findMany(),
-            prisma.promotion.findMany({ orderBy: { createdAt: "desc" } }),
-            prisma.user.findMany(),
-            prisma.galleryItem.findMany({ orderBy: { order: "asc" } }),
-            prisma.siteContent.findMany()
-        ]);
+        ] = await Promise.race([
+            Promise.all([
+                prisma.heroImage.findMany({ orderBy: { order: "asc" } }),
+                prisma.room.findMany({ orderBy: { createdAt: "asc" } }),
+                prisma.facility.findMany(),
+                prisma.testimonial.findMany({ orderBy: { createdAt: "asc" } }),
+                prisma.menuCategory.findMany({ orderBy: { order: "asc" } }),
+                prisma.contactInfo.findUnique({ where: { id: 1 } }),
+                prisma.blogPost.findMany({ orderBy: { createdAt: "desc" } }),
+                prisma.lead.findMany({ orderBy: { createdAt: "desc" } }),
+                prisma.subscriber.findMany(),
+                prisma.promotion.findMany({ orderBy: { createdAt: "desc" } }),
+                prisma.user.findMany(),
+                prisma.galleryItem.findMany({ orderBy: { order: "asc" } }),
+                prisma.siteContent.findMany()
+            ]),
+            timeout(3000)
+        ]) as any;
 
         const content = siteContentRows.reduce((acc: any, row: SiteContent) => {
             acc[row.key] = row.value;
             return acc;
         }, {});
 
+        const optimizeCloudinary = (url: string) => {
+            if (!url.includes('res.cloudinary.com')) return url;
+            if (url.includes('upload/')) {
+                return url.replace('upload/', 'upload/f_auto,q_auto/');
+            }
+            return url;
+        };
+
         // Map DB rows to the shape the UI already expects
         return {
-            heroImages: heroImages.map((h: HeroImage) => h.url),
+            heroImages: heroImages.map((h: HeroImage) => optimizeCloudinary(h.url)),
             rooms: rooms.map((r: Room) => ({
                 id: r.slug,
                 name: r.name,
                 desc: r.desc,
                 price: r.price,
-                image: r.image,
+                image: optimizeCloudinary(r.image),
                 tag: r.tag ?? undefined,
                 capacity: r.capacity,
             })),
-            facilities: facilities as Facility[],
+            facilities: (facilities as any[]).map(f => ({ ...f, image: f.image ? optimizeCloudinary(f.image) : null })),
             testimonials: testimonials as Testimonial[],
             menuCategories: menuCategories as MenuCategory[],
             contactInfo: contactInfoRow ? { ...(contactInfoRow as ContactInfo), social: (contactInfoRow as ContactInfo).social || {} } : getStaticSiteData().contactInfo,
-            blogPosts: blogPosts as BlogPost[],
+            blogPosts: (blogPosts as any[]).map(p => ({ ...p, image: p.image ? optimizeCloudinary(p.image) : "" })),
             leads: leads.map((l: Lead) => ({
                 ...l,
                 id: l.id,
@@ -131,8 +144,8 @@ export async function getSiteData() {
             subscribers: subscribers.map((s: Subscriber) => s.email),
             promotions: promotions as Promotion[],
             users: users.map(({ password: _, ...u }: any) => u),
-            galleryItems: galleryItems as GalleryItem[],
-            galleryVideos: galleryItems.filter((i: GalleryItem) => i.type === "video"),
+            galleryItems: (galleryItems as any[]).map(i => ({ ...i, url: optimizeCloudinary(i.url) })),
+            galleryVideos: galleryItems.filter((i: GalleryItem) => i.type === "video").map(i => ({ ...i, url: optimizeCloudinary(i.url) })),
             content,
         };
     } catch (error) {
@@ -275,16 +288,23 @@ export async function getDashboardStats() {
 }
 
 function getStaticSiteData() {
+    const optimizeCloudinary = (url: string) => {
+        if (!url.includes('res.cloudinary.com')) return url;
+        if (url.includes('upload/')) {
+            return url.replace('upload/', 'upload/f_auto,q_auto/');
+        }
+        return url;
+    };
     return {
-        heroImages: staticData.heroImages,
-        rooms: staticData.rooms,
-        facilities: staticData.facilities,
+        heroImages: staticData.heroImages.map(optimizeCloudinary),
+        rooms: staticData.rooms.map(r => ({ ...r, image: optimizeCloudinary(r.image) })),
+        facilities: staticData.facilities.map(f => ({ ...f, image: f.image ? optimizeCloudinary(f.image) : null })),
         testimonials: staticData.testimonials,
         menuCategories: staticData.menuCategories,
         contactInfo: staticData.contactInfo,
         blogPosts: [
-            { id: "1", title: "The Art of Kenyan Hospitality", author: "Editorial Team", date: "2025-05-10", category: "Lifestyle", content: "...", excerpt: "...", image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373725/parkside-villa-media/EXTRA_PHOTOS/IMG_8556_ds9eib.jpg", createdAt: new Date() },
-            { id: "2", title: "Culinary Excellence at Parkside", author: "Master Chef", date: "2025-05-12", category: "Dining", content: "...", excerpt: "...", image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373754/parkside-villa-media/EXTRA_PHOTOS/IMG_8560_vlao4a.jpg", createdAt: new Date() }
+            { id: "1", title: "The Art of Kenyan Hospitality", author: "Editorial Team", date: "2025-05-10", category: "Lifestyle", content: "...", excerpt: "...", image: optimizeCloudinary("https://res.cloudinary.com/dizwm3mic/image/upload/v1772373725/parkside-villa-media/EXTRA_PHOTOS/IMG_8556_ds9eib.jpg"), createdAt: new Date() },
+            { id: "2", title: "Culinary Excellence at Parkside", author: "Master Chef", date: "2025-05-12", category: "Dining", content: "...", excerpt: "...", image: optimizeCloudinary("https://res.cloudinary.com/dizwm3mic/image/upload/v1772373754/parkside-villa-media/EXTRA_PHOTOS/IMG_8560_vlao4a.jpg"), createdAt: new Date() }
         ],
         leads: [],
         subscribers: [],

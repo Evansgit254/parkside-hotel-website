@@ -101,6 +101,7 @@ export default function RoomsPage() {
                     alt="Rooms Hero"
                     fill
                     priority
+                    sizes="100vw"
                     className={styles.heroImage}
                     style={{ objectFit: 'cover' }}
                 />
@@ -181,7 +182,7 @@ export default function RoomsPage() {
                             >
                                 <div className={styles.imageWrapper}>
                                     <Image
-                                        src={(room.image || '').replace('/upload/', '/upload/f_auto,q_auto/')}
+                                        src={room.image || ""}
                                         alt={room.name}
                                         fill
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

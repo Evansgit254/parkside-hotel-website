@@ -162,6 +162,7 @@ export default function Home() {
               src={heroImages[currentSlide] || initialHeroImages[0]}
               alt="Parkside Villa Kitui"
               fill priority quality={90}
+              sizes="100vw"
               className={styles.imageReveal}
               style={{ objectFit: "cover" }}
             />
@@ -326,7 +327,7 @@ export default function Home() {
               >
                 <Image
                   src={room.image} alt={room.name}
-                  fill sizes="(max-width: 768px) 100vw, 50vw"
+                  fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   className={styles.roomImage}
                   style={{ objectFit: "cover" }}
                 />
