@@ -145,7 +145,7 @@ export async function getSiteData() {
             promotions: promotions as Promotion[],
             users: users.map(({ password: _, ...u }: any) => u),
             galleryItems: (galleryItems as any[]).map(i => ({ ...i, url: optimizeCloudinary(i.url) })),
-            galleryVideos: galleryItems.filter((i: GalleryItem) => i.type === "video").map(i => ({ ...i, url: optimizeCloudinary(i.url) })),
+            galleryVideos: galleryItems.filter((i: GalleryItem) => i.type === "video").map((i: any) => ({ ...i, url: optimizeCloudinary(i.url) })),
             content,
         };
     } catch (error) {

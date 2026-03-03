@@ -14,21 +14,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
     ];
 
-    const roomRoutes: MetadataRoute.Sitemap = data.rooms.map((room) => ({
+    const roomRoutes: MetadataRoute.Sitemap = data.rooms.map((room: any) => ({
         url: `${baseUrl}/rooms/${room.id}`,
         lastModified: new Date(),
         changeFrequency: 'monthly',
         priority: 0.8,
     }));
 
-    const facilityRoutes: MetadataRoute.Sitemap = data.facilities.map((fac) => ({
+    const facilityRoutes: MetadataRoute.Sitemap = data.facilities.map((fac: any) => ({
         url: `${baseUrl}/facilities/${fac.id}`,
         lastModified: new Date(),
         changeFrequency: 'monthly',
         priority: 0.7,
     }));
 
-    const blogRoutes: MetadataRoute.Sitemap = data.blogPosts.map((post) => ({
+    const blogRoutes: MetadataRoute.Sitemap = data.blogPosts.map((post: any) => ({
         url: `${baseUrl}/blog/${post.id}`,
         lastModified: new Date(),
         changeFrequency: 'monthly',
