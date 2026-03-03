@@ -906,16 +906,21 @@ export async function loginAdmin(email: string, password: string) {
     }
 
     if (isValid) {
-        const token = await signToken({ email, role: "admin" });
-        const cookieStore = await cookies();
-        cookieStore.set("admin_session", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
-            maxAge: 60 * 60 * 2 // 2 hours
-        });
-        return { success: true };
+        try {
+            const token = await signToken({ email, role: "admin" });
+            const cookieStore = await cookies();
+            cookieStore.set("admin_session", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/",
+                maxAge: 60 * 60 * 24 // 24 hours
+            });
+            return { success: true };
+        } catch (tokenError: any) {
+            console.error("Token signing failed:", tokenError);
+            return { success: false, message: "Authentication service error. Please check server configuration." };
+        }
     }
 
     return { success: false, message: "Invalid administrative credentials" };
