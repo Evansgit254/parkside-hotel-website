@@ -8,6 +8,7 @@ import styles from "../[id]/facility-detail.module.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, Users, Utensils, Waves, Wine, Hotel, CheckCircle2, ShieldCheck, X, Send, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function FacilityDetail() {
     const params = useParams();
@@ -260,7 +261,7 @@ export default function FacilityDetail() {
                             {conferenceHalls.map((hall, index) => (
                                 <div key={hall.id} className={`${styles.hallCard} ${index % 2 !== 0 ? styles.hallCardReverse : ''}`}>
                                     <div className={styles.hallImageWrapper}>
-                                        {hall.image && <img src={hall.image} alt={hall.name} className={styles.hallImage} />}
+                                        {hall.image && <Image src={hall.image} alt={hall.name} fill sizes="(max-width: 768px) 100vw, 50vw" quality={75} className={styles.hallImage} style={{ objectFit: 'cover' }} />}
                                         <div className={styles.hallCapacityBadge}>
                                             <Users size={16} /> {hall.capacity} pax
                                         </div>
