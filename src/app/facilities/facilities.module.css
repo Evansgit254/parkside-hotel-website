@@ -67,127 +67,141 @@
 }
 
 .facilitiesSection {
-    padding: var(--section-gap) var(--container-padding);
-    background: var(--background-alt);
+    background: var(--background);
+}
+
+.facilitySection {
+    padding: clamp(4rem, 10vw, 8rem) 0;
+    border-bottom: 1px solid var(--border-dark);
+}
+
+.facilitySection:last-child {
+    border-bottom: none;
 }
 
 .container {
     max-width: 1400px;
     margin: 0 auto;
+    padding: 0 var(--container-padding);
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: clamp(1.5rem, 5vw, 3rem);
-}
-
-.facilityCard {
-    background: #FFFFFF;
-    border: 1px solid var(--border-dark);
-    border-radius: 24px;
-    overflow: hidden;
+.flexWrapper {
     display: flex;
-    flex-direction: column;
-    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+    align-items: center;
+    gap: clamp(2rem, 8vw, 6rem);
 }
 
-.facilityCard:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-    border-color: rgba(212, 175, 55, 0.2);
+.facilitySection:nth-child(even) .flexWrapper {
+    flex-direction: row-reverse;
 }
 
-.imageWrapper {
-    height: 280px;
+.imageContainer {
+    flex: 1.2;
     position: relative;
-    background: var(--surface-mid);
+    height: clamp(350px, 45vh, 600px);
+    border-radius: 32px;
     overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
 }
 
 .cardImage {
     object-fit: cover;
-    transition: transform 0.8s ease;
 }
 
-.facilityCard:hover .cardImage {
-    transform: scale(1.05);
-}
-
-.imageOverlay {
-    position: absolute;
-    inset: 0;
-    background: transparent;
-}
-
-.placeholderImage {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--surface-mid);
-}
-
-.placeholderIcon {
-    color: rgba(255, 255, 255, 0.1);
-}
-
-.cardContent {
-    padding: 0 var(--container-padding) 2.5rem;
-    position: relative;
-    display: flex;
-    flex-direction: column;
+.contentContainer {
     flex: 1;
 }
 
 .iconBadge {
-    width: 56px;
-    height: 56px;
-    background: #FFFFFF;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 16px;
+    width: 64px;
+    height: 64px;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--secondary);
-    margin-top: -28px;
-    margin-bottom: 2rem;
-    position: relative;
-    z-index: 10;
+    margin-bottom: 2.5rem;
 }
 
 .cardTitle {
     font-family: var(--font-serif);
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: var(--foreground);
 }
 
 .cardDesc {
+    font-size: 1.125rem;
+    line-height: 1.8;
     color: var(--foreground-soft);
-    line-height: 1.7;
-    margin-bottom: 2.5rem;
-    flex: 1;
+    margin-bottom: 3rem;
+    max-width: 600px;
+}
+
+.detailsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    margin-bottom: 3.5rem;
+}
+
+.detailHeading {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--secondary);
+    margin-bottom: 1.25rem;
+    display: block;
+}
+
+.featureList,
+.highlightList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.featureItem,
+.highlightItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--foreground-soft);
+    margin-bottom: 0.75rem;
+}
+
+.checkIcon {
+    color: var(--secondary);
+    flex-shrink: 0;
 }
 
 .exploreLink {
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    color: var(--secondary);
+    gap: 1rem;
+    color: var(--foreground);
     text-decoration: none;
-    font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 0.75rem;
+    font-weight: 700;
+    font-size: 0.8rem;
     text-transform: uppercase;
-    letter-spacing: 0.18em;
-    transition: gap 0.3s ease;
-    margin-top: auto;
+    letter-spacing: 0.2em;
+    padding: 1.25rem 2.5rem;
+    background: transparent;
+    border: 1px solid var(--border-dark);
+    border-radius: 100px;
+    transition: all 0.4s ease;
 }
 
 .exploreLink:hover {
-    gap: 1.25rem;
+    background: var(--foreground);
+    color: var(--background);
+    transform: translateY(-4px);
 }
 
 .loading {
@@ -195,51 +209,36 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-outfit);
-    font-size: 2rem;
-    font-weight: 800;
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    font-style: italic;
     color: var(--secondary);
     background: #050505;
 }
 
+@media (max-width: 1024px) {
+    .flexWrapper {
+        flex-direction: column !important;
+        align-items: stretch;
+    }
+
+    .imageContainer {
+        height: 400px;
+        order: -1;
+    }
+
+    .cardTitle {
+        font-size: 2.5rem;
+    }
+}
+
 @media (max-width: 768px) {
-    .grid {
+    .detailsGrid {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
 
-    .hero {
-        height: 50vh;
-        min-height: 350px;
-    }
-
-    .heroContent {
-        padding: 0 1.5rem;
-    }
-
-    .title {
-        font-size: 2.75rem;
-    }
-
-    .facilitiesSection {
-        padding: 4rem 1.5rem;
-    }
-
-    .cardContent {
-        padding: 0 1.5rem 2rem;
-    }
-
-    .cardTitle {
-        font-size: 1.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero {
-        height: 60vh;
-    }
-
-    .title {
-        font-size: 2.25rem;
+    .facilitySection {
+        padding: 5rem 0;
     }
 }

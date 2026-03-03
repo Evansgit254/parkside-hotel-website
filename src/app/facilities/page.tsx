@@ -4,10 +4,10 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
 import { getSiteData } from "../actions";
 import { motion } from "framer-motion";
-import { Users, Utensils, Waves, Wine, Hotel } from "lucide-react";
+import { Users, Utensils, Waves, Wine, Hotel, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import styles from "./facilities.module.css";
-import Image from "next/image"; // Next.js image component for optimization
+import Image from "next/image";
 
 export default function FacilitiesPage() {
     const [facilities, setFacilities] = useState<any[]>([]);
@@ -24,8 +24,8 @@ export default function FacilitiesPage() {
 
     const facilitiesKeys = content?.facilities_intro || {};
 
-    const fadeInUp = {
-        hidden: { opacity: 0, y: 30 },
+    const fadeIn = {
+        hidden: { opacity: 0, y: 40 },
         visible: { opacity: 1, y: 0 }
     };
 
@@ -42,6 +42,7 @@ export default function FacilitiesPage() {
                     alt="Facilities Hero"
                     fill
                     priority
+                    quality={100}
                     className={styles.heroImage}
                     style={{ objectFit: 'cover' }}
                 />
@@ -61,60 +62,79 @@ export default function FacilitiesPage() {
                 </div>
             </section>
 
-            {/* Facilities Grid */}
+            {/* Facilities Sections */}
             <section className={styles.facilitiesSection}>
-                <div className={styles.container}>
-                    <div className={styles.grid}>
-                        {facilities.map((facility, index) => {
-                            const IconComponent = Icons[facility.icon] || Hotel;
-                            return (
-                                <motion.div
-                                    key={facility.id}
-                                    variants={fadeInUp}
-                                    initial="hidden"
-                                    whileInView="visible"
-                                    viewport={{ once: true, margin: "-50px" }}
-                                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                                    className={styles.facilityCard}
-                                >
-                                    <div className={styles.imageWrapper}>
-                                        {facility.image ? (
-                                            <Image
-                                                src={(facility.image || '').replace('/upload/', '/upload/f_auto,q_auto/')}
-                                                alt={facility.title}
-                                                fill
-                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                                className={styles.cardImage}
-                                                priority={index < 2}
-                                            />
-                                        ) : (
-                                            <div className={styles.placeholderImage}>
-                                                <IconComponent size={64} className={styles.placeholderIcon} />
-                                            </div>
-                                        )}
-                                        <div className={styles.imageOverlay} />
-                                    </div>
+                {facilities.map((facility, index) => {
+                    const IconComponent = Icons[facility.icon] || Hotel;
+                    return (
+                        <div key={facility.id} className={styles.facilitySection}>
+                            <div className={styles.container}>
+                                <div className={styles.flexWrapper}>
+                                    <motion.div
+                                        className={styles.imageContainer}
+                                        initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true, margin: "-100px" }}
+                                        transition={{ duration: 0.8 }}
+                                    >
+                                        <Image
+                                            src={facility.image}
+                                            alt={facility.title}
+                                            fill
+                                            quality={100}
+                                            priority={index === 0}
+                                            sizes="(max-width: 1024px) 100vw, 50vw"
+                                            className={styles.cardImage}
+                                        />
+                                    </motion.div>
 
-                                    <div className={styles.cardContent}>
+                                    <motion.div
+                                        className={styles.contentContainer}
+                                        initial={{ opacity: 0, y: 30 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.6, delay: 0.2 }}
+                                    >
                                         <div className={styles.iconBadge}>
-                                            <IconComponent size={24} />
+                                            <IconComponent size={32} />
                                         </div>
-                                        <h3 className={styles.cardTitle}>{facility.title}</h3>
+                                        <h2 className={styles.cardTitle}>{facility.title}</h2>
                                         <p className={styles.cardDesc}>{facility.desc}</p>
 
+                                        <div className={styles.detailsGrid}>
+                                            <div>
+                                                <span className={styles.detailHeading}>Key Features</span>
+                                                <ul className={styles.featureList}>
+                                                    {facility.features?.map((f: string, i: number) => (
+                                                        <li key={i} className={styles.featureItem}>
+                                                            <CheckCircle2 size={16} className={styles.checkIcon} />
+                                                            {f}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <span className={styles.detailHeading}>Highlights</span>
+                                                <ul className={styles.highlightList}>
+                                                    {facility.highlights?.map((h: string, i: number) => (
+                                                        <li key={i} className={styles.highlightItem}>
+                                                            <CheckCircle2 size={16} className={styles.checkIcon} />
+                                                            {h}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+
                                         <Link href={`/facilities/${facility.id}`} className={styles.exploreLink}>
-                                            <span>Explore Facility</span>
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                                <polyline points="12 5 19 12 12 19"></polyline>
-                                            </svg>
+                                            Explore {facility.title}
                                         </Link>
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-                </div>
+                                    </motion.div>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
             </section>
         </div>
     );
