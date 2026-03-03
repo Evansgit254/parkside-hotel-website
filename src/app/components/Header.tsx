@@ -9,7 +9,9 @@ import { User, X, Menu, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
+
 const navLinks = [
+    { href: "/", label: "Home" },
     {
         href: "/rooms",
         label: "Accommodation",
@@ -95,33 +97,29 @@ export default function Header() {
         return () => { document.body.style.overflow = ""; };
     }, [isMobileMenuOpen]);
 
-    const nonHomeStyle = !isHomepage ? {
-        position: 'fixed' as const,
-        background: 'rgba(255, 255, 255, 0.98)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
-    } : {};
+
 
     return (
         <>
             <header
-                className={`${styles.header} ${isScrolled ? styles.headerScrolled : ''} ${!isHomepage ? styles.navDarkText : ''}`}
-                style={nonHomeStyle}
+                className={`${styles.header} ${isScrolled ? styles.headerScrolled : ''} ${!isHomepage ? `${styles.navDarkText} ${styles.headerNonHome}` : ''}`}
             >
                 <div className={styles.navContainer}>
-                    <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
-                        <div className={styles.logo}>
-                            <Image
-                                src="/logo.png"
-                                alt="Kitui Parkside Hotels Logo"
-                                width={240}
-                                height={82}
-                                className={styles.logoImage}
-                                priority
-                            />
-                        </div>
-                    </Link>
+                    <motion.div
+                        className={styles.logoContainer}
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 1.2, ease: "easeOut" }}
+                    >
+                        <Image
+                            src="/logo_final_perfect.png"
+                            alt="Parkside Villa Kitui"
+                            width={320}
+                            height={100}
+                            className={styles.logoImageFinal}
+                            priority
+                        />
+                    </motion.div>
 
                     {/* Desktop nav */}
                     <nav className={styles.nav}>
@@ -197,7 +195,7 @@ export default function Header() {
                         onClick={e => e.stopPropagation()}
                     >
                         <div className={styles.mobileMenuHeader}>
-                            <Image src="/logo.png" alt="Kitui Parkside Hotels" width={200} height={68} className={styles.logoImage} />
+                            <Image src="/logo_final_perfect.png" alt="Parkside Villa Kitui" width={220} height={70} className={styles.logoImageFinal} />
                             <button
                                 className={styles.mobileMenuClose}
                                 onClick={() => setIsMobileMenuOpen(false)}
