@@ -2,9 +2,17 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const SECRET_KEY = new TextEncoder().encode(
-    process.env.JWT_SECRET || "dev_secret_only"
-);
+function getSecretKey(): Uint8Array {
+    const secret = process.env.JWT_SECRET;
+    if (!secret || secret === "generate_a_secure_random_string_here") {
+        if (process.env.NODE_ENV === "production") {
+            throw new Error("CRITICAL: JWT_SECRET not configured for middleware.");
+        }
+        return new TextEncoder().encode("dev_secret_only_not_for_production");
+    }
+    return new TextEncoder().encode(secret);
+}
+
 
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
@@ -18,7 +26,7 @@ export async function proxy(request: NextRequest) {
         }
 
         try {
-            const { payload } = await jwtVerify(token, SECRET_KEY);
+            const { payload } = await jwtVerify(token, getSecretKey());
             if (payload.role !== "admin") {
                 return NextResponse.redirect(new URL("/admin/login", request.url));
             }

@@ -1,13 +1,14 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-function getSecretKey(): Uint8Array {
+export function getSecretKey(): Uint8Array {
     const secret = process.env.JWT_SECRET;
-    if (!secret) {
+    if (!secret || secret === "generate_a_secure_random_string_here") {
         if (process.env.NODE_ENV === "production") {
-            throw new Error("CRITICAL: JWT_SECRET environment variable is missing. Authentication cannot proceed.");
+            throw new Error("CRITICAL: JWT_SECRET environment variable is missing or is still a placeholder. Authentication cannot proceed.");
         }
-        return new TextEncoder().encode("dev_secret_only");
+        console.warn("⚠️  JWT_SECRET is not set — using insecure dev-only key. DO NOT use in production.");
+        return new TextEncoder().encode("dev_secret_only_not_for_production");
     }
     return new TextEncoder().encode(secret);
 }

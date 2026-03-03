@@ -103,7 +103,7 @@ export async function getSiteData() {
                 prisma.galleryItem.findMany({ orderBy: { order: "asc" } }),
                 prisma.siteContent.findMany()
             ]),
-            timeout(3000)
+            timeout(10000)
         ]) as any;
 
         const content = siteContentRows.reduce((acc: any, row: SiteContent) => {
@@ -492,6 +492,7 @@ export async function addTestimonial(t: {
 }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireAdmin();
         await prisma.testimonial.create({
             data: {
                 name: t.name,
@@ -894,36 +895,29 @@ export async function loginAdmin(email: string, password: string) {
     const adminEmail = process.env.ADMIN_EMAIL;
     const adminPass = process.env.ADMIN_PASSWORD;
 
-    let isValid = false;
     if (!adminEmail || !adminPass) {
-        if (email === "admin@parksidevilla.com" && password === "parkside2025") {
-            isValid = true;
-        } else {
-            return { success: false, message: "Admin credentials not configured on server" };
-        }
-    } else if (email === adminEmail && password === adminPass) {
-        isValid = true;
+        return { success: false, message: "Admin credentials not configured on server. Set ADMIN_EMAIL and ADMIN_PASSWORD environment variables." };
     }
 
-    if (isValid) {
-        try {
-            const token = await signToken({ email, role: "admin" });
-            const cookieStore = await cookies();
-            cookieStore.set("admin_session", token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                path: "/",
-                maxAge: 60 * 60 * 24 // 24 hours
-            });
-            return { success: true };
-        } catch (tokenError: any) {
-            console.error("Token signing failed:", tokenError);
-            return { success: false, message: "Authentication service error. Please check server configuration." };
-        }
+    if (email !== adminEmail || password !== adminPass) {
+        return { success: false, message: "Invalid administrative credentials" };
     }
 
-    return { success: false, message: "Invalid administrative credentials" };
+    try {
+        const token = await signToken({ email, role: "admin" });
+        const cookieStore = await cookies();
+        cookieStore.set("admin_session", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            maxAge: 60 * 60 * 24 // 24 hours
+        });
+        return { success: true };
+    } catch (tokenError: any) {
+        console.error("Token signing failed:", tokenError);
+        return { success: false, message: "Authentication service error. Please check server configuration." };
+    }
 }
 
 export async function logoutAdmin() {
