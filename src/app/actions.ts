@@ -114,7 +114,7 @@ export async function getSiteData() {
         const optimizeCloudinary = (url: string) => {
             if (!url.includes('res.cloudinary.com')) return url;
             if (url.includes('upload/')) {
-                return url.replace('upload/', 'upload/f_auto,q_auto/');
+                return url.replace('upload/', 'upload/f_auto,q_auto:best/');
             }
             return url;
         };
@@ -291,7 +291,7 @@ function getStaticSiteData() {
     const optimizeCloudinary = (url: string) => {
         if (!url.includes('res.cloudinary.com')) return url;
         if (url.includes('upload/')) {
-            return url.replace('upload/', 'upload/f_auto,q_auto/');
+            return url.replace('upload/', 'upload/f_auto,q_auto:best/');
         }
         return url;
     };

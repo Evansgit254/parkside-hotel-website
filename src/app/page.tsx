@@ -161,7 +161,7 @@ export default function Home() {
             <Image
               src={heroImages[currentSlide] || initialHeroImages[0]}
               alt="Parkside Villa Kitui"
-              fill priority quality={90}
+              fill priority quality={100}
               sizes="100vw"
               className={styles.imageReveal}
               style={{ objectFit: "cover" }}

@@ -50,6 +50,7 @@ export default function ClientRoomDetail({ room }: { room: any }) {
                     alt={room.name}
                     fill
                     priority
+                    quality={100}
                     sizes="100vw"
                     className={styles.heroImage}
                     style={{ objectFit: 'cover' }}

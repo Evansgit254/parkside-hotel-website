@@ -101,6 +101,7 @@ export default function RoomsPage() {
                     alt="Rooms Hero"
                     fill
                     priority
+                    quality={100}
                     sizes="100vw"
                     className={styles.heroImage}
                     style={{ objectFit: 'cover' }}
@@ -188,6 +189,7 @@ export default function RoomsPage() {
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                         className={styles.roomImage}
                                         priority={index < 4}
+                                        quality={100}
                                     />
                                     {room.tag && <span className={styles.roomTag}>{room.tag}</span>}
                                     <div className={styles.imageOverlay} />
