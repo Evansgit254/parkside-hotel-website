@@ -2,18 +2,27 @@ export const dynamic = "force-dynamic";
 import { getSiteData } from "../actions";
 import { motion } from "framer-motion";
 import { Calendar, User } from "lucide-react";
-import Link from "next/link";
+import Image from "next/image";
 import styles from "./blog.module.css";
 import ClientBlogGrid from "./ClientBlogGrid";
 
 export default async function BlogPage() {
     const data = await getSiteData();
     const posts = data.blogPosts || [];
+    const heroImage = "https://res.cloudinary.com/dizwm3mic/image/upload/v1772440903/parkside-villa-media/Front_Image_Or_Background_Image/IMG-20251119-WA0061_fvrbbk.jpg";
 
     return (
         <div className={styles.pageWrapper}>
             {/* Hero Section */}
             <section className={styles.hero}>
+                <Image
+                    src={heroImage}
+                    alt="Blog Hero"
+                    fill
+                    priority
+                    className={styles.heroImage}
+                    style={{ objectFit: 'cover' }}
+                />
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>
                     <div>

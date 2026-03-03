@@ -37,6 +37,14 @@ export default function FacilitiesPage() {
         <div className={styles.pageWrapper}>
             {/* Hero Section */}
             <section className={styles.hero}>
+                <Image
+                    src="https://res.cloudinary.com/dizwm3mic/image/upload/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg"
+                    alt="Facilities Hero"
+                    fill
+                    priority
+                    className={styles.heroImage}
+                    style={{ objectFit: 'cover' }}
+                />
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>
                     <motion.div

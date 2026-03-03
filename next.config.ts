@@ -13,7 +13,6 @@ const nextConfig: NextConfig = {
         hostname: 'res.cloudinary.com',
       },
     ],
-    unoptimized: true,
   },
   async redirects() {
     return [

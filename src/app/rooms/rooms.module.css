@@ -19,10 +19,11 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    background-image: url('https://res.cloudinary.com/dizwm3mic/image/upload/v1772446787/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0698_zmv8bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    overflow: hidden;
+}
+
+.heroImage {
+    z-index: 0;
 }
 
 .heroOverlay {

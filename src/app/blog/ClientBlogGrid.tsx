@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Calendar, User } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./blog.module.css";
 
 export default function ClientBlogGrid({ posts }: { posts: any[] }) {
@@ -24,7 +25,13 @@ export default function ClientBlogGrid({ posts }: { posts: any[] }) {
                     className={styles.blogCard}
                 >
                     <div className={styles.imageWrapper}>
-                        <div className={styles.cardImage} style={{ backgroundImage: `url(${post.image})` }} />
+                        <Image
+                            src={post.image}
+                            alt={post.title}
+                            fill
+                            className={styles.cardImage}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
                         <div className={styles.categoryBadge}>{post.category}</div>
                     </div>
 
