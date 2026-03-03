@@ -6,7 +6,12 @@ import { Star, Send, X, CheckCircle2 } from "lucide-react";
 import { submitPublicReview } from "../actions";
 import styles from "./review.module.css";
 
-export default function ReviewForm({ onClose }: { onClose?: () => void }) {
+interface ReviewFormProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+export default function ReviewForm({ isOpen, onClose }: ReviewFormProps) {
     const [step, setStep] = useState(1);
     const [rating, setRating] = useState(5);
     const [hoveredRating, setHoveredRating] = useState(0);
@@ -28,118 +33,136 @@ export default function ReviewForm({ onClose }: { onClose?: () => void }) {
     }
 
     return (
-        <div className={styles.formCard}>
-            {onClose && (
-                <button onClick={onClose} className={styles.closeBtn}>
-                    <X size={20} />
-                </button>
-            )}
-
-            <AnimatePresence mode="wait">
-                {step === 1 ? (
+        <AnimatePresence>
+            {isOpen && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className={styles.modalOverlay}
+                >
                     <motion.div
-                        key="form"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
+                        initial={{ scale: 0.9, y: 20 }}
+                        animate={{ scale: 1, y: 0 }}
+                        exit={{ scale: 0.9, y: 20 }}
+                        className={styles.modalContent}
                     >
-                        <div className={styles.formHeader}>
-                            <h3 className={styles.formTitle}>Share Your Experience</h3>
-                            <p className={styles.formSubtitle}>Your feedback helps us maintain our standards of excellence.</p>
-                        </div>
+                        <div className={styles.formCard}>
+                            {onClose && (
+                                <button onClick={onClose} className={styles.closeBtn}>
+                                    <X size={20} />
+                                </button>
+                            )}
 
-                        <form onSubmit={handleSubmit} className={styles.form}>
-                            <div className={styles.ratingGroup}>
-                                <label className={styles.label}>Rate Your Stay</label>
-                                <div className={styles.stars}>
-                                    {[1, 2, 3, 4, 5].map((s) => (
-                                        <button
-                                            key={s}
-                                            type="button"
-                                            onMouseEnter={() => setHoveredRating(s)}
-                                            onMouseLeave={() => setHoveredRating(0)}
-                                            onClick={() => setRating(s)}
-                                            className={styles.starBtn}
-                                        >
-                                            <Star
-                                                size={24}
-                                                fill={(hoveredRating || rating) >= s ? "#d4af37" : "transparent"}
-                                                color={(hoveredRating || rating) >= s ? "#d4af37" : "#D1D5DB"}
-                                            />
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+                            <AnimatePresence mode="wait">
+                                {step === 1 ? (
+                                    <motion.div
+                                        key="form"
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                    >
+                                        <div className={styles.formHeader}>
+                                            <h3 className={styles.formTitle}>Share Your Experience</h3>
+                                            <p className={styles.formSubtitle}>Your feedback helps us maintain our standards of excellence.</p>
+                                        </div>
 
-                            <div className={styles.grid}>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Full Name</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        className={styles.input}
-                                        placeholder="John Doe"
-                                        value={formData.name}
-                                        onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                    />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Tagline</label>
-                                    <input
-                                        type="text"
-                                        className={styles.input}
-                                        placeholder="e.g. Unforgettable Stay"
-                                        value={formData.title}
-                                        onChange={e => setFormData({ ...formData, title: e.target.value })}
-                                    />
-                                </div>
-                            </div>
+                                        <form onSubmit={handleSubmit} className={styles.form}>
+                                            <div className={styles.ratingGroup}>
+                                                <label className={styles.label}>Rate Your Stay</label>
+                                                <div className={styles.stars}>
+                                                    {[1, 2, 3, 4, 5].map((s) => (
+                                                        <button
+                                                            key={s}
+                                                            type="button"
+                                                            onMouseEnter={() => setHoveredRating(s)}
+                                                            onMouseLeave={() => setHoveredRating(0)}
+                                                            onClick={() => setRating(s)}
+                                                            className={styles.starBtn}
+                                                        >
+                                                            <Star
+                                                                size={24}
+                                                                fill={(hoveredRating || rating) >= s ? "#d4af37" : "transparent"}
+                                                                color={(hoveredRating || rating) >= s ? "#d4af37" : "#D1D5DB"}
+                                                            />
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
 
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Your Review</label>
-                                <textarea
-                                    required
-                                    className={styles.input}
-                                    rows={4}
-                                    placeholder="Tell us about your time at Parkside Villa..."
-                                    value={formData.text}
-                                    onChange={e => setFormData({ ...formData, text: e.target.value })}
-                                />
-                            </div>
+                                            <div className={styles.grid}>
+                                                <div className={styles.formGroup}>
+                                                    <label className={styles.label}>Full Name</label>
+                                                    <input
+                                                        type="text"
+                                                        required
+                                                        className={styles.input}
+                                                        placeholder="John Doe"
+                                                        value={formData.name}
+                                                        onChange={e => setFormData({ ...formData, name: e.target.value })}
+                                                    />
+                                                </div>
+                                                <div className={styles.formGroup}>
+                                                    <label className={styles.label}>Tagline</label>
+                                                    <input
+                                                        type="text"
+                                                        className={styles.input}
+                                                        placeholder="e.g. Unforgettable Stay"
+                                                        value={formData.title}
+                                                        onChange={e => setFormData({ ...formData, title: e.target.value })}
+                                                    />
+                                                </div>
+                                            </div>
 
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className={styles.submitBtn}
-                            >
-                                {isSubmitting ? "Submitting..." : (
-                                    <>
-                                        Submit Review <Send size={16} />
-                                    </>
+                                            <div className={styles.formGroup}>
+                                                <label className={styles.label}>Your Review</label>
+                                                <textarea
+                                                    required
+                                                    className={styles.input}
+                                                    rows={4}
+                                                    placeholder="Tell us about your time at Parkside Villa..."
+                                                    value={formData.text}
+                                                    onChange={e => setFormData({ ...formData, text: e.target.value })}
+                                                />
+                                            </div>
+
+                                            <button
+                                                type="submit"
+                                                disabled={isSubmitting}
+                                                className={styles.submitBtn}
+                                            >
+                                                {isSubmitting ? "Submitting..." : (
+                                                    <>
+                                                        Submit Review <Send size={16} />
+                                                    </>
+                                                )}
+                                            </button>
+                                        </form>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="success"
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        className={styles.successState}
+                                    >
+                                        <div className={styles.successIcon}>
+                                            <CheckCircle2 size={48} />
+                                        </div>
+                                        <h3 className={styles.formTitle}>Thank You!</h3>
+                                        <p className={styles.formSubtitle}>Your review has been submitted for moderation. It will be live on our site shortly.</p>
+                                        {onClose && (
+                                            <button onClick={onClose} className={styles.submitBtn}>
+                                                Close
+                                            </button>
+                                        )}
+                                    </motion.div>
                                 )}
-                            </button>
-                        </form>
-                    </motion.div>
-                ) : (
-                    <motion.div
-                        key="success"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className={styles.successState}
-                    >
-                        <div className={styles.successIcon}>
-                            <CheckCircle2 size={48} />
+                            </AnimatePresence>
                         </div>
-                        <h3 className={styles.formTitle}>Thank You!</h3>
-                        <p className={styles.formSubtitle}>Your review has been submitted for moderation. It will be live on our site shortly.</p>
-                        {onClose && (
-                            <button onClick={onClose} className={styles.submitBtn}>
-                                Close
-                            </button>
-                        )}
                     </motion.div>
-                )}
-            </AnimatePresence>
-        </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }

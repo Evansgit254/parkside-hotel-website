@@ -4,19 +4,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Instagram, Linkedin, MessageCircle, PlaySquare } from "lucide-react";
 import styles from "../page.module.css";
-import { useState, useEffect } from "react";
-import { getSiteData, subscribeNewsletter } from "../actions";
+import { useState } from "react";
+import { subscribeNewsletter } from "../actions";
 
-export default function Footer() {
-    const [contactInfo, setContactInfo] = useState<any>(null);
-    const [content, setContent] = useState<any>({});
+interface FooterProps {
+    contactInfo?: any;
+    content?: any;
+}
 
-    useEffect(() => {
-        getSiteData().then(data => {
-            if (data && data.contactInfo) setContactInfo(data.contactInfo);
-            if (data && data.content) setContent(data.content);
-        });
-    }, []);
+export default function Footer({ contactInfo: initialContactInfo, content: initialContent }: FooterProps) {
+    const [contactInfo] = useState<any>(initialContactInfo);
+    const [content] = useState<any>(initialContent || {});
 
     if (!contactInfo) return null;
 

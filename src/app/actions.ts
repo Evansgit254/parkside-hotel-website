@@ -65,7 +65,91 @@ async function requireUser() {
 
 import * as staticData from "../data/site-data";
 
+// ─────────────────────────────────────────────
+// GRANULAR FETCHERS (Optimized for Speed)
+// ─────────────────────────────────────────────
+
+const optimizeCloudinary = (url: string) => {
+    if (!url || !url.includes('res.cloudinary.com')) return url;
+    if (url.includes('upload/')) {
+        return url.replace('upload/', 'upload/f_auto,q_auto:best/');
+    }
+    return url;
+};
+
+export async function getHomePageData() {
+    if (!isDatabaseConfigured()) return getStaticSiteData();
+    try {
+        const [heroImages, rooms, facilities, testimonials, siteContentRows] = await Promise.all([
+            prisma.heroImage.findMany({ orderBy: { order: "asc" } }),
+            prisma.room.findMany({ where: { tag: "Best Seller" }, take: 4 }),
+            prisma.facility.findMany({ take: 3 }),
+            prisma.testimonial.findMany({ where: { status: "Active" }, take: 5 }),
+            prisma.siteContent.findMany({
+                where: { key: { in: ["landing_hero", "rooms_intro", "facilities_intro"] } }
+            })
+        ]);
+
+        const content = siteContentRows.reduce((acc: any, row: any) => {
+            acc[row.key] = row.value;
+            return acc;
+        }, {});
+
+        return {
+            heroImages: heroImages.map(h => optimizeCloudinary(h.url)),
+            rooms: rooms.map(r => ({
+                id: r.slug,
+                name: r.name,
+                desc: r.desc,
+                price: r.price,
+                image: optimizeCloudinary(r.image),
+                tag: r.tag ?? undefined,
+                capacity: r.capacity
+            })),
+            facilities: facilities.map(f => ({ ...f, image: f.image ? optimizeCloudinary(f.image) : null })),
+            testimonials,
+            content
+        };
+    } catch (e) {
+        return getStaticSiteData();
+    }
+}
+
+export async function getRoomsPageData() {
+    if (!isDatabaseConfigured()) return { rooms: getStaticSiteData().rooms };
+    try {
+        const rooms = await prisma.room.findMany({ orderBy: { createdAt: "asc" } });
+        return {
+            rooms: rooms.map(r => ({
+                id: r.slug,
+                name: r.name,
+                desc: r.desc,
+                price: r.price,
+                image: optimizeCloudinary(r.image),
+                tag: r.tag ?? undefined,
+                capacity: r.capacity
+            }))
+        };
+    } catch (e) {
+        return { rooms: getStaticSiteData().rooms };
+    }
+}
+
+export async function getFacilitiesPageData() {
+    if (!isDatabaseConfigured()) return { facilities: getStaticSiteData().facilities };
+    try {
+        const facilities = await prisma.facility.findMany();
+        return {
+            facilities: facilities.map(f => ({ ...f, image: f.image ? optimizeCloudinary(f.image) : null }))
+        };
+    } catch (e) {
+        return { facilities: getStaticSiteData().facilities };
+    }
+}
+
 export async function getSiteData() {
+    // Legacy support: redirecting to granular fetches internally where possible
+    // but keeping it for secondary apps or complex pages
     if (!isDatabaseConfigured()) {
         return getStaticSiteData();
     }
@@ -110,14 +194,6 @@ export async function getSiteData() {
             acc[row.key] = row.value;
             return acc;
         }, {});
-
-        const optimizeCloudinary = (url: string) => {
-            if (!url.includes('res.cloudinary.com')) return url;
-            if (url.includes('upload/')) {
-                return url.replace('upload/', 'upload/f_auto,q_auto:best/');
-            }
-            return url;
-        };
 
         // Map DB rows to the shape the UI already expects
         return {

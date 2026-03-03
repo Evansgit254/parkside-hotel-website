@@ -6,7 +6,7 @@ const SECRET_KEY = new TextEncoder().encode(
     process.env.JWT_SECRET || "dev_secret_only"
 );
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Protect all /admin routes except the login page
