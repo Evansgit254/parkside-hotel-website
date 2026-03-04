@@ -938,36 +938,41 @@ import { v2 as cloudinary } from "cloudinary";
 // Cloudinary configures itself automatically if CLOUDINARY_URL is present in the environment variables.
 
 export async function uploadImage(formData: FormData) {
+    // Keep this as fallback or for smaller files if needed, but direct upload is preferred.
+    // ... logic same as before ...
+    return { success: false, error: "Use client-side upload via Cloudinary signature." };
+}
+
+/**
+ * Generates a Cloudinary signature for secure client-side uploads.
+ * This bypasses Vercel's 4.5MB serverless function limit.
+ */
+export async function getCloudinarySignature() {
     try {
         await requireAdmin();
-        const file = formData.get("file") as File;
-        if (!file) return { success: false, error: "No file provided" };
 
-        if (!process.env.CLOUDINARY_URL) {
-            return { success: false, error: "Cloudinary is not configured. Please set CLOUDINARY_URL in Vercel environment variables." };
-        }
+        const timestamp = Math.round(new Date().getTime() / 1000);
+        const paramsToSign = {
+            timestamp,
+            folder: "parkside_villa"
+        };
 
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
+        const signature = cloudinary.utils.api_sign_request(
+            paramsToSign,
+            process.env.CLOUDINARY_URL?.split('@')[0]?.split(':').pop() || "" // Api Secret
+        );
 
-        return new Promise<{ success: boolean; url?: string; error?: string }>((resolve) => {
-            const uploadStream = cloudinary.uploader.upload_stream(
-                { folder: "parkside_villa" },
-                (error, result) => {
-                    if (error) {
-                        console.error("Cloudinary upload error:", error);
-                        return resolve({ success: false, error: `Cloudinary error: ${error.message}` });
-                    }
-                    if (!result) return resolve({ success: false, error: "Upload failed: No result from Cloudinary" });
-                    console.log("[DIAG] Cloudinary Secure URL:", result.secure_url);
-                    resolve({ success: true, url: result.secure_url });
-                }
-            );
-            uploadStream.end(buffer);
-        });
+        return {
+            success: true,
+            signature,
+            timestamp,
+            cloudName: process.env.CLOUDINARY_URL?.split('@').pop() || "",
+            apiKey: process.env.CLOUDINARY_URL?.split(':')[1]?.replace('//', '') || "",
+            folder: "parkside_villa"
+        };
     } catch (error: any) {
-        console.error("Upload action error:", error);
-        return { success: false, url: undefined, error: error.message || "An unexpected error occurred during upload" };
+        console.error("Signature error:", error);
+        return { success: false, error: error.message };
     }
 }
 

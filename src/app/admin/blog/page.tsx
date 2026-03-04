@@ -2,7 +2,7 @@
 export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
-import { getSiteData, createBlogPost, updateBlogPost, deleteBlogPost, uploadImage } from "../../actions";
+import { getSiteData, createBlogPost, updateBlogPost, deleteBlogPost, uploadImage, getCloudinarySignature } from "../../actions";
 import styles from "../admin.module.css";
 import { Plus, Trash2, Edit3, Calendar, User, Tag, ArrowUpRight, Search, Filter, Save, X, Upload, Image as ImageIcon } from "lucide-react";
 import { BlogPost } from "@prisma/client";
@@ -83,26 +83,36 @@ export default function BlogAdmin() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const MAX_SIZE = 4.5 * 1024 * 1024;
-        if (file.size > MAX_SIZE) {
-            showToast(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`, "error");
-            return;
-        }
-
         setIsUploading(true);
         try {
+            const sigData = await getCloudinarySignature();
+            if (!sigData.success || !sigData.signature) {
+                throw new Error(sigData.error || "Failed to get signature");
+            }
+
             const formData = new FormData();
             formData.append("file", file);
-            const res = await uploadImage(formData);
-            if (res.success && res.url) {
-                setCurrentPost({ ...currentPost, image: res.url });
-                showToast("Image uploaded successfully", "success");
-            } else {
-                showToast(res.error || "Upload failed. Please try again.", "error");
+            formData.append("api_key", sigData.apiKey || "");
+            formData.append("timestamp", String(sigData.timestamp));
+            formData.append("signature", sigData.signature);
+            formData.append("folder", sigData.folder || "parkside_villa");
+
+            const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
+            const response = await fetch(uploadUrl, { method: "POST", body: formData });
+
+            if (!response.ok) {
+                const errResult = await response.json();
+                throw new Error(errResult.error?.message || "Upload failed");
             }
-        } catch (error) {
-            console.error("Upload failed", error);
-            showToast("An unexpected error occurred during upload.", "error");
+
+            const result = await response.json();
+            if (result.secure_url) {
+                setCurrentPost({ ...currentPost, image: result.secure_url });
+                showToast("Post image updated", "success");
+            }
+        } catch (error: any) {
+            console.error("Upload error", error);
+            showToast(`Upload failed: ${error.message}`, "error");
         } finally {
             setIsUploading(false);
         }

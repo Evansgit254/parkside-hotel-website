@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 
 import { useState, useEffect, useRef } from "react";
 import styles from "../admin.module.css";
-import { getSiteData, updateRoom, createRoom, deleteRoom, uploadImage } from "../../actions";
+import { getSiteData, updateRoom, createRoom, deleteRoom, uploadImage, getCloudinarySignature } from "../../actions";
 import { Edit2, Trash2, Plus, Upload, Image as ImageIcon, X } from "lucide-react";
 import AdminModal from "../../components/AdminModal";
 import { useCurrency } from "../../context/CurrencyContext";
@@ -43,26 +43,36 @@ export default function AdminRooms() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const MAX_SIZE = 4.5 * 1024 * 1024;
-        if (file.size > MAX_SIZE) {
-            showToast(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB. Please compress the image.`, "error");
-            return;
-        }
-
         setIsUploading(true);
         try {
+            const sigData = await getCloudinarySignature();
+            if (!sigData.success || !sigData.signature) {
+                throw new Error(sigData.error || "Failed to get signature");
+            }
+
             const formData = new FormData();
             formData.append("file", file);
-            const res = await uploadImage(formData);
-            if (res.success && res.url) {
-                setEditForm((prev: any) => ({ ...prev, image: res.url }));
-                showToast("Image uploaded successfully", "success");
-            } else {
-                showToast(res.error || "Upload failed. Please try again.", "error");
+            formData.append("api_key", sigData.apiKey || "");
+            formData.append("timestamp", String(sigData.timestamp));
+            formData.append("signature", sigData.signature);
+            formData.append("folder", sigData.folder || "parkside_villa");
+
+            const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
+            const response = await fetch(uploadUrl, { method: "POST", body: formData });
+
+            if (!response.ok) {
+                const errResult = await response.json();
+                throw new Error(errResult.error?.message || "Upload failed");
             }
-        } catch (error) {
+
+            const result = await response.json();
+            if (result.secure_url) {
+                setEditForm((prev: any) => ({ ...prev, image: result.secure_url }));
+                showToast("Image uploaded successfully", "success");
+            }
+        } catch (error: any) {
             console.error("Upload failed:", error);
-            showToast("An unexpected error occurred during upload.", "error");
+            showToast(`Upload failed: ${error.message || "Unknown error"}`, "error");
         } finally {
             setIsUploading(false);
         }

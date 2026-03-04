@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
 import styles from "../admin.module.css";
-import { getSiteData, updateSiteContent, updateContactInfo, uploadImage } from "../../actions";
+import { getSiteData, updateSiteContent, updateContactInfo, uploadImage, getCloudinarySignature } from "../../actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import { showToast } from "../components/AdminToast";
 import {
@@ -723,27 +723,46 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
     }, [value]);
 
     const handleUpload = async (file: File) => {
-        const MAX_SIZE = 4.5 * 1024 * 1024;
-        if (file.size > MAX_SIZE) {
-            showToast(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`, "error");
-            return;
-        }
-
         setUploading(true);
-        const formData = new FormData();
-        formData.append("file", file);
-
         try {
-            const res = await uploadImage(formData);
-            if (res?.success && res.url) {
-                onChange(res.url);
+            // 1. Get signature from server
+            const sigData = await getCloudinarySignature();
+            if (!sigData.success || !sigData.signature) {
+                throw new Error(sigData.error || "Failed to get upload signature");
+            }
+
+            // 2. Prepare Form Data for direct upload
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("api_key", sigData.apiKey || "");
+            formData.append("timestamp", String(sigData.timestamp));
+            formData.append("signature", sigData.signature);
+            formData.append("folder", sigData.folder || "parkside_villa");
+
+            // 3. POST direct to Cloudinary
+            const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
+            const response = await fetch(uploadUrl, {
+                method: "POST",
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errResult = await response.json();
+                throw new Error(errResult.error?.message || "Cloudinary upload failed");
+            }
+
+            const result = await response.json();
+            console.log("[DIAG] Client-side Cloudinary Result:", result);
+            console.log("[DIAG] Client-side Secure URL:", result.secure_url);
+
+            if (result.secure_url) {
+                onChange(result.secure_url);
+                setHasError(false);
                 showToast("Image uploaded successfully", "success");
-            } else {
-                showToast(res?.error || "Upload failed. Please check your configuration.", "error");
             }
         } catch (err: any) {
-            console.error("Upload error details:", err);
-            showToast(`An unexpected error occurred: ${err.message || "Unknown error"}`, "error");
+            console.error("Upload error:", err);
+            showToast(`Upload failed: ${err.message || "Unknown error"}`, "error");
         } finally {
             setUploading(false);
         }

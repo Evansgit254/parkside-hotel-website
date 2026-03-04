@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { Upload, X, Image as ImageIcon, Link as LinkIcon, Loader2, CheckCircle2 } from "lucide-react";
 import styles from "../admin.module.css";
-import { uploadImage } from "../../actions";
+import { uploadImage, getCloudinarySignature } from "../../actions";
 import { showToast } from "./AdminToast";
 
 interface MediaUploadProps {
@@ -27,25 +27,42 @@ export default function MediaUpload({ value, onChange, label, type = "image", pl
     };
 
     const uploadFile = async (file: File) => {
-        const MAX_SIZE = 4.5 * 1024 * 1024;
-        if (file.size > MAX_SIZE) {
-            showToast(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`, "error");
-            return;
-        }
-
         setUploading(true);
         try {
+            // 1. Get signature
+            const sigData = await getCloudinarySignature();
+            if (!sigData.success || !sigData.signature) {
+                throw new Error(sigData.error || "Failed to get upload signature");
+            }
+
+            // 2. Prepare Form Data
             const formData = new FormData();
             formData.append("file", file);
-            const res = await uploadImage(formData);
-            if (res.success && res.url) {
-                onChange(res.url);
-            } else {
-                showToast(res.error || "Upload failed. Please try again.", "error");
+            formData.append("api_key", sigData.apiKey || "");
+            formData.append("timestamp", String(sigData.timestamp));
+            formData.append("signature", sigData.signature);
+            formData.append("folder", sigData.folder || "parkside_villa");
+
+            // 3. Direct POST
+            const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
+            const response = await fetch(uploadUrl, {
+                method: "POST",
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errResult = await response.json();
+                throw new Error(errResult.error?.message || "Cloudinary upload failed");
             }
-        } catch (error) {
+
+            const result = await response.json();
+            if (result.secure_url) {
+                onChange(result.secure_url);
+                showToast("Asset uploaded successfully", "success");
+            }
+        } catch (error: any) {
             console.error("Upload failed", error);
-            showToast("An unexpected error occurred during upload.", "error");
+            showToast(error.message || "An unexpected error occurred during upload.", "error");
         } finally {
             setUploading(false);
         }
