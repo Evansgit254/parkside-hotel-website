@@ -70,8 +70,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: "Promotions & Offers", href: "/admin/promotions", icon: Tag },
         { name: "Blog Posts", href: "/admin/blog", icon: Edit3 },
         { name: "Gallery", href: "/admin/gallery", icon: ImageIcon },
-        { name: "Testimonials", href: "/admin/testimonials", icon: Star },
+        { name: "Hero Images", href: "/admin/content?tab=hero-images", icon: Star },
+        { name: "Navigation", href: "/admin/content?tab=navigation", icon: LayoutDashboard },
         { name: "Site Content", href: "/admin/content", icon: FileText },
+        { name: "Testimonials", href: "/admin/testimonials", icon: Star },
         { name: "Settings", href: "/admin/settings", icon: Settings },
     ];
 

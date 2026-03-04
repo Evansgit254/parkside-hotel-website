@@ -8,6 +8,7 @@ import {
     Save, Loader2, LayoutTemplate, Phone, BarChart2,
     Star, ChevronRight, CheckCircle2, AlertCircle
 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 // ─── Schema ────────────────────────────────────────────────────────────────────
 const contentSchema = [
@@ -340,8 +341,22 @@ export default function AdminContent() {
     const [savingKey, setSavingKey] = useState<string | null>(null);
     const [savingContact, setSavingContact] = useState(false);
     const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
+    const searchParams = useSearchParams();
+    const tabParam = searchParams.get("tab");
 
     useEffect(() => { loadData(); }, []);
+
+    // Sync activeTab with URL param if it exists
+    useEffect(() => {
+        if (tabParam && TABS.find(t => t.id === tabParam)) {
+            setActiveTab(tabParam);
+            // Also set activeSection to first key of that tab if current section isn't in that tab
+            const tab = TABS.find(t => t.id === tabParam);
+            if (tab && tab.keys[0]) {
+                setActiveSection(tab.keys[0]);
+            }
+        }
+    }, [tabParam]);
 
     const showToast = (msg: string, type: "success" | "error" = "success") => {
         setToast({ msg, type });
