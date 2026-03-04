@@ -1565,6 +1565,11 @@
     color: #FFFFFF;
 }
 
+.footerBottom p {
+    color: #FFFFFF !important;
+    opacity: 1 !important;
+}
+
 .footerBottom {
     max-width: var(--max-width);
     margin: 4rem auto 0;
@@ -1575,8 +1580,6 @@
     gap: 1.5rem;
     align-items: center;
     font-size: 0.75rem;
-    color: #FFFFFF !important;
-    opacity: 1;
     letter-spacing: 0.05em;
 }
 
