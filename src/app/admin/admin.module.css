@@ -277,7 +277,7 @@
     overflow-y: auto;
     background: var(--admin-bg);
     background-image:
-        radial-gradient(ellipse at 80% 0%, rgba(74, 43, 102, 0.04) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 0%, rgba(212, 175, 55, 0.04) 0%, transparent 55%),
         radial-gradient(ellipse at 20% 100%, rgba(20, 75, 54, 0.04) 0%, transparent 45%);
 }
 

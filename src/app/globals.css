@@ -78,7 +78,7 @@ html {
 
   /* Semantic Mapping */
   --primary: var(--forest-green);
-  --secondary: var(--purple);
+  --secondary: var(--gold);
   --foreground: var(--text-primary);
   --foreground-soft: var(--text-secondary);
   --background: var(--white);
@@ -89,15 +89,17 @@ html {
   --surface-card: #FFFFFF;
   --surface-mid: #F9FAFB;
   /* Light surface instead of dark for contrast layering */
+  --surface-mid: #F9FAFB;
 
   /* === ADMIN DASHBOARD VARIABLES === */
   --admin-green: #144B36;
   --admin-green-light: #1D6B4D;
   --admin-green-muted: rgba(20, 75, 54, 0.08);
   --admin-green-bg: rgba(20, 75, 54, 0.05);
-  --admin-purple: #4A2B66;
-  --admin-purple-light: #6A3E91;
-  --admin-purple-muted: rgba(74, 43, 102, 0.08);
+  --admin-purple: var(--gold);
+  --admin-purple-light: var(--gold-light);
+  --admin-purple-muted: var(--gold-muted);
+  --admin-brand-bg: var(--gold-muted);
   --admin-white: #FFFFFF;
   --admin-bg: #F7F8FC;
   --admin-surface: #FFFFFF;

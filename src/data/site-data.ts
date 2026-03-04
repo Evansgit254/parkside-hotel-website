@@ -41,8 +41,8 @@ export const rooms = [
         capacity: 4
     },
     {
-        id: "premium-standard",
-        name: "Premium Standard Room",
+        id: "standard-premium",
+        name: "Standard Premium Room",
         desc: "Enhanced comfort with modern amenities. Rate: KES 2,000 (Single) / KES 3,500 (Double) per night.",
         price: "2000",
         image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373725/parkside-villa-media/EXTRA_PHOTOS/IMG_8556_ds9eib.jpg",

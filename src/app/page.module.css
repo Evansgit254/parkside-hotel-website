@@ -282,7 +282,7 @@
 }
 
 .dropdownItem:hover {
-    background: var(--purple-muted);
+    background: var(--gold-muted);
     color: var(--secondary) !important;
     transform: translateX(4px);
 }
@@ -525,14 +525,14 @@
 }
 
 .hero .buttonSecondary:hover {
-    background: var(--purple-light);
-    border-color: var(--purple-light);
+    background: var(--gold-light);
+    border-color: var(--gold-light);
     color: var(--white);
     transform: translateY(-2px);
 }
 
 .buttonSecondary:hover {
-    background: var(--purple-light);
+    background: var(--gold-light);
     color: var(--white);
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(74, 43, 102, 0.2);
@@ -1776,7 +1776,7 @@
 .optionBtn:hover {
     border-color: var(--secondary);
     color: var(--secondary);
-    background: var(--purple-muted);
+    background: var(--gold-muted);
 }
 
 /* === BOOKING MODAL === */
@@ -1951,8 +1951,8 @@
 }
 
 .newsletterBtn:hover {
-    background: var(--purple-light);
-    border-color: var(--purple-light);
+    background: var(--gold-light);
+    border-color: var(--gold-light);
     color: var(--white);
 }
 

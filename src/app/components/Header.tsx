@@ -55,7 +55,7 @@ export default function Header() {
                 { href: "/rooms/deluxe-suites", label: navAcc.item2 || "Deluxe suites" },
                 { href: "/rooms/highrise-suites", label: navAcc.item3 || "Highrise suites" },
                 { href: "/rooms/cottages", label: navAcc.item4 || "Cottages" },
-                { href: "/rooms/standard-premium", label: navAcc.item5 || "Standard premium" },
+                { href: "/rooms/standard-premium", label: navAcc.item5 || "Standard Premium" },
                 { href: "/rooms", label: navAcc.item6 || "All Accommodations" },
             ]
         },

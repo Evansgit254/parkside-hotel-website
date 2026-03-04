@@ -183,7 +183,7 @@
 }
 
 .bookingCard {
-    background: var(--purple);
+    background: var(--primary);
     color: var(--white);
     padding: 3rem;
     border-radius: 24px;
