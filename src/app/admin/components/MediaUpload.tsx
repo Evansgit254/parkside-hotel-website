@@ -26,6 +26,12 @@ export default function MediaUpload({ value, onChange, label, type = "image", pl
     };
 
     const uploadFile = async (file: File) => {
+        const MAX_SIZE = 4.5 * 1024 * 1024;
+        if (file.size > MAX_SIZE) {
+            alert(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`);
+            return;
+        }
+
         setUploading(true);
         try {
             const formData = new FormData();

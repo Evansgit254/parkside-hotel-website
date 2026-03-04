@@ -715,6 +715,13 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
     const [uploading, setUploading] = useState<"cloudinary" | "local" | null>(null);
 
     const handleUpload = async (method: "cloudinary" | "local", file: File) => {
+        // Vercel hard limit for serverless payloads is 4.5MB
+        const MAX_SIZE = 4.5 * 1024 * 1024;
+        if (file.size > MAX_SIZE) {
+            alert(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB. Please compress the image or use a smaller file.`);
+            return;
+        }
+
         setUploading(method);
         const formData = new FormData();
         formData.append("file", file);
@@ -726,9 +733,9 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
             } else {
                 alert(res?.error || "Upload failed. Please check your configuration.");
             }
-        } catch (err) {
-            console.error(err);
-            alert("An unexpected error occurred during upload.");
+        } catch (err: any) {
+            console.error("Upload error details:", err);
+            alert(`An unexpected error occurred: ${err.message || "Unknown error"}`);
         } finally {
             setUploading(null);
         }
