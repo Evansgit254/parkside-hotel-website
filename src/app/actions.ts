@@ -944,14 +944,14 @@ export async function loginUser(email: string, password: string) {
 }
 
 export async function loginAdmin(email: string, password: string) {
-    const adminEmail = process.env.ADMIN_EMAIL;
-    const adminPass = process.env.ADMIN_PASSWORD;
+    const adminEmail = process.env.AUTH_ADMIN_EMAIL;
+    const adminPass = process.env.AUTH_ADMIN_PASSWORD;
 
     if (!adminEmail || !adminPass) {
         const missing = [];
-        if (!adminEmail) missing.push("ADMIN_EMAIL");
-        if (!adminPass) missing.push("ADMIN_PASSWORD");
-        return { success: false, message: `Server configuration error: Missing ${missing.join(" and ")}. Please ensure these are set in Vercel and the app is redeployed.` };
+        if (!adminEmail) missing.push("AUTH_ADMIN_EMAIL");
+        if (!adminPass) missing.push("AUTH_ADMIN_PASSWORD");
+        return { success: false, message: `Server configuration error: Missing ${missing.join(" and ")}. Please add these SPECIFIC names to Vercel and redeploy.` };
     }
 
     if (email.trim().toLowerCase() !== adminEmail.trim().toLowerCase() || password !== adminPass) {
