@@ -124,7 +124,16 @@ export async function getSiteData() {
                 tag: r.tag ?? undefined,
                 capacity: r.capacity,
             })),
-            facilities: (facilities as any[]).map(f => ({ ...f, image: f.image ? optimizeCloudinary(f.image) : null })),
+            facilities: (facilities as any[]).map(f => {
+                if (f.id === "conference" && conferenceHalls.length > 0) {
+                    return {
+                        ...f,
+                        image: f.image ? optimizeCloudinary(f.image) : null,
+                        features: (conferenceHalls as any[]).map(h => h.name.includes("Hall") ? h.name : `${h.name} Hall`)
+                    };
+                }
+                return { ...f, image: f.image ? optimizeCloudinary(f.image) : null };
+            }),
             conferenceHalls: (conferenceHalls as any[]).map(h => ({ ...h, image: h.image ? optimizeCloudinary(h.image) : null })),
             testimonials: testimonials as Testimonial[],
             menuCategories: menuCategories as MenuCategory[],

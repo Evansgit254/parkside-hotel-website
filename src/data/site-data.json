@@ -45,13 +45,16 @@
     {
       "id": "conference",
       "title": "Conference Halls",
-      "desc": "Modern M.I.C.E facilities with high-speed internet. Amboseli, Nzambani, Syokimau, Highrise, and Masai Mara halls.",
+      "desc": "Modern M.I.C.E facilities with high-speed internet. Amboseli, Nzambani, Syokimau, Highrise, Masai Mara, and Longonot halls.",
       "icon": "Users",
       "image": "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg",
       "features": [
-        "Amboseli & Nzambani Halls",
-        "Syokimau & Highrise Halls",
-        "Masai Mara Hall"
+        "Amboseli Hall",
+        "Nzambani Hall",
+        "Syokimau Hall",
+        "Highrise Hall",
+        "Masai Mara Hall",
+        "Longonot Hall"
       ],
       "highlights": [
         "Theatre, U-shape & Classroom setups",
