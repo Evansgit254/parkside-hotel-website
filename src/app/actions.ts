@@ -7,6 +7,9 @@ import bcrypt from "bcrypt";
 import { signToken, getAuthSession as getAuthSessionLib } from "../lib/auth";
 import { cookies } from "next/headers";
 import { z } from "zod";
+import fs from "fs";
+import path from "path";
+import os from "os";
 
 export async function getAuthSession() {
     return await getAuthSessionLib();
@@ -66,8 +69,27 @@ async function requireUser() {
 import * as staticData from "../data/site-data";
 
 export async function getSiteData() {
-    if (!isDatabaseConfigured()) {
-        return getStaticSiteData();
+    const isBuild = process.env.NEXT_PHASE === 'phase-production-build' || process.env.NODE_ENV === 'production';
+    const cacheFile = path.join(os.tmpdir(), 'parkside-site-data.cache.json');
+
+    // Build-time caching to prevent 7 workers from hitting DB simultaneously
+    if (isBuild) {
+        try {
+            if (fs.existsSync(cacheFile)) {
+                const stats = fs.statSync(cacheFile);
+                // Cache is valid for 5 minutes during build
+                if (Date.now() - stats.mtimeMs < 5 * 60 * 1000) {
+                    const cached = JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
+                    return cached;
+                }
+            }
+        } catch (e) {
+            console.warn("Build cache read failed, falling back to DB", e);
+        }
+
+        // Staggered start: wait 0-3 seconds to avoid "thundering herd" on the DB pool
+        const delay = Math.floor(Math.random() * 3000);
+        await new Promise(resolve => setTimeout(resolve, delay));
     }
 
     try {
@@ -90,7 +112,7 @@ export async function getSiteData() {
                 prisma.conferenceHall.findMany({ orderBy: { createdAt: "asc" } }),
                 prisma.siteContent.findMany()
             ]),
-            timeout(10000)
+            timeout(30000) // Increased to 30s
         ]) as any;
 
         const [
@@ -113,7 +135,7 @@ export async function getSiteData() {
         };
 
         // Map DB rows to the shape the UI already expects
-        return {
+        const finalData = {
             heroImages: heroImages.map((h: HeroImage) => optimizeCloudinary(h.url)),
             rooms: rooms.map((r: Room) => ({
                 id: r.slug,
@@ -150,6 +172,17 @@ export async function getSiteData() {
             galleryVideos: galleryItems.filter((i: GalleryItem) => i.type === "video").map((i: any) => ({ ...i, url: optimizeCloudinary(i.url) })),
             content,
         };
+
+        // Save to build cache
+        if (isBuild) {
+            try {
+                fs.writeFileSync(cacheFile, JSON.stringify(finalData), 'utf8');
+            } catch (e) {
+                console.warn("Build cache write failed", e);
+            }
+        }
+
+        return finalData;
     } catch (error: any) {
         console.error("CRITICAL: Database connection failed on Vercel.", {
             message: error.message,
