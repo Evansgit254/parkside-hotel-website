@@ -8,7 +8,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { showToast } from "../components/AdminToast";
 import {
     Save, Loader2, LayoutTemplate, Phone, BarChart2,
-    Star, ChevronRight, CheckCircle2, AlertCircle, Upload, Cloud
+    Star, ChevronRight, CheckCircle2, AlertCircle, Upload, Cloud,
+    Image as ImageIcon, AlertTriangle
 } from "lucide-react";
 
 // ─── Schema ────────────────────────────────────────────────────────────────────
@@ -714,6 +715,11 @@ export default function AdminContent() {
 
 function ImageField({ value, onChange }: { value: string; onChange: (val: string) => void }) {
     const [uploading, setUploading] = useState(false);
+    const [hasError, setHasError] = useState(false);
+
+    useEffect(() => {
+        setHasError(false);
+    }, [value]);
 
     const handleUpload = async (file: File) => {
         const MAX_SIZE = 4.5 * 1024 * 1024;
@@ -738,7 +744,6 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
             console.error("Upload error details:", err);
             showToast(`An unexpected error occurred: ${err.message || "Unknown error"}`, "error");
         } finally {
-            setUploading(null as any);
             setUploading(false);
         }
     };
@@ -770,13 +775,18 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
             </div>
             {value && (
                 <div className={styles.imagePreview}>
-                    <img
-                        src={value}
-                        alt="Preview"
-                        onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                    />
+                    {!hasError ? (
+                        <img
+                            src={value}
+                            alt="Preview"
+                            onError={() => setHasError(true)}
+                        />
+                    ) : (
+                        <div className={styles.brokenImage}>
+                            <AlertTriangle className={styles.brokenIcon} size={24} />
+                            <span>Preview Unavailable</span>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
