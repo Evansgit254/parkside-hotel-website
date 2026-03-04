@@ -1575,8 +1575,8 @@
     gap: 1.5rem;
     align-items: center;
     font-size: 0.75rem;
-    color: #FFFFFF;
-    opacity: 0.9;
+    color: #FFFFFF !important;
+    opacity: 1;
     letter-spacing: 0.05em;
 }
 
@@ -1632,8 +1632,8 @@
     width: 64px;
     height: 64px;
     border-radius: 16px;
-    background: var(--purple-muted);
-    color: var(--secondary);
+    background: rgba(20, 75, 54, 0.1);
+    color: #C9A84C;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1646,8 +1646,8 @@
     right: 2.5rem;
     width: 54px;
     height: 54px;
-    background: var(--secondary);
-    color: var(--text-primary);
+    background: #144B36;
+    color: #FFFFFF;
     border: none;
     border-radius: 50%;
     display: flex;
