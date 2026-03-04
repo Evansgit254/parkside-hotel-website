@@ -6,6 +6,7 @@ import styles from "../admin.module.css";
 import { getSiteData, updateFacility, addFacility, deleteFacility, uploadImage } from "../../actions";
 import { Edit2, Trash2, Plus, Users, Utensils, Waves, Wine, Hotel, Upload, Image as ImageIcon, X } from "lucide-react";
 import AdminModal from "../../components/AdminModal";
+import { showToast } from "../components/AdminToast";
 
 export default function AdminFacilities() {
     const [facilities, setFacilities] = useState<any[]>([]);
@@ -40,7 +41,7 @@ export default function AdminFacilities() {
 
         const MAX_SIZE = 4.5 * 1024 * 1024;
         if (file.size > MAX_SIZE) {
-            alert(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`);
+            showToast(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`, "error");
             return;
         }
 
@@ -51,12 +52,13 @@ export default function AdminFacilities() {
             const res = await uploadImage(formData);
             if (res.success && res.url) {
                 setEditForm((prev: any) => ({ ...prev, image: res.url }));
+                showToast("Image uploaded successfully", "success");
             } else {
-                alert(res.error || "Upload failed. Please try again.");
+                showToast(res.error || "Upload failed. Please try again.", "error");
             }
         } catch (error) {
             console.error("Upload failed:", error);
-            alert("An unexpected error occurred during upload.");
+            showToast("An unexpected error occurred during upload.", "error");
         } finally {
             setIsUploading(false);
         }
@@ -79,6 +81,7 @@ export default function AdminFacilities() {
         if (res.success) {
             await fetchFacilities();
             setIsModalOpen(false);
+            showToast(editForm.id === "NEW" ? "Facility created successfully" : "Facility updated successfully", "success");
         } else {
             setError(res.error || "Failed to save facility.");
         }
@@ -90,8 +93,9 @@ export default function AdminFacilities() {
             const res = await deleteFacility(id);
             if (res.success) {
                 await fetchFacilities();
+                showToast("Facility deleted successfully", "success");
             } else {
-                alert(res.error || "Failed to delete facility.");
+                showToast(res.error || "Failed to delete facility.", "error");
             }
         }
     };

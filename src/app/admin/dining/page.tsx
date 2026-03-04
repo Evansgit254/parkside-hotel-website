@@ -7,6 +7,7 @@ import { getSiteData, updateDiningCategory, createDiningCategory, deleteDiningCa
 import { Edit2, Trash2, Plus, Utensils, Coffee, Cake, LogOut } from "lucide-react";
 import AdminModal from "../../components/AdminModal";
 import { useCurrency } from "../../context/CurrencyContext";
+import { showToast } from "../components/AdminToast";
 
 export default function AdminDining() {
     const { formatPrice } = useCurrency();
@@ -68,6 +69,7 @@ export default function AdminDining() {
         if (res.success) {
             await fetchMenu();
             setIsCategoryModalOpen(false);
+            showToast(categoryForm.id === "NEW" ? "Category created successfully" : "Category updated successfully", "success");
         } else {
             setError(res.error || "Failed to save category.");
         }
@@ -79,8 +81,9 @@ export default function AdminDining() {
             const res = await deleteDiningCategory(categoryId);
             if (res.success) {
                 await fetchMenu();
+                showToast("Category deleted successfully", "success");
             } else {
-                alert(res.error || "Failed to delete category.");
+                showToast(res.error || "Failed to delete category.", "error");
             }
         }
     };
@@ -118,6 +121,7 @@ export default function AdminDining() {
         if (res.success) {
             await fetchMenu();
             setIsItemModalOpen(false);
+            showToast(itemFormState.itemIdx === "NEW" ? "Dish added successfully" : "Dish updated successfully", "success");
         } else {
             setError(res.error || "Failed to save menu item.");
         }
@@ -131,8 +135,9 @@ export default function AdminDining() {
             const res = await updateDiningCategory(categoryId, { ...category, items: updatedItems });
             if (res.success) {
                 await fetchMenu();
+                showToast("Dish removed successfully", "success");
             } else {
-                alert(res.error || "Failed to delete item.");
+                showToast(res.error || "Failed to delete item.", "error");
             }
         }
     };
@@ -146,7 +151,7 @@ export default function AdminDining() {
                     <h1 className={styles.sectionTitle}>Dining & Cuisine</h1>
                     <p style={{ color: '#6B7280', marginTop: '0.5rem' }}>Manage your gourmet menu categories and culinary delights</p>
                 </div>
-                <button onClick={handleAddCategory} className={styles.loginButton}>
+                <button onClick={handleAddCategory} className={styles.addButton}>
                     <Plus size={18} /> New Category
                 </button>
             </div>

@@ -8,6 +8,7 @@ import { Plus, Trash2, Edit2, Image as ImageIcon, Video, Upload, Grid, List, Sav
 import { GalleryItem } from "@prisma/client";
 
 import MediaUpload from "../components/MediaUpload";
+import { showToast } from "../components/AdminToast";
 
 export default function GalleryAdmin() {
     const [items, setItems] = useState<GalleryItem[]>([]);
@@ -58,6 +59,7 @@ export default function GalleryAdmin() {
             await loadItems();
             setIsModalOpen(false);
             setEditForm({ id: "", url: "", type: "image", title: "" });
+            showToast(editForm.id ? "Gallery item updated successfully" : "Gallery item added successfully", "success");
         } else {
             setError(res.error || "Failed to save item.");
         }
@@ -69,8 +71,9 @@ export default function GalleryAdmin() {
         const res = await deleteGalleryItem(id);
         if (res.success) {
             setItems(items.filter(item => item.id !== id));
+            showToast("Gallery item removed successfully", "success");
         } else {
-            alert(res.error || "Failed to delete item.");
+            showToast(res.error || "Failed to delete item.", "error");
         }
     };
 

@@ -6,6 +6,7 @@ import { getSiteData, createBlogPost, updateBlogPost, deleteBlogPost, uploadImag
 import styles from "../admin.module.css";
 import { Plus, Trash2, Edit3, Calendar, User, Tag, ArrowUpRight, Search, Filter, Save, X, Upload, Image as ImageIcon } from "lucide-react";
 import { BlogPost } from "@prisma/client";
+import { showToast } from "../components/AdminToast";
 
 export default function BlogAdmin() {
     const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -60,6 +61,7 @@ export default function BlogAdmin() {
             await loadPosts();
             setIsEditing(false);
             setCurrentPost(null);
+            showToast(currentPost?.id ? "Blog post updated successfully" : "Blog post published successfully", "success");
         } else {
             setError(res.error || "Error saving post");
         }
@@ -71,8 +73,9 @@ export default function BlogAdmin() {
         const res = await deleteBlogPost(id);
         if (res.success) {
             setPosts(posts.filter(p => p.id !== id));
+            showToast("Blog post deleted successfully", "success");
         } else {
-            alert(res.error || "Failed to delete post");
+            showToast(res.error || "Failed to delete post", "error");
         }
     };
 
@@ -82,7 +85,7 @@ export default function BlogAdmin() {
 
         const MAX_SIZE = 4.5 * 1024 * 1024;
         if (file.size > MAX_SIZE) {
-            alert(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`);
+            showToast(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`, "error");
             return;
         }
 
@@ -93,12 +96,13 @@ export default function BlogAdmin() {
             const res = await uploadImage(formData);
             if (res.success && res.url) {
                 setCurrentPost({ ...currentPost, image: res.url });
+                showToast("Image uploaded successfully", "success");
             } else {
-                alert(res.error || "Upload failed. Please try again.");
+                showToast(res.error || "Upload failed. Please try again.", "error");
             }
         } catch (error) {
             console.error("Upload failed", error);
-            alert("An unexpected error occurred during upload.");
+            showToast("An unexpected error occurred during upload.", "error");
         } finally {
             setIsUploading(false);
         }

@@ -5,6 +5,7 @@ import styles from "../admin.module.css";
 import { Mail, Phone, Calendar, Clock, CheckCircle, Trash2, BedDouble, User, AlertTriangle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getSiteData, updateLeadStatus, deleteLead } from "../../actions";
+import { showToast } from "../components/AdminToast";
 
 export default function AdminLeads() {
     const [leads, setLeads] = useState<any[]>([]);
@@ -24,8 +25,9 @@ export default function AdminLeads() {
         const res = await updateLeadStatus(id, status);
         if (res.success) {
             await fetchLeads();
+            showToast(`Enquiry status updated to ${status}`, "success");
         } else {
-            alert(res.error || "Failed to update status");
+            showToast(res.error || "Failed to update status", "error");
         }
     };
 
@@ -35,8 +37,9 @@ export default function AdminLeads() {
         if (res.success) {
             setConfirmDeleteId(null);
             await fetchLeads();
+            showToast("Enquiry removed successfully", "success");
         } else {
-            alert(res.error || "Failed to delete enquiry");
+            showToast(res.error || "Failed to delete enquiry", "error");
         }
         setIsDeleting(false);
     };

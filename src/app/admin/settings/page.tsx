@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import styles from "../admin.module.css";
 import { getSiteData, updateContactInfo, addHeroImage, deleteHeroImage, uploadImage } from "../../actions";
 import { Save, Phone, Mail, MapPin, MessageSquare, Facebook, Instagram, Linkedin, Plus, Trash2, Image as ImageIcon, Upload } from "lucide-react";
+import { showToast } from "../components/AdminToast";
 
 export default function AdminSettings() {
     const [contact, setContact] = useState<any>(null);
@@ -32,8 +33,9 @@ export default function AdminSettings() {
         const res = await updateContactInfo(contact);
         if (res.success) {
             await fetchData();
+            showToast("Contact information saved successfully", "success");
         } else {
-            alert(res.error || "Failed to update contact info");
+            showToast(res.error || "Failed to update contact info", "error");
         }
         setSaving(false);
     };
@@ -44,8 +46,9 @@ export default function AdminSettings() {
         if (res.success) {
             setNewImageUrl("");
             await fetchData();
+            showToast("Hero image added successfully", "success");
         } else {
-            alert(res.error || "Failed to add hero image");
+            showToast(res.error || "Failed to add hero image", "error");
         }
     };
 
@@ -55,7 +58,7 @@ export default function AdminSettings() {
 
         const MAX_SIZE = 4.5 * 1024 * 1024;
         if (file.size > MAX_SIZE) {
-            alert(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`);
+            showToast(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`, "error");
             return;
         }
 
@@ -67,12 +70,13 @@ export default function AdminSettings() {
             if (res.success && res.url) {
                 await addHeroImage(res.url);
                 await fetchData();
+                showToast("Hero image uploaded and added", "success");
             } else {
-                alert(res.error || "Upload failed. Please try again.");
+                showToast(res.error || "Upload failed. Please try again.", "error");
             }
         } catch (error) {
             console.error("Upload failed:", error);
-            alert("An unexpected error occurred during upload.");
+            showToast("An unexpected error occurred during upload.", "error");
         } finally {
             setIsUploading(false);
         }
@@ -83,8 +87,9 @@ export default function AdminSettings() {
             const res = await deleteHeroImage(url);
             if (res.success) {
                 await fetchData();
+                showToast("Hero image removed successfully", "success");
             } else {
-                alert(res.error || "Failed to delete hero image");
+                showToast(res.error || "Failed to delete hero image", "error");
             }
         }
     };

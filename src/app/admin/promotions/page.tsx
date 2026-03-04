@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { getPromotions, addPromotion, updatePromotion, deletePromotion } from "../../actions";
 import styles from "../admin.module.css";
 import { Plus, Trash2, Calendar, Tag, Percent, ArrowUpRight, Edit2, X, Save } from "lucide-react";
+import { showToast } from "../components/AdminToast";
 
 export default function PromotionsAdmin() {
     const [promotions, setPromotions] = useState<any[]>([]);
@@ -80,6 +81,7 @@ export default function PromotionsAdmin() {
             await loadPromotions();
             setModalOpen(false);
             setEditForm({ id: "", title: "", code: "", discount: "", expiry: "", description: "" });
+            showToast(editForm.id ? "Campaign updated successfully" : "Campaign launched successfully", "success");
         } else {
             setError(res.error || "Failed to save promotion");
         }
@@ -91,8 +93,9 @@ export default function PromotionsAdmin() {
         const res = await deletePromotion(id);
         if (res.success) {
             setPromotions(promotions.filter(p => p.id !== id));
+            showToast("Promotion deleted successfully", "success");
         } else {
-            alert(res.error || "Failed to delete promotion");
+            showToast(res.error || "Failed to delete promotion", "error");
         }
     }
 

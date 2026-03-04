@@ -6,6 +6,7 @@ import styles from "../admin.module.css";
 import { getSiteData, updateTestimonial, deleteTestimonial, addTestimonial } from "../../actions";
 import { Edit2, Trash2, Plus, Star, Quote, CheckCircle2 } from "lucide-react";
 import AdminModal from "../../components/AdminModal";
+import { showToast } from "../components/AdminToast";
 
 export default function AdminTestimonials() {
     const [testimonials, setTestimonials] = useState<any[]>([]);
@@ -31,27 +32,45 @@ export default function AdminTestimonials() {
         setIsModalOpen(true);
     };
 
+    const [error, setError] = useState<string | null>(null);
+
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
-        if (editForm.isNew) {
-            const { id, isNew, ...rest } = editForm;
-            await addTestimonial(rest);
-        } else {
-            await updateTestimonial(editForm.id, editForm);
-        }
+        setError(null);
+        try {
+            let res;
+            if (editForm.isNew) {
+                const { id, isNew, ...rest } = editForm;
+                res = await addTestimonial(rest);
+            } else {
+                res = await updateTestimonial(editForm.id, editForm);
+            }
 
-        const data = await getSiteData();
-        setTestimonials(data.testimonials);
-        setIsModalOpen(false);
+            if (res?.success) {
+                const data = await getSiteData();
+                setTestimonials(data.testimonials);
+                setIsModalOpen(false);
+                showToast(editForm.isNew ? "Testimonial added successfully" : "Testimonial updated successfully", "success");
+            } else {
+                setError(res?.error || "Failed to save testimonial.");
+            }
+        } catch (err) {
+            setError("An unexpected error occurred.");
+        }
         setIsSaving(false);
     };
 
     const handleDelete = async (id: number | string) => {
         if (confirm("Are you sure you want to delete this testimonial?")) {
-            await deleteTestimonial(id as number);
-            const data = await getSiteData();
-            setTestimonials(data.testimonials);
+            const res = await deleteTestimonial(id as number);
+            if (res?.success) {
+                const data = await getSiteData();
+                setTestimonials(data.testimonials);
+                showToast("Testimonial deleted successfully", "success");
+            } else {
+                showToast(res?.error || "Failed to delete testimonial.", "error");
+            }
         }
     };
 
@@ -64,7 +83,7 @@ export default function AdminTestimonials() {
                     <h1 className={styles.sectionTitle}>Testimonials</h1>
                     <p style={{ color: '#6B7280', marginTop: '0.5rem' }}>Curate the voices of your satisfied guests</p>
                 </div>
-                <button onClick={handleAdd} className={styles.loginButton}>
+                <button onClick={handleAdd} className={styles.addButton}>
                     <Plus size={18} /> Add Review
                 </button>
             </div>
@@ -119,9 +138,14 @@ export default function AdminTestimonials() {
                                 {testi.status === 'Pending' && (
                                     <button
                                         onClick={async () => {
-                                            await updateTestimonial(testi.id, { ...testi, status: 'Active' });
-                                            const data = await getSiteData();
-                                            setTestimonials(data.testimonials);
+                                            const res = await updateTestimonial(testi.id, { ...testi, status: 'Active' });
+                                            if (res?.success) {
+                                                const data = await getSiteData();
+                                                setTestimonials(data.testimonials);
+                                                showToast("Testimonial approved", "success");
+                                            } else {
+                                                showToast("Failed to approve testimonial.", "error");
+                                            }
                                         }}
                                         className={styles.actionBtn}
                                         style={{ color: '#4ade80' }}
@@ -148,6 +172,7 @@ export default function AdminTestimonials() {
                 title={editForm.isNew ? "Add Guest Review" : `Edit Review from ${editForm.name}`}
                 onSubmit={handleSave}
                 loading={isSaving}
+                error={error}
             >
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Review Text</label>

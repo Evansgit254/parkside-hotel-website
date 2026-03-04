@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getDashboardStats } from "../actions";
+import { showToast } from "./components/AdminToast";
 
 export default function AdminDashboard() {
     const [liveStats, setLiveStats] = useState<any>(null);
@@ -211,7 +212,7 @@ function OtaSyncButton() {
         setTimeout(() => {
             setSyncing(false);
             setLastSync(new Date().toLocaleTimeString());
-            alert("Inventory synchronized successfully across all connected OTAs.");
+            showToast("Inventory synchronized successfully across all connected OTAs.", "success");
         }, 2000);
     };
 

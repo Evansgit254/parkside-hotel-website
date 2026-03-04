@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { Upload, X, Image as ImageIcon, Link as LinkIcon, Loader2, CheckCircle2 } from "lucide-react";
 import styles from "../admin.module.css";
 import { uploadImage } from "../../actions";
+import { showToast } from "./AdminToast";
 
 interface MediaUploadProps {
     value: string;
@@ -28,7 +29,7 @@ export default function MediaUpload({ value, onChange, label, type = "image", pl
     const uploadFile = async (file: File) => {
         const MAX_SIZE = 4.5 * 1024 * 1024;
         if (file.size > MAX_SIZE) {
-            alert(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`);
+            showToast(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`, "error");
             return;
         }
 
@@ -40,11 +41,11 @@ export default function MediaUpload({ value, onChange, label, type = "image", pl
             if (res.success && res.url) {
                 onChange(res.url);
             } else {
-                alert(res.error || "Upload failed. Please try again.");
+                showToast(res.error || "Upload failed. Please try again.", "error");
             }
         } catch (error) {
             console.error("Upload failed", error);
-            alert("An unexpected error occurred during upload.");
+            showToast("An unexpected error occurred during upload.", "error");
         } finally {
             setUploading(false);
         }

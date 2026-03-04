@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import styles from "../admin.module.css";
 import { getSiteData, updateSiteContent, updateContactInfo, uploadImage } from "../../actions";
 import { useRouter, useSearchParams } from "next/navigation";
+import { showToast } from "../components/AdminToast";
 import {
     Save, Loader2, LayoutTemplate, Phone, BarChart2,
     Star, ChevronRight, CheckCircle2, AlertCircle, Upload, Cloud
@@ -717,7 +718,7 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
     const handleUpload = async (file: File) => {
         const MAX_SIZE = 4.5 * 1024 * 1024;
         if (file.size > MAX_SIZE) {
-            alert(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`);
+            showToast(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`, "error");
             return;
         }
 
@@ -729,12 +730,13 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
             const res = await uploadImage(formData);
             if (res?.success && res.url) {
                 onChange(res.url);
+                showToast("Image uploaded successfully", "success");
             } else {
-                alert(res?.error || "Upload failed. Please check your configuration.");
+                showToast(res?.error || "Upload failed. Please check your configuration.", "error");
             }
         } catch (err: any) {
             console.error("Upload error details:", err);
-            alert(`An unexpected error occurred: ${err.message || "Unknown error"}`);
+            showToast(`An unexpected error occurred: ${err.message || "Unknown error"}`, "error");
         } finally {
             setUploading(null as any);
             setUploading(false);

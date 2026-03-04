@@ -7,6 +7,7 @@ import { getSiteData, updateRoom, createRoom, deleteRoom, uploadImage } from "..
 import { Edit2, Trash2, Plus, Upload, Image as ImageIcon, X } from "lucide-react";
 import AdminModal from "../../components/AdminModal";
 import { useCurrency } from "../../context/CurrencyContext";
+import { showToast } from "../components/AdminToast";
 
 export default function AdminRooms() {
     const { formatPrice } = useCurrency();
@@ -44,7 +45,7 @@ export default function AdminRooms() {
 
         const MAX_SIZE = 4.5 * 1024 * 1024;
         if (file.size > MAX_SIZE) {
-            alert(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB. Please compress the image.`);
+            showToast(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB. Please compress the image.`, "error");
             return;
         }
 
@@ -55,12 +56,13 @@ export default function AdminRooms() {
             const res = await uploadImage(formData);
             if (res.success && res.url) {
                 setEditForm((prev: any) => ({ ...prev, image: res.url }));
+                showToast("Image uploaded successfully", "success");
             } else {
-                alert(res.error || "Upload failed. Please try again.");
+                showToast(res.error || "Upload failed. Please try again.", "error");
             }
         } catch (error) {
             console.error("Upload failed:", error);
-            alert("An unexpected error occurred during upload.");
+            showToast("An unexpected error occurred during upload.", "error");
         } finally {
             setIsUploading(false);
         }
@@ -84,6 +86,7 @@ export default function AdminRooms() {
         if (res.success) {
             await fetchRooms();
             setIsModalOpen(false);
+            showToast(editForm.id === "NEW" ? "Room created successfully" : "Room updated successfully", "success");
         } else {
             setError(res.error || "Failed to save room details.");
         }
@@ -95,8 +98,9 @@ export default function AdminRooms() {
             const res = await deleteRoom(id);
             if (res.success) {
                 await fetchRooms();
+                showToast("Room deleted successfully", "success");
             } else {
-                alert(res.error || "Failed to delete room.");
+                showToast(res.error || "Failed to delete room.", "error");
             }
         }
     };
