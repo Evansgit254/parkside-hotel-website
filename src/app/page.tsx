@@ -112,6 +112,22 @@ export default function Home() {
     return () => { window.removeEventListener("scroll", handleScroll); clearInterval(timer); };
   }, [heroImages.length]);
 
+  // Robust manual scroll to hash when site data or recent rooms load
+  // to prevent layout shifts from pushing the target off-screen.
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash && (siteData.content || recentRooms.length > 0)) {
+      const id = hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        const timer = setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 800); // 800ms delay to ensure layout has stabilized
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [siteData, recentRooms.length]);
+
   const nextSlide = () => setCurrentSlide(prev => (prev + 1) % heroImages.length);
   const prevSlide = () => setCurrentSlide(prev => (prev - 1 + heroImages.length) % heroImages.length);
 
