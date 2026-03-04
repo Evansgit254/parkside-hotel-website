@@ -176,7 +176,7 @@ export default function FacilityDetail() {
                         </motion.div>
                     </div>
                 </div>
-                <div className={styles.heroImage} style={{ backgroundImage: `url(${facility.image})` }}>
+                <div className={styles.heroImage} style={{ backgroundImage: facility.image ? `url(${facility.image})` : 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}>
                     <div className={styles.heroOverlay} />
                 </div>
             </section>

@@ -9,7 +9,7 @@ import ClientBlogGrid from "./ClientBlogGrid";
 export default async function BlogPage() {
     const data = await getSiteData();
     const posts = data.blogPosts || [];
-    const heroImage = "https://res.cloudinary.com/dizwm3mic/image/upload/v1772440903/parkside-villa-media/Front_Image_Or_Background_Image/IMG-20251119-WA0061_fvrbbk.jpg";
+    const heroImage = data.content?.blog_hero?.image || "https://res.cloudinary.com/dizwm3mic/image/upload/v1772440903/parkside-villa-media/Front_Image_Or_Background_Image/IMG-20251119-WA0061_fvrbbk.jpg";
 
     return (
         <div className={styles.pageWrapper}>

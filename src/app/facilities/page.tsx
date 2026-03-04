@@ -21,7 +21,7 @@ export default async function FacilitiesPage() {
             {/* Hero Section */}
             <section className={styles.hero}>
                 <Image
-                    src="https://res.cloudinary.com/dizwm3mic/image/upload/f_auto,q_auto/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg"
+                    src={content?.facilities_hero?.image || "https://res.cloudinary.com/dizwm3mic/image/upload/f_auto,q_auto/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg"}
                     alt="Facilities Hero"
                     fill
                     priority
@@ -52,15 +52,31 @@ export default async function FacilitiesPage() {
                             <div className={styles.container}>
                                 <div className={styles.flexWrapper}>
                                     <div className={styles.imageContainer}>
-                                        <Image
-                                            src={facility.image || "/placeholder-facility.jpg"}
-                                            alt={facility.title}
-                                            fill
-                                            quality={75}
-                                            priority={index === 0}
-                                            sizes="(max-width: 1024px) 100vw, 50vw"
-                                            className={styles.cardImage}
-                                        />
+                                        {facility.image ? (
+                                            <Image
+                                                src={facility.image}
+                                                alt={facility.title}
+                                                fill
+                                                quality={75}
+                                                priority={index === 0}
+                                                sizes="(max-width: 1024px) 100vw, 50vw"
+                                                className={styles.cardImage}
+                                            />
+                                        ) : (
+                                            <div style={{
+                                                width: '100%', height: '100%',
+                                                display: 'flex', flexDirection: 'column',
+                                                alignItems: 'center', justifyContent: 'center',
+                                                background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+                                                color: 'rgba(212, 175, 55, 0.6)',
+                                                gap: '1rem'
+                                            }}>
+                                                <IconComponent size={64} />
+                                                <span style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                                                    {facility.title}
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className={styles.contentContainer}>

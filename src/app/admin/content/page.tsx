@@ -129,6 +129,42 @@ const contentSchema = [
         ]
     },
     {
+        key: "rooms_hero",
+        label: "Rooms Hero Image",
+        description: "The background image for the Rooms page hero banner.",
+        icon: LayoutTemplate,
+        fields: [
+            { name: "image", label: "Hero Image URL (Cloudinary)", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446787/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0698_zmv8bg.jpg" }
+        ]
+    },
+    {
+        key: "facilities_hero",
+        label: "Facilities Hero Image",
+        description: "The background image for the Facilities page hero banner.",
+        icon: LayoutTemplate,
+        fields: [
+            { name: "image", label: "Hero Image URL (Cloudinary)", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/f_auto,q_auto/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg" }
+        ]
+    },
+    {
+        key: "dining_hero",
+        label: "Dining Hero Image",
+        description: "The background image for the Dining page hero banner.",
+        icon: LayoutTemplate,
+        fields: [
+            { name: "image", label: "Hero Image URL (Cloudinary)", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446807/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0703_qptc5r.jpg" }
+        ]
+    },
+    {
+        key: "blog_hero",
+        label: "Blog Hero Image",
+        description: "The background image for the Blog page hero banner.",
+        icon: LayoutTemplate,
+        fields: [
+            { name: "image", label: "Hero Image URL (Cloudinary)", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772440903/parkside-villa-media/Front_Image_Or_Background_Image/IMG-20251119-WA0061_fvrbbk.jpg" }
+        ]
+    },
+    {
         key: "recent_rooms",
         label: "Recently Viewed",
         description: "Copy for the section showing recently visited rooms.",
@@ -162,6 +198,44 @@ const contentSchema = [
         ]
     },
     {
+        key: "footer_links",
+        label: "Footer Links (Quick Links)",
+        description: "Links shown under the first footer column.",
+        icon: LayoutTemplate,
+        fields: [
+            { name: "link1_label", label: "Link 1 Label", type: "text", default: "Accommodation" },
+            { name: "link1_url", label: "Link 1 URL", type: "text", default: "/#accommodation" },
+            { name: "link2_label", label: "Link 2 Label", type: "text", default: "Conference" },
+            { name: "link2_url", label: "Link 2 URL", type: "text", default: "/#conference" },
+            { name: "link3_label", label: "Link 3 Label", type: "text", default: "Facilities" },
+            { name: "link3_url", label: "Link 3 URL", type: "text", default: "/facilities" },
+            { name: "link4_label", label: "Link 4 Label", type: "text", default: "Dining" },
+            { name: "link4_url", label: "Link 4 URL", type: "text", default: "/dining" },
+            { name: "link5_label", label: "Link 5 Label", type: "text", default: "Gallery" },
+            { name: "link5_url", label: "Link 5 URL", type: "text", default: "/gallery" },
+            { name: "link6_label", label: "Link 6 Label", type: "text", default: "Blog" },
+            { name: "link6_url", label: "Link 6 URL", type: "text", default: "/blog" },
+            { name: "link7_label", label: "Link 7 Label", type: "text", default: "Contact Us" },
+            { name: "link7_url", label: "Link 7 URL", type: "text", default: "/#contact" }
+        ]
+    },
+    {
+        key: "footer_pillars",
+        label: "Footer Links (Our Pillars)",
+        description: "Links shown under the second footer column.",
+        icon: LayoutTemplate,
+        fields: [
+            { name: "link1_label", label: "Link 1 Label", type: "text", default: "Luxury Rooms" },
+            { name: "link1_url", label: "Link 1 URL", type: "text", default: "/#accommodation" },
+            { name: "link2_label", label: "Link 2 Label", type: "text", default: "Event Space" },
+            { name: "link2_url", label: "Link 2 URL", type: "text", default: "/#conference" },
+            { name: "link3_label", label: "Link 3 Label", type: "text", default: "Gourmet Food" },
+            { name: "link3_url", label: "Link 3 URL", type: "text", default: "/dining" },
+            { name: "link4_label", label: "Link 4 Label", type: "text", default: "Garden Oasis" },
+            { name: "link4_url", label: "Link 4 URL", type: "text", default: "/#accommodation" }
+        ]
+    },
+    {
         key: "dining_menu",
         label: "Dining Menu Section",
         description: "Titles for the full menu section on the Dining page.",
@@ -181,14 +255,26 @@ const contentSchema = [
             { name: "rooms", label: "Step 1: Accommodation Message", type: "textarea", default: "Our rooms range from the Deluxe Garden Room to the Presidential Executive Suite. Each is a sanctuary of comfort." },
             { name: "dining", label: "Step 2: Dining Message", type: "textarea", default: "Our kitchen is led by experienced chefs offering both local Kenyan cuisine and international favorites. Available from 06:00 to 23:00." }
         ]
+    },
+    {
+        key: "seo_metadata",
+        label: "SEO Metadata",
+        description: "Global search engine optimization settings for the entire website.",
+        icon: Star,
+        fields: [
+            { name: "title", label: "Site Title", type: "text", default: "Parkside Villa Kitui | Best Hotel & Conference in Kitui" },
+            { name: "description", label: "Site Description", type: "textarea", default: "Experience world-class hospitality at Parkside Villa Kitui. Luxury rooms, fine dining, and premier conference facilities designed for comfort and productivity in Kitui, Kenya." },
+            { name: "keywords", label: "Keywords (comma separated)", type: "textarea", default: "Kitui hotel, Parkside Villa Kitui, accommodation in Kitui, conference facilities Kitui, best hotel Kitui, luxury hotel Kitui, Kenya, places to stay in Kitui" }
+        ]
     }
 ];
 
 const TABS = [
-    { id: "page-copy", label: "Page Copy", keys: ["landing_hero", "rooms_intro", "dining_intro", "facilities_intro", "brand_quote", "testimonials_intro", "recent_rooms", "contact_section", "footer_about", "footer_titles", "dining_menu"] },
-    { id: "pages", label: "Page Headers", keys: ["gallery_intro", "blog_intro"] },
+    { id: "page-copy", label: "Page Copy", keys: ["landing_hero", "rooms_intro", "dining_intro", "facilities_intro", "brand_quote", "testimonials_intro", "recent_rooms", "contact_section", "footer_about", "footer_titles", "footer_links", "footer_pillars", "dining_menu"] },
+    { id: "pages", label: "Page Headers", keys: ["gallery_intro", "blog_intro", "rooms_hero", "facilities_hero", "dining_hero", "blog_hero"] },
     { id: "stats", label: "Statistics", keys: ["experience_stats"] },
     { id: "concierge", label: "Concierge", keys: ["concierge_messages"] },
+    { id: "seo", label: "SEO", keys: ["seo_metadata"] },
     { id: "contact", label: "Contact Info", keys: [] },
 ];
 

@@ -5,14 +5,14 @@ import Image from "next/image";
 import { Facebook, Instagram, Linkedin, MessageCircle, PlaySquare } from "lucide-react";
 import styles from "../page.module.css";
 import { useState, useEffect } from "react";
-import { getSiteData, subscribeNewsletter } from "../actions";
+import { getPublicSiteData, subscribeNewsletter } from "../actions";
 
 export default function Footer() {
     const [contactInfo, setContactInfo] = useState<any>(null);
     const [content, setContent] = useState<any>({});
 
     useEffect(() => {
-        getSiteData().then(data => {
+        getPublicSiteData().then(data => {
             if (data && data.contactInfo) setContactInfo(data.contactInfo);
             if (data && data.content) setContent(data.content);
         });
@@ -66,23 +66,23 @@ export default function Footer() {
                     <div>
                         <h4 className={styles.footerTitle}>{content.footer_titles?.col1 || "Quick Links"}</h4>
                         <div className={styles.footerLinks}>
-                            <a href="/#accommodation">Accommodation</a>
-                            <a href="/#conference">Conference</a>
-                            <Link href="/facilities">Facilities</Link>
-                            <Link href="/dining">Dining</Link>
-                            <Link href="/gallery">Gallery</Link>
-                            <Link href="/blog">Blog</Link>
-                            <a href="/#contact">Contact Us</a>
+                            <a href={content.footer_links?.link1_url || "/#accommodation"}>{content.footer_links?.link1_label || "Accommodation"}</a>
+                            <a href={content.footer_links?.link2_url || "/#conference"}>{content.footer_links?.link2_label || "Conference"}</a>
+                            <Link href={content.footer_links?.link3_url || "/facilities"}>{content.footer_links?.link3_label || "Facilities"}</Link>
+                            <Link href={content.footer_links?.link4_url || "/dining"}>{content.footer_links?.link4_label || "Dining"}</Link>
+                            <Link href={content.footer_links?.link5_url || "/gallery"}>{content.footer_links?.link5_label || "Gallery"}</Link>
+                            <Link href={content.footer_links?.link6_url || "/blog"}>{content.footer_links?.link6_label || "Blog"}</Link>
+                            <a href={content.footer_links?.link7_url || "/#contact"}>{content.footer_links?.link7_label || "Contact Us"}</a>
                         </div>
                     </div>
 
                     <div>
                         <h4 className={styles.footerTitle}>{content.footer_titles?.col2 || "Our Pillars"}</h4>
                         <div className={styles.footerLinks}>
-                            <a href="/#accommodation">Luxury Rooms</a>
-                            <a href="/#conference">Event Space</a>
-                            <Link href="/dining">Gourmet Food</Link>
-                            <a href="/#accommodation">Garden Oasis</a>
+                            <a href={content.footer_pillars?.link1_url || "/#accommodation"}>{content.footer_pillars?.link1_label || "Luxury Rooms"}</a>
+                            <a href={content.footer_pillars?.link2_url || "/#conference"}>{content.footer_pillars?.link2_label || "Event Space"}</a>
+                            <Link href={content.footer_pillars?.link3_url || "/dining"}>{content.footer_pillars?.link3_label || "Gourmet Food"}</Link>
+                            <a href={content.footer_pillars?.link4_url || "/#accommodation"}>{content.footer_pillars?.link4_label || "Garden Oasis"}</a>
                         </div>
                     </div>
 

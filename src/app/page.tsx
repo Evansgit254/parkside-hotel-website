@@ -12,7 +12,7 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./page.module.css";
-import { getSiteData, addLead } from "./actions";
+import { getPublicSiteData, addLead } from "./actions";
 import { useRouter } from "next/navigation";
 import Magnetic from "./components/Magnetic";
 import Schema from "./components/Schema";
@@ -41,7 +41,7 @@ export default function Home() {
   });
 
   useEffect(() => {
-    getSiteData().then(data => { if (data) setSiteData(data); });
+    getPublicSiteData().then(data => { if (data) setSiteData(data); });
   }, []);
 
   const { rooms, facilities, testimonials, contactInfo, heroImages, content } = siteData;
@@ -205,10 +205,12 @@ export default function Home() {
         <div className={styles.carouselControls}>
           <div className={styles.carouselDots}>
             {heroImages.map((_: any, i: number) => (
-              <div
+              <button
                 key={`hero-dot-${i}`}
+                type="button"
                 className={`${styles.dot} ${currentSlide === i ? styles.activeDot : ""}`}
                 onClick={() => setCurrentSlide(i)}
+                aria-label={`Go to slide ${i + 1}`}
               />
             ))}
           </div>
@@ -939,6 +941,7 @@ export default function Home() {
         className={styles.conciergeBtn}
         onClick={() => { setIsConciergeOpen(!isConciergeOpen); setConciergeStep(0); }}
         title="Open Virtual Concierge"
+        aria-label="Open virtual concierge"
       >
         <MessageSquare size={22} />
       </motion.button>

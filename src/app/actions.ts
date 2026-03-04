@@ -151,6 +151,38 @@ export async function getSiteData() {
     }
 }
 
+// Public‑facing site data: trims admin‑only collections so that
+// unauthenticated clients never receive users, subscribers, promotions, etc.
+export async function getPublicSiteData() {
+    const {
+        heroImages,
+        rooms,
+        facilities,
+        testimonials,
+        menuCategories,
+        contactInfo,
+        blogPosts,
+        galleryItems,
+        galleryVideos,
+        conferenceHalls,
+        content,
+    } = await getSiteData();
+
+    return {
+        heroImages,
+        rooms,
+        facilities,
+        testimonials,
+        menuCategories,
+        contactInfo,
+        blogPosts,
+        galleryItems,
+        galleryVideos,
+        conferenceHalls,
+        content,
+    };
+}
+
 export async function getDashboardStats() {
     if (!isDatabaseConfigured()) {
         return {
@@ -324,23 +356,35 @@ export async function addLead(lead: {
 }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
-        if (!lead.email || !lead.name) {
-            return { success: false, error: "Name and Email are required" };
+        const LeadSchema = z.object({
+            name: z.string().min(1).max(100),
+            email: z.string().email().max(200),
+            phone: z.string().max(50).optional().nullable(),
+            date: z.string().max(200).optional().nullable(),
+            room: z.string().max(200).optional().nullable(),
+            guests: z.string().max(1000).optional().nullable(),
+        });
+
+        const validated = LeadSchema.safeParse(lead);
+        if (!validated.success) {
+            return { success: false, error: "Invalid enquiry details" };
         }
 
+        const safeLead = validated.data;
+
         // Resolve room relation if slug provided and exists
-        const roomExists = lead.room
-            ? await prisma.room.findUnique({ where: { slug: lead.room } })
+        const roomExists = safeLead.room
+            ? await prisma.room.findUnique({ where: { slug: safeLead.room } })
             : null;
 
         const newLead = await prisma.lead.create({
             data: {
-                name: lead.name,
-                email: lead.email,
-                phone: lead.phone ?? null,
-                date: lead.date ?? null,
-                guests: lead.guests ?? null,
-                roomSlug: roomExists ? lead.room! : null,
+                name: safeLead.name,
+                email: safeLead.email,
+                phone: safeLead.phone ?? null,
+                date: safeLead.date ?? null,
+                guests: safeLead.guests ?? null,
+                roomSlug: roomExists ? safeLead.room! : null,
                 status: "Pending",
                 time: "Just now",
             },
@@ -538,12 +582,26 @@ export async function deleteTestimonial(id: number) {
 }
 
 export async function submitPublicReview(review: { name: string; title: string; text: string }) {
+    const PublicReviewSchema = z.object({
+        name: z.string().min(1).max(100),
+        title: z.string().min(1).max(200),
+        text: z.string().min(1).max(2000),
+    });
+
+    const parsed = PublicReviewSchema.safeParse(review);
+    if (!parsed.success) {
+        return { success: false, error: "Invalid review details" };
+    }
+
+    const safeReview = parsed.data;
+
     await NotificationService.sendEmail(
         "concierge@parksidevillakitui.com",
-        `New Public Review: ${review.name}`,
-        review.text
+        `New Public Review: ${safeReview.name}`,
+        safeReview.text
     );
-    return addTestimonial({ ...review, status: "Pending" });
+    await addTestimonial({ ...safeReview, status: "Pending" });
+    return { success: true };
 }
 
 // ─────────────────────────────────────────────
@@ -1152,6 +1210,12 @@ export async function updateSiteContent(key: string, value: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
+
+        // Basic guardrail: avoid unbounded string blobs in dynamic content.
+        if (typeof value === "string" && value.length > 4000) {
+            throw new Error("Content value too long");
+        }
+
         SiteContentSchema.parse({ key, value });
         await prisma.siteContent.upsert({
             where: { key },

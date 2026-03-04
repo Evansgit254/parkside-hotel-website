@@ -21,31 +21,42 @@ const mulish = Mulish({
   preload: true,
 });
 
-export const metadata: Metadata = {
-  title: "Parkside Villa Kitui | Best Hotel & Conference in Kitui",
-  description: "Experience world-class hospitality at Parkside Villa Kitui. Luxury rooms, fine dining, and premier conference facilities designed for comfort and productivity in Kitui, Kenya.",
-  keywords: ["Kitui hotel", "Parkside Villa Kitui", "accommodation in Kitui", "conference facilities Kitui", "best hotel Kitui", "luxury hotel Kitui, Kenya", "places to stay in Kitui"],
-  openGraph: {
-    title: "Parkside Villa Kitui | Luxury Accommodation & Dining",
-    description: "Kitui's premier destination for luxury accommodation, dining, and corporate events.",
-    url: "https://www.parksidevillakitui.com",
-    siteName: "Parkside Villa Kitui",
-    locale: "en_KE",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Parkside Villa Kitui",
-    description: "Kitui's premier destination for luxury accommodation, dining, and corporate events.",
-  },
-  alternates: {
-    canonical: "https://www.parksidevillakitui.com",
-  },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  }
-};
+import { getSiteData } from "./actions";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await getSiteData();
+  const seo = data?.content?.seo_metadata || {};
+
+  const siteTitle = seo.title || "Parkside Villa Kitui | Best Hotel & Conference in Kitui";
+  const siteDescription = seo.description || "Experience world-class hospitality at Parkside Villa Kitui. Luxury rooms, fine dining, and premier conference facilities designed for comfort and productivity in Kitui, Kenya.";
+  const siteKeywords = seo.keywords ? seo.keywords.split(',').map((k: string) => k.trim()) : ["Kitui hotel", "Parkside Villa Kitui", "accommodation in Kitui", "conference facilities Kitui", "best hotel Kitui", "luxury hotel Kitui, Kenya", "places to stay in Kitui"];
+
+  return {
+    title: siteTitle,
+    description: siteDescription,
+    keywords: siteKeywords,
+    openGraph: {
+      title: siteTitle,
+      description: siteDescription,
+      url: "https://www.parksidevillakitui.com",
+      siteName: "Parkside Villa Kitui",
+      locale: "en_KE",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Parkside Villa Kitui",
+      description: siteDescription,
+    },
+    alternates: {
+      canonical: "https://www.parksidevillakitui.com",
+    },
+    icons: {
+      icon: "/favicon.ico",
+      apple: "/apple-touch-icon.png",
+    }
+  };
+}
 
 export const viewport = {
   themeColor: "#050505",

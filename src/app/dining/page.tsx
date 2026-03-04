@@ -81,7 +81,7 @@ export default function Dining() {
                     transition={{ duration: 1.2 }}
                 >
                     <Image
-                        src="https://res.cloudinary.com/dizwm3mic/image/upload/v1772446807/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0703_qptc5r.jpg"
+                        src={content?.dining_hero?.image || "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446807/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0703_qptc5r.jpg"}
                         alt="Fine Dining"
                         fill
                         priority
