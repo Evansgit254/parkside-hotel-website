@@ -9,6 +9,8 @@ import Image from "next/image";
 export default async function FacilitiesPage() {
     const data = await getSiteData();
     const facilities = data.facilities || [];
+    const conferenceHalls = (data as any).conferenceHalls || [];
+    const galleryItems = data.galleryItems || [];
     const content = data.content || {};
     const facilitiesKeys = content?.facilities_intro || {};
 
@@ -43,8 +45,10 @@ export default async function FacilitiesPage() {
             <section className={styles.facilitiesSection}>
                 {facilities.map((facility: any, index: number) => {
                     const IconComponent = Icons[facility.icon] || Hotel;
+                    const isConference = facility.id === "conference";
+
                     return (
-                        <div key={facility.id} className={styles.facilitySection}>
+                        <div key={facility.id} className={styles.facilitySection} id={facility.id}>
                             <div className={styles.container}>
                                 <div className={styles.flexWrapper}>
                                     <div className={styles.imageContainer}>
@@ -96,11 +100,64 @@ export default async function FacilitiesPage() {
                                         </Link>
                                     </div>
                                 </div>
+
+                                {/* Show individual halls if it's the conference section */}
+                                {isConference && conferenceHalls.length > 0 && (
+                                    <div className={styles.hallsGrid}>
+                                        {conferenceHalls.map((hall: any) => (
+                                            <Link href={`/facilities/conference?hall=${hall.slug}`} key={hall.id} className={styles.hallCard}>
+                                                <div className={styles.hallImageContainer}>
+                                                    <Image
+                                                        src={hall.image || "/placeholder-hall.jpg"}
+                                                        alt={hall.name}
+                                                        fill
+                                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                        style={{ objectFit: 'cover' }}
+                                                    />
+                                                </div>
+                                                <div className={styles.hallContent}>
+                                                    <h3 className={styles.hallName}>{hall.name}</h3>
+                                                    <span className={styles.hallCapacity}>Up to {hall.capacity} Guests</span>
+                                                </div>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     );
                 })}
             </section>
+
+            {/* Gallery Section */}
+            {galleryItems.length > 0 && (
+                <section className={styles.gallerySection}>
+                    <div className={styles.container}>
+                        <div className={styles.sectionHeader}>
+                            <span className={styles.sectionBadge}>Gallery</span>
+                            <h2 className={styles.sectionTitle}>The Full Experience</h2>
+                        </div>
+                        <div className={styles.galleryGrid}>
+                            {galleryItems.slice(0, 8).map((item: any) => (
+                                <div key={item.id} className={styles.galleryItem}>
+                                    <Image
+                                        src={item.url}
+                                        alt={item.title || "Gallery Item"}
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                                        style={{ objectFit: 'cover' }}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        <div style={{ textAlign: 'center', marginTop: '4rem' }}>
+                            <Link href="/gallery" className={styles.exploreLink}>
+                                View Full Gallery
+                            </Link>
+                        </div>
+                    </div>
+                </section>
+            )}
         </div>
     );
 }

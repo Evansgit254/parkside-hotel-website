@@ -73,21 +73,7 @@ export async function getSiteData() {
     try {
         const timeout = (ms: number) => new Promise((_, reject) => setTimeout(() => reject(new Error("Database timeout")), ms));
 
-        const [
-            heroImages,
-            rooms,
-            facilities,
-            testimonials,
-            menuCategories,
-            contactInfoRow,
-            blogPosts,
-            leads,
-            subscribers,
-            promotions,
-            users,
-            galleryItems,
-            siteContentRows
-        ] = await Promise.race([
+        const results = await Promise.race([
             Promise.all([
                 prisma.heroImage.findMany({ orderBy: { order: "asc" } }),
                 prisma.room.findMany({ orderBy: { createdAt: "asc" } }),
@@ -101,10 +87,17 @@ export async function getSiteData() {
                 prisma.promotion.findMany({ orderBy: { createdAt: "desc" } }),
                 prisma.user.findMany(),
                 prisma.galleryItem.findMany({ orderBy: { order: "asc" } }),
+                prisma.conferenceHall.findMany({ orderBy: { createdAt: "asc" } }),
                 prisma.siteContent.findMany()
             ]),
             timeout(10000)
         ]) as any;
+
+        const [
+            heroImages, rooms, facilities, testimonials, menuCategories,
+            contactInfoRow, blogPosts, leads, subscribers, promotions,
+            users, galleryItems, conferenceHalls, siteContentRows
+        ] = results;
 
         const content = siteContentRows.reduce((acc: any, row: SiteContent) => {
             acc[row.key] = row.value;
@@ -132,12 +125,12 @@ export async function getSiteData() {
                 capacity: r.capacity,
             })),
             facilities: (facilities as any[]).map(f => ({ ...f, image: f.image ? optimizeCloudinary(f.image) : null })),
+            conferenceHalls: (conferenceHalls as any[]).map(h => ({ ...h, image: h.image ? optimizeCloudinary(h.image) : null })),
             testimonials: testimonials as Testimonial[],
             menuCategories: menuCategories as MenuCategory[],
             contactInfo: contactInfoRow ? { ...(contactInfoRow as ContactInfo), social: (contactInfoRow as ContactInfo).social || {} } : getStaticSiteData().contactInfo,
             blogPosts: (blogPosts as any[]).map(p => ({ ...p, image: p.image ? optimizeCloudinary(p.image) : "" })),
             leads: leads.map((l: Lead) => ({
-                ...l,
                 id: l.id,
                 room: l.roomSlug ?? "",
             })),
@@ -312,6 +305,7 @@ function getStaticSiteData() {
         users: [],
         galleryItems: [],
         galleryVideos: [],
+        conferenceHalls: [],
         content: {}
     };
 }

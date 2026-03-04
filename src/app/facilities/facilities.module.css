@@ -242,3 +242,101 @@
         padding: 5rem 0;
     }
 }
+/* New Expanded Facilities Styles */
+.hallsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border-dark);
+}
+
+.hallCard {
+    background: var(--background-alt);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-dark);
+    position: relative;
+}
+
+.hallCard:hover {
+    transform: translateY(-8px);
+    border-color: var(--secondary);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.hallImageContainer {
+    position: relative;
+    height: 200px;
+}
+
+.hallContent {
+    padding: 1.5rem;
+}
+
+.hallName {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.hallCapacity {
+    font-size: 0.8rem;
+    color: var(--secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+}
+
+.gallerySection {
+    padding: 8rem 0;
+    background: var(--background-alt);
+}
+
+.galleryGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 4rem;
+}
+
+.galleryItem {
+    position: relative;
+    height: 350px;
+    border-radius: 24px;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.galleryItem:hover {
+    transform: scale(0.98);
+}
+
+.sectionHeader {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 4rem;
+}
+
+.sectionBadge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    color: var(--secondary);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+}
+
+.sectionTitle {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--foreground);
+}
