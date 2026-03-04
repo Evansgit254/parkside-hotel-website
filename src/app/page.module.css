@@ -1573,8 +1573,21 @@
     gap: 1.5rem;
     align-items: center;
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.9);
     letter-spacing: 0.05em;
+}
+
+.footerAdminLink {
+    color: #FFFFFF;
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    margin-left: 0.5rem;
+}
+
+.footerAdminLink:hover {
+    opacity: 1;
+    text-decoration: underline;
 }
 
 @media (min-width: 768px) {

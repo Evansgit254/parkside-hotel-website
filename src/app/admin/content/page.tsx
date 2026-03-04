@@ -270,8 +270,9 @@ const contentSchema = [
 ];
 
 const TABS = [
-    { id: "page-copy", label: "Page Copy", keys: ["landing_hero", "rooms_intro", "dining_intro", "facilities_intro", "brand_quote", "testimonials_intro", "recent_rooms", "contact_section", "footer_about", "footer_titles", "footer_links", "footer_pillars", "dining_menu"] },
-    { id: "pages", label: "Page Headers", keys: ["gallery_intro", "blog_intro", "rooms_hero", "facilities_hero", "dining_hero", "blog_hero"] },
+    { id: "hero-images", label: "Hero Images", keys: ["landing_hero", "rooms_hero", "facilities_hero", "dining_hero", "blog_hero"] },
+    { id: "page-intros", label: "Page Intros", keys: ["rooms_intro", "dining_intro", "facilities_intro", "gallery_intro", "blog_intro", "recent_rooms", "brand_quote", "testimonials_intro", "dining_menu"] },
+    { id: "footer", label: "Footer", keys: ["footer_about", "footer_titles", "footer_links", "footer_pillars"] },
     { id: "stats", label: "Statistics", keys: ["experience_stats"] },
     { id: "concierge", label: "Concierge", keys: ["concierge_messages"] },
     { id: "seo", label: "SEO", keys: ["seo_metadata"] },
@@ -303,7 +304,7 @@ export default function AdminContent() {
     const [content, setContent] = useState<any>({});
     const [contactData, setContactData] = useState({ ...defaultContact });
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState("page-copy");
+    const [activeTab, setActiveTab] = useState("hero-images");
     const [activeSection, setActiveSection] = useState("landing_hero");
     const [savingKey, setSavingKey] = useState<string | null>(null);
     const [savingContact, setSavingContact] = useState(false);

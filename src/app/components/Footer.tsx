@@ -94,7 +94,7 @@ export default function Footer() {
                     </div>
                 </div>
                 <div className={styles.footerBottom}>
-                    <p>&copy; {new Date().getFullYear()} Parkside Villa Kitui. All Rights Reserved. | <Link href="/admin" style={{ color: 'inherit', textDecoration: 'none', opacity: 0.6 }}>Admin Login</Link></p>
+                    <p>&copy; {new Date().getFullYear()} Parkside Villa Kitui. All Rights Reserved. | <Link href="/admin" className={styles.footerAdminLink}>Admin Login</Link></p>
                 </div>
             </div>
         </footer>
