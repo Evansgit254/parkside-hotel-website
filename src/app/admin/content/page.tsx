@@ -266,11 +266,42 @@ const contentSchema = [
             { name: "description", label: "Site Description", type: "textarea", default: "Experience world-class hospitality at Parkside Villa Kitui. Luxury rooms, fine dining, and premier conference facilities designed for comfort and productivity in Kitui, Kenya." },
             { name: "keywords", label: "Keywords (comma separated)", type: "textarea", default: "Kitui hotel, Parkside Villa Kitui, accommodation in Kitui, conference facilities Kitui, best hotel Kitui, luxury hotel Kitui, Kenya, places to stay in Kitui" }
         ]
+    },
+    {
+        key: "nav_main",
+        label: "Main Navigation Labels",
+        description: "The primary labels shown in the top navigation bar.",
+        icon: LayoutTemplate,
+        fields: [
+            { name: "home", label: "Home Label", type: "text", default: "Home" },
+            { name: "rooms", label: "Accommodation Label", type: "text", default: "Accommodation" },
+            { name: "conference", label: "Conference Label", type: "text", default: "Conference" },
+            { name: "facilities", label: "Facilities Label", type: "text", default: "Facilities" },
+            { name: "gallery", label: "Gallery Label", type: "text", default: "Gallery" },
+            { name: "blog", label: "Blog Label", type: "text", default: "Blog" },
+            { name: "dining", label: "Dining Label", type: "text", default: "Dining" },
+            { name: "contact", label: "Contact Label", type: "text", default: "Contact" },
+        ]
+    },
+    {
+        key: "nav_accommodation",
+        label: "Accommodation Dropdown",
+        description: "Manage the room types listed in the navigation menu.",
+        icon: Star,
+        fields: [
+            { name: "item1", label: "Item 1: Executive", type: "text", default: "Executive suites" },
+            { name: "item2", label: "Item 2: Deluxe", type: "text", default: "Deluxe suites" },
+            { name: "item3", label: "Item 3: Highrise", type: "text", default: "Highrise suites" },
+            { name: "item4", label: "Item 4: Cottages", type: "text", default: "Cottages" },
+            { name: "item5", label: "Item 5: Premium", type: "text", default: "Standard premium" },
+            { name: "item6", label: "Item 6: View All", type: "text", default: "All Accommodations" },
+        ]
     }
 ];
 
 const TABS = [
     { id: "hero-images", label: "Hero Images", keys: ["landing_hero", "rooms_hero", "facilities_hero", "dining_hero", "blog_hero"] },
+    { id: "navigation", label: "Navigation", keys: ["nav_main", "nav_accommodation"] },
     { id: "page-intros", label: "Page Intros", keys: ["rooms_intro", "dining_intro", "facilities_intro", "gallery_intro", "blog_intro", "recent_rooms", "brand_quote", "testimonials_intro", "dining_menu"] },
     { id: "footer", label: "Footer", keys: ["footer_about", "footer_titles", "footer_links", "footer_pillars"] },
     { id: "stats", label: "Statistics", keys: ["experience_stats"] },
