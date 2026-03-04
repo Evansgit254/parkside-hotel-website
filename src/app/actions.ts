@@ -937,54 +937,6 @@ export async function uploadImage(formData: FormData) {
     }
 }
 
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
-
-export async function uploadImageLocal(formData: FormData) {
-    try {
-        await requireAdmin();
-
-        if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
-            // Most production environments like Vercel have read-only filesystems or ephemeral storage
-            return {
-                success: false,
-                url: undefined,
-                error: "Local storage is not supported in production (Vercel). Please use the 'Cloud' upload method."
-            };
-        }
-
-        const file = formData.get("file") as File;
-        if (!file) return { success: false, error: "No file provided" };
-
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-
-        const uploadsDir = path.join(process.cwd(), "public", "uploads");
-
-        try {
-            await mkdir(uploadsDir, { recursive: true });
-        } catch (err: any) {
-            console.error("Failed to create uploads directory:", err);
-            return { success: false, error: "Server error: Failed to initialize local storage." };
-        }
-
-        const filename = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
-        const filePath = path.join(uploadsDir, filename);
-
-        try {
-            await writeFile(filePath, buffer);
-        } catch (err: any) {
-            console.error("Failed to write local file:", err);
-            return { success: false, error: "Server error: Failed to save file locally." };
-        }
-
-        return { success: true, url: `/uploads/${filename}`, error: undefined };
-    } catch (error: any) {
-        console.error("Local upload action error:", error);
-        return { success: false, url: undefined, error: error.message || "An unexpected error occurred during local upload" };
-    }
-}
-
 // ─────────────────────────────────────────────
 // AUTH & PROFILE
 // ─────────────────────────────────────────────

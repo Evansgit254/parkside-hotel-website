@@ -69,7 +69,7 @@ export default function MediaUpload({ value, onChange, label, type = "image", pl
                     className={`${styles.mediaUploadTab} ${mode === 'upload' ? styles.mediaUploadTabActive : ''}`}
                     onClick={() => setMode('upload')}
                 >
-                    <Upload size={14} /> Local Upload
+                    <Upload size={14} /> Upload File
                 </button>
                 <button
                     type="button"

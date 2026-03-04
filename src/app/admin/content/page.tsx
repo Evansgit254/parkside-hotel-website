@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
 import styles from "../admin.module.css";
-import { getSiteData, updateSiteContent, updateContactInfo, uploadImage, uploadImageLocal } from "../../actions";
+import { getSiteData, updateSiteContent, updateContactInfo, uploadImage } from "../../actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
     Save, Loader2, LayoutTemplate, Phone, BarChart2,
@@ -712,22 +712,21 @@ export default function AdminContent() {
 }
 
 function ImageField({ value, onChange }: { value: string; onChange: (val: string) => void }) {
-    const [uploading, setUploading] = useState<"cloudinary" | "local" | null>(null);
+    const [uploading, setUploading] = useState(false);
 
-    const handleUpload = async (method: "cloudinary" | "local", file: File) => {
-        // Vercel hard limit for serverless payloads is 4.5MB
+    const handleUpload = async (file: File) => {
         const MAX_SIZE = 4.5 * 1024 * 1024;
         if (file.size > MAX_SIZE) {
-            alert(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB. Please compress the image or use a smaller file.`);
+            alert(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Vercel limits uploads to 4.5MB.`);
             return;
         }
 
-        setUploading(method);
+        setUploading(true);
         const formData = new FormData();
         formData.append("file", file);
 
         try {
-            const res = method === "cloudinary" ? await uploadImage(formData) : await uploadImageLocal(formData);
+            const res = await uploadImage(formData);
             if (res?.success && res.url) {
                 onChange(res.url);
             } else {
@@ -737,7 +736,8 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
             console.error("Upload error details:", err);
             alert(`An unexpected error occurred: ${err.message || "Unknown error"}`);
         } finally {
-            setUploading(null);
+            setUploading(null as any);
+            setUploading(false);
         }
     };
 
@@ -750,38 +750,21 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
                     value={value}
                     onChange={e => onChange(e.target.value)}
                     style={{ flex: 1 }}
-                    placeholder="Image URL (Cloudinary or Local path)"
+                    placeholder="Image URL (Cloudinary or Remote)"
                 />
                 <label
-                    className={`${styles.uploadBtn} ${styles.localUploadBtn}`}
-                    style={{ opacity: uploading === "local" ? 0.5 : 1 }}
-                >
-                    {uploading === "local" ? <Loader2 className={styles.spinner} size={14} /> : <Upload size={14} />}
-                    Local
-                    <input
-                        type="file"
-                        style={{ display: 'none' }}
-                        onChange={e => e.target.files?.[0] && handleUpload("local", e.target.files[0])}
-                        disabled={!!uploading}
-                    />
-                </label>
-                <label
                     className={`${styles.uploadBtn} ${styles.cloudUploadBtn}`}
-                    style={{ opacity: uploading === "cloudinary" ? 0.5 : 1 }}
+                    style={{ opacity: uploading ? 0.5 : 1 }}
                 >
-                    {uploading === "cloudinary" ? <Loader2 className={styles.spinner} size={14} /> : <Cloud size={14} />}
-                    Cloud
+                    {uploading ? <Loader2 className={styles.spinner} size={14} /> : <Upload size={14} />}
+                    Upload from Device
                     <input
                         type="file"
                         style={{ display: 'none' }}
-                        onChange={e => e.target.files?.[0] && handleUpload("cloudinary", e.target.files[0])}
-                        disabled={!!uploading}
+                        onChange={e => e.target.files?.[0] && handleUpload(e.target.files[0])}
+                        disabled={uploading}
                     />
                 </label>
-            </div>
-            <div style={{ fontSize: '0.65rem', color: '#6B7280', marginTop: '-0.25rem', paddingLeft: '0.25rem' }}>
-                Tip: Use <b>Cloud</b> for images hosted on the web (recommended for Vercel).
-                <b> Local</b> works only on local development or dedicated servers.
             </div>
             {value && (
                 <div className={styles.imagePreview}>
