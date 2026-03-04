@@ -6,6 +6,14 @@ export function isDatabaseConfigured() {
     const connectionString = process.env.DATABASE_URL;
     if (!connectionString) return false;
 
+    // Check for valid protocol
+    if (!connectionString.startsWith('postgresql://') &&
+        !connectionString.startsWith('mysql://') &&
+        !connectionString.startsWith('mongodb://') &&
+        !connectionString.startsWith('file:')) {
+        return false;
+    }
+
     const placeholders = [
         "USER:PASSWORD",
         "localhost/placeholder",

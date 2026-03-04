@@ -150,9 +150,10 @@ export async function getSiteData() {
             galleryVideos: galleryItems.filter((i: GalleryItem) => i.type === "video").map((i: any) => ({ ...i, url: optimizeCloudinary(i.url) })),
             content,
         };
-    } catch (error) {
+    } catch (error: any) {
         console.error("CRITICAL: Database connection failed on Vercel.", {
-            error,
+            message: error.message,
+            stack: error.stack,
             isConfigured: isDatabaseConfigured(),
             node_env: process.env.NODE_ENV
         });

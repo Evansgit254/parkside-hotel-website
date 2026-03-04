@@ -418,7 +418,7 @@
 .title {
     font-family: var(--font-serif);
     font-size: clamp(3.5rem, 7vw, 6.5rem);
-    font-weight: 300;
+    font-weight: 700;
     line-height: 1.0;
     color: var(--white);
     letter-spacing: -0.02em;
@@ -434,10 +434,10 @@
 .subtitle {
     font-family: var(--font-body);
     font-size: 1rem;
-    color: var(--foreground-soft);
+    color: var(--white);
     max-width: 480px;
     line-height: 1.8;
-    font-weight: 300;
+    font-weight: 500;
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
 }
 
@@ -1323,6 +1323,7 @@
     padding: 10rem var(--container-padding);
     position: relative;
     overflow: hidden;
+    scroll-margin-top: 100px;
 }
 
 .contactSection::before {
@@ -1338,7 +1339,7 @@
     white-space: nowrap;
     pointer-events: none;
     letter-spacing: -0.03em;
-    opacity: 0.05;
+    opacity: 0.1;
 }
 
 .contactInner {
@@ -1417,26 +1418,32 @@
 
 .formLabel {
     font-family: var(--font-sans);
-    font-size: 0.5625rem;
+    font-size: 0.6875rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
     color: var(--secondary);
+    font-weight: 700;
 }
 
 .input {
-    padding: 1rem 0;
-    background: transparent;
+    padding: 1rem 0.5rem;
+    background: rgba(20, 75, 54, 0.02);
     border: none;
-    border-bottom: 2px solid var(--border);
-    color: var(--foreground);
+    border-bottom: 2px solid rgba(20, 75, 54, 0.2);
+    color: var(--text-primary);
     font-family: var(--font-body);
-    font-size: 0.9375rem;
+    font-size: 1rem;
     font-weight: 500;
     /* Increased weight for readability */
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
     outline: none;
     font-family: inherit;
     width: 100%;
+}
+
+.input:focus {
+    background: rgba(20, 75, 54, 0.05);
+    border-bottom-color: var(--primary);
 }
 
 .input::placeholder {

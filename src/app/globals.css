@@ -78,7 +78,7 @@ html {
 
   /* Semantic Mapping */
   --primary: var(--forest-green);
-  --secondary: var(--gold);
+  --secondary: var(--purple);
   --foreground: var(--text-primary);
   --foreground-soft: var(--text-secondary);
   --background: var(--white);
@@ -96,10 +96,10 @@ html {
   --admin-green-light: #1D6B4D;
   --admin-green-muted: rgba(20, 75, 54, 0.08);
   --admin-green-bg: rgba(20, 75, 54, 0.05);
-  --admin-purple: var(--gold);
-  --admin-purple-light: var(--gold-light);
-  --admin-purple-muted: var(--gold-muted);
-  --admin-brand-bg: var(--gold-muted);
+  --admin-purple: var(--purple);
+  --admin-purple-light: var(--purple-light);
+  --admin-purple-muted: var(--purple-muted);
+  --admin-brand-bg: var(--purple-muted);
   --admin-white: #FFFFFF;
   --admin-bg: #F7F8FC;
   --admin-surface: #FFFFFF;
