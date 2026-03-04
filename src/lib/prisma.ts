@@ -30,7 +30,17 @@ function createPrismaClient() {
         return new PrismaClient();
     }
 
+    let url = process.env.DATABASE_URL || "";
+
+    // During build, we want to limit connections per worker and increase timeout
+    // Next.js often uses multiple workers (e.g. 7) which can quickly exhaust a DB pool
+    if (process.env.NODE_ENV === "production" && !url.includes("connection_limit=")) {
+        const separator = url.includes("?") ? "&" : "?";
+        url = `${url}${separator}connection_limit=2&pool_timeout=60`;
+    }
+
     return new PrismaClient({
+        datasources: url ? { db: { url } } : undefined,
         log: ["error", "warn"],
     });
 }
