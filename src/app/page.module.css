@@ -1320,10 +1320,10 @@
 /* Contact Section Fixes */
 .contactSection {
     background: #F8F6F0;
-    padding: 10rem var(--container-padding);
+    padding: 5rem var(--container-padding) 10rem;
     position: relative;
     overflow: hidden;
-    scroll-margin-top: 100px;
+    scroll-margin-top: 110px;
 }
 
 .contactSection::before {
