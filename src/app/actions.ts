@@ -918,6 +918,27 @@ export async function uploadImage(formData: FormData) {
     });
 }
 
+import { writeFile, mkdir } from "fs/promises";
+import path from "path";
+
+export async function uploadImageLocal(formData: FormData) {
+    await requireAdmin();
+    const file = formData.get("file") as File;
+    if (!file) throw new Error("No file uploaded");
+
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const uploadsDir = path.join(process.cwd(), "public", "uploads");
+    await mkdir(uploadsDir, { recursive: true });
+
+    const filename = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
+    const filePath = path.join(uploadsDir, filename);
+    await writeFile(filePath, buffer);
+
+    return { url: `/uploads/${filename}` };
+}
+
 // ─────────────────────────────────────────────
 // AUTH & PROFILE
 // ─────────────────────────────────────────────

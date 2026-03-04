@@ -44,9 +44,18 @@ export default function Home() {
     getPublicSiteData().then(data => { if (data) setSiteData(data); });
   }, []);
 
-  const { rooms, facilities, testimonials, contactInfo, heroImages, content } = siteData;
+  const { rooms, facilities, testimonials, contactInfo, content } = siteData;
 
+  // Use CMS images if available, otherwise fallback to static data
   const heroKeys = content?.landing_hero || {};
+  const cmsHeroImages = [
+    heroKeys.image1,
+    heroKeys.image2,
+    heroKeys.image3,
+    heroKeys.image4
+  ].filter(Boolean);
+
+  const heroImages = cmsHeroImages.length > 0 ? cmsHeroImages : initialHeroImages;
   const roomsKeys = content?.rooms_intro || {};
   const facilitiesKeys = content?.facilities_intro || {};
 

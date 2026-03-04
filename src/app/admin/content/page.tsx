@@ -3,21 +3,25 @@ export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
 import styles from "../admin.module.css";
-import { getSiteData, updateSiteContent, updateContactInfo } from "../../actions";
+import { getSiteData, updateSiteContent, updateContactInfo, uploadImage, uploadImageLocal } from "../../actions";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
     Save, Loader2, LayoutTemplate, Phone, BarChart2,
-    Star, ChevronRight, CheckCircle2, AlertCircle
+    Star, ChevronRight, CheckCircle2, AlertCircle, Upload, Cloud
 } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 
 // ─── Schema ────────────────────────────────────────────────────────────────────
 const contentSchema = [
     {
         key: "landing_hero",
-        label: "Landing Page Hero",
-        description: "The first thing visitors see — headline, subtitle, and CTAs.",
+        label: "Landing Page Hero Sliders",
+        description: "Manage up to 4 sliding images for the main landing page hero section.",
         icon: Star,
         fields: [
+            { name: "image1", label: "Hero Image 1", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373733/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0710_oy6d2y.jpg" },
+            { name: "image2", label: "Hero Image 2", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772374351/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0691_j8yeyh.jpg" },
+            { name: "image3", label: "Hero Image 3", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373738/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0714_reoyas.jpg" },
+            { name: "image4", label: "Hero Image 4", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772374371/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0733_o1u6re.jpg" },
             { name: "badge", label: "Hero Badge", type: "text", default: "Refining Hospitality Since 2005" },
             { name: "title", label: "Hero Title", type: "text", default: "Parkside Villa Kitui" },
             { name: "subtitle", label: "Hero Subtitle", type: "textarea", default: "An oasis of tranquility in the heart of Kenya." },
@@ -582,6 +586,8 @@ export default function AdminContent() {
                                 ) : (
                                     activeSchemaSection.fields.map(field => {
                                         const val = (content[activeSchemaSection.key]?.[field.name]) ?? field.default;
+                                        const isImage = field.name.toLocaleLowerCase().includes("image") || field.label.toLocaleLowerCase().includes("image");
+
                                         return (
                                             <div key={field.name} className={styles.formGroup}>
                                                 <label className={styles.label}>{field.label}</label>
@@ -592,6 +598,11 @@ export default function AdminContent() {
                                                         onChange={e => handleChange(activeSchemaSection.key, field.name, e.target.value)}
                                                         rows={4}
                                                         style={{ resize: 'vertical', lineHeight: 1.7 }}
+                                                    />
+                                                ) : isImage ? (
+                                                    <ImageField
+                                                        value={val}
+                                                        onChange={(newVal) => handleChange(activeSchemaSection.key, field.name, newVal)}
                                                     />
                                                 ) : (
                                                     <input
@@ -694,6 +705,85 @@ export default function AdminContent() {
                             </button>
                         </div>
                     </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+function ImageField({ value, onChange }: { value: string; onChange: (val: string) => void }) {
+    const [uploading, setUploading] = useState<"cloudinary" | "local" | null>(null);
+
+    const handleUpload = async (method: "cloudinary" | "local", file: File) => {
+        setUploading(method);
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const res = method === "cloudinary" ? await uploadImage(formData) : await uploadImageLocal(formData);
+            if (res?.url) {
+                onChange(res.url);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Upload failed.");
+        } finally {
+            setUploading(null);
+        }
+    };
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <input
+                    type="text"
+                    className={styles.input}
+                    value={value}
+                    onChange={e => onChange(e.target.value)}
+                    style={{ flex: 1 }}
+                    placeholder="Image URL (Cloudinary or Local path)"
+                />
+                <label style={{
+                    display: 'flex', alignItems: 'center', gap: '0.5rem',
+                    padding: '0 1rem', background: '#F3F4F6', color: '#374151',
+                    fontSize: '0.625rem', fontWeight: 600, textTransform: 'uppercase',
+                    letterSpacing: '0.1em', cursor: 'pointer', borderRadius: '6px',
+                    border: '1px solid #D1D5DB', transition: 'all 0.2s',
+                    opacity: uploading === "local" ? 0.5 : 1
+                }}>
+                    {uploading === "local" ? <Loader2 className={styles.spinner} size={14} /> : <Upload size={14} />}
+                    Local
+                    <input
+                        type="file"
+                        style={{ display: 'none' }}
+                        onChange={e => e.target.files?.[0] && handleUpload("local", e.target.files[0])}
+                        disabled={!!uploading}
+                    />
+                </label>
+                <label style={{
+                    display: 'flex', alignItems: 'center', gap: '0.5rem',
+                    padding: '0 1rem', background: '#144B36', color: '#FFFFFF',
+                    fontSize: '0.625rem', fontWeight: 600, textTransform: 'uppercase',
+                    letterSpacing: '0.1em', cursor: 'pointer', borderRadius: '6px',
+                    border: '1px solid #144B36', transition: 'all 0.2s',
+                    opacity: uploading === "cloudinary" ? 0.5 : 1
+                }}>
+                    {uploading === "cloudinary" ? <Loader2 className={styles.spinner} size={14} /> : <Cloud size={14} />}
+                    Cloud
+                    <input
+                        type="file"
+                        style={{ display: 'none' }}
+                        onChange={e => e.target.files?.[0] && handleUpload("cloudinary", e.target.files[0])}
+                        disabled={!!uploading}
+                    />
+                </label>
+            </div>
+            {value && (
+                <div style={{
+                    width: '120px', height: '80px', borderRadius: '8px', overflow: 'hidden',
+                    border: '1px solid rgba(0,0,0,0.1)', background: '#F9FAFB'
+                }}>
+                    <img src={value} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
             )}
         </div>
