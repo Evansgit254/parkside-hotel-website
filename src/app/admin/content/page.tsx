@@ -371,6 +371,7 @@ export default function AdminContent() {
 
     const loadData = async () => {
         const data = await getSiteData();
+        console.log("[DIAG] Loaded Data Content:", JSON.stringify(data?.content, null, 2));
         if (data?.content) setContent(data.content);
         if (data?.contactInfo) {
             const ci = data.contactInfo;
@@ -779,6 +780,7 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
                         <img
                             src={value}
                             alt="Preview"
+                            referrerPolicy="no-referrer"
                             onError={() => setHasError(true)}
                         />
                     ) : (

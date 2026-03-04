@@ -959,6 +959,7 @@ export async function uploadImage(formData: FormData) {
                         return resolve({ success: false, error: `Cloudinary error: ${error.message}` });
                     }
                     if (!result) return resolve({ success: false, error: "Upload failed: No result from Cloudinary" });
+                    console.log("[DIAG] Cloudinary Secure URL:", result.secure_url);
                     resolve({ success: true, url: result.secure_url });
                 }
             );
@@ -1267,11 +1268,23 @@ export async function updateSiteContent(key: string, value: any) {
         await requireAdmin();
 
         // Basic guardrail: avoid unbounded string blobs in dynamic content.
-        if (typeof value === "string" && value.length > 4000) {
-            throw new Error("Content value too long");
+        if (typeof value === "string") {
+            console.log(`[DIAG] updateSiteContent key: ${key}, value length: ${value.length}`);
+            if (value.length > 4000) {
+                throw new Error("Content value too long");
+            }
         }
 
         SiteContentSchema.parse({ key, value });
+        console.log(`[DIAG] Prisma Upsert - Key: ${key}, Value Type: ${typeof value}`);
+        if (typeof value === 'object') {
+            console.log(`[DIAG] Value Keys: ${Object.keys(value).join(", ")}`);
+            Object.keys(value).forEach(k => {
+                if (typeof value[k] === 'string') {
+                    console.log(`[DIAG] Property ${k} length: ${value[k].length}`);
+                }
+            });
+        }
         await prisma.siteContent.upsert({
             where: { key },
             update: { value },
