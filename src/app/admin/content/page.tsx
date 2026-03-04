@@ -13,7 +13,7 @@ import {
 const contentSchema = [
     {
         key: "landing_hero",
-        label: "Hero Banner",
+        label: "Landing Page Hero",
         description: "The first thing visitors see — headline, subtitle, and CTAs.",
         icon: Star,
         fields: [
