@@ -30,8 +30,8 @@
 
 /* === SIDEBAR === */
 .sidebar {
-    width: 260px;
-    min-width: 260px;
+    width: 280px;
+    min-width: 280px;
     background: linear-gradient(180deg, var(--admin-green) 0%, var(--admin-green-light) 100%);
     border-right: none;
     display: flex;
@@ -109,6 +109,7 @@
     background: none;
     width: 100%;
     text-align: left;
+    white-space: nowrap;
 }
 
 .navLink:hover {

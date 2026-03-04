@@ -770,7 +770,13 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
             </div>
             {value && (
                 <div className={styles.imagePreview}>
-                    <img src={value} alt="Preview" />
+                    <img
+                        src={value}
+                        alt="Preview"
+                        onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                    />
                 </div>
             )}
         </div>

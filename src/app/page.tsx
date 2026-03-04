@@ -189,6 +189,12 @@ export default function Home() {
               sizes="100vw"
               className={styles.imageReveal}
               style={{ objectFit: "cover" }}
+              onError={(e) => {
+                // If a CMS image fails, we can fallback to the static one
+                console.warn("Hero image failed to load, falling back to static asset");
+                const target = e.target as HTMLImageElement;
+                target.src = initialHeroImages[currentSlide] || initialHeroImages[0];
+              }}
             />
           </motion.div>
         </AnimatePresence>
