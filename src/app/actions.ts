@@ -948,11 +948,14 @@ export async function loginAdmin(email: string, password: string) {
     const adminPass = process.env.ADMIN_PASSWORD;
 
     if (!adminEmail || !adminPass) {
-        return { success: false, message: "Admin credentials not configured on server. Set ADMIN_EMAIL and ADMIN_PASSWORD environment variables." };
+        const missing = [];
+        if (!adminEmail) missing.push("ADMIN_EMAIL");
+        if (!adminPass) missing.push("ADMIN_PASSWORD");
+        return { success: false, message: `Server configuration error: Missing ${missing.join(" and ")}. Please ensure these are set in Vercel and the app is redeployed.` };
     }
 
-    if (email !== adminEmail || password !== adminPass) {
-        return { success: false, message: "Invalid administrative credentials" };
+    if (email.trim().toLowerCase() !== adminEmail.trim().toLowerCase() || password !== adminPass) {
+        return { success: false, message: "Invalid administrative credentials. Please check for typos and try again." };
     }
 
     try {
