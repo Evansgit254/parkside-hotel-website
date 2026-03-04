@@ -84,11 +84,15 @@ export default function BlogAdmin() {
         try {
             const formData = new FormData();
             formData.append("file", file);
-            const { url } = await uploadImage(formData);
-            setCurrentPost({ ...currentPost, image: url });
+            const res = await uploadImage(formData);
+            if (res.success && res.url) {
+                setCurrentPost({ ...currentPost, image: res.url });
+            } else {
+                alert(res.error || "Upload failed. Please try again.");
+            }
         } catch (error) {
             console.error("Upload failed", error);
-            alert("Upload failed");
+            alert("An unexpected error occurred during upload.");
         } finally {
             setIsUploading(false);
         }

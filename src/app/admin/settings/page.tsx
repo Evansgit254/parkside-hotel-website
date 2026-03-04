@@ -57,12 +57,16 @@ export default function AdminSettings() {
         try {
             const formData = new FormData();
             formData.append("file", file);
-            const { url } = await uploadImage(formData);
-            await addHeroImage(url);
-            await fetchData();
+            const res = await uploadImage(formData);
+            if (res.success && res.url) {
+                await addHeroImage(res.url);
+                await fetchData();
+            } else {
+                alert(res.error || "Upload failed. Please try again.");
+            }
         } catch (error) {
             console.error("Upload failed:", error);
-            alert("Upload failed. Please try again.");
+            alert("An unexpected error occurred during upload.");
         } finally {
             setIsUploading(false);
         }

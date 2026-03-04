@@ -895,48 +895,84 @@ import { v2 as cloudinary } from "cloudinary";
 // Cloudinary configures itself automatically if CLOUDINARY_URL is present in the environment variables.
 
 export async function uploadImage(formData: FormData) {
-    await requireAdmin();
-    const file = formData.get("file") as File;
-    if (!file) throw new Error("No file uploaded");
+    try {
+        await requireAdmin();
+        const file = formData.get("file") as File;
+        if (!file) return { success: false, error: "No file provided" };
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+        if (!process.env.CLOUDINARY_URL) {
+            return { success: false, error: "Cloudinary is not configured. Please set CLOUDINARY_URL in Vercel environment variables." };
+        }
 
-    return new Promise<{ url: string }>((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-            { folder: "parkside_villa" },
-            (error, result) => {
-                if (error) {
-                    console.error("Cloudinary upload error:", error);
-                    return reject(new Error("Image upload failed"));
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+
+        return new Promise<{ success: boolean; url?: string; error?: string }>((resolve) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+                { folder: "parkside_villa" },
+                (error, result) => {
+                    if (error) {
+                        console.error("Cloudinary upload error:", error);
+                        return resolve({ success: false, error: `Cloudinary error: ${error.message}` });
+                    }
+                    if (!result) return resolve({ success: false, error: "Upload failed: No result from Cloudinary" });
+                    resolve({ success: true, url: result.secure_url });
                 }
-                if (!result) return reject(new Error("Upload failed, no result"));
-                resolve({ url: result.secure_url });
-            }
-        );
-        uploadStream.end(buffer);
-    });
+            );
+            uploadStream.end(buffer);
+        });
+    } catch (error: any) {
+        console.error("Upload action error:", error);
+        return { success: false, url: undefined, error: error.message || "An unexpected error occurred during upload" };
+    }
 }
 
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
 export async function uploadImageLocal(formData: FormData) {
-    await requireAdmin();
-    const file = formData.get("file") as File;
-    if (!file) throw new Error("No file uploaded");
+    try {
+        await requireAdmin();
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+        if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
+            // Most production environments like Vercel have read-only filesystems or ephemeral storage
+            return {
+                success: false,
+                url: undefined,
+                error: "Local storage is not supported in production (Vercel). Please use the 'Cloud' upload method."
+            };
+        }
 
-    const uploadsDir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(uploadsDir, { recursive: true });
+        const file = formData.get("file") as File;
+        if (!file) return { success: false, error: "No file provided" };
 
-    const filename = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
-    const filePath = path.join(uploadsDir, filename);
-    await writeFile(filePath, buffer);
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
 
-    return { url: `/uploads/${filename}` };
+        const uploadsDir = path.join(process.cwd(), "public", "uploads");
+
+        try {
+            await mkdir(uploadsDir, { recursive: true });
+        } catch (err: any) {
+            console.error("Failed to create uploads directory:", err);
+            return { success: false, error: "Server error: Failed to initialize local storage." };
+        }
+
+        const filename = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
+        const filePath = path.join(uploadsDir, filename);
+
+        try {
+            await writeFile(filePath, buffer);
+        } catch (err: any) {
+            console.error("Failed to write local file:", err);
+            return { success: false, error: "Server error: Failed to save file locally." };
+        }
+
+        return { success: true, url: `/uploads/${filename}`, error: undefined };
+    } catch (error: any) {
+        console.error("Local upload action error:", error);
+        return { success: false, url: undefined, error: error.message || "An unexpected error occurred during local upload" };
+    }
 }
 
 // ─────────────────────────────────────────────

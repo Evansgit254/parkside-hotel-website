@@ -721,20 +721,22 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
 
         try {
             const res = method === "cloudinary" ? await uploadImage(formData) : await uploadImageLocal(formData);
-            if (res?.url) {
+            if (res?.success && res.url) {
                 onChange(res.url);
+            } else {
+                alert(res?.error || "Upload failed. Please check your configuration.");
             }
         } catch (err) {
             console.error(err);
-            alert("Upload failed.");
+            alert("An unexpected error occurred during upload.");
         } finally {
             setUploading(null);
         }
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className={styles.imageUploadWrapper}>
+            <div className={styles.uploadMethods}>
                 <input
                     type="text"
                     className={styles.input}
@@ -743,14 +745,10 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
                     style={{ flex: 1 }}
                     placeholder="Image URL (Cloudinary or Local path)"
                 />
-                <label style={{
-                    display: 'flex', alignItems: 'center', gap: '0.5rem',
-                    padding: '0 1rem', background: '#F3F4F6', color: '#374151',
-                    fontSize: '0.625rem', fontWeight: 600, textTransform: 'uppercase',
-                    letterSpacing: '0.1em', cursor: 'pointer', borderRadius: '6px',
-                    border: '1px solid #D1D5DB', transition: 'all 0.2s',
-                    opacity: uploading === "local" ? 0.5 : 1
-                }}>
+                <label
+                    className={`${styles.uploadBtn} ${styles.localUploadBtn}`}
+                    style={{ opacity: uploading === "local" ? 0.5 : 1 }}
+                >
                     {uploading === "local" ? <Loader2 className={styles.spinner} size={14} /> : <Upload size={14} />}
                     Local
                     <input
@@ -760,14 +758,10 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
                         disabled={!!uploading}
                     />
                 </label>
-                <label style={{
-                    display: 'flex', alignItems: 'center', gap: '0.5rem',
-                    padding: '0 1rem', background: '#144B36', color: '#FFFFFF',
-                    fontSize: '0.625rem', fontWeight: 600, textTransform: 'uppercase',
-                    letterSpacing: '0.1em', cursor: 'pointer', borderRadius: '6px',
-                    border: '1px solid #144B36', transition: 'all 0.2s',
-                    opacity: uploading === "cloudinary" ? 0.5 : 1
-                }}>
+                <label
+                    className={`${styles.uploadBtn} ${styles.cloudUploadBtn}`}
+                    style={{ opacity: uploading === "cloudinary" ? 0.5 : 1 }}
+                >
                     {uploading === "cloudinary" ? <Loader2 className={styles.spinner} size={14} /> : <Cloud size={14} />}
                     Cloud
                     <input
@@ -778,12 +772,13 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
                     />
                 </label>
             </div>
+            <div style={{ fontSize: '0.65rem', color: '#6B7280', marginTop: '-0.25rem', paddingLeft: '0.25rem' }}>
+                Tip: Use <b>Cloud</b> for images hosted on the web (recommended for Vercel).
+                <b> Local</b> works only on local development or dedicated servers.
+            </div>
             {value && (
-                <div style={{
-                    width: '120px', height: '80px', borderRadius: '8px', overflow: 'hidden',
-                    border: '1px solid rgba(0,0,0,0.1)', background: '#F9FAFB'
-                }}>
-                    <img src={value} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div className={styles.imagePreview}>
+                    <img src={value} alt="Preview" />
                 </div>
             )}
         </div>

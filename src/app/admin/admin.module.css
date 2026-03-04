@@ -4,7 +4,7 @@
     display: flex;
     background: var(--admin-bg);
     color: var(--admin-text);
-    font-family: var(--font-sans);
+    font-family: var(--font-mulish), sans-serif;
     position: relative;
     overflow-x: hidden;
 }
@@ -51,11 +51,11 @@
 }
 
 .sidebarBrand {
-    font-family: var(--font-serif);
-    font-size: 1.125rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-family: var(--font-playfair), serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: none;
     color: rgba(255, 255, 255, 0.95);
     display: block;
     margin-bottom: 0.25rem;
@@ -385,13 +385,13 @@
 }
 
 .sectionTitle {
-    font-family: var(--font-serif);
-    font-size: 2.25rem;
+    font-family: var(--font-playfair), serif;
+    font-size: 2.5rem;
     font-weight: 700;
     color: var(--admin-text);
     margin: 0;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
 }
 
 .sectionSubtitle {
@@ -751,24 +751,27 @@
 }
 
 /* === INPUTS === */
-.input {
+.input,
+.textarea {
     width: 100%;
-    padding: 0.875rem 1.125rem;
-    background: var(--admin-surface);
-    border: 1px solid var(--admin-border);
-    border-radius: 10px;
-    color: var(--admin-text);
-    font-size: 0.875rem;
+    padding: 0.875rem 1.25rem;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    color: #111827;
+    font-size: 0.9375rem;
     font-weight: 400;
     outline: none;
-    transition: all 0.2s ease;
-    font-family: inherit;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: var(--font-mulish), sans-serif;
+    line-height: 1.5;
 }
 
-.input:focus {
-    border-color: var(--admin-green);
-    background: var(--admin-surface);
-    box-shadow: 0 0 0 3px var(--admin-green-muted);
+.input:focus,
+.textarea:focus {
+    border-color: var(--forest-green);
+    background: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(20, 75, 54, 0.08);
 }
 
 .input::placeholder {
@@ -786,12 +789,19 @@
 
 .label {
     display: block;
-    font-size: 0.5625rem;
-    letter-spacing: 0.2em;
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--admin-green);
-    margin-bottom: 0.625rem;
+    color: #374151;
+    margin-bottom: 0.5rem;
     font-weight: 700;
+}
+
+.formGroup {
+    margin-bottom: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .formGrid {
@@ -2380,6 +2390,76 @@
 
     .liveIndicator {
         display: none;
+    }
+
+    /* === ImageField Component Enhancements === */
+    .imageUploadWrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+        background: #F9FAFB;
+        border: 1px solid #E5E7EB;
+        border-radius: 12px;
+    }
+
+    .uploadMethods {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .uploadBtn {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        padding: 0.75rem 1.25rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid transparent;
+    }
+
+    .localUploadBtn {
+        background: #FFFFFF;
+        color: #374151;
+        border-color: #D1D5DB;
+    }
+
+    .localUploadBtn:hover:not(:disabled) {
+        background: #F3F4F6;
+        border-color: #9CA3AF;
+    }
+
+    .cloudUploadBtn {
+        background: var(--forest-green);
+        color: #FFFFFF;
+        border-color: var(--forest-green);
+    }
+
+    .cloudUploadBtn:hover:not(:disabled) {
+        background: var(--forest-green-light);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(20, 75, 54, 0.2);
+    }
+
+    .imagePreview {
+        width: 140px;
+        height: 90px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        background: #FFFFFF;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .imagePreview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .topBarTime {

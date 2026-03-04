@@ -30,11 +30,15 @@ export default function MediaUpload({ value, onChange, label, type = "image", pl
         try {
             const formData = new FormData();
             formData.append("file", file);
-            const { url } = await uploadImage(formData);
-            onChange(url);
+            const res = await uploadImage(formData);
+            if (res.success && res.url) {
+                onChange(res.url);
+            } else {
+                alert(res.error || "Upload failed. Please try again.");
+            }
         } catch (error) {
             console.error("Upload failed", error);
-            alert("Upload failed. Please try again.");
+            alert("An unexpected error occurred during upload.");
         } finally {
             setUploading(false);
         }

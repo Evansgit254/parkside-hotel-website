@@ -46,11 +46,15 @@ export default function AdminRooms() {
         try {
             const formData = new FormData();
             formData.append("file", file);
-            const { url } = await uploadImage(formData);
-            setEditForm((prev: any) => ({ ...prev, image: url }));
+            const res = await uploadImage(formData);
+            if (res.success && res.url) {
+                setEditForm((prev: any) => ({ ...prev, image: res.url }));
+            } else {
+                alert(res.error || "Upload failed. Please try again.");
+            }
         } catch (error) {
             console.error("Upload failed:", error);
-            alert("Upload failed. Please try again.");
+            alert("An unexpected error occurred during upload.");
         } finally {
             setIsUploading(false);
         }
