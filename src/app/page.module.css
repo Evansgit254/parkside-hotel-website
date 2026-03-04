@@ -1529,10 +1529,11 @@
 }
 
 .footerDesc {
-    color: rgba(255, 255, 255, 0.9);
+    color: #FFFFFF;
     line-height: 1.8;
     font-size: 0.875rem;
     max-width: 300px;
+    opacity: 0.9;
 }
 
 .footerTitle {
@@ -1554,9 +1555,10 @@
 .footerLinks a {
     font-family: var(--font-body);
     font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.8);
-    transition: color 0.3s ease;
+    color: #FFFFFF;
+    transition: all 0.3s ease;
     font-weight: 500;
+    opacity: 0.85;
 }
 
 .footerLinks a:hover {
@@ -1573,7 +1575,8 @@
     gap: 1.5rem;
     align-items: center;
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: #FFFFFF;
+    opacity: 0.9;
     letter-spacing: 0.05em;
 }
 

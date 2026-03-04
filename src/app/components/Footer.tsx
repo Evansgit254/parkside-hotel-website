@@ -89,7 +89,7 @@ export default function Footer() {
                     <div>
                         <h4 className={styles.footerTitle}>{content.footer_titles?.col3 || "Visit Us"}</h4>
                         <div className={styles.footerLinks}>
-                            <span style={{ color: 'var(--text-secondary)' }}>{contactInfo.address || "Parkside Villa, Kitui"}</span>
+                            <span style={{ color: '#FFFFFF', opacity: 0.9 }}>{contactInfo.address || "Parkside Villa, Kitui"}</span>
                         </div>
                     </div>
                 </div>
