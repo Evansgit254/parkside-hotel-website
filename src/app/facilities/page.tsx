@@ -23,6 +23,7 @@ export default async function FacilitiesPage() {
                     alt="Facilities Hero"
                     fill
                     priority
+                    quality={90}
                     className={styles.heroBgImage}
                     style={{ objectFit: 'cover' }}
                     fallbackText="Luxury Facilities"

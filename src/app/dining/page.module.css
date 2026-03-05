@@ -6,7 +6,7 @@
 
 .hero {
     position: relative;
-    height: 60vh;
+    height: 50vh;
     min-height: 400px;
     width: 100%;
     display: flex;
@@ -22,7 +22,7 @@
 .heroOverlay {
     position: absolute;
     inset: 0;
-    background: rgba(28, 28, 26, 0.4);
+    background: rgba(0, 0, 0, 0.4);
     z-index: 1;
 }
 

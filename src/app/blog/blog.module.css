@@ -22,7 +22,7 @@
 .heroOverlay {
     position: absolute;
     inset: 0;
-    background: rgba(28, 28, 26, 0.4);
+    background: rgba(0, 0, 0, 0.4);
 }
 
 .heroContent {

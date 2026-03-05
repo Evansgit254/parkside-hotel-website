@@ -85,7 +85,7 @@ export default function Dining() {
                         alt="Fine Dining"
                         fill
                         priority
-                        quality={100}
+                        quality={90}
                         className={styles.heroImage}
                         style={{ objectFit: 'cover' }}
                         fallbackText="Our Culinary Haven"

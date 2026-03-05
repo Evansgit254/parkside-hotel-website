@@ -339,10 +339,10 @@
     min-height: 700px;
     width: 100%;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
     background: #050f0b;
-    /* Deep luxury dark background */
 }
 
 .heroSlide {
@@ -361,7 +361,7 @@
 .heroOverlay {
     position: absolute;
     inset: 0;
-    background: rgba(5, 10, 8, 0.55);
+    background: rgba(0, 0, 0, 0.4);
     z-index: 3;
 }
 
@@ -369,10 +369,11 @@
     position: relative;
     z-index: 10;
     padding: var(--container-padding);
-    padding-bottom: clamp(4rem, 15vw, 7rem);
     max-width: 1200px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
     gap: 2rem;
     width: 100%;
 }
@@ -1325,24 +1326,25 @@
     background: #F8F6F0;
     padding: 5rem var(--container-padding) 10rem;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     scroll-margin-top: 110px;
 }
 
 .contactSection::before {
     content: 'CONTACT';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    bottom: 2rem;
+    left: var(--container-padding, 2rem);
     font-family: var(--font-serif);
-    font-size: 20vw;
+    font-size: clamp(4rem, 10vw, 10rem);
     font-weight: 300;
     color: var(--primary);
     white-space: nowrap;
     pointer-events: none;
-    letter-spacing: -0.03em;
-    opacity: 0.1;
+    letter-spacing: 0.05em;
+    opacity: 0.07;
+    z-index: 0;
+    line-height: 1;
 }
 
 .contactInner {

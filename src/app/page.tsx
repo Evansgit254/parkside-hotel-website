@@ -181,7 +181,7 @@ export default function Home() {
             <SafeImage
               src={heroImages[currentSlide] || initialHeroImages[0]}
               alt="Parkside Villa Kitui"
-              fill priority quality={75}
+              fill priority quality={90}
               sizes="100vw"
               className={styles.imageReveal}
               style={{ objectFit: "cover" }}

@@ -22,7 +22,7 @@ export default function AdminDashboard() {
     }, []);
 
     const stats = [
-        { name: "Global Reach", value: "1,280", label: "Monthly Visits", icon: TrendingUp, color: "#3b82f6" },
+        { name: "Visitors", value: liveStats?.visitors?.toString() || "—", label: "Monthly Visits", icon: TrendingUp, color: "#3b82f6" },
         { name: "Reservations", value: liveStats?.leads?.toString() || "0", label: "Pending Enquiries", icon: MessageSquare, color: "#C9A84C" },
         { name: "Accommodations", value: liveStats?.rooms?.toString() || "0", label: "Active Suites", icon: Hotel, color: "#10b981" },
         { name: "Menu Items", value: liveStats?.menus?.toString() || "0", label: "Dining Curations", icon: Utensils, color: "#f59e0b" },
@@ -50,9 +50,6 @@ export default function AdminDashboard() {
                             <div className={styles.cardIconRow}>
                                 <div className={styles.cardIcon} style={{ color: stat.color }}>
                                     <stat.icon size={16} />
-                                </div>
-                                <div className={styles.cardTrend}>
-                                    <ArrowUpRight size={11} /> +12%
                                 </div>
                             </div>
                             <div className={styles.cardValue}>{stat.value}</div>

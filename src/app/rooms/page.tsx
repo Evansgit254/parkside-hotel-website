@@ -20,7 +20,7 @@ export default async function RoomsPage() {
                     alt="Rooms Hero"
                     fill
                     priority
-                    quality={75}
+                    quality={90}
                     sizes="100vw"
                     className={styles.heroImage}
                     style={{ objectFit: 'cover' }}

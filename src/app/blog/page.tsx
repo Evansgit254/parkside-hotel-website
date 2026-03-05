@@ -20,6 +20,7 @@ export default async function BlogPage() {
                     alt="Blog Hero"
                     fill
                     priority
+                    quality={90}
                     className={styles.heroImage}
                     style={{ objectFit: 'cover' }}
                     fallbackText="Our Journal"

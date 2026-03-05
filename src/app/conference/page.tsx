@@ -21,7 +21,7 @@ export default async function ConferencePage() {
                     alt="Conference Facilities"
                     fill
                     priority
-                    quality={75}
+                    quality={90}
                     className={styles.heroImage}
                     style={{ objectFit: 'cover' }}
                     fallbackText="Our Premium Venues"
@@ -48,7 +48,7 @@ export default async function ConferencePage() {
                                         alt={hall.name}
                                         fill
                                         sizes="(max-width: 768px) 100vw, 50vw"
-                                        quality={75}
+                                        quality={90}
                                         priority={index < 2}
                                         className={styles.listImage}
                                         style={{ objectFit: 'cover' }}

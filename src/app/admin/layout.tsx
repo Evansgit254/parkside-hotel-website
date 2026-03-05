@@ -73,15 +73,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: "Promotions & Offers", href: "/admin/promotions", icon: Tag },
         { name: "Blog Posts", href: "/admin/blog", icon: Edit3 },
         { name: "Gallery", href: "/admin/gallery", icon: ImageIcon },
-        { name: "Hero Images", href: "/admin/content?tab=hero-images", icon: Star },
-        { name: "Navigation", href: "/admin/content?tab=navigation", icon: LayoutDashboard },
         { name: "Site Content", href: "/admin/content", icon: FileText },
         { name: "Testimonials", href: "/admin/testimonials", icon: Star },
         { name: "Settings", href: "/admin/settings", icon: Settings },
     ];
 
+    // Determine active nav item based on pathname
+    const isNavActive = (href: string) => {
+        // Exact match for dashboard
+        if (href === "/admin") return pathname === "/admin";
+        // For other links, use startsWith to handle sub-routes
+        return pathname.startsWith(href.split("?")[0]);
+    };
+
     // Get page title from pathname
-    const currentPage = navItems.find(i => i.href === pathname)?.name || "Dashboard";
+    const currentPage = navItems.find(i => isNavActive(i.href))?.name || "Dashboard";
 
     return (
         <div className={styles.adminContainer}>
@@ -117,7 +123,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                className={`${styles.navLink} ${pathname === item.href ? styles.navLinkActive : ""}`}
+                                className={`${styles.navLink} ${isNavActive(item.href) ? styles.navLinkActive : ""}`}
                             >
                                 <item.icon size={18} className={styles.navIcon} />
                                 <span>{item.name}</span>
@@ -131,7 +137,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                className={`${styles.navLink} ${pathname === item.href ? styles.navLinkActive : ""}`}
+                                className={`${styles.navLink} ${isNavActive(item.href) ? styles.navLinkActive : ""}`}
                             >
                                 <item.icon size={18} className={styles.navIcon} />
                                 <span>{item.name}</span>
@@ -143,7 +149,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         <span className={styles.navGroupLabel}>System</span>
                         <Link
                             href="/admin/settings"
-                            className={`${styles.navLink} ${pathname === "/admin/settings" ? styles.navLinkActive : ""}`}
+                            className={`${styles.navLink} ${isNavActive("/admin/settings") ? styles.navLinkActive : ""}`}
                         >
                             <Settings size={18} className={styles.navIcon} />
                             <span>Settings</span>
