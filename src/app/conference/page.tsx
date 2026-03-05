@@ -1,38 +1,67 @@
-export const revalidate = 3600;
+"use client";
 
 import { getSiteData } from "../actions";
 import Link from "next/link";
 import SafeImage from "../components/SafeImage";
 import styles from "./conference.module.css";
 import { Users, ArrowRight } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 
-export default async function ConferencePage() {
-    const data = await getSiteData();
-    const halls = (data as any).conferenceHalls || [];
-    const content = data.content || {};
+export default function ConferencePage() {
+    const [halls, setHalls] = useState<any[]>([]);
+    const [content, setContent] = useState<any>({});
+    const containerRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end start"]
+    });
+
+    const yParallax = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+
+    useEffect(() => {
+        getSiteData().then(data => {
+            setHalls((data as any).conferenceHalls || []);
+            setContent(data.content || {});
+        });
+    }, []);
+
     const intro = content?.conference_intro || {};
 
     return (
-        <div className={styles.pageWrapper}>
+        <div className={styles.pageWrapper} ref={containerRef}>
             {/* Hero */}
             <section className={styles.hero}>
-                <SafeImage
-                    src={halls[0]?.image || "https://res.cloudinary.com/dizwm3mic/image/upload/f_auto,q_auto/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg"}
-                    alt="Conference Facilities"
-                    fill
-                    priority
-                    quality={90}
-                    className={styles.heroImage}
-                    style={{ objectFit: 'cover' }}
-                    fallbackText="Our Premium Venues"
-                />
+                <motion.div
+                    style={{ y: yParallax, height: '100%', width: '100%', position: 'absolute', top: 0, left: 0 }}
+                    initial={{ scale: 1.1, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 1.2 }}
+                >
+                    <SafeImage
+                        src={halls[0]?.image || "https://res.cloudinary.com/dizwm3mic/image/upload/f_auto,q_auto/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg"}
+                        alt="Conference Facilities"
+                        fill
+                        priority
+                        quality={90}
+                        className={styles.heroImage}
+                        style={{ objectFit: 'cover' }}
+                        fallbackText="Our Premium Venues"
+                    />
+                </motion.div>
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>
-                    <span className={styles.badge}>{intro.badge || "World-Class Venues"}</span>
-                    <h1 className={styles.title}>{intro.title || "Conference & Events"}</h1>
-                    <p className={styles.subtitle}>
-                        {intro.desc || "State-of-the-art conference halls designed for productive meetings, corporate events, and unforgettable celebrations."}
-                    </p>
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
+                    >
+                        <span className={styles.badge}>{intro.badge || "World-Class Venues"}</span>
+                        <h1 className={styles.title}>{intro.title || "Conference & Events"}</h1>
+                        <p className={styles.subtitle}>
+                            {intro.desc || "State-of-the-art conference halls designed for productive meetings, corporate events, and unforgettable celebrations."}
+                        </p>
+                    </motion.div>
                 </div>
             </section>
 

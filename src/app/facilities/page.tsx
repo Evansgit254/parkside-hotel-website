@@ -1,40 +1,68 @@
-export const revalidate = 3600;
+"use client";
 
 import { getSiteData } from "../actions";
 import { Users, Utensils, Waves, Wine, Hotel, ArrowRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import styles from "../rooms/rooms.module.css"; // Using the finalized high-end vertical list styles
 import SafeImage from "../components/SafeImage";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 
-export default async function FacilitiesPage() {
-    const data = await getSiteData();
-    const facilities = data.facilities || [];
-    const content = data.content || {};
+export default function FacilitiesPage() {
+    const [facilities, setFacilities] = useState<any[]>([]);
+    const [content, setContent] = useState<any>({});
+    const containerRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end start"]
+    });
+
+    const yParallax = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+
+    useEffect(() => {
+        getSiteData().then(data => {
+            setFacilities(data.facilities || []);
+            setContent(data.content || {});
+        });
+    }, []);
+
     const facilitiesIntro = content?.facilities_intro || {};
-
     const Icons: Record<string, any> = { Users, Utensils, Waves, Wine, Hotel };
 
     return (
-        <div className={styles.listingWrapper}>
+        <div className={styles.listingWrapper} ref={containerRef}>
             {/* Hero Section */}
             <section className={styles.heroSection}>
-                <SafeImage
-                    src={content?.facilities_hero?.image || "https://res.cloudinary.com/dizwm3mic/image/upload/f_auto,q_auto/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg"}
-                    alt="Facilities Hero"
-                    fill
-                    priority
-                    quality={90}
-                    className={styles.heroBgImage}
-                    style={{ objectFit: 'cover' }}
-                    fallbackText="Luxury Facilities"
-                />
+                <motion.div
+                    style={{ y: yParallax, height: '100%', width: '100%', position: 'absolute', top: 0, left: 0 }}
+                    initial={{ scale: 1.1, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 1.2 }}
+                >
+                    <SafeImage
+                        src={content?.facilities_hero?.image || "https://res.cloudinary.com/dizwm3mic/image/upload/f_auto,q_auto/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg"}
+                        alt="Facilities Hero"
+                        fill
+                        priority
+                        quality={90}
+                        className={styles.heroBgImage}
+                        style={{ objectFit: 'cover' }}
+                        fallbackText="Luxury Facilities"
+                    />
+                </motion.div>
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>
-                    <span className={styles.heroBadge}>{facilitiesIntro.badge || "World-Class Amenities"}</span>
-                    <h1 className={styles.heroTitle}>{facilitiesIntro.title || "Premium Hotel Facilities"}</h1>
-                    <p className={styles.heroSubtitle}>
-                        {facilitiesIntro.desc || "Experience a blend of luxury and convenience with our top-tier facilities designed for your comfort."}
-                    </p>
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
+                    >
+                        <span className={styles.heroBadge}>{facilitiesIntro.badge || "World-Class Amenities"}</span>
+                        <h1 className={styles.heroTitle}>{facilitiesIntro.title || "Premium Hotel Facilities"}</h1>
+                        <p className={styles.heroSubtitle}>
+                            {facilitiesIntro.desc || "Experience a blend of luxury and convenience with our top-tier facilities designed for your comfort."}
+                        </p>
+                    </motion.div>
                 </div>
             </section>
 
