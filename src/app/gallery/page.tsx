@@ -17,55 +17,56 @@ export default function GalleryPage() {
         getSiteData().then(data => {
             const allImages: any[] = [];
 
-            // Extract from Hero
-            if (data.heroImages) {
-                data.heroImages.forEach((img: string) =>
-                    allImages.push({ url: img, category: "Property", caption: "Parkside Villa Architecture", type: 'image' })
-                );
-            }
-
-            // Extract from Rooms
-            if (data.rooms) {
-                data.rooms.forEach((room: any) => {
-                    if (room.image) allImages.push({ url: room.image, category: "Accommodation", caption: room.name, type: 'image' });
+            // 1. Process Dedicated Gallery Categories and their Items
+            if (data.galleryCategories) {
+                data.galleryCategories.forEach((cat: any) => {
+                    if (cat.items) {
+                        cat.items.forEach((item: any) => {
+                            allImages.push({
+                                url: item.url,
+                                category: cat.name,
+                                caption: item.title,
+                                type: item.type,
+                                thumbnail: item.type === 'video' ? `https://img.youtube.com/vi/${item.url.split('v=')[1] || item.url.split('/').pop()}/0.jpg` : undefined
+                            });
+                        });
+                    }
                 });
             }
 
-            // Extract from Facilities
-            if (data.facilities) {
-                data.facilities.forEach((fac: any) => {
-                    if (fac.image) allImages.push({ url: fac.image, category: "Facilities", caption: fac.title, type: 'image' });
-                });
-            }
-
-            // Extract from dedicated Gallery table
+            // 2. Process Uncategorized dedicated items
             if (data.galleryItems) {
-                data.galleryItems.forEach((item: any) => {
-                    const titleParts = item.title?.split(" - ") || [];
-                    const folderRaw = titleParts[0] || "General";
-                    // Normalize folder name: Replace underscores with spaces, Title Case
-                    const folder = folderRaw.replace(/_/g, ' ').split(' ').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
-
+                const uncategorized = data.galleryItems.filter((i: any) => !i.categoryId);
+                uncategorized.forEach((item: any) => {
                     allImages.push({
                         url: item.url,
-                        category: item.type === 'video' ? "Videos" : folder,
-                        caption: titleParts[1] || item.title,
+                        category: "General",
+                        caption: item.title,
                         type: item.type,
                         thumbnail: item.type === 'video' ? `https://img.youtube.com/vi/${item.url.split('v=')[1] || item.url.split('/').pop()}/0.jpg` : undefined
                     });
                 });
             }
 
-            // Extract from Videos (Legacy/Backwards compatibility)
-            if (data.galleryVideos && (!data.galleryItems || data.galleryItems.length === 0)) {
-                data.galleryVideos.forEach((vid: any) => {
-                    allImages.push({
-                        url: vid.url,
-                        category: "Videos",
-                        caption: vid.title,
-                        type: 'video',
-                        thumbnail: vid.thumbnail
-                    });
+            // 3. Fallback/Auto-extracted (Property, Accommodation, Facilities)
+            // Extract from Hero
+            if (data.heroImages && allImages.length === 0) {
+                data.heroImages.forEach((img: string) =>
+                    allImages.push({ url: img, category: "Property", caption: "Parkside Villa Architecture", type: 'image' })
+                );
+            }
+
+            // Extract from Rooms
+            if (data.rooms && allImages.filter((m: any) => m.category === "Accommodation").length === 0) {
+                data.rooms.forEach((room: any) => {
+                    if (room.image) allImages.push({ url: room.image, category: "Accommodation", caption: room.name, type: 'image' });
+                });
+            }
+
+            // Extract from Facilities
+            if (data.facilities && allImages.filter((m: any) => m.category === "Facilities").length === 0) {
+                data.facilities.forEach((fac: any) => {
+                    if (fac.image) allImages.push({ url: fac.image, category: "Facilities", caption: fac.title, type: 'image' });
                 });
             }
 

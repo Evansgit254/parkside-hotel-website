@@ -116,11 +116,20 @@ model HeroImage {
 }
 
 model GalleryItem {
-  id    String  @id @default(cuid())
-  url   String
-  type  String
-  title String?
-  order Int     @default(0)
+  id         String           @id @default(cuid())
+  url        String
+  type       String
+  title      String?
+  order      Int              @default(0)
+  categoryId String?
+  category   GalleryCategory? @relation(fields: [categoryId], references: [id])
+}
+
+model GalleryCategory {
+  id    String        @id @default(cuid())
+  name  String        @unique
+  order Int           @default(0)
+  items GalleryItem[]
 }
 
 model Promotion {

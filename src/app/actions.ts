@@ -17,7 +17,7 @@ export async function getAuthSession() {
 import {
     Room, Lead, User, Testimonial, BlogPost, Facility,
     MenuCategory, HeroImage, GalleryItem, Promotion, Subscriber, ContactInfo,
-    SiteContent, DiningVenue
+    SiteContent, DiningVenue, GalleryCategory
 } from "@prisma/client";
 
 // ─────────────────────────────────────────────
@@ -112,10 +112,14 @@ export async function getSiteData() {
                 prisma.subscriber.findMany(),
                 prisma.promotion.findMany({ orderBy: { createdAt: "desc" } }),
                 prisma.user.findMany(),
-                prisma.galleryItem.findMany({ orderBy: { order: "asc" } }),
+                prisma.galleryItem.findMany({
+                    orderBy: { order: "asc" },
+                    include: { category: true }
+                }),
                 prisma.conferenceHall.findMany({ orderBy: { createdAt: "asc" } }),
                 prisma.siteContent.findMany(),
                 prisma.diningVenue.findMany({ orderBy: { createdAt: "asc" } }),
+                prisma.galleryCategory.findMany({ orderBy: { order: "asc" } }),
             ]),
             timeout(30000) // Increased to 30s
         ]) as any;
@@ -123,7 +127,7 @@ export async function getSiteData() {
         const [
             heroImages, rooms, facilities, testimonials, menuCategories,
             contactInfoRow, blogPosts, leads, subscribers, promotions,
-            users, galleryItems, conferenceHalls, siteContentRows, diningVenues
+            users, galleryItems, conferenceHalls, siteContentRows, diningVenues, galleryCategories
         ] = results;
 
         const content = siteContentRows.reduce((acc: any, row: SiteContent) => {
@@ -187,6 +191,10 @@ export async function getSiteData() {
             users: users.map(({ password: _, ...u }: any) => u),
             galleryItems: (galleryItems as any[]).map(i => ({ ...i, url: optimizeCloudinary(i.url) })),
             galleryVideos: galleryItems.filter((i: GalleryItem) => i.type === "video").map((i: any) => ({ ...i, url: optimizeCloudinary(i.url) })),
+            galleryCategories: (galleryCategories as any[]).map(c => ({
+                ...c,
+                items: galleryItems.filter((i: any) => i.categoryId === c.id).map((i: any) => ({ ...i, url: optimizeCloudinary(i.url) }))
+            })),
             content,
         };
 
@@ -222,15 +230,19 @@ export async function getPublicSiteData() {
             prisma.menuCategory.findMany({ orderBy: { order: "asc" } }),
             prisma.contactInfo.findUnique({ where: { id: 1 } }),
             prisma.blogPost.findMany({ orderBy: { createdAt: "desc" } }),
-            prisma.galleryItem.findMany({ orderBy: { order: "asc" } }),
+            prisma.galleryItem.findMany({
+                orderBy: { order: "asc" },
+                include: { category: true }
+            }),
             prisma.conferenceHall.findMany({ orderBy: { createdAt: "asc" } }),
             prisma.siteContent.findMany(),
             prisma.diningVenue.findMany({ orderBy: { createdAt: "asc" } }),
+            prisma.galleryCategory.findMany({ orderBy: { order: "asc" } }),
         ]);
 
         const [
             heroImages, rooms, facilities, testimonials, menuCategories,
-            contactInfoRow, blogPosts, galleryItems, conferenceHalls, siteContentRows, diningVenues
+            contactInfoRow, blogPosts, galleryItems, conferenceHalls, siteContentRows, diningVenues, galleryCategories
         ] = results;
 
         const content = siteContentRows.reduce((acc: any, row: SiteContent) => {
@@ -274,6 +286,10 @@ export async function getPublicSiteData() {
             blogPosts: (blogPosts as any[]).map(p => ({ ...p, image: p.image ? optimizeCloudinary(p.image) : "" })),
             galleryItems: (galleryItems as any[]).map(i => ({ ...i, url: optimizeCloudinary(i.url) })),
             galleryVideos: galleryItems.filter((i: GalleryItem) => i.type === "video").map((i: any) => ({ ...i, url: optimizeCloudinary(i.url) })),
+            galleryCategories: (galleryCategories as any[]).map(c => ({
+                ...c,
+                items: galleryItems.filter((i: any) => i.categoryId === c.id).map((i: any) => ({ ...i, url: optimizeCloudinary(i.url) }))
+            })),
             content,
         };
     } catch (error) {
@@ -1237,20 +1253,29 @@ export async function deleteBlogPost(id: string) {
 export async function getGalleryItems() {
     if (!isDatabaseConfigured()) return [];
     try {
-        return await prisma.galleryItem.findMany({ orderBy: { order: "asc" } });
+        return await prisma.galleryItem.findMany({
+            orderBy: { order: "asc" },
+            include: { category: true }
+        });
     } catch (error) {
         console.error("Error getting gallery items:", error);
         return [];
     }
 }
 
-export async function addGalleryItem(item: { url: string; type: string; title?: string }) {
+export async function addGalleryItem(item: { url: string; type: string; title?: string; categoryId?: string }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
         const count = await prisma.galleryItem.count();
         const newItem = await prisma.galleryItem.create({
-            data: { ...item, order: count },
+            data: {
+                url: item.url,
+                type: item.type,
+                title: item.title,
+                order: count,
+                categoryId: item.categoryId || null
+            },
         });
         revalidateAll();
         return { success: true, item: newItem };
@@ -1273,7 +1298,7 @@ export async function deleteGalleryItem(id: string) {
     }
 }
 
-export async function updateGalleryItem(id: string, item: { url: string; type: string; title?: string }) {
+export async function updateGalleryItem(id: string, item: { url: string; type: string; title?: string; categoryId?: string }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
@@ -1283,6 +1308,7 @@ export async function updateGalleryItem(id: string, item: { url: string; type: s
                 url: item.url,
                 type: item.type,
                 title: item.title,
+                categoryId: item.categoryId || null
             },
         });
         revalidateAll();
@@ -1307,6 +1333,80 @@ export async function updateGalleryOrder(items: { id: string; order: number }[])
         return { success: true };
     } catch (error) {
         console.error("Error updating gallery order:", error);
+        return { success: false, error: "Database error" };
+    }
+}
+
+// ─────────────────────────────────────────────
+// GALLERY CATEGORIES
+// ─────────────────────────────────────────────
+
+export async function getGalleryCategories() {
+    if (!isDatabaseConfigured()) return [];
+    try {
+        return await prisma.galleryCategory.findMany({
+            orderBy: { order: "asc" },
+            include: { _count: { select: { items: true } } }
+        });
+    } catch (error) {
+        console.error("Error getting gallery categories:", error);
+        return [];
+    }
+}
+
+export async function addGalleryCategory(data: { name: string; order?: number }) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await requireAdmin();
+        const count = await prisma.galleryCategory.count();
+        const newCategory = await prisma.galleryCategory.create({
+            data: {
+                name: data.name,
+                order: data.order ?? count,
+            },
+        });
+        revalidateAll();
+        return { success: true, category: newCategory };
+    } catch (error) {
+        console.error("Error adding gallery category:", error);
+        return { success: false, error: "Database error" };
+    }
+}
+
+export async function updateGalleryCategory(id: string, data: { name: string; order?: number }) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await requireAdmin();
+        const updated = await prisma.galleryCategory.update({
+            where: { id },
+            data: {
+                name: data.name,
+                order: data.order,
+            },
+        });
+        revalidateAll();
+        return { success: true, category: updated };
+    } catch (error) {
+        console.error("Error updating gallery category:", error);
+        return { success: false, error: "Database error" };
+    }
+}
+
+export async function deleteGalleryCategory(id: string) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await requireAdmin();
+        // Option 1: Set categoryId to null for all items in this category
+        await prisma.galleryItem.updateMany({
+            where: { categoryId: id },
+            data: { categoryId: null }
+        });
+
+        await prisma.galleryCategory.delete({ where: { id } });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting gallery category:", error);
         return { success: false, error: "Database error" };
     }
 }

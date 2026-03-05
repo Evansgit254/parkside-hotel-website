@@ -2,19 +2,22 @@
 export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
-import { getSiteData, getGalleryItems, addGalleryItem, deleteGalleryItem, uploadImage, updateGalleryOrder, updateGalleryItem } from "../../actions";
+import { getSiteData, getGalleryItems, addGalleryItem, deleteGalleryItem, uploadImage, updateGalleryOrder, updateGalleryItem, getGalleryCategories, addGalleryCategory, updateGalleryCategory, deleteGalleryCategory } from "../../actions";
 import styles from "../admin.module.css";
 import { Plus, Trash2, Edit2, Image as ImageIcon, Video, Upload, Grid, List, Save, X, ExternalLink, Move, Loader2 } from "lucide-react";
-import { GalleryItem } from "@prisma/client";
+import { GalleryItem, GalleryCategory } from "@prisma/client";
 
 import MediaUpload from "../components/MediaUpload";
 import { showToast } from "../components/AdminToast";
 
 export default function GalleryAdmin() {
     const [items, setItems] = useState<GalleryItem[]>([]);
+    const [categories, setCategories] = useState<GalleryCategory[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editForm, setEditForm] = useState({ id: "", url: "", type: "image", title: "" });
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+    const [editForm, setEditForm] = useState({ id: "", url: "", type: "image", title: "", categoryId: "" });
+    const [categoryForm, setCategoryForm] = useState({ id: "", name: "" });
     const [activeTab, setActiveTab] = useState<"image" | "video">("image");
 
     useEffect(() => {
@@ -22,22 +25,25 @@ export default function GalleryAdmin() {
     }, []);
 
     const loadItems = async () => {
-        const galleryItems = await getGalleryItems();
-        if (galleryItems) {
-            setItems(galleryItems);
-        }
+        setLoading(true);
+        const [galleryItems, galleryCats] = await Promise.all([
+            getGalleryItems(),
+            getGalleryCategories()
+        ]);
+        if (galleryItems) setItems(galleryItems as any);
+        if (galleryCats) setCategories(galleryCats);
         setLoading(false);
     };
 
     const [error, setError] = useState<string | null>(null);
 
-    const handleEdit = (item: GalleryItem) => {
-        setEditForm({ id: item.id, url: item.url, type: item.type, title: item.title || "" });
+    const handleEdit = (item: any) => {
+        setEditForm({ id: item.id, url: item.url, type: item.type, title: item.title || "", categoryId: item.categoryId || "" });
         setIsModalOpen(true);
     };
 
     const handleAdd = () => {
-        setEditForm({ id: "", url: "", type: "image", title: "" });
+        setEditForm({ id: "", url: "", type: "image", title: "", categoryId: "" });
         setIsModalOpen(true);
     };
 
@@ -58,7 +64,7 @@ export default function GalleryAdmin() {
         if (res.success) {
             await loadItems();
             setIsModalOpen(false);
-            setEditForm({ id: "", url: "", type: "image", title: "" });
+            setEditForm({ id: "", url: "", type: "image", title: "", categoryId: "" });
             showToast(editForm.id ? "Gallery item updated successfully" : "Gallery item added successfully", "success");
         } else {
             setError(res.error || "Failed to save item.");
@@ -75,6 +81,39 @@ export default function GalleryAdmin() {
         } else {
             showToast(res.error || "Failed to delete item.", "error");
         }
+    };
+
+    const handleCategorySave = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!categoryForm.name) return;
+        setLoading(true);
+        let res;
+        if (categoryForm.id) {
+            res = await updateGalleryCategory(categoryForm.id, { name: categoryForm.name });
+        } else {
+            res = await addGalleryCategory({ name: categoryForm.name });
+        }
+        if (res.success) {
+            await loadItems();
+            setCategoryForm({ id: "", name: "" });
+            showToast(categoryForm.id ? "Category updated" : "Category added", "success");
+        } else {
+            showToast(res.error || "Failed to save category", "error");
+        }
+        setLoading(false);
+    };
+
+    const handleCategoryDelete = async (id: string) => {
+        if (!confirm("Delete this category? Items will be moved to 'Uncategorized'.")) return;
+        setLoading(true);
+        const res = await deleteGalleryCategory(id);
+        if (res.success) {
+            await loadItems();
+            showToast("Category deleted", "success");
+        } else {
+            showToast(res.error || "Failed to delete category", "error");
+        }
+        setLoading(false);
     };
 
     const filteredItems = items.filter(item => item.type === activeTab);
@@ -94,9 +133,14 @@ export default function GalleryAdmin() {
                     <h1 className={styles.sectionTitle}>Gallery Collection</h1>
                     <p className={styles.sectionSubtitle}>Manage the luxury storytelling assets of Parkside Villa.</p>
                 </div>
-                <button className={styles.addButton} onClick={handleAdd}>
-                    <Plus size={16} /> Curate Asset
-                </button>
+                <div className={styles.adminActionGroup} style={{ display: 'flex', gap: '10px' }}>
+                    <button className={styles.secondaryBtn} onClick={() => setIsCategoryModalOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Grid size={16} /> Manage Categories
+                    </button>
+                    <button className={styles.addButton} onClick={handleAdd}>
+                        <Plus size={16} /> Curate Asset
+                    </button>
+                </div>
             </div>
 
             <div className={styles.mediaTabsWrapper}>
@@ -137,7 +181,12 @@ export default function GalleryAdmin() {
                         </div>
                         <div className={styles.luxuryMediaInfo}>
                             <h4 className={styles.luxuryMediaTitle}>{item.title || "Untitled Masterpiece"}</h4>
-                            <p className={styles.luxuryMediaUrl}>{item.url}</p>
+                            <div className={styles.mediaMetaRow} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
+                                <span className={styles.categoryBadge} style={{ fontSize: '10px', background: 'rgba(201,168,76,0.1)', color: '#C9A84C', padding: '2px 6px', borderRadius: '4px' }}>
+                                    {(item as any).category?.name || "Uncategorized"}
+                                </span>
+                                <p className={styles.luxuryMediaUrl} style={{ margin: 0 }}>{item.url.substring(0, 30)}...</p>
+                            </div>
                         </div>
                     </div>
                 ))}
@@ -181,6 +230,21 @@ export default function GalleryAdmin() {
                                     />
                                 </div>
 
+                                <div className={styles.formSection}>
+                                    <label className={styles.label}>Category</label>
+                                    <select
+                                        className={styles.select}
+                                        value={editForm.categoryId}
+                                        onChange={e => setEditForm(prev => ({ ...prev, categoryId: e.target.value }))}
+                                        style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: 'white' }}
+                                    >
+                                        <option value="">Uncategorized</option>
+                                        {categories.map(cat => (
+                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
                                 <MediaUpload
                                     label="Visual Asset Source"
                                     value={editForm.url}
@@ -215,6 +279,59 @@ export default function GalleryAdmin() {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {isCategoryModalOpen && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent} style={{ maxWidth: '600px' }}>
+                        <div className={styles.modalHeader}>
+                            <div>
+                                <h3 className={styles.modalTitle}>Manage Vision Categories</h3>
+                                <p className={styles.modalSub}>Organize your estate visuals into logical curated groups.</p>
+                            </div>
+                            <button onClick={() => { setIsCategoryModalOpen(false); setCategoryForm({ id: "", name: "" }); }} className={styles.modalClose}><X size={20} /></button>
+                        </div>
+
+                        <div className={styles.modalBody}>
+                            <form onSubmit={handleCategorySave} style={{ display: 'flex', gap: '10px', marginBottom: '24px' }}>
+                                <input
+                                    type="text"
+                                    className={styles.input}
+                                    placeholder="e.g. Royal Suites"
+                                    value={categoryForm.name}
+                                    onChange={e => setCategoryForm({ ...categoryForm, name: e.target.value })}
+                                />
+                                <button type="submit" className={styles.saveButton} disabled={loading || !categoryForm.name}>
+                                    {categoryForm.id ? "Update" : "Add"}
+                                </button>
+                                {categoryForm.id && (
+                                    <button type="button" className={styles.secondaryBtn} onClick={() => setCategoryForm({ id: "", name: "" })}>Cancel</button>
+                                )}
+                            </form>
+
+                            <div className={styles.categoryList} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                {categories.length === 0 && (
+                                    <p style={{ textAlign: 'center', opacity: 0.5, padding: '20px' }}>No custom categories defined.</p>
+                                )}
+                                {categories.map(cat => (
+                                    <div key={cat.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>
+                                        <div>
+                                            <span style={{ fontWeight: 600 }}>{cat.name}</span>
+                                            <span style={{ marginLeft: '10px', fontSize: '12px', opacity: 0.5 }}>{(cat as any)._count?.items || 0} Assets</span>
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            <button className={styles.actionIcon} onClick={() => setCategoryForm({ id: cat.id, name: cat.name })}><Edit2 size={14} /></button>
+                                            <button className={styles.actionIcon} style={{ color: '#ef4444' }} onClick={() => handleCategoryDelete(cat.id)}><Trash2 size={14} /></button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className={styles.modalFooter}>
+                            <button type="button" onClick={() => setIsCategoryModalOpen(false)} className={styles.secondaryBtn} style={{ width: '100%' }}>Close Manager</button>
+                        </div>
                     </div>
                 </div>
             )}
