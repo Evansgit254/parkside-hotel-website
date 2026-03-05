@@ -3,38 +3,38 @@ export const dynamic = "force-dynamic";
 
 import { useState, useEffect, useRef } from "react";
 import styles from "../admin.module.css";
-import { getConferenceHalls, createConferenceHall, updateConferenceHall, deleteConferenceHall, uploadImage, getCloudinarySignature } from "../../actions";
-import { Edit2, Trash2, Plus, Upload, Image as ImageIcon, X, Users, Layout } from "lucide-react";
+import { getDiningVenues, createDiningVenue, updateDiningVenue, deleteDiningVenue, getCloudinarySignature } from "../../actions";
+import { Edit2, Trash2, Plus, Upload, Image as ImageIcon, X, Wine, Clock, List } from "lucide-react";
 import AdminModal from "../../components/AdminModal";
 import { showToast } from "../components/AdminToast";
 
-export default function AdminConference() {
-    const [halls, setHalls] = useState<any[]>([]);
+export default function AdminDiningVenues() {
+    const [venues, setVenues] = useState<any[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editForm, setEditForm] = useState<any>({ id: "", name: "", desc: "", image: "", images: [], capacity: 50, setups: [] });
+    const [editForm, setEditForm] = useState<any>({ id: "", name: "", desc: "", image: "", images: [], features: [], hours: "" });
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const multiFileInputRef = useRef<HTMLInputElement>(null);
 
-    const fetchHalls = async () => {
-        const data = await getConferenceHalls();
-        setHalls(data);
+    const fetchVenues = async () => {
+        const data = await getDiningVenues();
+        setVenues(data);
         setLoading(false);
     };
 
     useEffect(() => {
-        fetchHalls();
+        fetchVenues();
     }, []);
 
-    const handleEdit = (hall: any) => {
-        setEditForm({ ...hall, images: Array.isArray(hall.images) ? hall.images : [] });
+    const handleEdit = (venue: any) => {
+        setEditForm({ ...venue, features: Array.isArray(venue.features) ? venue.features : [] });
         setIsModalOpen(true);
     };
 
     const handleAdd = () => {
-        setEditForm({ id: "NEW", name: "", desc: "", image: "", images: [], capacity: 50, setups: [] });
+        setEditForm({ id: "NEW", name: "", desc: "", image: "", images: [], features: [], hours: "" });
         setIsModalOpen(true);
     };
 
@@ -97,36 +97,34 @@ export default function AdminConference() {
         let res;
         const payload = {
             ...editForm,
-            capacity: parseInt(editForm.capacity) || 50,
-            setups: Array.isArray(editForm.setups) ? editForm.setups : [],
-            images: Array.isArray(editForm.images) ? editForm.images : []
+            features: Array.isArray(editForm.features) ? editForm.features : []
         };
 
         if (editForm.id === "NEW") {
             const { id, ...createData } = payload;
-            res = await createConferenceHall(createData);
+            res = await createDiningVenue(createData);
         } else {
-            res = await updateConferenceHall(editForm.id, payload);
+            res = await updateDiningVenue(editForm.id, payload);
         }
 
         if (res.success) {
-            await fetchHalls();
+            await fetchVenues();
             setIsModalOpen(false);
-            showToast(editForm.id === "NEW" ? "Conference hall created successfully" : "Conference hall updated successfully", "success");
+            showToast(editForm.id === "NEW" ? "Dining venue created successfully" : "Dining venue updated successfully", "success");
         } else {
-            setError(res.error || "Failed to save conference hall details.");
+            setError(res.error || "Failed to save dining venue details.");
         }
         setIsSaving(false);
     };
 
     const handleDelete = async (id: string) => {
-        if (confirm("Are you sure you want to delete this conference hall?")) {
-            const res = await deleteConferenceHall(id);
+        if (confirm("Are you sure you want to delete this dining venue?")) {
+            const res = await deleteDiningVenue(id);
             if (res.success) {
-                await fetchHalls();
-                showToast("Conference hall deleted successfully", "success");
+                await fetchVenues();
+                showToast("Dining venue deleted successfully", "success");
             } else {
-                showToast(res.error || "Failed to delete conference hall.", "error");
+                showToast(res.error || "Failed to delete dining venue.", "error");
             }
         }
     };
@@ -144,71 +142,76 @@ export default function AdminConference() {
         <>
             <div className={styles.sectionHeader}>
                 <div className={styles.sectionTitleGroup}>
-                    <span className={styles.sectionEyebrow}>Facility Management</span>
-                    <h1 className={styles.sectionTitle}>Conference Halls</h1>
-                    <p className={styles.sectionSubtitle}>Manage individual M.I.C.E. halls, capacities, and settings</p>
+                    <span className={styles.sectionEyebrow}>Dining Management</span>
+                    <h1 className={styles.sectionTitle}>Dining Venues</h1>
+                    <p className={styles.sectionSubtitle}>Manage VIP Lounges, Bars, and Restaurants</p>
                 </div>
                 <button onClick={handleAdd} className={styles.addButton}>
-                    <Plus size={14} /> New Hall
+                    <Plus size={14} /> New Venue
                 </button>
             </div>
 
             <div className={styles.tableContainer}>
-                <div className={styles.tableHeader} style={{ gridTemplateColumns: '120px 1fr 120px 80px' }}>
+                <div className={styles.tableHeader} style={{ gridTemplateColumns: '120px 1fr 150px 80px' }}>
                     <div>Preview</div>
-                    <div>Hall Details</div>
-                    <div style={{ textAlign: 'center' }}>Capacity</div>
+                    <div>Venue Details</div>
+                    <div style={{ textAlign: 'center' }}>Hours</div>
                     <div style={{ textAlign: 'right' }}>Actions</div>
                 </div>
 
-                {halls.map((hall) => (
-                    <div key={hall.id} className={styles.tableRow} style={{ gridTemplateColumns: '120px 1fr 120px 80px' }}>
+                {venues.map((venue) => (
+                    <div key={venue.id} className={styles.tableRow} style={{ gridTemplateColumns: '120px 1fr 150px 80px' }}>
                         <div style={{ width: '100px', height: '70px', overflow: 'hidden', background: '#F7F8FC', borderRadius: '8px' }}>
-                            {hall.image ? (
-                                <img src={hall.image} alt={hall.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            {venue.image ? (
+                                <img src={venue.image} alt={venue.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             ) : (
                                 <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6B7280' }}>
-                                    <ImageIcon size={20} />
+                                    <Wine size={20} />
                                 </div>
                             )}
                         </div>
 
                         <div>
-                            <div style={{ fontWeight: 600, fontSize: '1.05rem', marginBottom: '0.35rem', color: '#111827' }}>{hall.name}</div>
-                            <div style={{ fontSize: '0.85rem', color: '#6B7280', lineHeight: '1.5', maxWidth: '500px' }}>{hall.desc}</div>
+                            <div style={{ fontWeight: 600, fontSize: '1.05rem', marginBottom: '0.35rem', color: '#111827' }}>{venue.name}</div>
+                            <div style={{ fontSize: '0.85rem', color: '#6B7280', lineHeight: '1.5', maxWidth: '500px' }}>{venue.desc}</div>
+                            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                                <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.5rem', background: 'rgba(0,0,0,0.05)', borderRadius: '4px' }}>
+                                    {venue.images?.length || 0} Gallery Photos
+                                </span>
+                            </div>
                         </div>
 
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: 'var(--secondary)', fontWeight: 600 }}>
-                            <Users size={16} />
-                            {hall.capacity} pax
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#6B7280', fontSize: '0.85rem' }}>
+                            <Clock size={16} />
+                            {venue.hours || "Not set"}
                         </div>
 
                         <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
-                            <button onClick={() => handleEdit(hall)} className={styles.actionBtn} title="Edit">
+                            <button onClick={() => handleEdit(venue)} className={styles.actionBtn} title="Edit">
                                 <Edit2 size={16} />
                             </button>
-                            <button onClick={() => handleDelete(hall.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete">
+                            <button onClick={() => handleDelete(venue.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete">
                                 <Trash2 size={16} />
                             </button>
                         </div>
                     </div>
                 ))}
-                {halls.length === 0 && (
-                    <div style={{ padding: '3rem', textAlign: 'center', color: '#6B7280' }}>No conference halls found. Add your first hall to get started.</div>
+                {venues.length === 0 && (
+                    <div style={{ padding: '3rem', textAlign: 'center', color: '#6B7280' }}>No dining venues found.</div>
                 )}
             </div>
 
             <AdminModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                title={editForm.id === "NEW" ? "New Conference Hall" : `Edit — ${editForm.name}`}
+                title={editForm.id === "NEW" ? "New Dining Venue" : `Edit — ${editForm.name}`}
                 onSubmit={handleSave}
                 loading={isSaving}
                 error={error}
             >
                 <div className={styles.formGrid}>
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
-                        <label className={styles.label}>Hall Cover Image</label>
+                        <label className={styles.label}>Main Cover Image</label>
                         <div
                             onClick={() => fileInputRef.current?.click()}
                             style={{
@@ -223,26 +226,20 @@ export default function AdminConference() {
                                 justifyContent: 'center',
                                 cursor: 'pointer',
                                 overflow: 'hidden',
-                                position: 'relative',
-                                transition: 'all 0.2s ease'
+                                position: 'relative'
                             }}
                         >
                             {editForm.image ? (
                                 <>
                                     <img src={editForm.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s ease' }} onMouseOver={e => e.currentTarget.style.opacity = '1'} onMouseOut={e => e.currentTarget.style.opacity = '0'}>
-                                        <Upload size={24} color="#fff" />
-                                    </div>
-                                    <button type="button" onClick={e => { e.stopPropagation(); setEditForm((p: any) => ({ ...p, image: '' })); }} style={{ position: 'absolute', top: '10px', right: '10px', width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(220,38,38,0.9)', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 20 }} title="Remove image">
+                                    <button type="button" onClick={e => { e.stopPropagation(); setEditForm((p: any) => ({ ...p, image: '' })); }} style={{ position: 'absolute', top: '10px', right: '10px', width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(220,38,38,0.9)', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 20 }}>
                                         <X size={16} color="#fff" />
                                     </button>
                                 </>
                             ) : (
                                 <>
                                     <Upload size={28} color="rgba(0,0,0,0.25)" />
-                                    <span style={{ color: '#6B7280', marginTop: '1rem', fontSize: '0.875rem', fontWeight: 500 }}>
-                                        {isUploading ? "Uploading image..." : "Click to upload hall photo"}
-                                    </span>
+                                    <span style={{ color: '#6B7280', marginTop: '1rem', fontSize: '0.875rem' }}>Upload venue photo</span>
                                 </>
                             )}
                         </div>
@@ -250,7 +247,7 @@ export default function AdminConference() {
                     </div>
 
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
-                        <label className={styles.label}>Hall Gallery (4+ Photos Recommended)</label>
+                        <label className={styles.label}>Venue Gallery (4+ Photos Recommended)</label>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
                             {editForm.images?.map((url: string, idx: number) => (
                                 <div key={idx} style={{ position: 'relative', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)' }}>
@@ -283,22 +280,38 @@ export default function AdminConference() {
                     </div>
 
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
-                        <label className={styles.label}>Hall Name</label>
-                        <input className={styles.input} placeholder="e.g. Amboseli Hall" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} required />
+                        <label className={styles.label}>Venue Name</label>
+                        <input className={styles.input} placeholder="e.g. VIP Lounge" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} required />
                     </div>
 
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
-                        <label className={styles.label}>Description & Features</label>
-                        <textarea className={styles.input} style={{ minHeight: '100px', resize: 'vertical' }} placeholder="Detail the hall's features (projectors, AC, lighting, etc.)..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} required />
+                        <label className={styles.label}>Description</label>
+                        <textarea className={styles.input} style={{ minHeight: '80px' }} placeholder="Describe the atmosphere, offerings..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} required />
                     </div>
 
                     <div className={styles.formGroup}>
-                        <label className={styles.label}>Maximum Capacity (Guests)</label>
+                        <label className={styles.label}>Operating Hours</label>
                         <div style={{ position: 'relative' }}>
-                            <div style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--secondary)' }}>
-                                <Users size={16} />
+                            <div style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#6B7280' }}>
+                                <Clock size={16} />
                             </div>
-                            <input type="number" min="1" className={styles.input} style={{ paddingLeft: '2.5rem' }} placeholder="e.g. 100" value={editForm.capacity} onChange={e => setEditForm({ ...editForm, capacity: parseInt(e.target.value) || 0 })} required />
+                            <input className={styles.input} style={{ paddingLeft: '2.5rem' }} placeholder="e.g. 7:00 AM - 11:00 PM" value={editForm.hours} onChange={e => setEditForm({ ...editForm, hours: e.target.value })} />
+                        </div>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>Features (Comma separated)</label>
+                        <div style={{ position: 'relative' }}>
+                            <div style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#6B7280' }}>
+                                <List size={16} />
+                            </div>
+                            <input
+                                className={styles.input}
+                                style={{ paddingLeft: '2.5rem' }}
+                                placeholder="Al Fresco, Live Music, Cocktails"
+                                value={Array.isArray(editForm.features) ? editForm.features.join(", ") : ""}
+                                onChange={e => setEditForm({ ...editForm, features: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })}
+                            />
                         </div>
                     </div>
                 </div>

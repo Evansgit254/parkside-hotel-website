@@ -51,44 +51,46 @@ export default function Header() {
             href: "/rooms",
             label: navMain.rooms || "Accommodation",
             subLinks: [
-                { href: "/rooms/executive-suites", label: navAcc.item1 || "Executive suites" },
-                { href: "/rooms/deluxe-suites", label: navAcc.item2 || "Deluxe suites" },
-                { href: "/rooms/highrise-suites", label: navAcc.item3 || "Highrise suites" },
-                { href: "/rooms/cottages", label: navAcc.item4 || "Cottages" },
-                { href: "/rooms/standard-premium", label: navAcc.item5 || "Standard Premium" },
-                { href: "/rooms", label: navAcc.item6 || "All Accommodations" },
+                { href: "/rooms/standard-premium", label: "Standard Premium" },
+                { href: "/rooms/deluxe-suites", label: "Deluxe Suites" },
+                { href: "/rooms/executive-suites", label: "Executive Suites" },
+                { href: "/rooms/cottages", label: "Cottages" },
+                { href: "/rooms", label: "All Accommodations" },
             ]
         },
         {
-            href: "/facilities/conference",
+            href: "/conference",
             label: navMain.conference || "Conference",
             subLinks: [
-                { href: "/facilities/conference#amboseli-nzambani-halls", label: "Amboseli & Nzambani" },
-                { href: "/facilities/conference#syokimau-highrise-halls", label: "Syokimau & Highrise" },
-                { href: "/facilities/conference#masai-mara-hall", label: "Masai Mara Hall" },
+                { href: "/conference/longonot-hall", label: "Longonot Hall" },
+                { href: "/conference/amboseli-nzambani-halls", label: "Amboseli & Nzambani" },
+                { href: "/conference/syokimau-highrise-halls", label: "Syokimau & Highrise" },
+                { href: "/conference/masai-mara-hall", label: "Masai Mara Hall" },
+                { href: "/conference", label: "All Hall Selections" },
             ]
         },
         {
-            href: "/facilities/pool",
+            href: "/facilities",
             label: navMain.facilities || "Facilities",
             subLinks: [
-                { href: "/facilities/pool#swimming-pool", label: "Swimming Pool" },
-                { href: "/facilities/pool#kids-zone", label: "Kids Zone" },
-                { href: "/facilities/pool#pool-tables-for-recreation", label: "Pool Table" },
-                { href: "/facilities/pool#lush-gardens", label: "Lush Gardens" },
+                { href: "/facilities/pool", label: "Swimming Pool" },
+                { href: "/facilities/kids-zone", label: "Kids Zone" },
+                { href: "/facilities/lush-gardens", label: "Lush Gardens" },
+                { href: "/facilities", label: "All Hotel Facilities" },
             ]
         },
-        { href: "/gallery", label: navMain.gallery || "Gallery" },
-        { href: "/blog", label: navMain.blog || "Blog" },
         {
             href: "/dining",
             label: navMain.dining || "Dining",
             subLinks: [
+                { href: "/dining/open-bar-restaurant", label: "Open Bar & Restaurant" },
+                { href: "/dining/vip-lounge", label: "VIP Lounge" },
                 { href: "/dining#menu", label: "Our Menu" },
-                { href: "/facilities/dining#vip-lounge", label: "VIP Lounge" },
-                { href: "/facilities/dining#open-bar-restaurant", label: "Open Bar & restaurant" },
+                { href: "/dining", label: "All Dining Venues" },
             ]
         },
+        { href: "/gallery", label: navMain.gallery || "Gallery" },
+        { href: "/blog", label: navMain.blog || "Blog" },
         { href: "/#contact", label: navMain.contact || "Contact" },
     ];
 

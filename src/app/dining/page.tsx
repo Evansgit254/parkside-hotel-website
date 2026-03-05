@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import SafeImage from "../components/SafeImage";
 import styles from "./page.module.css";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -80,7 +80,7 @@ export default function Dining() {
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1.2 }}
                 >
-                    <Image
+                    <SafeImage
                         src={content?.dining_hero?.image || "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446807/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0703_qptc5r.jpg"}
                         alt="Fine Dining"
                         fill
@@ -88,6 +88,7 @@ export default function Dining() {
                         quality={100}
                         className={styles.heroImage}
                         style={{ objectFit: 'cover' }}
+                        fallbackText="Our Culinary Haven"
                     />
                 </motion.div>
                 <div className={styles.heroOverlay} />

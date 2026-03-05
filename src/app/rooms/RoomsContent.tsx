@@ -8,7 +8,7 @@ import {
     Shield, Check, Loader2, Wine, Users
 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+import SafeImage from "../components/SafeImage";
 import { useRouter } from "next/navigation";
 import { addLead } from "../actions";
 import { useCurrency } from "../context/CurrencyContext";
@@ -125,11 +125,14 @@ export default function RoomsContent({ initialRooms, content }: RoomsContentProp
                 </div>
             </section>
 
-            {/* ROOMS GRID */}
-            <section className={styles.gridSection}>
-                <div className={styles.container}>
-                    <div className={styles.roomGrid}>
-                        {filteredRooms.map((room, index) => (
+            {/* ROOMS VERTICAL LIST */}
+            <section className={styles.listSection}>
+                <div className={styles.listContainer}>
+                    {filteredRooms.map((room, index) => {
+                        const isEven = index % 2 === 1;
+                        const price = typeof room.price === 'string' ? room.price : `KES ${room.price}`;
+
+                        return (
                             <motion.div
                                 key={room.id}
                                 variants={fadeUp}
@@ -137,48 +140,56 @@ export default function RoomsContent({ initialRooms, content }: RoomsContentProp
                                 whileInView="visible"
                                 viewport={{ once: true, margin: "-50px" }}
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                                className={styles.roomCard}
-                                onClick={() => router.push(`/rooms/${room.id}`)}
+                                className={`${styles.listItem} ${isEven ? styles.itemReverse : ""}`}
                             >
-                                <div className={styles.imageWrapper}>
-                                    <Image
-                                        src={room.image || ""}
+                                <div className={styles.itemImageWrapper} onClick={() => router.push(`/rooms/${room.id}`)} style={{ cursor: 'pointer' }}>
+                                    <SafeImage
+                                        src={room.image}
                                         alt={room.name}
                                         fill
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                        className={styles.roomImage}
-                                        priority={index < 4}
-                                        quality={75}
+                                        sizes="(max-width: 1024px) 100vw, 50vw"
+                                        className={styles.itemImage}
+                                        style={{ objectFit: 'cover' }}
+                                        fallbackText="Room image coming soon"
                                     />
-                                    {room.tag && <span className={styles.roomTag}>{room.tag}</span>}
                                     <div className={styles.imageOverlay} />
+                                    {room.tag && <span className={styles.itemTagBadge}>{room.tag}</span>}
                                 </div>
 
-                                <div className={styles.roomContent}>
-                                    <div className={styles.roomHeader}>
-                                        <h3 className={styles.roomName}>{room.name}</h3>
-                                        <div className={styles.priceInfo}>
-                                            <span className={styles.priceValue}>{formatPrice(room.price)}</span>
-                                            <span className={styles.perNight}>/ night</span>
+                                <div className={styles.itemContent}>
+                                    <div className={styles.contentHeader}>
+                                        <div className={styles.priceTag}>
+                                            <span className={styles.priceAmount}>{price}</span>
+                                            <span className={styles.pricePeriod}>/ night</span>
                                         </div>
+                                        <h2 className={styles.itemTitle}>{room.name}</h2>
+                                    </div>
+                                    <p className={styles.itemDesc}>{room.desc}</p>
+
+                                    <div className={styles.amenityRow}>
+                                        {Array.isArray(room.amenities) && room.amenities.length > 0 ? (
+                                            room.amenities.slice(0, 3).map((amenity: string, idx: number) => (
+                                                <div key={idx} className={styles.amenityItem}>
+                                                    <Check size={14} /> {amenity}
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <>
+                                                <div className={styles.amenityItem}><Wifi size={14} /> WiFi</div>
+                                                <div className={styles.amenityItem}><Wind size={14} /> AC</div>
+                                                <div className={styles.amenityItem}><Tv size={14} /> Smart TV</div>
+                                            </>
+                                        )}
+                                        <div className={styles.amenityItem}><Users size={14} /> Up to {room.capacity || 2} Guests</div>
                                     </div>
 
-                                    <p className={styles.roomDesc}>{room.desc}</p>
-
-                                    <div className={styles.amenitiesShort}>
-                                        <div className={styles.amenity}><Wifi size={14} /> WiFi</div>
-                                        <div className={styles.amenity}><Wind size={14} /> AC</div>
-                                        <div className={styles.amenity}><Tv size={14} /> TV</div>
-                                    </div>
-
-                                    <div className={styles.cardActions}>
-                                        <Link href={`/rooms/${room.id}`} className={styles.detailsLink}>
-                                            View Details
+                                    <div className={styles.actionGroup}>
+                                        <Link href={`/rooms/${room.id}`} className={styles.primaryLink}>
+                                            Explore Sanctuary
                                         </Link>
                                         <button
-                                            className={styles.bookBtn}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
+                                            className={styles.secondaryLink}
+                                            onClick={() => {
                                                 setSelectedRoom(room);
                                                 setIsBookingModalOpen(true);
                                             }}
@@ -188,8 +199,8 @@ export default function RoomsContent({ initialRooms, content }: RoomsContentProp
                                     </div>
                                 </div>
                             </motion.div>
-                        ))}
-                    </div>
+                        );
+                    })}
                 </div>
             </section>
 
@@ -283,11 +294,10 @@ export default function RoomsContent({ initialRooms, content }: RoomsContentProp
                                             <div className={styles.formGroup}>
                                                 <label className={styles.formLabel}>GUESTS</label>
                                                 <select value={bookingData.guests} onChange={e => setBookingData({ ...bookingData, guests: e.target.value })} className={styles.input}>
-                                                    <option>1 Adult</option>
-                                                    <option>2 Adults</option>
-                                                    <option>2 Adults, 1 Child</option>
-                                                    <option>2 Adults, 2 Children</option>
-                                                    <option>Family (4+ Persons)</option>
+                                                    {Array.from({ length: selectedRoom.capacity || 2 }, (_, i) => i + 1).map(num => (
+                                                        <option key={num}>{num} Adult{num > 1 ? 's' : ''}</option>
+                                                    ))}
+                                                    {selectedRoom.capacity > 1 && <option>{selectedRoom.capacity} Adults, 1 Child</option>}
                                                 </select>
                                             </div>
                                             <button type="submit" className={styles.buttonPrimary}>Continue</button>

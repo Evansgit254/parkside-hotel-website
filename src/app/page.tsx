@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import SafeImage from "./components/SafeImage";
 import styles from "./page.module.css";
 import { getPublicSiteData, addLead } from "./actions";
 import { useRouter } from "next/navigation";
@@ -46,16 +47,11 @@ export default function Home() {
 
   const { rooms, facilities, testimonials, contactInfo, content } = siteData;
 
-  // Use CMS images if available, otherwise fallback to static data
-  const heroKeys = content?.landing_hero || {};
-  const cmsHeroImages = [
-    heroKeys.image1,
-    heroKeys.image2,
-    heroKeys.image3,
-    heroKeys.image4
-  ].filter(Boolean);
+  // Use database hero images if available, otherwise fallback to static data
+  const dbHeroImages = siteData.heroImages || [];
+  const heroImages = dbHeroImages.length > 0 ? dbHeroImages : initialHeroImages;
 
-  const heroImages = cmsHeroImages.length > 0 ? cmsHeroImages : initialHeroImages;
+  const heroKeys = content?.landing_hero || {};
   const roomsKeys = content?.rooms_intro || {};
   const facilitiesKeys = content?.facilities_intro || {};
 
@@ -182,19 +178,14 @@ export default function Home() {
             transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
             className={styles.heroSlide}
           >
-            <Image
+            <SafeImage
               src={heroImages[currentSlide] || initialHeroImages[0]}
               alt="Parkside Villa Kitui"
               fill priority quality={75}
               sizes="100vw"
               className={styles.imageReveal}
               style={{ objectFit: "cover" }}
-              onError={(e) => {
-                // If a CMS image fails, we can fallback to the static one
-                console.warn("Hero image failed to load, falling back to static asset");
-                const target = e.target as HTMLImageElement;
-                target.src = initialHeroImages[currentSlide] || initialHeroImages[0];
-              }}
+              fallbackText="Welcome to Parkside Villa"
             />
           </motion.div>
         </AnimatePresence>
@@ -357,11 +348,12 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: idx * 0.1 }}
                 onClick={() => router.push(`/rooms/${room.id}`)}
               >
-                <Image
+                <SafeImage
                   src={room.image} alt={room.name}
                   fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   className={styles.roomImage}
                   style={{ objectFit: "cover" }}
+                  fallbackText="Room details coming soon"
                 />
                 {room.tag && <span className={styles.roomTag}>{room.tag}</span>}
                 <div className={styles.roomInfo}>

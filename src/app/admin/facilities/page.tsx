@@ -11,11 +11,12 @@ import { showToast } from "../components/AdminToast";
 export default function AdminFacilities() {
     const [facilities, setFacilities] = useState<any[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editForm, setEditForm] = useState<any>({ id: "", title: "", desc: "", icon: "Hotel", image: "", features: [], highlights: [] });
+    const [editForm, setEditForm] = useState<any>({ id: "", title: "", desc: "", icon: "Hotel", image: "", images: [], features: [], highlights: [] });
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const multiFileInputRef = useRef<HTMLInputElement>(null);
 
     const fetchFacilities = async () => {
         const data = await getSiteData();
@@ -26,46 +27,56 @@ export default function AdminFacilities() {
     useEffect(() => { fetchFacilities(); }, []);
 
     const handleAdd = () => {
-        setEditForm({ id: "NEW", title: "", desc: "", icon: "Hotel", image: "", features: [], highlights: [] });
+        setEditForm({ id: "NEW", title: "", desc: "", icon: "Hotel", image: "", images: [], features: [], highlights: [] });
         setIsModalOpen(true);
     };
 
     const handleEdit = (facility: any) => {
-        setEditForm({ ...facility });
+        setEditForm({ ...facility, images: Array.isArray(facility.images) ? facility.images : [] });
         setIsModalOpen(true);
     };
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, isMulti = false) => {
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
 
         setIsUploading(true);
         try {
-            const sigData = await getCloudinarySignature();
-            if (!sigData.success || !sigData.signature) {
-                throw new Error(sigData.error || "Failed to get signature");
+            const uploadedUrls: string[] = [];
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const sigData = await getCloudinarySignature();
+                if (!sigData.success || !sigData.signature) {
+                    throw new Error(sigData.error || "Failed to get signature");
+                }
+
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("api_key", sigData.apiKey || "");
+                formData.append("timestamp", String(sigData.timestamp));
+                formData.append("signature", sigData.signature);
+                formData.append("folder", sigData.folder || "parkside_villa");
+
+                const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
+                const response = await fetch(uploadUrl, { method: "POST", body: formData });
+
+                if (!response.ok) {
+                    const errResult = await response.json();
+                    throw new Error(errResult.error?.message || "Upload failed");
+                }
+
+                const result = await response.json();
+                if (result.secure_url) {
+                    uploadedUrls.push(result.secure_url);
+                }
             }
 
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("api_key", sigData.apiKey || "");
-            formData.append("timestamp", String(sigData.timestamp));
-            formData.append("signature", sigData.signature);
-            formData.append("folder", sigData.folder || "parkside_villa");
-
-            const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
-            const response = await fetch(uploadUrl, { method: "POST", body: formData });
-
-            if (!response.ok) {
-                const errResult = await response.json();
-                throw new Error(errResult.error?.message || "Upload failed");
+            if (isMulti) {
+                setEditForm((prev: any) => ({ ...prev, images: [...(prev.images || []), ...uploadedUrls] }));
+            } else {
+                setEditForm((prev: any) => ({ ...prev, image: uploadedUrls[0] }));
             }
-
-            const result = await response.json();
-            if (result.secure_url) {
-                setEditForm((prev: any) => ({ ...prev, image: result.secure_url }));
-                showToast("Image uploaded successfully", "success");
-            }
+            showToast("Upload successful", "success");
         } catch (error: any) {
             console.error("Upload failed:", error);
             showToast(`Upload failed: ${error.message || "Unknown error"}`, "error");
@@ -81,11 +92,15 @@ export default function AdminFacilities() {
         setIsSaving(true);
         setError(null);
         let res;
+        const payload = {
+            ...editForm,
+            images: Array.isArray(editForm.images) ? editForm.images : []
+        };
         if (editForm.id === "NEW") {
-            const { id, ...facilityData } = editForm;
+            const { id, ...facilityData } = payload;
             res = await addFacility(facilityData);
         } else {
-            res = await updateFacility(editForm.id, editForm);
+            res = await updateFacility(editForm.id, payload);
         }
 
         if (res.success) {
@@ -108,6 +123,13 @@ export default function AdminFacilities() {
                 showToast(res.error || "Failed to delete facility.", "error");
             }
         }
+    };
+
+    const removeImage = (index: number) => {
+        setEditForm((prev: any) => ({
+            ...prev,
+            images: prev.images.filter((_: any, i: number) => i !== index)
+        }));
     };
 
     const Icons: Record<string, any> = { Users, Utensils, Waves, Wine, Hotel };
@@ -168,7 +190,7 @@ export default function AdminFacilities() {
                                 {/* Meta badges */}
                                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                                     <span className={`${styles.badge} ${styles.badgeGold}`}>{facility.features?.length || 0} Features</span>
-                                    <span className={`${styles.badge} ${styles.badgePending}`}>{facility.highlights?.length || 0} Highlights</span>
+                                    <span className={`${styles.badge} ${styles.badgeGold}`}>{facility.images?.length || 0} Photos</span>
                                 </div>
 
                                 {/* Actions */}
@@ -196,8 +218,8 @@ export default function AdminFacilities() {
             >
                 <div className={styles.formGrid}>
                     {/* Image Upload */}
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Facility Image</label>
+                    <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
+                        <label className={styles.label}>Facility Main Image</label>
                         <div
                             onClick={() => fileInputRef.current?.click()}
                             style={{
@@ -224,12 +246,45 @@ export default function AdminFacilities() {
                                 <>
                                     <Upload size={24} color="rgba(0,0,0,0.25)" />
                                     <span style={{ color: '#6B7280', marginTop: '0.75rem', fontSize: '0.8125rem' }}>
-                                        {isUploading ? "Uploading..." : "Click to upload facility image"}
+                                        {isUploading ? "Uploading..." : "Click to upload facility main image"}
                                     </span>
                                 </>
                             )}
                         </div>
-                        <input type="file" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} accept="image/*" />
+                        <input type="file" ref={fileInputRef} onChange={e => handleFileChange(e, false)} style={{ display: 'none' }} accept="image/*" />
+                    </div>
+
+                    <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
+                        <label className={styles.label}>Facility Gallery (4+ Photos Recommended)</label>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                            {editForm.images?.map((url: string, idx: number) => (
+                                <div key={idx} style={{ position: 'relative', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+                                    <img src={url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <button type="button" onClick={() => removeImage(idx)} style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(220,38,38,0.9)', border: 'none', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <X size={12} color="#fff" />
+                                    </button>
+                                </div>
+                            ))}
+                            <button
+                                type="button"
+                                onClick={() => multiFileInputRef.current?.click()}
+                                style={{
+                                    height: '80px',
+                                    border: '1px dashed var(--border)',
+                                    borderRadius: '8px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    background: '#fff',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                <Plus size={20} color="#6B7280" />
+                                <span style={{ fontSize: '0.65rem', color: '#6B7280', marginTop: '0.25rem' }}>Add More</span>
+                            </button>
+                        </div>
+                        <input type="file" ref={multiFileInputRef} onChange={e => handleFileChange(e, true)} style={{ display: 'none' }} accept="image/*" multiple />
                     </div>
 
                     {/* Title */}

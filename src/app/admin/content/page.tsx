@@ -20,10 +20,6 @@ const contentSchema = [
         description: "Manage up to 4 sliding images for the main landing page hero section.",
         icon: Star,
         fields: [
-            { name: "image1", label: "Hero Image 1", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373733/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0710_oy6d2y.jpg" },
-            { name: "image2", label: "Hero Image 2", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772374351/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0691_j8yeyh.jpg" },
-            { name: "image3", label: "Hero Image 3", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373738/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0714_reoyas.jpg" },
-            { name: "image4", label: "Hero Image 4", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772374371/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0733_o1u6re.jpg" },
             { name: "badge", label: "Hero Badge", type: "text", default: "Refining Hospitality Since 2005" },
             { name: "title", label: "Hero Title", type: "text", default: "Parkside Villa Kitui" },
             { name: "subtitle", label: "Hero Subtitle", type: "textarea", default: "An oasis of tranquility in the heart of Kenya." },

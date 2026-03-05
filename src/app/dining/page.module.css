@@ -122,9 +122,10 @@
 .title {
     font-family: var(--font-serif);
     font-size: clamp(3.5rem, 8vw, 5.5rem);
-    font-weight: 700;
-    color: #ffffff;
+    font-weight: 800;
+    color: #FFFFFF !important;
     letter-spacing: -0.02em;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .section {

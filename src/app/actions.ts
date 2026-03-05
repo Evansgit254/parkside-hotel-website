@@ -17,7 +17,7 @@ export async function getAuthSession() {
 import {
     Room, Lead, User, Testimonial, BlogPost, Facility,
     MenuCategory, HeroImage, GalleryItem, Promotion, Subscriber, ContactInfo,
-    SiteContent
+    SiteContent, DiningVenue
 } from "@prisma/client";
 
 // ─────────────────────────────────────────────
@@ -28,13 +28,17 @@ function revalidateAll() {
     revalidatePath("/");
     revalidatePath("/rooms");
     revalidatePath("/dining");
+    revalidatePath("/conference");
+    revalidatePath("/facilities");
     revalidatePath("/gallery");
     revalidatePath("/blog");
     revalidatePath("/admin");
     revalidatePath("/admin/rooms");
     revalidatePath("/admin/dining");
+    revalidatePath("/admin/dining-venues");
     revalidatePath("/admin/leads");
     revalidatePath("/admin/facilities");
+    revalidatePath("/admin/conference");
     revalidatePath("/admin/settings");
     revalidatePath("/admin/promotions");
     revalidatePath("/admin/testimonials");
@@ -110,7 +114,8 @@ export async function getSiteData() {
                 prisma.user.findMany(),
                 prisma.galleryItem.findMany({ orderBy: { order: "asc" } }),
                 prisma.conferenceHall.findMany({ orderBy: { createdAt: "asc" } }),
-                prisma.siteContent.findMany()
+                prisma.siteContent.findMany(),
+                prisma.diningVenue.findMany({ orderBy: { createdAt: "asc" } }),
             ]),
             timeout(30000) // Increased to 30s
         ]) as any;
@@ -118,7 +123,7 @@ export async function getSiteData() {
         const [
             heroImages, rooms, facilities, testimonials, menuCategories,
             contactInfoRow, blogPosts, leads, subscribers, promotions,
-            users, galleryItems, conferenceHalls, siteContentRows
+            users, galleryItems, conferenceHalls, siteContentRows, diningVenues
         ] = results;
 
         const content = siteContentRows.reduce((acc: any, row: SiteContent) => {
@@ -126,23 +131,34 @@ export async function getSiteData() {
             return acc;
         }, {});
 
-        const optimizeCloudinary = (url: string) => {
+        const optimizeCloudinary = (url: string | null | undefined) => {
+            if (!url) return null;
+            if (typeof url !== 'string') return null;
             if (!url.includes('res.cloudinary.com')) return url;
-            if (url.includes('upload/')) {
-                return url.replace('upload/', 'upload/f_auto,q_auto:best/');
+
+            try {
+                // Ensure it's a valid URL string
+                new URL(url);
+                if (url.includes('upload/')) {
+                    return url.replace('upload/', 'upload/f_auto,q_auto:best/');
+                }
+                return url;
+            } catch (e) {
+                console.warn("Invalid Cloudinary URL encountered:", url);
+                return null;
             }
-            return url;
         };
 
         // Map DB rows to the shape the UI already expects
         const finalData = {
             heroImages: heroImages.map((h: HeroImage) => optimizeCloudinary(h.url)),
-            rooms: rooms.map((r: Room) => ({
+            rooms: rooms.map((r: any) => ({
                 id: r.slug,
                 name: r.name,
                 desc: r.desc,
                 price: r.price,
                 image: optimizeCloudinary(r.image),
+                images: (r.images || []).map((img: string) => optimizeCloudinary(img)),
                 tag: r.tag ?? undefined,
                 capacity: r.capacity,
             })),
@@ -156,7 +172,8 @@ export async function getSiteData() {
                 }
                 return { ...f, image: f.image ? optimizeCloudinary(f.image) : null };
             }),
-            conferenceHalls: (conferenceHalls as any[]).map(h => ({ ...h, image: h.image ? optimizeCloudinary(h.image) : null })),
+            conferenceHalls: (conferenceHalls as any[]).map(h => ({ ...h, image: h.image ? optimizeCloudinary(h.image) : null, images: (h.images || []).map((img: string) => optimizeCloudinary(img)) })),
+            diningVenues: (diningVenues as any[]).map(v => ({ ...v, image: v.image ? optimizeCloudinary(v.image) : null, images: (v.images || []).map((img: string) => optimizeCloudinary(img)) })),
             testimonials: testimonials as Testimonial[],
             menuCategories: menuCategories as MenuCategory[],
             contactInfo: contactInfoRow ? { ...(contactInfoRow as ContactInfo), social: (contactInfoRow as ContactInfo).social || {} } : getStaticSiteData().contactInfo,
@@ -194,36 +211,75 @@ export async function getSiteData() {
     }
 }
 
-// Public‑facing site data: trims admin‑only collections so that
-// unauthenticated clients never receive users, subscribers, promotions, etc.
+// Public‑facing site data: Only fetches what is needed for the public UI
 export async function getPublicSiteData() {
-    const {
-        heroImages,
-        rooms,
-        facilities,
-        testimonials,
-        menuCategories,
-        contactInfo,
-        blogPosts,
-        galleryItems,
-        galleryVideos,
-        conferenceHalls,
-        content,
-    } = await getSiteData();
+    try {
+        const results = await Promise.all([
+            prisma.heroImage.findMany({ orderBy: { order: "asc" } }),
+            prisma.room.findMany({ orderBy: { createdAt: "asc" } }),
+            prisma.facility.findMany(),
+            prisma.testimonial.findMany({ where: { status: "Active" }, orderBy: { createdAt: "asc" } }),
+            prisma.menuCategory.findMany({ orderBy: { order: "asc" } }),
+            prisma.contactInfo.findUnique({ where: { id: 1 } }),
+            prisma.blogPost.findMany({ orderBy: { createdAt: "desc" } }),
+            prisma.galleryItem.findMany({ orderBy: { order: "asc" } }),
+            prisma.conferenceHall.findMany({ orderBy: { createdAt: "asc" } }),
+            prisma.siteContent.findMany(),
+            prisma.diningVenue.findMany({ orderBy: { createdAt: "asc" } }),
+        ]);
 
-    return {
-        heroImages,
-        rooms,
-        facilities,
-        testimonials,
-        menuCategories,
-        contactInfo,
-        blogPosts,
-        galleryItems,
-        galleryVideos,
-        conferenceHalls,
-        content,
-    };
+        const [
+            heroImages, rooms, facilities, testimonials, menuCategories,
+            contactInfoRow, blogPosts, galleryItems, conferenceHalls, siteContentRows, diningVenues
+        ] = results;
+
+        const content = siteContentRows.reduce((acc: any, row: SiteContent) => {
+            acc[row.key] = row.value;
+            return acc;
+        }, {});
+
+        const optimizeCloudinary = (url: string | null | undefined) => {
+            if (!url || typeof url !== 'string') return null;
+            if (!url.includes('res.cloudinary.com')) return url;
+            try {
+                new URL(url);
+                return url.includes('upload/') ? url.replace('upload/', 'upload/f_auto,q_auto:best/') : url;
+            } catch (e) { return null; }
+        };
+
+        return {
+            heroImages: heroImages.map((h: HeroImage) => optimizeCloudinary(h.url)),
+            rooms: rooms.map((r: any) => ({
+                id: r.slug,
+                name: r.name,
+                desc: r.desc,
+                price: r.price,
+                image: optimizeCloudinary(r.image),
+                images: (r.images || []).map((img: string) => optimizeCloudinary(img)),
+                tag: r.tag ?? undefined,
+                capacity: r.capacity,
+            })),
+            facilities: (facilities as any[]).map(f => ({
+                ...f,
+                image: f.image ? optimizeCloudinary(f.image) : null,
+                features: (f.id === "conference" && conferenceHalls.length > 0)
+                    ? (conferenceHalls as any[]).map(h => h.name.includes("Hall") ? h.name : `${h.name} Hall`)
+                    : f.features
+            })),
+            conferenceHalls: (conferenceHalls as any[]).map(h => ({ ...h, image: h.image ? optimizeCloudinary(h.image) : null, images: (h.images || []).map((img: string) => optimizeCloudinary(img)) })),
+            diningVenues: (diningVenues as any[]).map(v => ({ ...v, image: v.image ? optimizeCloudinary(v.image) : null, images: (v.images || []).map((img: string) => optimizeCloudinary(img)) })),
+            testimonials: testimonials as Testimonial[],
+            menuCategories: menuCategories as MenuCategory[],
+            contactInfo: contactInfoRow ? { ...(contactInfoRow as ContactInfo), social: (contactInfoRow as ContactInfo).social || {} } : getStaticSiteData().contactInfo,
+            blogPosts: (blogPosts as any[]).map(p => ({ ...p, image: p.image ? optimizeCloudinary(p.image) : "" })),
+            galleryItems: (galleryItems as any[]).map(i => ({ ...i, url: optimizeCloudinary(i.url) })),
+            galleryVideos: galleryItems.filter((i: GalleryItem) => i.type === "video").map((i: any) => ({ ...i, url: optimizeCloudinary(i.url) })),
+            content,
+        };
+    } catch (error) {
+        console.error("Error fetching public site data:", error);
+        return getStaticSiteData();
+    }
 }
 
 export async function getDashboardStats() {
@@ -381,6 +437,7 @@ function getStaticSiteData() {
         galleryItems: [],
         galleryVideos: [],
         conferenceHalls: [],
+        diningVenues: [],
         content: {}
     };
 }
@@ -513,6 +570,7 @@ export async function createRoom(newRoom: {
                 desc: newRoom.desc,
                 price: newRoom.price,
                 image: newRoom.image,
+                images: (newRoom as any).images ?? [],
                 tag: newRoom.tag ?? null,
                 capacity: newRoom.capacity ?? 2,
             },
@@ -536,6 +594,7 @@ export async function updateRoom(roomId: string, updatedRoom: Partial<Room>) {
                 desc: updatedRoom.desc,
                 price: updatedRoom.price,
                 image: updatedRoom.image,
+                images: (updatedRoom as any).images ?? undefined,
                 tag: updatedRoom.tag ?? null,
                 capacity: updatedRoom.capacity ?? 2,
             },
@@ -706,7 +765,7 @@ export async function addFacility(f: Partial<Facility> & { title: string; desc: 
         await requireAdmin();
         const id = f.id ?? f.title.toLowerCase().replace(/\s+/g, "-");
         await prisma.facility.create({
-            data: { id, title: f.title, desc: f.desc, icon: f.icon, image: f.image ?? null, features: f.features ?? [], highlights: f.highlights ?? [] },
+            data: { id, title: f.title, desc: f.desc, icon: f.icon, image: f.image ?? null, images: (f as any).images ?? [], features: f.features ?? [], highlights: f.highlights ?? [] },
         });
         revalidateAll();
         return { success: true };
@@ -727,6 +786,7 @@ export async function updateFacility(facilityId: string, updatedFacility: any) {
                 desc: updatedFacility.desc,
                 icon: updatedFacility.icon,
                 image: updatedFacility.image ?? null,
+                images: updatedFacility.images ?? undefined,
                 features: updatedFacility.features ?? [],
                 highlights: updatedFacility.highlights ?? [],
             },
@@ -1329,6 +1389,7 @@ export async function createConferenceHall(data: any) {
                 name: data.name,
                 desc: data.desc,
                 image: data.image,
+                images: data.images || [],
                 capacity: parseInt(data.capacity) || 50,
                 setups: data.setups || [],
             }
@@ -1351,6 +1412,7 @@ export async function updateConferenceHall(id: string, data: any) {
                 name: data.name,
                 desc: data.desc,
                 image: data.image,
+                images: data.images ?? undefined,
                 capacity: parseInt(data.capacity) || 50,
                 setups: data.setups,
                 ...(data.name && { slug: data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') })
@@ -1374,5 +1436,101 @@ export async function deleteConferenceHall(id: string) {
     } catch (error) {
         console.error("Error deleting conference hall:", error);
         return { success: false, error: "Server error deleting hall" };
+    }
+}
+
+export async function getConferenceHallBySlug(slug: string) {
+    if (!isDatabaseConfigured()) return null;
+    try {
+        return await prisma.conferenceHall.findUnique({ where: { slug } });
+    } catch (error) {
+        console.error("Error fetching conference hall:", error);
+        return null;
+    }
+}
+
+// ─────────────────────────────────────────────
+// DINING VENUES
+// ─────────────────────────────────────────────
+
+export async function getDiningVenues() {
+    if (!isDatabaseConfigured()) return [];
+    try {
+        return await prisma.diningVenue.findMany({
+            orderBy: { createdAt: "asc" }
+        });
+    } catch (error) {
+        console.error("Error fetching dining venues:", error);
+        return [];
+    }
+}
+
+export async function getDiningVenueBySlug(slug: string) {
+    if (!isDatabaseConfigured()) return null;
+    try {
+        return await prisma.diningVenue.findUnique({ where: { slug } });
+    } catch (error) {
+        console.error("Error fetching dining venue:", error);
+        return null;
+    }
+}
+
+export async function createDiningVenue(data: any) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await requireAdmin();
+        const venue = await prisma.diningVenue.create({
+            data: {
+                slug: data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                name: data.name,
+                desc: data.desc,
+                image: data.image || '',
+                images: data.images || [],
+                features: data.features || [],
+                hours: data.hours || null,
+            }
+        });
+        revalidateAll();
+        return { success: true, venue };
+    } catch (error) {
+        console.error("Error creating dining venue:", error);
+        return { success: false, error: "Server error creating venue" };
+    }
+}
+
+export async function updateDiningVenue(id: string, data: any) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await requireAdmin();
+        const venue = await prisma.diningVenue.update({
+            where: { id },
+            data: {
+                name: data.name,
+                desc: data.desc,
+                image: data.image || '',
+                images: data.images ?? undefined,
+                features: data.features || [],
+                hours: data.hours || null,
+                ...(data.name && { slug: data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') })
+            }
+        });
+        revalidateAll();
+        return { success: true, venue };
+    } catch (error) {
+        console.error("Error updating dining venue:", error);
+        return { success: false, error: "Server error updating venue" };
+    }
+}
+
+export async function deleteDiningVenue(id: string) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await requireAdmin();
+        await prisma.diningVenue.delete({ where: { id } });
+        revalidateAll();
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting dining venue:", error);
+        return { success: false, error: "Server error deleting venue" };
     }
 }

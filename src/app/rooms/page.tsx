@@ -1,5 +1,5 @@
 import { getSiteData } from "../actions";
-import Image from "next/image";
+import SafeImage from "../components/SafeImage";
 import styles from "./rooms.module.css";
 import RoomsContent from "./RoomsContent";
 
@@ -15,7 +15,7 @@ export default async function RoomsPage() {
         <main className={styles.pageWrapper}>
             {/* HERO SECTION - Server Rendered for Speed */}
             <section className={styles.hero}>
-                <Image
+                <SafeImage
                     src={content?.rooms_hero?.image || "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446787/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0698_zmv8bg.jpg"}
                     alt="Rooms Hero"
                     fill
@@ -24,6 +24,7 @@ export default async function RoomsPage() {
                     sizes="100vw"
                     className={styles.heroImage}
                     style={{ objectFit: 'cover' }}
+                    fallbackText="Our Luxury Collection"
                 />
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>

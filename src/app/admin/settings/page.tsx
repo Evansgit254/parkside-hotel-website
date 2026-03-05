@@ -211,9 +211,9 @@ export default function AdminSettings() {
                     <div style={{ marginBottom: '2.5rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
                             <ImageIcon size={20} color="var(--secondary)" />
-                            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', margin: 0 }}>Visual Ambiance</h3>
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', margin: 0 }}>Website Hero Slideshow</h3>
                         </div>
-                        <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Manage the high-definition hero imagery for the home carousel</p>
+                        <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Manage the high-definition hero imagery for the home page landing carousel</p>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>

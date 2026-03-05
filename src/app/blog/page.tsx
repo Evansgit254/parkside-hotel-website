@@ -2,7 +2,7 @@ export const revalidate = 3600;
 import { getSiteData } from "../actions";
 import { motion } from "framer-motion";
 import { Calendar, User } from "lucide-react";
-import Image from "next/image";
+import SafeImage from "../components/SafeImage";
 import styles from "./blog.module.css";
 import ClientBlogGrid from "./ClientBlogGrid";
 
@@ -15,13 +15,14 @@ export default async function BlogPage() {
         <div className={styles.pageWrapper}>
             {/* Hero Section */}
             <section className={styles.hero}>
-                <Image
+                <SafeImage
                     src={heroImage}
                     alt="Blog Hero"
                     fill
                     priority
                     className={styles.heroImage}
                     style={{ objectFit: 'cover' }}
+                    fallbackText="Our Journal"
                 />
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>
