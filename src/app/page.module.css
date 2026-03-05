@@ -18,7 +18,7 @@
     left: 0;
     width: 100%;
     z-index: 1000;
-    padding: 0 4%;
+    padding: 0 var(--container-padding);
     height: 100px;
     display: flex;
     align-items: center;
@@ -164,7 +164,7 @@
     gap: 1.5rem;
     cursor: default;
     user-select: none;
-    margin-left: -10px;
+    margin-left: 0;
     height: 100%;
 }
 
@@ -187,7 +187,7 @@
     align-items: center;
     cursor: default;
     user-select: none;
-    margin-left: -20px;
+    margin-left: 0;
     /* Pull slightly towards edge for 'flush' look */
 }
 
@@ -1029,7 +1029,7 @@
 /* === EXPERIENCE STRIP — Between Rooms and Facilities === */
 .experienceStrip {
     background: var(--white);
-    padding: 6rem 3rem;
+    padding: 6rem var(--container-padding);
 }
 
 .experienceStripInner {
@@ -1095,7 +1095,7 @@
 /* === FACILITIES SECTION === */
 .facilitiesSection {
     background: var(--background-alt);
-    padding: 8rem 3rem;
+    padding: 8rem var(--container-padding);
 }
 
 .facilitiesLayout {
@@ -1212,7 +1212,7 @@
 /* === TESTIMONIALS === */
 .testimonialsSection {
     background: var(--white);
-    padding: 8rem 3rem;
+    padding: 8rem var(--container-padding);
     overflow: hidden;
 }
 
@@ -1498,7 +1498,7 @@
     background: #00593B;
     /* Custom Green from Image */
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 6rem 3rem 3rem;
+    padding: 6rem var(--container-padding) 3rem;
     width: 100%;
 }
 

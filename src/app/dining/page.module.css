@@ -42,7 +42,7 @@
     z-index: 100;
     display: flex;
     align-items: center;
-    padding: 0 4rem;
+    padding: 0 var(--container-padding);
     transition: all 0.3s ease;
 }
 
@@ -128,7 +128,7 @@
 }
 
 .section {
-    padding: 6rem 2rem;
+    padding: 6rem var(--container-padding);
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
@@ -262,7 +262,7 @@
     }
 
     .section {
-        padding: 4rem 1.5rem;
+        padding: 4rem var(--container-padding);
     }
 
     .menuGrid {
@@ -279,7 +279,7 @@
     }
 
     .dynamicHeader {
-        padding: 0 1.5rem;
+        padding: 0 var(--container-padding);
     }
 }
 
