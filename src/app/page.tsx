@@ -20,6 +20,7 @@ import Schema from "./components/Schema";
 import { useCurrency } from "./context/CurrencyContext";
 import ReviewForm from "./components/ReviewForm";
 import Footer from "./components/Footer";
+import HeroSlider from "./components/HeroSlider";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
@@ -56,7 +57,6 @@ export default function Home() {
   const facilitiesKeys = content?.facilities_intro || {};
 
   const [isScrolled, setIsScrolled] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [bookingStatus, setBookingStatus] = useState("");
   const [contactStatus, setContactStatus] = useState("");
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -102,11 +102,8 @@ export default function Home() {
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 60);
     window.addEventListener("scroll", handleScroll);
-    const timer = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % heroImages.length);
-    }, 7000);
-    return () => { window.removeEventListener("scroll", handleScroll); clearInterval(timer); };
-  }, [heroImages.length]);
+    return () => { window.removeEventListener("scroll", handleScroll); };
+  }, []);
 
   // Robust manual scroll to hash when site data or recent rooms load
   // to prevent layout shifts from pushing the target off-screen.
@@ -124,8 +121,6 @@ export default function Home() {
     }
   }, [siteData, recentRooms.length]);
 
-  const nextSlide = () => setCurrentSlide(prev => (prev + 1) % heroImages.length);
-  const prevSlide = () => setCurrentSlide(prev => (prev - 1 + heroImages.length) % heroImages.length);
 
 
   const handleBookingSubmit = () => {
@@ -169,26 +164,7 @@ export default function Home() {
 
       {/* ── HERO ── */}
       <section className={styles.hero}>
-        <AnimatePresence>
-          <motion.div
-            key={currentSlide}
-            initial={{ scale: 1.08, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-            className={styles.heroSlide}
-          >
-            <SafeImage
-              src={heroImages[currentSlide] || initialHeroImages[0]}
-              alt="Parkside Villa Kitui"
-              fill priority quality={90}
-              sizes="100vw"
-              className={styles.imageReveal}
-              style={{ objectFit: "cover" }}
-              fallbackText="Welcome to Parkside Villa"
-            />
-          </motion.div>
-        </AnimatePresence>
+        <HeroSlider images={heroImages} fallbackImage={initialHeroImages[0]} />
 
         <div className={styles.heroOverlay} />
 
@@ -223,22 +199,6 @@ export default function Home() {
           </motion.div>
         </motion.div>
 
-        {/* Carousel Dots (vertical) */}
-        <div className={styles.carouselControls}>
-          <div className={styles.carouselDots}>
-            {heroImages.map((_: any, i: number) => (
-              <button
-                key={`hero-dot-${i}`}
-                type="button"
-                className={`${styles.dot} ${currentSlide === i ? styles.activeDot : ""}`}
-                onClick={() => setCurrentSlide(i)}
-                aria-label={`Go to slide ${i + 1}`}
-              />
-            ))}
-          </div>
-          <button onClick={prevSlide} className={styles.carouselBtn}><ChevronLeft size={16} /></button>
-          <button onClick={nextSlide} className={styles.carouselBtn}><ChevronRight size={16} /></button>
-        </div>
       </section>
 
       {/* ── BOOKING BAR ── */}

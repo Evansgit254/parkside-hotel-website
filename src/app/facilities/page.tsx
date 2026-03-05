@@ -5,6 +5,7 @@ import { Users, Utensils, Waves, Wine, Hotel, ArrowRight, CheckCircle2 } from "l
 import Link from "next/link";
 import styles from "../rooms/rooms.module.css"; // Using the finalized high-end vertical list styles
 import SafeImage from "../components/SafeImage";
+import HeroSlider from "../components/HeroSlider";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 
@@ -39,15 +40,9 @@ export default function FacilitiesPage() {
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1.2 }}
                 >
-                    <SafeImage
-                        src={content?.facilities_hero?.image || "https://res.cloudinary.com/dizwm3mic/image/upload/f_auto,q_auto/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg"}
-                        alt="Facilities Hero"
-                        fill
-                        priority
-                        quality={90}
-                        className={styles.heroBgImage}
-                        style={{ objectFit: 'cover' }}
-                        fallbackText="Luxury Facilities"
+                    <HeroSlider
+                        images={Array.isArray(content?.facilities_hero?.image) ? content.facilities_hero.image : [content?.facilities_hero?.image].filter(Boolean)}
+                        fallbackImage="https://res.cloudinary.com/dizwm3mic/image/upload/f_auto,q_auto/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg"
                     />
                 </motion.div>
                 <div className={styles.heroOverlay} />

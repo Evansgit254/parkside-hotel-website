@@ -135,8 +135,9 @@ export async function getSiteData() {
             return acc;
         }, {});
 
-        const optimizeCloudinary = (url: string | null | undefined) => {
+        const optimizeCloudinary = (url: any): any => {
             if (!url) return null;
+            if (Array.isArray(url)) return url.map(u => optimizeCloudinary(u)).filter(Boolean);
             if (typeof url !== 'string') return null;
             if (!url.includes('res.cloudinary.com')) return url;
 
@@ -250,8 +251,10 @@ export async function getPublicSiteData() {
             return acc;
         }, {});
 
-        const optimizeCloudinary = (url: string | null | undefined) => {
-            if (!url || typeof url !== 'string') return null;
+        const optimizeCloudinary = (url: any): any => {
+            if (!url) return null;
+            if (Array.isArray(url)) return url.map(u => optimizeCloudinary(u)).filter(Boolean);
+            if (typeof url !== 'string') return null;
             if (!url.includes('res.cloudinary.com')) return url;
             try {
                 new URL(url);
@@ -1282,6 +1285,31 @@ export async function addGalleryItem(item: { url: string; type: string; title?: 
     } catch (error) {
         console.error("Error adding gallery item:", error);
         return { success: false, error: "Database error" };
+    }
+}
+
+export async function addGalleryItems(items: { url: string; type: string; title?: string; categoryId?: string }[]) {
+    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
+    try {
+        await requireAdmin();
+        const count = await prisma.galleryItem.count();
+
+        // Use createMany for bulk insertion
+        await prisma.galleryItem.createMany({
+            data: items.map((item, idx) => ({
+                url: item.url,
+                type: item.type,
+                title: item.title || null,
+                order: count + idx,
+                categoryId: item.categoryId || null
+            }))
+        });
+
+        revalidateAll();
+        return { success: true };
+    } catch (error: any) {
+        console.error("Error bulk adding gallery items:", error);
+        return { success: false, error: error.message || "Database error" };
     }
 }
 

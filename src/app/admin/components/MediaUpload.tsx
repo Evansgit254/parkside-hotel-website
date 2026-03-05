@@ -7,23 +7,78 @@ import { uploadImage, getCloudinarySignature } from "../../actions";
 import { showToast } from "./AdminToast";
 
 interface MediaUploadProps {
-    value: string;
+    value?: string | string[];
     onChange: (url: string) => void;
+    onFilesChange?: (urls: string[]) => void;
     label?: string;
     type?: "image" | "video";
     placeholder?: string;
+    multiple?: boolean;
 }
 
-export default function MediaUpload({ value, onChange, label, type = "image", placeholder }: MediaUploadProps) {
+export default function MediaUpload({ value, onChange, onFilesChange, label, type = "image", placeholder, multiple = false }: MediaUploadProps) {
     const [isDragging, setIsDragging] = useState(false);
     const [uploading, setUploading] = useState(false);
-    const [mode, setMode] = useState<"upload" | "url">(value && !value.startsWith("/") ? "url" : "upload");
+    const firstValue = Array.isArray(value) ? value[0] : value;
+    const [mode, setMode] = useState<"upload" | "url">(firstValue && !firstValue.startsWith("/") ? "url" : "upload");
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        uploadFile(file);
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
+
+        if (multiple) {
+            uploadFiles(Array.from(files));
+        } else {
+            uploadFile(files[0]);
+        }
+    };
+
+    const uploadFiles = async (files: File[]) => {
+        setUploading(true);
+        const uploadedUrls: string[] = [];
+        try {
+            const sigData = await getCloudinarySignature();
+            if (!sigData.success || !sigData.signature) {
+                throw new Error(sigData.error || "Failed to get upload signature");
+            }
+
+            for (const file of files) {
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("api_key", sigData.apiKey || "");
+                formData.append("timestamp", String(sigData.timestamp));
+                formData.append("signature", sigData.signature);
+                formData.append("folder", sigData.folder || "parkside_villa");
+
+                const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
+                const response = await fetch(uploadUrl, {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.secure_url) {
+                        uploadedUrls.push(result.secure_url);
+                    }
+                }
+            }
+
+            if (uploadedUrls.length > 0) {
+                if (onFilesChange) {
+                    onFilesChange(uploadedUrls);
+                } else if (onChange) {
+                    onChange(uploadedUrls[0]);
+                }
+                showToast(`Successfully uploaded ${uploadedUrls.length} assets`, "success");
+            }
+        } catch (error: any) {
+            console.error("Batch upload failed", error);
+            showToast(error.message || "An unexpected error occurred during batch upload.", "error");
+        } finally {
+            setUploading(false);
+        }
     };
 
     const uploadFile = async (file: File) => {
@@ -71,9 +126,16 @@ export default function MediaUpload({ value, onChange, label, type = "image", pl
     const onDrop = (e: React.DragEvent) => {
         e.preventDefault();
         setIsDragging(false);
-        const file = e.dataTransfer.files?.[0];
-        if (file && file.type.startsWith("image/")) {
-            uploadFile(file);
+        const files = Array.from(e.dataTransfer.files);
+        if (files.length > 0) {
+            const imageFiles = files.filter(f => f.type.startsWith("image/"));
+            if (imageFiles.length > 0) {
+                if (multiple) {
+                    uploadFiles(imageFiles);
+                } else {
+                    uploadFile(imageFiles[0]);
+                }
+            }
         }
     };
 
@@ -112,6 +174,7 @@ export default function MediaUpload({ value, onChange, label, type = "image", pl
                             ref={fileInputRef}
                             onChange={handleFileChange}
                             accept="image/*"
+                            multiple={multiple}
                             hidden
                         />
 
@@ -120,9 +183,9 @@ export default function MediaUpload({ value, onChange, label, type = "image", pl
                                 <Loader2 className={styles.spinner} size={32} />
                                 <p>Processing high-resolution asset...</p>
                             </div>
-                        ) : value ? (
+                        ) : firstValue ? (
                             <div className={styles.previewWrapper}>
-                                <img src={value} alt="Preview" className={styles.uploadPreview} />
+                                <img src={firstValue} alt="Preview" className={styles.uploadPreview} />
                                 <div className={styles.previewOverlay}>
                                     <div className={styles.previewInfo}>
                                         <CheckCircle2 size={16} className={styles.successIcon} />
@@ -157,12 +220,12 @@ export default function MediaUpload({ value, onChange, label, type = "image", pl
                             type="text"
                             className={styles.input}
                             placeholder={placeholder || "https://example.com/image.jpg"}
-                            value={value}
+                            value={firstValue || ""}
                             onChange={(e) => onChange(e.target.value)}
                         />
-                        {value && (
+                        {firstValue && (
                             <div className={styles.urlPreviewMini}>
-                                <img src={value} alt="" />
+                                <img src={firstValue} alt="" />
                             </div>
                         )}
                     </div>

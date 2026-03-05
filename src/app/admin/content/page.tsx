@@ -9,7 +9,7 @@ import { showToast } from "../components/AdminToast";
 import {
     Save, Loader2, LayoutTemplate, Phone, BarChart2,
     Star, ChevronRight, CheckCircle2, AlertCircle, Upload, Cloud,
-    Image as ImageIcon, AlertTriangle
+    Image as ImageIcon, AlertTriangle, X
 } from "lucide-react";
 
 // ─── Schema ────────────────────────────────────────────────────────────────────
@@ -133,38 +133,38 @@ const contentSchema = [
     },
     {
         key: "rooms_hero",
-        label: "Rooms Hero Image",
-        description: "The background image for the Rooms page hero banner.",
+        label: "Rooms Hero Images",
+        description: "Manage sliding background images for the Rooms page hero banner.",
         icon: LayoutTemplate,
         fields: [
-            { name: "image", label: "Hero Image URL (Cloudinary)", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446787/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0698_zmv8bg.jpg" }
+            { name: "image", label: "Hero Images (Add multiple)", type: "image-list", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446787/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0698_zmv8bg.jpg" }
         ]
     },
     {
         key: "facilities_hero",
-        label: "Facilities Hero Image",
-        description: "The background image for the Facilities page hero banner.",
+        label: "Facilities Hero Images",
+        description: "Manage sliding background images for the Facilities page hero banner.",
         icon: LayoutTemplate,
         fields: [
-            { name: "image", label: "Hero Image URL (Cloudinary)", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/f_auto,q_auto/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg" }
+            { name: "image", label: "Hero Images (Add multiple)", type: "image-list", default: "https://res.cloudinary.com/dizwm3mic/image/upload/f_auto,q_auto/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg" }
         ]
     },
     {
         key: "dining_hero",
-        label: "Dining Hero Image",
-        description: "The background image for the Dining page hero banner.",
+        label: "Dining Hero Images",
+        description: "Manage sliding background images for the Dining page hero banner.",
         icon: LayoutTemplate,
         fields: [
-            { name: "image", label: "Hero Image URL (Cloudinary)", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446807/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0703_qptc5r.jpg" }
+            { name: "image", label: "Hero Images (Add multiple)", type: "image-list", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446807/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0703_qptc5r.jpg" }
         ]
     },
     {
         key: "blog_hero",
-        label: "Blog Hero Image",
-        description: "The background image for the Blog page hero banner.",
+        label: "Blog Hero Images",
+        description: "Manage sliding background images for the Blog page hero banner.",
         icon: LayoutTemplate,
         fields: [
-            { name: "image", label: "Hero Image URL (Cloudinary)", type: "text", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772440903/parkside-villa-media/Front_Image_Or_Background_Image/IMG-20251119-WA0061_fvrbbk.jpg" }
+            { name: "image", label: "Hero Images (Add multiple)", type: "image-list", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772440903/parkside-villa-media/Front_Image_Or_Background_Image/IMG-20251119-WA0061_fvrbbk.jpg" }
         ]
     },
     {
@@ -392,7 +392,7 @@ export default function AdminContent() {
         showToast("Changes saved successfully.", "success");
     };
 
-    const handleChange = (schemaKey: string, fieldName: string, value: string) => {
+    const handleChange = (schemaKey: string, fieldName: string, value: string | string[]) => {
         setContent((prev: any) => ({
             ...prev,
             [schemaKey]: { ...(prev[schemaKey] || {}), [fieldName]: value }
@@ -598,6 +598,12 @@ export default function AdminContent() {
                                                         rows={4}
                                                         style={{ resize: 'vertical', lineHeight: 1.7 }}
                                                     />
+                                                ) : field.type === "image-list" ? (
+                                                    <ImageField
+                                                        value={val}
+                                                        onChange={(newVal) => handleChange(activeSchemaSection.key, field.name, newVal)}
+                                                        multiple
+                                                    />
                                                 ) : isImage ? (
                                                     <ImageField
                                                         value={val}
@@ -710,24 +716,20 @@ export default function AdminContent() {
     );
 }
 
-function ImageField({ value, onChange }: { value: string; onChange: (val: string) => void }) {
+function ImageField({ value, onChange, multiple = false }: { value: string | string[]; onChange: (val: string | string[]) => void; multiple?: boolean }) {
     const [uploading, setUploading] = useState(false);
-    const [hasError, setHasError] = useState(false);
+    const [hasError, setHasError] = useState<Record<string, boolean>>({});
 
-    useEffect(() => {
-        setHasError(false);
-    }, [value]);
+    const images = Array.isArray(value) ? value : (value ? [value] : []);
 
     const handleUpload = async (file: File) => {
         setUploading(true);
         try {
-            // 1. Get signature from server
             const sigData = await getCloudinarySignature();
             if (!sigData.success || !sigData.signature) {
                 throw new Error(sigData.error || "Failed to get upload signature");
             }
 
-            // 2. Prepare Form Data for direct upload
             const formData = new FormData();
             formData.append("file", file);
             formData.append("api_key", sigData.apiKey || "");
@@ -735,7 +737,6 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
             formData.append("signature", sigData.signature);
             formData.append("folder", sigData.folder || "parkside_villa");
 
-            // 3. POST direct to Cloudinary
             const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
             const response = await fetch(uploadUrl, {
                 method: "POST",
@@ -748,12 +749,12 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
             }
 
             const result = await response.json();
-            console.log("[DIAG] Client-side Cloudinary Result:", result);
-            console.log("[DIAG] Client-side Secure URL:", result.secure_url);
-
             if (result.secure_url) {
-                onChange(result.secure_url);
-                setHasError(false);
+                if (multiple) {
+                    onChange([...images, result.secure_url]);
+                } else {
+                    onChange(result.secure_url);
+                }
                 showToast("Image uploaded successfully", "success");
             }
         } catch (err: any) {
@@ -764,46 +765,84 @@ function ImageField({ value, onChange }: { value: string; onChange: (val: string
         }
     };
 
+    const removeImage = (index: number) => {
+        const newImages = [...images];
+        newImages.splice(index, 1);
+        onChange(multiple ? newImages : "");
+    };
+
     return (
         <div className={styles.imageUploadWrapper}>
             <div className={styles.uploadMethods}>
-                <input
-                    type="text"
-                    className={styles.input}
-                    value={value}
-                    onChange={e => onChange(e.target.value)}
-                    style={{ flex: 1 }}
-                    placeholder="Image URL (Cloudinary or Remote)"
-                />
+                {!multiple && (
+                    <input
+                        type="text"
+                        className={styles.input}
+                        value={Array.isArray(value) ? value[0] || "" : value}
+                        onChange={e => onChange(multiple ? [e.target.value] : e.target.value)}
+                        style={{ flex: 1 }}
+                        placeholder="Image URL (Cloudinary or Remote)"
+                    />
+                )}
                 <label
                     className={`${styles.uploadBtn} ${styles.cloudUploadBtn}`}
-                    style={{ opacity: uploading ? 0.5 : 1 }}
+                    style={{ opacity: uploading ? 0.5 : 1, flex: multiple ? 1 : 'unset' }}
                 >
                     {uploading ? <Loader2 className={styles.spinner} size={14} /> : <Upload size={14} />}
-                    Upload from Device
+                    {multiple ? "Add Multiple Images" : "Upload from Device"}
                     <input
                         type="file"
+                        multiple={multiple}
                         style={{ display: 'none' }}
-                        onChange={e => e.target.files?.[0] && handleUpload(e.target.files[0])}
+                        onChange={async (e) => {
+                            if (e.target.files) {
+                                for (let i = 0; i < e.target.files.length; i++) {
+                                    await handleUpload(e.target.files[i]);
+                                }
+                            }
+                        }}
                         disabled={uploading}
                     />
                 </label>
             </div>
-            {value && (
-                <div className={styles.imagePreview}>
-                    {!hasError ? (
-                        <img
-                            src={value}
-                            alt="Preview"
-                            referrerPolicy="no-referrer"
-                            onError={() => setHasError(true)}
-                        />
-                    ) : (
-                        <div className={styles.brokenImage}>
-                            <AlertTriangle className={styles.brokenIcon} size={24} />
-                            <span>Preview Unavailable</span>
+
+            {images.length > 0 && (
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
+                    gap: '1rem',
+                    marginTop: '1rem'
+                }}>
+                    {images.map((img, idx) => (
+                        <div key={idx} style={{ position: 'relative', aspectRatio: '1', background: '#f0f0f0', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.05)' }}>
+                            {!hasError[img] ? (
+                                <img
+                                    src={img}
+                                    alt="Preview"
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    onError={() => setHasError(prev => ({ ...prev, [img]: true }))}
+                                />
+                            ) : (
+                                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '4px', opacity: 0.5 }}>
+                                    <AlertTriangle size={20} />
+                                    <span style={{ fontSize: '10px' }}>Error</span>
+                                </div>
+                            )}
+                            <button
+                                type="button"
+                                onClick={() => removeImage(idx)}
+                                style={{
+                                    position: 'absolute', top: '4px', right: '4px',
+                                    background: 'rgba(239, 68, 68, 0.9)', color: 'white',
+                                    border: 'none', borderRadius: '50%', width: '20px', height: '20px',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    cursor: 'pointer', fontSize: '12px'
+                                }}
+                            >
+                                <X size={12} />
+                            </button>
                         </div>
-                    )}
+                    ))}
                 </div>
             )}
         </div>

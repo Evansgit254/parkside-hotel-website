@@ -4,6 +4,7 @@ import { getSiteData } from "../actions";
 import SafeImage from "../components/SafeImage";
 import styles from "./rooms.module.css";
 import RoomsContent from "./RoomsContent";
+import HeroSlider from "../components/HeroSlider";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 
@@ -37,16 +38,9 @@ export default function RoomsPage() {
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1.2 }}
                 >
-                    <SafeImage
-                        src={content?.rooms_hero?.image || "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446787/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0698_zmv8bg.jpg"}
-                        alt="Rooms Hero"
-                        fill
-                        priority
-                        quality={90}
-                        sizes="100vw"
-                        className={styles.heroImage}
-                        style={{ objectFit: 'cover' }}
-                        fallbackText="Our Luxury Collection"
+                    <HeroSlider
+                        images={Array.isArray(content?.rooms_hero?.image) ? content.rooms_hero.image : [content?.rooms_hero?.image].filter(Boolean)}
+                        fallbackImage="https://res.cloudinary.com/dizwm3mic/image/upload/v1772446787/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0698_zmv8bg.jpg"
                     />
                 </motion.div>
                 <div className={styles.heroOverlay} />

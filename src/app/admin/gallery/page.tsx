@@ -2,7 +2,7 @@
 export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
-import { getSiteData, getGalleryItems, addGalleryItem, deleteGalleryItem, uploadImage, updateGalleryOrder, updateGalleryItem, getGalleryCategories, addGalleryCategory, updateGalleryCategory, deleteGalleryCategory } from "../../actions";
+import { getSiteData, getGalleryItems, addGalleryItem, addGalleryItems, deleteGalleryItem, uploadImage, updateGalleryOrder, updateGalleryItem, getGalleryCategories, addGalleryCategory, updateGalleryCategory, deleteGalleryCategory } from "../../actions";
 import styles from "../admin.module.css";
 import { Plus, Trash2, Edit2, Image as ImageIcon, Video, Upload, Grid, List, Save, X, ExternalLink, Move, Loader2 } from "lucide-react";
 import { GalleryItem, GalleryCategory } from "@prisma/client";
@@ -45,6 +45,25 @@ export default function GalleryAdmin() {
     const handleAdd = () => {
         setEditForm({ id: "", url: "", type: "image", title: "", categoryId: "" });
         setIsModalOpen(true);
+    };
+
+    const handleFilesChange = async (urls: string[]) => {
+        setLoading(true);
+        const res = await addGalleryItems(urls.map(url => ({
+            url,
+            type: editForm.type,
+            categoryId: editForm.categoryId || undefined,
+            title: ""
+        })));
+
+        if (res.success) {
+            await loadItems();
+            setIsModalOpen(false);
+            showToast(`Successfully curated ${urls.length} assets`, "success");
+        } else {
+            setError(res.error || "Failed to bulk add items.");
+        }
+        setLoading(false);
     };
 
     const handleSave = async (e: React.FormEvent) => {
@@ -249,6 +268,8 @@ export default function GalleryAdmin() {
                                     label="Visual Asset Source"
                                     value={editForm.url}
                                     onChange={(url) => setEditForm(prev => ({ ...prev, url }))}
+                                    onFilesChange={handleFilesChange}
+                                    multiple={!editForm.id}
                                     placeholder={editForm.type === 'image' ? "https://..." : "https://youtube.com/watch?v=..."}
                                 />
 
