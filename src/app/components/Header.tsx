@@ -17,12 +17,20 @@ export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const [content, setContent] = useState<any>({});
+    const [rooms, setRooms] = useState<any[]>([]);
+    const [conferenceHalls, setConferenceHalls] = useState<any[]>([]);
+    const [facilities, setFacilities] = useState<any[]>([]);
+    const [diningVenues, setDiningVenues] = useState<any[]>([]);
     const pathname = usePathname();
     const isHomepage = pathname === '/';
 
     useEffect(() => {
         getPublicSiteData().then(data => {
             if (data?.content) setContent(data.content);
+            if (data?.rooms) setRooms(data.rooms);
+            if (data?.conferenceHalls) setConferenceHalls(data.conferenceHalls);
+            if (data?.facilities) setFacilities(data.facilities);
+            if (data?.diningVenues) setDiningVenues(data.diningVenues);
         });
 
         const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -51,10 +59,7 @@ export default function Header() {
             href: "/rooms",
             label: navMain.rooms || "Accommodation",
             subLinks: [
-                { href: "/rooms/standard-premium", label: "Standard Premium" },
-                { href: "/rooms/deluxe-suites", label: "Deluxe Suites" },
-                { href: "/rooms/executive-suites", label: "Executive Suites" },
-                { href: "/rooms/cottages", label: "Cottages" },
+                ...rooms.map(r => ({ href: `/rooms/${r.id}`, label: r.name })),
                 { href: "/rooms", label: "All Accommodations" },
             ]
         },
@@ -62,10 +67,7 @@ export default function Header() {
             href: "/conference",
             label: navMain.conference || "Conference",
             subLinks: [
-                { href: "/conference/longonot-hall", label: "Longonot Hall" },
-                { href: "/conference/amboseli-nzambani-halls", label: "Amboseli & Nzambani" },
-                { href: "/conference/syokimau-highrise-halls", label: "Syokimau & Highrise" },
-                { href: "/conference/masai-mara-hall", label: "Masai Mara Hall" },
+                ...conferenceHalls.map(h => ({ href: `/conference/${h.slug}`, label: h.name })),
                 { href: "/conference", label: "All Hall Selections" },
             ]
         },
@@ -73,9 +75,7 @@ export default function Header() {
             href: "/facilities",
             label: navMain.facilities || "Facilities",
             subLinks: [
-                { href: "/facilities/pool", label: "Swimming Pool" },
-                { href: "/facilities/kids-zone", label: "Kids Zone" },
-                { href: "/facilities/lush-gardens", label: "Lush Gardens" },
+                ...facilities.map(f => ({ href: `/facilities/${f.id}`, label: f.title })),
                 { href: "/facilities", label: "All Hotel Facilities" },
             ]
         },
@@ -83,8 +83,7 @@ export default function Header() {
             href: "/dining",
             label: navMain.dining || "Dining",
             subLinks: [
-                { href: "/dining/open-bar-restaurant", label: "Open Bar & Restaurant" },
-                { href: "/dining/vip-lounge", label: "VIP Lounge" },
+                ...diningVenues.map(v => ({ href: `/dining/${v.slug}`, label: v.name })),
                 { href: "/dining#menu", label: "Our Menu" },
                 { href: "/dining", label: "All Dining Venues" },
             ]
