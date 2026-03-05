@@ -32,16 +32,26 @@ function createPrismaClient() {
 
     let url = process.env.DATABASE_URL || "";
 
-    // During build, we want to limit connections per worker and increase timeout
-    // Next.js often uses multiple workers (e.g. 7) which can quickly exhaust a DB pool
-    if (process.env.NODE_ENV === "production" && !url.includes("connection_limit=")) {
-        const separator = url.includes("?") ? "&" : "?";
-        url = `${url}${separator}connection_limit=2&pool_timeout=60`;
+    // During build or production, we MUST limit connections per worker and increase timeout
+    // Next.js uses multiple workers (e.g. 7-10) which can quickly exhaust Neon's free tier (10-20 connections total)
+    if (process.env.NODE_ENV === "production") {
+        const urlParams = new URL(url.replace("postgresql://", "http://")); // dummy protocol for URL parser
+
+        // Ensure connection_limit is low (2) for each worker
+        urlParams.searchParams.set("connection_limit", "2");
+
+        // Increase connect_timeout for Neon cold starts (15s)
+        urlParams.searchParams.set("connect_timeout", "15");
+
+        // Increase pool_timeout for busy builds
+        urlParams.searchParams.set("pool_timeout", "60");
+
+        url = url.split("?")[0] + "?" + urlParams.searchParams.toString();
     }
 
     return new PrismaClient({
         datasources: url ? { db: { url } } : undefined,
-        log: ["error", "warn"],
+        log: ["warn", "error"],
     });
 }
 
