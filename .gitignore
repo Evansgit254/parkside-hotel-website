@@ -48,6 +48,7 @@ next-env.d.ts
 
 # Media
 PARKSIDE VILLA MEDIA/
+!public/hero-assets/
 
 # Playwright test artifacts
 /test-results/
