@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '10mb',
     },
     outputFileTracingIncludes: {
-      '/**': ['./public/hero-assets/**/*'],
+      'src/app/actions/media': ['./public/hero-assets/**/*'],
     },
   },
   async redirects() {

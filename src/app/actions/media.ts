@@ -6,9 +6,13 @@ import path from "path";
 export async function getLocalMedia() {
     const cwd = process.cwd();
 
-    // Recursive search for hero-assets starting from cwd, max depth 4
+    // NFT HINT: statically reference one of our assets to force the whole folder into the bundle.
+    // The Vercel builder sees this static path and traces the directory.
+    const _nftHint = path.join(cwd, "public", "hero-assets", "1.webp");
+
+    // Recursive search for hero-assets starting from cwd, max depth 5
     const findDir = (curr: string, name: string, depth: number = 0): string | null => {
-        if (depth > 4) return null;
+        if (depth > 5) return null;
         try {
             const items = fs.readdirSync(curr);
             if (items.includes(name)) return path.join(curr, name);
@@ -25,19 +29,12 @@ export async function getLocalMedia() {
 
     const heroAssetsPath = findDir(cwd, "hero-assets");
 
-    // Also specifically checking .next/static/media or .next/server/chunks
-    const nextPath = path.join(cwd, ".next");
-    let nextContent: string[] = [];
-    if (fs.existsSync(nextPath)) {
-        try {
-            nextContent = fs.readdirSync(nextPath);
-        } catch (e) { }
-    }
-
     if (!heroAssetsPath) {
+        // Log directories at root for final diagnostic
+        const rootContent = fs.readdirSync(cwd).join(", ");
         return {
             success: false,
-            error: `[vDiag-4] hero-assets folder not found. (CWD: ${cwd}, .next exists: ${fs.existsSync(nextPath)}, .next Content: ${nextContent.join(", ")})`,
+            error: `[vDiag-5] hero-assets not found. CWD: ${cwd}, Root: ${rootContent}`,
             files: []
         };
     }
