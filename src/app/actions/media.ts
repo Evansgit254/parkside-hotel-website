@@ -6,15 +6,15 @@ import path from "path";
 export async function getLocalMedia() {
     const cwd = process.cwd();
 
-    // Recursive search for hero-assets starting from cwd, max depth 3
+    // Recursive search for hero-assets starting from cwd, max depth 4
     const findDir = (curr: string, name: string, depth: number = 0): string | null => {
-        if (depth > 3) return null;
+        if (depth > 4) return null;
         try {
             const items = fs.readdirSync(curr);
             if (items.includes(name)) return path.join(curr, name);
             for (const item of items) {
                 const full = path.join(curr, item);
-                if (fs.statSync(full).isDirectory()) {
+                if (fs.statSync(full).isDirectory() && !item.startsWith('.') || item === '.next') {
                     const found = findDir(full, name, depth + 1);
                     if (found) return found;
                 }
@@ -24,21 +24,26 @@ export async function getLocalMedia() {
     };
 
     const heroAssetsPath = findDir(cwd, "hero-assets");
-    const publicPath = heroAssetsPath ? path.join(heroAssetsPath, "..") : path.join(cwd, "public");
+
+    // Also specifically checking .next/static/media or .next/server/chunks
+    const nextPath = path.join(cwd, ".next");
+    let nextContent: string[] = [];
+    if (fs.existsSync(nextPath)) {
+        try {
+            nextContent = fs.readdirSync(nextPath);
+        } catch (e) { }
+    }
 
     if (!heroAssetsPath) {
-        // One last fallback: check if it's in the root but maybe readdir missed it?
-        const directHero = path.join(cwd, "public", "hero-assets");
-        const exists = fs.existsSync(directHero);
-
         return {
             success: false,
-            error: `hero-assets folder not found. (CWD: ${cwd}, Searched 3 levels deep).`,
+            error: `hero-assets folder not found. (CWD: ${cwd}, .next exists: ${fs.existsSync(nextPath)}, .next Content: ${nextContent.join(", ")})`,
             files: []
         };
     }
 
     try {
+        const publicPath = path.join(heroAssetsPath, "..");
         const getAllFiles = (dirPath: string, arrayOfFiles: string[] = []) => {
             const files = fs.readdirSync(dirPath);
             files.forEach((file) => {
@@ -47,7 +52,6 @@ export async function getLocalMedia() {
                     arrayOfFiles = getAllFiles(fullPath, arrayOfFiles);
                 } else {
                     if (/\.(jpg|jpeg|png|webp|gif|mp4)$/i.test(file) && !file.startsWith("._")) {
-                        // We want the URL to be /hero-assets/...
                         const relativePath = path.relative(publicPath, fullPath);
                         arrayOfFiles.push("/" + relativePath.replace(/\\/g, "/"));
                     }
