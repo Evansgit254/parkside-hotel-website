@@ -4,15 +4,28 @@ import fs from "fs";
 import path from "path";
 
 export async function getLocalMedia() {
-    const mediaDir = path.join(process.cwd(), "public", "PARKSIDE VILLA MEDIA");
-    const heroDir = path.join(process.cwd(), "public", "hero-assets");
+    const cwd = process.cwd();
+    const mediaDir = path.join(cwd, "public", "PARKSIDE VILLA MEDIA");
+    const heroDir = path.join(cwd, "public", "hero-assets");
+
+    // Debugging: check common paths
+    const publicPath = path.join(cwd, "public");
+    let publicExists = fs.existsSync(publicPath);
+    let publicContent: string[] = [];
+    if (publicExists) {
+        publicContent = fs.readdirSync(publicPath);
+    }
 
     const scanDirs = [];
     if (fs.existsSync(heroDir)) scanDirs.push(heroDir);
     if (fs.existsSync(mediaDir)) scanDirs.push(mediaDir);
 
     if (scanDirs.length === 0) {
-        return { success: false, error: "Media directories not found", files: [] };
+        return {
+            success: false,
+            error: `Media directories not found. (CWD: ${cwd}, PublicExists: ${publicExists}, PublicContent: ${publicContent.join(", ")})`,
+            files: []
+        };
     }
 
     try {
@@ -28,9 +41,8 @@ export async function getLocalMedia() {
                         arrayOfFiles = getAllFiles(fullPath, arrayOfFiles);
                     }
                 } else {
-                    // Only include common image formats and ignore metadata files
                     if (/\.(jpg|jpeg|png|webp|gif|mp4)$/i.test(file) && !file.startsWith("._")) {
-                        const relativePath = path.relative(path.join(process.cwd(), "public"), fullPath);
+                        const relativePath = path.relative(publicPath, fullPath);
                         arrayOfFiles.push("/" + relativePath.replace(/\\/g, "/"));
                     }
                 }
@@ -44,7 +56,6 @@ export async function getLocalMedia() {
             allFiles = getAllFiles(dir, allFiles);
         });
 
-        // Unique files and sort
         const files = Array.from(new Set(allFiles)).sort((a, b) => a.localeCompare(b));
 
         return { success: true, files };
