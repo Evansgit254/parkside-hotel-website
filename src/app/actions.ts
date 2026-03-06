@@ -1058,28 +1058,48 @@ export async function getCloudinarySignature() {
     try {
         await requireAdmin();
 
+        const cloudinaryUrl = process.env.CLOUDINARY_URL;
+        if (!cloudinaryUrl) {
+            console.error("CLOUDINARY_URL is missing from environment variables");
+            return { success: false, error: "Cloudinary configuration (CLOUDINARY_URL) is missing. Check your .env file." };
+        }
+
+        // Validate format briefly
+        if (!cloudinaryUrl.includes('://') || !cloudinaryUrl.includes('@')) {
+            return { success: false, error: "Cloudinary configuration format is invalid. Ensure it follows: cloudinary://api_key:api_secret@cloud_name" };
+        }
+
         const timestamp = Math.round(new Date().getTime() / 1000);
         const paramsToSign = {
             timestamp,
             folder: "parkside-villa-media"
         };
 
+        const [authPart, cloudPart] = cloudinaryUrl.split('@');
+        const apiSecret = authPart.split(':').pop() || "";
+        const apiKey = authPart.split(':')[1]?.replace('//', '') || "";
+        const cloudName = cloudPart.split('/').shift() || "";
+
+        if (!apiSecret || !apiKey || !cloudName) {
+            return { success: false, error: "Failed to parse Cloudinary credentials from CLOUDINARY_URL" };
+        }
+
         const signature = cloudinary.utils.api_sign_request(
             paramsToSign,
-            process.env.CLOUDINARY_URL?.split('@')[0]?.split(':').pop() || "" // Api Secret
+            apiSecret
         );
 
         return {
             success: true,
             signature,
             timestamp,
-            cloudName: process.env.CLOUDINARY_URL?.split('@').pop() || "",
-            apiKey: process.env.CLOUDINARY_URL?.split(':')[1]?.replace('//', '') || "",
+            cloudName,
+            apiKey,
             folder: "parkside-villa-media"
         };
     } catch (error: any) {
-        console.error("Signature error:", error);
-        return { success: false, error: error.message };
+        console.error("Signature generation error:", error);
+        return { success: false, error: error.message || "Failed to generate upload signature" };
     }
 }
 

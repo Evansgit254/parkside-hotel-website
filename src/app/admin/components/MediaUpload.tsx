@@ -41,6 +41,7 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
         setUploadProgress({ current: 0, total: files.length });
         const successfulUrls: string[] = [];
         let errorCount = 0;
+        let lastError = "";
 
         try {
             const sigData = await getCloudinarySignature();
@@ -87,10 +88,12 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                             errorMsg = err.error?.message || errorMsg;
                         } catch (e) { }
                         console.error(`Upload ${i + 1} failed:`, errorMsg);
+                        lastError = errorMsg;
                         errorCount++;
                     }
                 } catch (e: any) {
                     console.error(`Network error for file ${i + 1}:`, e);
+                    lastError = e.message || "Network error";
                     errorCount++;
                 }
             }
@@ -103,12 +106,12 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                 }
 
                 if (errorCount > 0) {
-                    showToast(`Uploaded ${successfulUrls.length} assets, but ${errorCount} failed.`, "error");
+                    showToast(`Uploaded ${successfulUrls.length} assets, but ${errorCount} failed: ${lastError}`, "error");
                 } else {
                     showToast(`Successfully uploaded ${successfulUrls.length} asset(s)`, "success");
                 }
             } else if (errorCount > 0) {
-                showToast(`Upload failed. Please check your connection and Cloudinary settings.`, "error");
+                showToast(lastError || `Upload failed. Please check your connection and Cloudinary settings.`, "error");
             }
 
         } catch (error: any) {
