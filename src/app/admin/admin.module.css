@@ -2565,3 +2565,134 @@
         display: none;
     }
 }
+
+/* === LOCAL MEDIA EXPLORER === */
+.localExplorer {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    background: #F9FAFB;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+    max-height: 600px;
+    margin-top: 1rem;
+}
+
+.explorerHeader {
+    padding: 1rem;
+    background: #FFFFFF;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.searchBar {
+    flex: 1;
+}
+
+.refreshBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.refreshBtn:hover:not(:disabled) {
+    background: #F3F4F6;
+    border-color: #D1D5DB;
+}
+
+.explorerGrid {
+    flex: 1;
+    padding: 1.25rem;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1.25rem;
+    align-content: flex-start;
+}
+
+.explorerItem {
+    position: relative;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.explorerItem:hover {
+    border-color: #144B36;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.explorerItemActive {
+    border-color: #144B36;
+    background: rgba(20, 75, 54, 0.03);
+    box-shadow: 0 0 0 2px rgba(20, 75, 54, 0.1);
+}
+
+.explorerPreview {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #F3F4F6;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.explorerPreview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.explorerLabel {
+    display: block;
+    font-size: 0.6875rem;
+    color: #4B5563;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.selectedCheck {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #FFFFFF;
+    color: #10B981;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+}
+
+.explorerStatus {
+    grid-column: 1 / -1;
+    padding: 3rem;
+    text-align: center;
+    color: #9CA3AF;
+    font-size: 0.8125rem;
+}
+
+.videoPlaceholder {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    color: #9CA3AF;
+}

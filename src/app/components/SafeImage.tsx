@@ -28,6 +28,11 @@ const SafeImage: React.FC<SafeImageProps> = (allProps) => {
 
     const showPlaceholder = error || !src || src === "";
 
+    // Ensure local paths with spaces are encoded for Next.js Image component
+    const processedSrc = src && src.startsWith("/") && src.includes(" ")
+        ? encodeURI(src)
+        : src;
+
     return (
         <div className={`${styles.wrapper} ${props.className || ''}`}>
             {showPlaceholder ? (
@@ -38,7 +43,7 @@ const SafeImage: React.FC<SafeImageProps> = (allProps) => {
             ) : (
                 <Image
                     {...props}
-                    src={src}
+                    src={processedSrc || ""}
                     alt={alt || "Parkside Villa"}
                     className={`${props.className || ''} ${styles.image} ${isLoading ? styles.loading : styles.loaded}`}
                     onLoadingComplete={() => setIsLoading(false)}
