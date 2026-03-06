@@ -16,6 +16,8 @@ interface MediaUploadProps {
     multiple?: boolean;
 }
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit for Cloudinary basic tier
+
 export default function MediaUpload({ value, onChange, onFilesChange, label, type = "image", placeholder, multiple = false }: MediaUploadProps) {
     const [isDragging, setIsDragging] = useState(false);
     const [uploading, setUploading] = useState(false);
@@ -30,9 +32,24 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
         if (!files || files.length === 0) return;
 
         if (multiple) {
-            uploadFilesSequential(Array.from(files));
+            const validFiles = Array.from(files).filter(file => {
+                if (file.size > MAX_FILE_SIZE) {
+                    showToast(`Skipping ${file.name}: Exceeds 10MB limit.`, "error");
+                    return false;
+                }
+                return true;
+            });
+            if (validFiles.length > 0) {
+                uploadFilesSequential(validFiles);
+            }
         } else {
-            uploadFile(files[0]);
+            const file = files[0];
+            if (file.size > MAX_FILE_SIZE) {
+                showToast(`File too large: ${file.name} is over 10MB. Please compress or use a smaller image.`, "error");
+                if (fileInputRef.current) fileInputRef.current.value = "";
+                return;
+            }
+            uploadFile(file);
         }
     };
 
@@ -201,9 +218,23 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
             const imageFiles = files.filter(f => f.type.startsWith("image/"));
             if (imageFiles.length > 0) {
                 if (multiple) {
-                    uploadFilesSequential(imageFiles);
+                    const validFiles = imageFiles.filter(file => {
+                        if (file.size > MAX_FILE_SIZE) {
+                            showToast(`Skipping ${file.name}: Exceeds 10MB limit.`, "error");
+                            return false;
+                        }
+                        return true;
+                    });
+                    if (validFiles.length > 0) {
+                        uploadFilesSequential(validFiles);
+                    }
                 } else {
-                    uploadFile(imageFiles[0]);
+                    const file = imageFiles[0];
+                    if (file.size > MAX_FILE_SIZE) {
+                        showToast(`File too large: Over 10MB limit.`, "error");
+                        return;
+                    }
+                    uploadFile(file);
                 }
             }
         }
