@@ -65,7 +65,7 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
 
                     // Add a timeout to prevent absolute hangs
                     const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+                    const timeoutId = setTimeout(() => controller.abort(), 300000); // 300s (5 min) timeout
 
                     const response = await fetch(uploadUrl, {
                         method: "POST",
@@ -92,8 +92,12 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                         errorCount++;
                     }
                 } catch (e: any) {
-                    console.error(`Network error for file ${i + 1}:`, e);
-                    lastError = e.message || "Network error";
+                    if (e.name === 'AbortError') {
+                        lastError = "Upload timed out (5 min limit). Try a smaller file or faster connection.";
+                    } else {
+                        lastError = e.message || "Network error";
+                    }
+                    console.error(`Network error for file ${i + 1}:`, lastError);
                     errorCount++;
                 }
             }
@@ -147,7 +151,7 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
             const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
 
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+            const timeoutId = setTimeout(() => controller.abort(), 300000); // 300s (5 min) timeout
 
             const response = await fetch(uploadUrl, {
                 method: "POST",
@@ -176,7 +180,9 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
         } catch (error: any) {
             console.error("Upload failed", error);
             let msg = error.message || "An unexpected error occurred.";
-            if (msg.toLowerCase().includes("signature")) {
+            if (error.name === 'AbortError') {
+                msg = "Upload timed out (5 min limit). Try a smaller file or faster connection.";
+            } else if (msg.toLowerCase().includes("signature")) {
                 msg += " (Check Vercel Environment Variables)";
             }
             showToast(msg, "error");
