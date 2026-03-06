@@ -46,7 +46,14 @@ export default function LiveChat() {
     }
 
     return (
-        <div className="fixed bottom-8 right-8 z-[2000] font-sans">
+        <div
+            className="fixed z-[2000] font-sans"
+            style={{
+                bottom: '2rem',
+                right: '2rem',
+                left: 'auto' // Force right positioning
+            }}
+        >
             <AnimatePresence>
                 {isOpen && (
                     <motion.div

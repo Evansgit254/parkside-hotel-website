@@ -273,45 +273,67 @@ a {
 
 /* === GOOGLE TRANSLATE OVERRIDES === */
 /* Hide the top translation banner and prevent body shift */
-.skiptranslate iframe.goog-te-banner-frame {
+.skiptranslate iframe.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate {
   display: none !important;
+  visibility: hidden !important;
 }
 
 body {
   top: 0 !important;
 }
 
-#goog-gt-tt {
+/* Hide the 'simple' floating widget if it appears at bottom */
+.goog-te-gadget-simple,
+.goog-te-menu-frame,
+iframe.goog-te-menu-frame {
+  z-index: 1000 !important;
+}
+
+/* Ensure the widget stays in the header and doesn't float below footer */
+#google_translate_element {
+  min-width: 120px;
+  min-height: 30px;
+}
+
+#goog-gt-tt,
+.goog-te-balloon-frame {
   display: none !important;
 }
 
 /* Style the Google Translate dropdown to match the luxury theme */
 #google_translate_element select,
 .goog-te-combo {
-  background-color: rgba(28, 28, 26, 0.9) !important;
+  background-color: transparent !important;
   color: var(--secondary) !important;
-  border: 1px solid var(--gold-border) !important;
-  border-radius: 4px !important;
-  padding: 0.5rem 1rem !important;
+  border: 1px solid var(--border-gold) !important;
+  border-radius: 100px !important;
+  padding: 0.35rem 1rem !important;
   font-family: var(--font-sans) !important;
   font-size: 0.7rem !important;
-  letter-spacing: 0.15em !important;
+  letter-spacing: 0.1em !important;
   text-transform: uppercase !important;
   cursor: pointer !important;
   outline: none !important;
   transition: all 0.3s var(--ease-luxury) !important;
 }
 
+.headerScrolled .goog-te-combo,
+.headerNonHome .goog-te-combo {
+  color: var(--primary) !important;
+  border-color: rgba(20, 75, 54, 0.2) !important;
+}
+
 #google_translate_element select:hover,
 .goog-te-combo:hover {
   background-color: var(--secondary) !important;
-  color: var(--background-alt) !important;
-  border-color: var(--secondary) !important;
+  color: var(--white) !important;
 }
 
 /* Hide the Google logo and extra text */
 .goog-logo-link,
-.goog-te-gadget span {
+.goog-te-gadget span,
+.goog-te-gadget>div {
   display: none !important;
 }
 

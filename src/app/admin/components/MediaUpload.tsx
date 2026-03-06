@@ -36,7 +36,7 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
 
     const uploadFiles = async (files: File[]) => {
         setUploading(true);
-        const uploadedUrls: string[] = [];
+        let completedCount = 0;
         try {
             const sigData = await getCloudinarySignature();
             if (!sigData.success || !sigData.signature) {
@@ -51,29 +51,42 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                 formData.append("signature", sigData.signature);
                 formData.append("folder", sigData.folder || "parkside_villa");
 
-                const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
-                const response = await fetch(uploadUrl, {
-                    method: "POST",
-                    body: formData
-                });
+                try {
+                    const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
+                    const response = await fetch(uploadUrl, {
+                        method: "POST",
+                        body: formData
+                    });
 
-                if (response.ok) {
-                    const result = await response.json();
-                    return result.secure_url || null;
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.secure_url) {
+                            completedCount++;
+                            if (onFilesChange) {
+                                // For gallery, we might want to collect them all or send them one by one.
+                                // In this component, we'll collect them and send the final batch for GalleryAdmin
+                                // because GalleryAdmin handles the batch save.
+                                return result.secure_url;
+                            } else if (onChange) {
+                                onChange(result.secure_url);
+                                return result.secure_url;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.error("File upload failed:", e);
                 }
                 return null;
             });
 
             const results = await Promise.all(uploadPromises);
-            uploadedUrls.push(...results.filter((url): url is string => !!url));
+            const finalUrls = results.filter((url): url is string => !!url);
 
-            if (uploadedUrls.length > 0) {
+            if (finalUrls.length > 0) {
                 if (onFilesChange) {
-                    onFilesChange(uploadedUrls);
-                } else if (onChange) {
-                    onChange(uploadedUrls[0]);
+                    onFilesChange(finalUrls);
                 }
-                showToast(`Successfully uploaded ${uploadedUrls.length} assets`, "success");
+                showToast(`Successfully uploaded ${finalUrls.length} assets`, "success");
             }
         } catch (error: any) {
             console.error("Batch upload failed", error);
