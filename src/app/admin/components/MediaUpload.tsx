@@ -43,7 +43,7 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                 throw new Error(sigData.error || "Failed to get upload signature");
             }
 
-            for (const file of files) {
+            const uploadPromises = files.map(async (file) => {
                 const formData = new FormData();
                 formData.append("file", file);
                 formData.append("api_key", sigData.apiKey || "");
@@ -59,11 +59,13 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
 
                 if (response.ok) {
                     const result = await response.json();
-                    if (result.secure_url) {
-                        uploadedUrls.push(result.secure_url);
-                    }
+                    return result.secure_url || null;
                 }
-            }
+                return null;
+            });
+
+            const results = await Promise.all(uploadPromises);
+            uploadedUrls.push(...results.filter((url): url is string => !!url));
 
             if (uploadedUrls.length > 0) {
                 if (onFilesChange) {

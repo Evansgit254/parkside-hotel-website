@@ -722,7 +722,7 @@ function ImageField({ value, onChange, multiple = false }: { value: string | str
 
     const images = Array.isArray(value) ? value : (value ? [value] : []);
 
-    const handleUpload = async (file: File) => {
+    const handleUploads = async (files: FileList) => {
         setUploading(true);
         try {
             const sigData = await getCloudinarySignature();
@@ -730,32 +730,35 @@ function ImageField({ value, onChange, multiple = false }: { value: string | str
                 throw new Error(sigData.error || "Failed to get upload signature");
             }
 
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("api_key", sigData.apiKey || "");
-            formData.append("timestamp", String(sigData.timestamp));
-            formData.append("signature", sigData.signature);
-            formData.append("folder", sigData.folder || "parkside_villa");
+            const uploadPromises = Array.from(files).map(async (file) => {
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("api_key", sigData.apiKey || "");
+                formData.append("timestamp", String(sigData.timestamp));
+                formData.append("signature", sigData.signature);
+                formData.append("folder", sigData.folder || "parkside_villa");
 
-            const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
-            const response = await fetch(uploadUrl, {
-                method: "POST",
-                body: formData
+                const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
+                const response = await fetch(uploadUrl, {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) return null;
+                const result = await response.json();
+                return result.secure_url || null;
             });
 
-            if (!response.ok) {
-                const errResult = await response.json();
-                throw new Error(errResult.error?.message || "Cloudinary upload failed");
-            }
+            const results = await Promise.all(uploadPromises);
+            const newUrls = results.filter((url): url is string => !!url);
 
-            const result = await response.json();
-            if (result.secure_url) {
+            if (newUrls.length > 0) {
                 if (multiple) {
-                    onChange([...images, result.secure_url]);
+                    onChange([...images, ...newUrls]);
                 } else {
-                    onChange(result.secure_url);
+                    onChange(newUrls[0]);
                 }
-                showToast("Image uploaded successfully", "success");
+                showToast(`Successfully uploaded ${newUrls.length} image(s)`, "success");
             }
         } catch (err: any) {
             console.error("Upload error:", err);
@@ -796,9 +799,7 @@ function ImageField({ value, onChange, multiple = false }: { value: string | str
                         style={{ display: 'none' }}
                         onChange={async (e) => {
                             if (e.target.files) {
-                                for (let i = 0; i < e.target.files.length; i++) {
-                                    await handleUpload(e.target.files[i]);
-                                }
+                                await handleUploads(e.target.files);
                             }
                         }}
                         disabled={uploading}
