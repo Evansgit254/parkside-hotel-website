@@ -794,25 +794,37 @@ export async function addFacility(f: Partial<Facility> & { title: string; desc: 
     }
 }
 
+const FacilitySchema = z.object({
+    title: z.string().min(1),
+    desc: z.string().min(1),
+    icon: z.string().min(1),
+    image: z.string().optional().nullable(),
+    images: z.array(z.string()).optional(),
+    features: z.array(z.any()).optional(),
+    highlights: z.array(z.any()).optional(),
+});
+
 export async function updateFacility(facilityId: string, updatedFacility: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
+        const parsed = FacilitySchema.parse(updatedFacility);
         await prisma.facility.update({
             where: { id: facilityId },
             data: {
-                title: updatedFacility.title,
-                desc: updatedFacility.desc,
-                icon: updatedFacility.icon,
-                image: updatedFacility.image ?? null,
-                images: updatedFacility.images ?? undefined,
-                features: updatedFacility.features ?? [],
-                highlights: updatedFacility.highlights ?? [],
+                title: parsed.title,
+                desc: parsed.desc,
+                icon: parsed.icon,
+                image: parsed.image ?? null,
+                images: parsed.images ?? undefined,
+                features: parsed.features ?? [],
+                highlights: parsed.highlights ?? [],
             },
         });
         revalidateAll();
         return { success: true };
     } catch (error: any) {
+        if (error instanceof z.ZodError) return { success: false, error: error.issues.map((e: any) => e.message).join(", ") };
         console.error("Error updating facility:", error);
         return { success: false, error: error.message || "Database error" };
     }
@@ -873,31 +885,41 @@ export async function deleteHeroImage(imageUrl: string) {
 // CONTACT INFO
 // ─────────────────────────────────────────────
 
+const ContactInfoSchema = z.object({
+    phone: z.string().min(1),
+    email: z.string().email(),
+    whatsapp: z.string().optional().nullable(),
+    address: z.string().min(1),
+    social: z.any().optional(),
+});
+
 export async function updateContactInfo(contactInfo: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
+        const parsed = ContactInfoSchema.parse(contactInfo);
         await prisma.contactInfo.upsert({
             where: { id: 1 },
             update: {
-                phone: contactInfo.phone,
-                email: contactInfo.email,
-                whatsapp: contactInfo.whatsapp ?? null,
-                address: contactInfo.address,
-                social: contactInfo.social ?? {},
+                phone: parsed.phone,
+                email: parsed.email,
+                whatsapp: parsed.whatsapp ?? null,
+                address: parsed.address,
+                social: parsed.social ?? {},
             },
             create: {
                 id: 1,
-                phone: contactInfo.phone,
-                email: contactInfo.email,
-                whatsapp: contactInfo.whatsapp ?? null,
-                address: contactInfo.address,
-                social: contactInfo.social ?? {},
+                phone: parsed.phone,
+                email: parsed.email,
+                whatsapp: parsed.whatsapp ?? null,
+                address: parsed.address,
+                social: parsed.social ?? {},
             },
         });
         revalidateAll();
         return { success: true };
     } catch (error) {
+        if (error instanceof z.ZodError) return { success: false, error: error.issues.map((e: any) => e.message).join(", ") };
         console.error("Error updating contact info:", error);
         return { success: false, error: "Database error" };
     }
@@ -1033,7 +1055,7 @@ export async function getCloudinarySignature() {
         const timestamp = Math.round(new Date().getTime() / 1000);
         const paramsToSign = {
             timestamp,
-            folder: "parkside_villa"
+            folder: "parkside-villa-media"
         };
 
         const signature = cloudinary.utils.api_sign_request(
@@ -1047,7 +1069,7 @@ export async function getCloudinarySignature() {
             timestamp,
             cloudName: process.env.CLOUDINARY_URL?.split('@').pop() || "",
             apiKey: process.env.CLOUDINARY_URL?.split(':')[1]?.replace('//', '') || "",
-            folder: "parkside_villa"
+            folder: "parkside-villa-media"
         };
     } catch (error: any) {
         console.error("Signature error:", error);
@@ -1071,6 +1093,17 @@ export async function loginUser(email: string, password: string) {
         if (!isMatch) {
             return { success: false, message: "Invalid email or password" };
         }
+
+        // Set session cookie so user stays logged in
+        const token = await signToken({ id: user.id, email: user.email, role: "user" });
+        const cookieStore = await cookies();
+        cookieStore.set("user_session", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            maxAge: 60 * 60 * 24 * 7 // 7 days
+        });
 
         const { password: _, ...safeUser } = user;
         return { success: true, user: safeUser };
@@ -1507,24 +1540,35 @@ export async function getConferenceHalls() {
     }
 }
 
+const ConferenceHallSchema = z.object({
+    name: z.string().min(1),
+    desc: z.string().min(1),
+    image: z.string(),
+    images: z.array(z.string()).optional(),
+    capacity: z.union([z.string(), z.number()]).optional(),
+    setups: z.array(z.any()).optional(),
+});
+
 export async function createConferenceHall(data: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
+        const parsed = ConferenceHallSchema.parse(data);
         const newHall = await prisma.conferenceHall.create({
             data: {
-                slug: data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-                name: data.name,
-                desc: data.desc,
-                image: data.image,
-                images: data.images || [],
-                capacity: parseInt(data.capacity) || 50,
-                setups: data.setups || [],
+                slug: parsed.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                name: parsed.name,
+                desc: parsed.desc,
+                image: parsed.image,
+                images: parsed.images || [],
+                capacity: parseInt(String(parsed.capacity)) || 50,
+                setups: parsed.setups || [],
             }
         });
         revalidateAll();
         return { success: true, hall: newHall };
     } catch (error) {
+        if (error instanceof z.ZodError) return { success: false, error: error.issues.map((e: any) => e.message).join(", ") };
         console.error("Error creating conference hall:", error);
         return { success: false, error: "Server error creating hall" };
     }
@@ -1534,21 +1578,23 @@ export async function updateConferenceHall(id: string, data: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
+        const parsed = ConferenceHallSchema.parse(data);
         const updatedHall = await prisma.conferenceHall.update({
             where: { id },
             data: {
-                name: data.name,
-                desc: data.desc,
-                image: data.image,
-                images: data.images ?? undefined,
-                capacity: parseInt(data.capacity) || 50,
-                setups: data.setups,
-                ...(data.name && { slug: data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') })
+                name: parsed.name,
+                desc: parsed.desc,
+                image: parsed.image,
+                images: parsed.images ?? undefined,
+                capacity: parseInt(String(parsed.capacity)) || 50,
+                setups: parsed.setups,
+                slug: parsed.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
             }
         });
         revalidateAll();
         return { success: true, hall: updatedHall };
     } catch (error) {
+        if (error instanceof z.ZodError) return { success: false, error: error.issues.map((e: any) => e.message).join(", ") };
         console.error("Error updating conference hall:", error);
         return { success: false, error: "Server error updating hall" };
     }
@@ -1603,24 +1649,35 @@ export async function getDiningVenueBySlug(slug: string) {
     }
 }
 
+const DiningVenueSchema = z.object({
+    name: z.string().min(1),
+    desc: z.string().min(1),
+    image: z.string().optional(),
+    images: z.array(z.string()).optional(),
+    features: z.array(z.any()).optional(),
+    hours: z.string().optional().nullable(),
+});
+
 export async function createDiningVenue(data: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
+        const parsed = DiningVenueSchema.parse(data);
         const venue = await prisma.diningVenue.create({
             data: {
-                slug: data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-                name: data.name,
-                desc: data.desc,
-                image: data.image || '',
-                images: data.images || [],
-                features: data.features || [],
-                hours: data.hours || null,
+                slug: parsed.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                name: parsed.name,
+                desc: parsed.desc,
+                image: parsed.image || '',
+                images: parsed.images || [],
+                features: parsed.features || [],
+                hours: parsed.hours || null,
             }
         });
         revalidateAll();
         return { success: true, venue };
     } catch (error) {
+        if (error instanceof z.ZodError) return { success: false, error: error.issues.map((e: any) => e.message).join(", ") };
         console.error("Error creating dining venue:", error);
         return { success: false, error: "Server error creating venue" };
     }
@@ -1630,21 +1687,23 @@ export async function updateDiningVenue(id: string, data: any) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
+        const parsed = DiningVenueSchema.parse(data);
         const venue = await prisma.diningVenue.update({
             where: { id },
             data: {
-                name: data.name,
-                desc: data.desc,
-                image: data.image || '',
-                images: data.images ?? undefined,
-                features: data.features || [],
-                hours: data.hours || null,
-                ...(data.name && { slug: data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') })
+                name: parsed.name,
+                desc: parsed.desc,
+                image: parsed.image || '',
+                images: parsed.images ?? undefined,
+                features: parsed.features || [],
+                hours: parsed.hours || null,
+                slug: parsed.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
             }
         });
         revalidateAll();
         return { success: true, venue };
     } catch (error) {
+        if (error instanceof z.ZodError) return { success: false, error: error.issues.map((e: any) => e.message).join(", ") };
         console.error("Error updating dining venue:", error);
         return { success: false, error: "Server error updating venue" };
     }

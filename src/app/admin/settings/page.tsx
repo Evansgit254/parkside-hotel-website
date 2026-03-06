@@ -1,11 +1,12 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import styles from "../admin.module.css";
-import { getSiteData, updateContactInfo, addHeroImage, deleteHeroImage, uploadImage, getCloudinarySignature } from "../../actions";
-import { Save, Phone, Mail, MapPin, MessageSquare, Facebook, Instagram, Linkedin, Plus, Trash2, Image as ImageIcon, Upload } from "lucide-react";
+import { getSiteData, updateContactInfo, addHeroImage, deleteHeroImage } from "../../actions";
+import { Save, Phone, Mail, MapPin, MessageSquare, Facebook, Instagram, Linkedin, Plus, Trash2, Image as ImageIcon } from "lucide-react";
 import { showToast } from "../components/AdminToast";
+import MediaUpload from "../components/MediaUpload";
 
 export default function AdminSettings() {
     const [contact, setContact] = useState<any>(null);
@@ -13,8 +14,6 @@ export default function AdminSettings() {
     const [newImageUrl, setNewImageUrl] = useState("");
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
-    const [isUploading, setIsUploading] = useState(false);
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const fetchData = async () => {
         const data = await getSiteData();
@@ -49,46 +48,6 @@ export default function AdminSettings() {
             showToast("Hero image added successfully", "success");
         } else {
             showToast(res.error || "Failed to add hero image", "error");
-        }
-    };
-
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        setIsUploading(true);
-        try {
-            const sigData = await getCloudinarySignature();
-            if (!sigData.success || !sigData.signature) {
-                throw new Error(sigData.error || "Failed to get signature");
-            }
-
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("api_key", sigData.apiKey || "");
-            formData.append("timestamp", String(sigData.timestamp));
-            formData.append("signature", sigData.signature);
-            formData.append("folder", sigData.folder || "parkside_villa");
-
-            const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
-            const response = await fetch(uploadUrl, { method: "POST", body: formData });
-
-            if (!response.ok) {
-                const errResult = await response.json();
-                throw new Error(errResult.error?.message || "Upload failed");
-            }
-
-            const result = await response.json();
-            if (result.secure_url) {
-                await addHeroImage(result.secure_url);
-                await fetchData();
-                showToast("Hero image uploaded and added", "success");
-            }
-        } catch (error: any) {
-            console.error("Upload failed:", error);
-            showToast(`Upload failed: ${error.message || "Unknown error"}`, "error");
-        } finally {
-            setIsUploading(false);
         }
     };
 
@@ -231,38 +190,18 @@ export default function AdminSettings() {
                     </div>
 
                     <div style={{ display: 'grid', gap: '1rem' }}>
-                        <div
-                            onClick={() => fileInputRef.current?.click()}
-                            style={{
-                                width: '100%',
-                                padding: '2.5rem',
-                                background: '#F7F8FC',
-                                border: '2px dashed rgba(0,0,0,0.1)',
-                                borderRadius: '16px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease'
+                        <MediaUpload
+                            value=""
+                            onChange={() => { }}
+                            onFilesChange={async (urls) => {
+                                for (const url of urls) {
+                                    await addHeroImage(url);
+                                }
+                                await fetchData();
+                                showToast("Hero image(s) added", "success");
                             }}
-                            onMouseOver={e => e.currentTarget.style.borderColor = 'var(--secondary)'}
-                            onMouseOut={e => e.currentTarget.style.borderColor = 'rgba(0,0,0,0.08)'}
-                        >
-                            <Upload size={32} color="var(--secondary)" />
-                            <span style={{ color: '#6B7280', marginTop: '0.75rem', fontSize: '0.9375rem', fontWeight: 500 }}>
-                                {isUploading ? "Uploading..." : "Click to upload a new ambiance image"}
-                            </span>
-                            <span style={{ color: '#6B7280', marginTop: '0.25rem', fontSize: '0.75rem' }}>
-                                Recommended: 1920x1080px (16:9)
-                            </span>
-                        </div>
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            onChange={handleFileChange}
-                            style={{ display: 'none' }}
-                            accept="image/*"
+                            multiple
+                            label="Upload New Gallery Asset"
                         />
 
                         <div style={{ display: 'flex', gap: '1rem', background: '#F7F8FC', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.07)' }}>

@@ -1,12 +1,13 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import styles from "../admin.module.css";
-import { getDiningVenues, createDiningVenue, updateDiningVenue, deleteDiningVenue, getCloudinarySignature } from "../../actions";
-import { Edit2, Trash2, Plus, Upload, Image as ImageIcon, X, Wine, Clock, List } from "lucide-react";
+import { getDiningVenues, createDiningVenue, updateDiningVenue, deleteDiningVenue } from "../../actions";
+import { Edit2, Trash2, Plus, X, Wine, Clock, List } from "lucide-react";
 import AdminModal from "../../components/AdminModal";
 import { showToast } from "../components/AdminToast";
+import MediaUpload from "../components/MediaUpload";
 
 export default function AdminDiningVenues() {
     const [venues, setVenues] = useState<any[]>([]);
@@ -14,9 +15,6 @@ export default function AdminDiningVenues() {
     const [editForm, setEditForm] = useState<any>({ id: "", name: "", desc: "", image: "", images: [], features: [], hours: "" });
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
-    const [isUploading, setIsUploading] = useState(false);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const multiFileInputRef = useRef<HTMLInputElement>(null);
 
     const fetchVenues = async () => {
         const data = await getDiningVenues();
@@ -38,54 +36,6 @@ export default function AdminDiningVenues() {
         setIsModalOpen(true);
     };
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, isMulti = false) => {
-        const files = e.target.files;
-        if (!files || files.length === 0) return;
-
-        setIsUploading(true);
-        try {
-            const uploadedUrls: string[] = [];
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const sigData = await getCloudinarySignature();
-                if (!sigData.success || !sigData.signature) {
-                    throw new Error(sigData.error || "Failed to get signature");
-                }
-
-                const formData = new FormData();
-                formData.append("file", file);
-                formData.append("api_key", sigData.apiKey || "");
-                formData.append("timestamp", String(sigData.timestamp));
-                formData.append("signature", sigData.signature);
-                formData.append("folder", sigData.folder || "parkside_villa");
-
-                const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
-                const response = await fetch(uploadUrl, { method: "POST", body: formData });
-
-                if (!response.ok) {
-                    const errResult = await response.json();
-                    throw new Error(errResult.error?.message || "Upload failed");
-                }
-
-                const result = await response.json();
-                if (result.secure_url) {
-                    uploadedUrls.push(result.secure_url);
-                }
-            }
-
-            if (isMulti) {
-                setEditForm((prev: any) => ({ ...prev, images: [...(prev.images || []), ...uploadedUrls] }));
-            } else {
-                setEditForm((prev: any) => ({ ...prev, image: uploadedUrls[0] }));
-            }
-            showToast("Upload successful", "success");
-        } catch (error: any) {
-            console.error("Upload failed:", error);
-            showToast(`Upload failed: ${error.message || "Unknown error"}`, "error");
-        } finally {
-            setIsUploading(false);
-        }
-    };
 
     const [error, setError] = useState<string | null>(null);
 
@@ -211,39 +161,11 @@ export default function AdminDiningVenues() {
             >
                 <div className={styles.formGrid}>
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
-                        <label className={styles.label}>Main Cover Image</label>
-                        <div
-                            onClick={() => fileInputRef.current?.click()}
-                            style={{
-                                width: '100%',
-                                height: '200px',
-                                background: '#F7F8FC',
-                                border: '1px dashed rgba(0,0,0,0.15)',
-                                borderRadius: '8px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'pointer',
-                                overflow: 'hidden',
-                                position: 'relative'
-                            }}
-                        >
-                            {editForm.image ? (
-                                <>
-                                    <img src={editForm.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                    <button type="button" onClick={e => { e.stopPropagation(); setEditForm((p: any) => ({ ...p, image: '' })); }} style={{ position: 'absolute', top: '10px', right: '10px', width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(220,38,38,0.9)', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 20 }}>
-                                        <X size={16} color="#fff" />
-                                    </button>
-                                </>
-                            ) : (
-                                <>
-                                    <Upload size={28} color="rgba(0,0,0,0.25)" />
-                                    <span style={{ color: '#6B7280', marginTop: '1rem', fontSize: '0.875rem' }}>Upload venue photo</span>
-                                </>
-                            )}
-                        </div>
-                        <input type="file" ref={fileInputRef} onChange={e => handleFileChange(e, false)} style={{ display: 'none' }} accept="image/*" />
+                        <MediaUpload
+                            label="Main Cover Image"
+                            value={editForm.image}
+                            onChange={(url) => setEditForm((prev: any) => ({ ...prev, image: url }))}
+                        />
                     </div>
 
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
@@ -257,26 +179,13 @@ export default function AdminDiningVenues() {
                                     </button>
                                 </div>
                             ))}
-                            <button
-                                type="button"
-                                onClick={() => multiFileInputRef.current?.click()}
-                                style={{
-                                    height: '80px',
-                                    border: '1px dashed var(--border)',
-                                    borderRadius: '8px',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    background: '#fff',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                <Plus size={20} color="#6B7280" />
-                                <span style={{ fontSize: '0.65rem', color: '#6B7280', marginTop: '0.25rem' }}>Add More</span>
-                            </button>
                         </div>
-                        <input type="file" ref={multiFileInputRef} onChange={e => handleFileChange(e, true)} style={{ display: 'none' }} accept="image/*" multiple />
+                        <MediaUpload
+                            value=""
+                            onChange={() => { }}
+                            onFilesChange={(urls) => setEditForm((prev: any) => ({ ...prev, images: [...(prev.images || []), ...urls] }))}
+                            multiple
+                        />
                     </div>
 
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>

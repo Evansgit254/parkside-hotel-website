@@ -11,6 +11,7 @@ import {
     Star, ChevronRight, CheckCircle2, AlertCircle, Upload, Cloud,
     Image as ImageIcon, AlertTriangle, X
 } from "lucide-react";
+import MediaUpload from "../components/MediaUpload";
 
 // ─── Schema ────────────────────────────────────────────────────────────────────
 const contentSchema = [
@@ -599,13 +600,17 @@ export default function AdminContent() {
                                                         style={{ resize: 'vertical', lineHeight: 1.7 }}
                                                     />
                                                 ) : field.type === "image-list" ? (
-                                                    <ImageField
+                                                    <MediaUpload
                                                         value={val}
                                                         onChange={(newVal) => handleChange(activeSchemaSection.key, field.name, newVal)}
+                                                        onFilesChange={(urls) => {
+                                                            const existing = Array.isArray(val) ? val : (val ? [val] : []);
+                                                            handleChange(activeSchemaSection.key, field.name, [...existing, ...urls]);
+                                                        }}
                                                         multiple
                                                     />
                                                 ) : isImage ? (
-                                                    <ImageField
+                                                    <MediaUpload
                                                         value={val}
                                                         onChange={(newVal) => handleChange(activeSchemaSection.key, field.name, newVal)}
                                                     />
@@ -710,140 +715,6 @@ export default function AdminContent() {
                             </button>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
-    );
-}
-
-function ImageField({ value, onChange, multiple = false }: { value: string | string[]; onChange: (val: string | string[]) => void; multiple?: boolean }) {
-    const [uploading, setUploading] = useState(false);
-    const [hasError, setHasError] = useState<Record<string, boolean>>({});
-
-    const images = Array.isArray(value) ? value : (value ? [value] : []);
-
-    const handleUploads = async (files: FileList) => {
-        setUploading(true);
-        try {
-            const sigData = await getCloudinarySignature();
-            if (!sigData.success || !sigData.signature) {
-                throw new Error(sigData.error || "Failed to get upload signature");
-            }
-
-            const uploadPromises = Array.from(files).map(async (file) => {
-                const formData = new FormData();
-                formData.append("file", file);
-                formData.append("api_key", sigData.apiKey || "");
-                formData.append("timestamp", String(sigData.timestamp));
-                formData.append("signature", sigData.signature);
-                formData.append("folder", sigData.folder || "parkside_villa");
-
-                const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
-                const response = await fetch(uploadUrl, {
-                    method: "POST",
-                    body: formData
-                });
-
-                if (!response.ok) return null;
-                const result = await response.json();
-                return result.secure_url || null;
-            });
-
-            const results = await Promise.all(uploadPromises);
-            const newUrls = results.filter((url): url is string => !!url);
-
-            if (newUrls.length > 0) {
-                if (multiple) {
-                    onChange([...images, ...newUrls]);
-                } else {
-                    onChange(newUrls[0]);
-                }
-                showToast(`Successfully uploaded ${newUrls.length} image(s)`, "success");
-            }
-        } catch (err: any) {
-            console.error("Upload error:", err);
-            showToast(`Upload failed: ${err.message || "Unknown error"}`, "error");
-        } finally {
-            setUploading(false);
-        }
-    };
-
-    const removeImage = (index: number) => {
-        const newImages = [...images];
-        newImages.splice(index, 1);
-        onChange(multiple ? newImages : "");
-    };
-
-    return (
-        <div className={styles.imageUploadWrapper}>
-            <div className={styles.uploadMethods}>
-                {!multiple && (
-                    <input
-                        type="text"
-                        className={styles.input}
-                        value={Array.isArray(value) ? value[0] || "" : value}
-                        onChange={e => onChange(multiple ? [e.target.value] : e.target.value)}
-                        style={{ flex: 1 }}
-                        placeholder="Image URL (Cloudinary or Remote)"
-                    />
-                )}
-                <label
-                    className={`${styles.uploadBtn} ${styles.cloudUploadBtn}`}
-                    style={{ opacity: uploading ? 0.5 : 1, flex: multiple ? 1 : 'unset' }}
-                >
-                    {uploading ? <Loader2 className={styles.spinner} size={14} /> : <Upload size={14} />}
-                    {multiple ? "Add Multiple Images" : "Upload from Device"}
-                    <input
-                        type="file"
-                        multiple={multiple}
-                        style={{ display: 'none' }}
-                        onChange={async (e) => {
-                            if (e.target.files) {
-                                await handleUploads(e.target.files);
-                            }
-                        }}
-                        disabled={uploading}
-                    />
-                </label>
-            </div>
-
-            {images.length > 0 && (
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
-                    gap: '1rem',
-                    marginTop: '1rem'
-                }}>
-                    {images.map((img, idx) => (
-                        <div key={idx} style={{ position: 'relative', aspectRatio: '1', background: '#f0f0f0', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.05)' }}>
-                            {!hasError[img] ? (
-                                <img
-                                    src={img}
-                                    alt="Preview"
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    onError={() => setHasError(prev => ({ ...prev, [img]: true }))}
-                                />
-                            ) : (
-                                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '4px', opacity: 0.5 }}>
-                                    <AlertTriangle size={20} />
-                                    <span style={{ fontSize: '10px' }}>Error</span>
-                                </div>
-                            )}
-                            <button
-                                type="button"
-                                onClick={() => removeImage(idx)}
-                                style={{
-                                    position: 'absolute', top: '4px', right: '4px',
-                                    background: 'rgba(239, 68, 68, 0.9)', color: 'white',
-                                    border: 'none', borderRadius: '50%', width: '20px', height: '20px',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    cursor: 'pointer', fontSize: '12px'
-                                }}
-                            >
-                                <X size={12} />
-                            </button>
-                        </div>
-                    ))}
                 </div>
             )}
         </div>

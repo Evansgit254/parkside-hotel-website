@@ -2,11 +2,12 @@
 export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
-import { getSiteData, createBlogPost, updateBlogPost, deleteBlogPost, uploadImage, getCloudinarySignature } from "../../actions";
+import { getSiteData, createBlogPost, updateBlogPost, deleteBlogPost } from "../../actions";
 import styles from "../admin.module.css";
-import { Plus, Trash2, Edit3, Calendar, User, Tag, ArrowUpRight, Search, Filter, Save, X, Upload, Image as ImageIcon } from "lucide-react";
+import { Plus, Trash2, Edit3, Calendar, User, Search, Filter, Save, X } from "lucide-react";
 import { BlogPost } from "@prisma/client";
 import { showToast } from "../components/AdminToast";
+import MediaUpload from "../components/MediaUpload";
 
 export default function BlogAdmin() {
     const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -16,7 +17,6 @@ export default function BlogAdmin() {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("All Categories");
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
         loadPosts();
@@ -76,45 +76,6 @@ export default function BlogAdmin() {
             showToast("Blog post deleted successfully", "success");
         } else {
             showToast(res.error || "Failed to delete post", "error");
-        }
-    };
-
-    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        setIsUploading(true);
-        try {
-            const sigData = await getCloudinarySignature();
-            if (!sigData.success || !sigData.signature) {
-                throw new Error(sigData.error || "Failed to get signature");
-            }
-
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("api_key", sigData.apiKey || "");
-            formData.append("timestamp", String(sigData.timestamp));
-            formData.append("signature", sigData.signature);
-            formData.append("folder", sigData.folder || "parkside_villa");
-
-            const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
-            const response = await fetch(uploadUrl, { method: "POST", body: formData });
-
-            if (!response.ok) {
-                const errResult = await response.json();
-                throw new Error(errResult.error?.message || "Upload failed");
-            }
-
-            const result = await response.json();
-            if (result.secure_url) {
-                setCurrentPost({ ...currentPost, image: result.secure_url });
-                showToast("Post image updated", "success");
-            }
-        } catch (error: any) {
-            console.error("Upload error", error);
-            showToast(`Upload failed: ${error.message}`, "error");
-        } finally {
-            setIsUploading(false);
         }
     };
 
@@ -289,31 +250,11 @@ export default function BlogAdmin() {
 
                                 <div className={styles.composerSidebar}>
                                     <div className={styles.composerField}>
-                                        <label className={styles.composerLabel}>Header Atmosphere</label>
-                                        <div className={styles.composerPreview}>
-                                            {currentPost?.image ? (
-                                                <img src={currentPost.image} alt="Preview" />
-                                            ) : (
-                                                <div className={styles.composerPreviewEmpty}>
-                                                    <ImageIcon size={32} />
-                                                    <span>No atmosphere defined</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className={styles.inputWithAction} style={{ marginTop: '1rem' }}>
-                                            <input
-                                                type="text"
-                                                placeholder="Image URL..."
-                                                className={styles.composerInput}
-                                                style={{ padding: '0.75rem' }}
-                                                value={currentPost?.image || ""}
-                                                onChange={e => setCurrentPost(prev => ({ ...prev, image: e.target.value }))}
-                                            />
-                                            <label className={styles.uploadMini}>
-                                                <Upload size={14} />
-                                                <input type="file" hidden onChange={handleImageUpload} accept="image/*" />
-                                            </label>
-                                        </div>
+                                        <MediaUpload
+                                            label="Header Atmosphere"
+                                            value={currentPost?.image || ""}
+                                            onChange={(url) => setCurrentPost(prev => ({ ...prev, image: url }))}
+                                        />
                                     </div>
 
                                     <div className={styles.composerField}>

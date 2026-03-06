@@ -13,8 +13,7 @@ function getSecretKey(): Uint8Array {
     return new TextEncoder().encode(secret);
 }
 
-
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Protect all /admin routes except the login page

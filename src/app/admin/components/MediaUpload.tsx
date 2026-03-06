@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { Upload, X, Image as ImageIcon, Link as LinkIcon, Loader2, CheckCircle2 } from "lucide-react";
 import styles from "../admin.module.css";
-import { uploadImage, getCloudinarySignature } from "../../actions";
+import { getCloudinarySignature } from "../../actions";
 import { showToast } from "./AdminToast";
 
 interface MediaUploadProps {
@@ -23,33 +23,41 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
     const [mode, setMode] = useState<"upload" | "url">(firstValue && !firstValue.startsWith("/") ? "url" : "upload");
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const [uploadProgress, setUploadProgress] = useState<{ current: number; total: number } | null>(null);
+
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (!files || files.length === 0) return;
 
         if (multiple) {
-            uploadFiles(Array.from(files));
+            uploadFilesSequential(Array.from(files));
         } else {
             uploadFile(files[0]);
         }
     };
 
-    const uploadFiles = async (files: File[]) => {
+    const uploadFilesSequential = async (files: File[]) => {
         setUploading(true);
-        let completedCount = 0;
+        setUploadProgress({ current: 0, total: files.length });
+        const successfulUrls: string[] = [];
+        let errorCount = 0;
+
         try {
             const sigData = await getCloudinarySignature();
             if (!sigData.success || !sigData.signature) {
                 throw new Error(sigData.error || "Failed to get upload signature");
             }
 
-            const uploadPromises = files.map(async (file) => {
+            for (let i = 0; i < files.length; i++) {
+                setUploadProgress({ current: i + 1, total: files.length });
+                const file = files[i];
+
                 const formData = new FormData();
                 formData.append("file", file);
                 formData.append("api_key", sigData.apiKey || "");
                 formData.append("timestamp", String(sigData.timestamp));
                 formData.append("signature", sigData.signature);
-                formData.append("folder", sigData.folder || "parkside_villa");
+                formData.append("folder", sigData.folder || "parkside-villa-media");
 
                 try {
                     const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
@@ -61,59 +69,64 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                     if (response.ok) {
                         const result = await response.json();
                         if (result.secure_url) {
-                            completedCount++;
-                            if (onFilesChange) {
-                                // For gallery, we might want to collect them all or send them one by one.
-                                // In this component, we'll collect them and send the final batch for GalleryAdmin
-                                // because GalleryAdmin handles the batch save.
-                                return result.secure_url;
-                            } else if (onChange) {
-                                onChange(result.secure_url);
-                                return result.secure_url;
-                            }
+                            successfulUrls.push(result.secure_url);
+                        } else {
+                            errorCount++;
                         }
+                    } else {
+                        const err = await response.json();
+                        console.error(`Upload ${i + 1} failed:`, err);
+                        errorCount++;
                     }
                 } catch (e) {
-                    console.error("File upload failed:", e);
+                    console.error(`Network error for file ${i + 1}:`, e);
+                    errorCount++;
                 }
-                return null;
-            });
-
-            const results = await Promise.all(uploadPromises);
-            const finalUrls = results.filter((url): url is string => !!url);
-
-            if (finalUrls.length > 0) {
-                if (onFilesChange) {
-                    onFilesChange(finalUrls);
-                }
-                showToast(`Successfully uploaded ${finalUrls.length} assets`, "success");
             }
+
+            if (successfulUrls.length > 0) {
+                if (onFilesChange) {
+                    onFilesChange(successfulUrls);
+                } else if (onChange) {
+                    // For multiple mode, prepend to existing or just send the new ones
+                    // This depends on the parent, but usually onFilesChange is used for arrays
+                    onChange(successfulUrls[0]);
+                }
+
+                if (errorCount > 0) {
+                    showToast(`Uploaded ${successfulUrls.length} assets, but ${errorCount} failed.`, "error");
+                } else {
+                    showToast(`Successfully uploaded all ${successfulUrls.length} assets`, "success");
+                }
+            } else if (errorCount > 0) {
+                showToast(`All ${errorCount} uploads failed. Please check your connection.`, "error");
+            }
+
         } catch (error: any) {
             console.error("Batch upload failed", error);
             showToast(error.message || "An unexpected error occurred during batch upload.", "error");
         } finally {
             setUploading(false);
+            setUploadProgress(null);
         }
     };
 
     const uploadFile = async (file: File) => {
         setUploading(true);
+        setUploadProgress({ current: 1, total: 1 });
         try {
-            // 1. Get signature
             const sigData = await getCloudinarySignature();
             if (!sigData.success || !sigData.signature) {
                 throw new Error(sigData.error || "Failed to get upload signature");
             }
 
-            // 2. Prepare Form Data
             const formData = new FormData();
             formData.append("file", file);
             formData.append("api_key", sigData.apiKey || "");
             formData.append("timestamp", String(sigData.timestamp));
             formData.append("signature", sigData.signature);
-            formData.append("folder", sigData.folder || "parkside_villa");
+            formData.append("folder", sigData.folder || "parkside-villa-media");
 
-            // 3. Direct POST
             const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
             const response = await fetch(uploadUrl, {
                 method: "POST",
@@ -135,6 +148,7 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
             showToast(error.message || "An unexpected error occurred during upload.", "error");
         } finally {
             setUploading(false);
+            setUploadProgress(null);
         }
     };
 
@@ -146,7 +160,7 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
             const imageFiles = files.filter(f => f.type.startsWith("image/"));
             if (imageFiles.length > 0) {
                 if (multiple) {
-                    uploadFiles(imageFiles);
+                    uploadFilesSequential(imageFiles);
                 } else {
                     uploadFile(imageFiles[0]);
                 }
@@ -196,7 +210,12 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                         {uploading ? (
                             <div className={styles.uploadStatus}>
                                 <Loader2 className={styles.spinner} size={32} />
-                                <p>Processing high-resolution asset...</p>
+                                <p>
+                                    {uploadProgress
+                                        ? `Processing asset ${uploadProgress.current} of ${uploadProgress.total}...`
+                                        : "Processing high-resolution asset..."
+                                    }
+                                </p>
                             </div>
                         ) : firstValue ? (
                             <div className={styles.previewWrapper}>
