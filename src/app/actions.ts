@@ -1114,14 +1114,11 @@ export async function loginUser(email: string, password: string) {
 }
 
 export async function loginAdmin(email: string, password: string) {
-    const adminEmail = process.env.AUTH_ADMIN_EMAIL;
-    const adminPass = process.env.AUTH_ADMIN_PASSWORD;
+    const adminEmail = process.env.AUTH_ADMIN_EMAIL || process.env.ADMIN_EMAIL;
+    const adminPass = process.env.AUTH_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD;
 
     if (!adminEmail || !adminPass) {
-        const missing = [];
-        if (!adminEmail) missing.push("AUTH_ADMIN_EMAIL");
-        if (!adminPass) missing.push("AUTH_ADMIN_PASSWORD");
-        return { success: false, message: `Server configuration error: Missing ${missing.join(" and ")}. Please add these SPECIFIC names to Vercel and redeploy.` };
+        return { success: false, message: "Server configuration error: Admin credentials not configured. Please contact the system administrator." };
     }
 
     if (email.trim().toLowerCase() !== adminEmail.trim().toLowerCase() || password !== adminPass) {
