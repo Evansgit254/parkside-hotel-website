@@ -61,10 +61,17 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
 
                 try {
                     const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
+
+                    // Add a timeout to prevent absolute hangs
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+
                     const response = await fetch(uploadUrl, {
                         method: "POST",
-                        body: formData
+                        body: formData,
+                        signal: controller.signal
                     });
+                    clearTimeout(timeoutId);
 
                     if (response.ok) {
                         const result = await response.json();
@@ -74,11 +81,15 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                             errorCount++;
                         }
                     } else {
-                        const err = await response.json();
-                        console.error(`Upload ${i + 1} failed:`, err);
+                        let errorMsg = "Upload failed";
+                        try {
+                            const err = await response.json();
+                            errorMsg = err.error?.message || errorMsg;
+                        } catch (e) { }
+                        console.error(`Upload ${i + 1} failed:`, errorMsg);
                         errorCount++;
                     }
-                } catch (e) {
+                } catch (e: any) {
                     console.error(`Network error for file ${i + 1}:`, e);
                     errorCount++;
                 }
@@ -88,26 +99,29 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                 if (onFilesChange) {
                     onFilesChange(successfulUrls);
                 } else if (onChange) {
-                    // For multiple mode, prepend to existing or just send the new ones
-                    // This depends on the parent, but usually onFilesChange is used for arrays
                     onChange(successfulUrls[0]);
                 }
 
                 if (errorCount > 0) {
                     showToast(`Uploaded ${successfulUrls.length} assets, but ${errorCount} failed.`, "error");
                 } else {
-                    showToast(`Successfully uploaded all ${successfulUrls.length} assets`, "success");
+                    showToast(`Successfully uploaded ${successfulUrls.length} asset(s)`, "success");
                 }
             } else if (errorCount > 0) {
-                showToast(`All ${errorCount} uploads failed. Please check your connection.`, "error");
+                showToast(`Upload failed. Please check your connection and Cloudinary settings.`, "error");
             }
 
         } catch (error: any) {
             console.error("Batch upload failed", error);
-            showToast(error.message || "An unexpected error occurred during batch upload.", "error");
+            let msg = error.message || "An unexpected error occurred.";
+            if (msg.toLowerCase().includes("signature")) {
+                msg += " (Check Vercel Environment Variables)";
+            }
+            showToast(msg, "error");
         } finally {
             setUploading(false);
             setUploadProgress(null);
+            if (fileInputRef.current) fileInputRef.current.value = "";
         }
     };
 
@@ -128,17 +142,22 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
             formData.append("folder", sigData.folder || "parkside-villa-media");
 
             const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`;
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+
             const response = await fetch(uploadUrl, {
                 method: "POST",
-                body: formData
+                body: formData,
+                signal: controller.signal
             });
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 let errorMsg = "Cloudinary upload failed";
                 try {
                     const errResult = await response.json();
                     errorMsg = errResult.error?.message || errorMsg;
-                    // Provide helpful context for common errors
                     if (errorMsg.toLowerCase().includes("signature")) {
                         errorMsg += " (Check Vercel environment variables matches .env)";
                     }
@@ -153,11 +172,14 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
             }
         } catch (error: any) {
             console.error("Upload failed", error);
-            showToast(error.message || "An unexpected error occurred during upload.", "error");
+            let msg = error.message || "An unexpected error occurred.";
+            if (msg.toLowerCase().includes("signature")) {
+                msg += " (Check Vercel Environment Variables)";
+            }
+            showToast(msg, "error");
         } finally {
             setUploading(false);
             setUploadProgress(null);
-            // Reset file input so same file can be selected again if needed
             if (fileInputRef.current) fileInputRef.current.value = "";
         }
     };
