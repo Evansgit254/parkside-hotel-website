@@ -14,7 +14,7 @@ export async function getLocalMedia() {
             if (items.includes(name)) return path.join(curr, name);
             for (const item of items) {
                 const full = path.join(curr, item);
-                if (fs.statSync(full).isDirectory() && !item.startsWith('.') || item === '.next') {
+                if (fs.statSync(full).isDirectory() && (!item.startsWith('.') || item === '.next')) {
                     const found = findDir(full, name, depth + 1);
                     if (found) return found;
                 }
@@ -37,7 +37,7 @@ export async function getLocalMedia() {
     if (!heroAssetsPath) {
         return {
             success: false,
-            error: `hero-assets folder not found. (CWD: ${cwd}, .next exists: ${fs.existsSync(nextPath)}, .next Content: ${nextContent.join(", ")})`,
+            error: `[vDiag-4] hero-assets folder not found. (CWD: ${cwd}, .next exists: ${fs.existsSync(nextPath)}, .next Content: ${nextContent.join(", ")})`,
             files: []
         };
     }
