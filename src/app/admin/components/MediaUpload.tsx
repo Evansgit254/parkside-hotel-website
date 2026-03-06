@@ -111,7 +111,7 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                     showToast(`Successfully uploaded ${successfulUrls.length} asset(s)`, "success");
                 }
             } else if (errorCount > 0) {
-                showToast(lastError || `Upload failed. Please check your connection and Cloudinary settings.`, "error");
+                showToast(lastError ? `Upload failed: ${lastError}` : `Upload failed (no error detail). Please check connection and Cloudinary settings. [v2]`, "error");
             }
 
         } catch (error: any) {

@@ -1061,7 +1061,7 @@ export async function getCloudinarySignature() {
         const cloudinaryUrl = process.env.CLOUDINARY_URL;
         if (!cloudinaryUrl) {
             console.error("CLOUDINARY_URL is missing from environment variables");
-            return { success: false, error: "Cloudinary configuration (CLOUDINARY_URL) is missing. Check your .env file." };
+            return { success: false, error: "Cloudinary configuration (CLOUDINARY_URL) is missing. Check your .env file. [v2]" };
         }
 
         // Validate format briefly
