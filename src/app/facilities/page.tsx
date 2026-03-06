@@ -42,7 +42,7 @@ export default function FacilitiesPage() {
                 >
                     <HeroSlider
                         images={Array.isArray(content?.facilities_hero?.image) ? content.facilities_hero.image : [content?.facilities_hero?.image].filter(Boolean)}
-                        fallbackImage="https://res.cloudinary.com/dizwm3mic/image/upload/f_auto,q_auto/v1772446800/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0701_pzkfbr.jpg"
+                        fallbackImage="/hero-placeholder.jpg"
                     />
                 </motion.div>
                 <div className={styles.heroOverlay} />

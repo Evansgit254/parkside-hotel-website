@@ -15,7 +15,7 @@ interface HeroSliderProps {
 
 export default function HeroSlider({
     images,
-    fallbackImage = "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373725/parkside-villa-media/EXTRA_PHOTOS/IMG_8556_ds9eib.jpg",
+    fallbackImage,
     interval = 7000,
     showControls = true
 }: HeroSliderProps) {

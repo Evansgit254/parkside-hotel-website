@@ -50,6 +50,7 @@ export default function Home() {
 
   // Use database hero images if available, otherwise fallback to static data
   const dbHeroImages = siteData.heroImages || [];
+  // Only use fallbacks if the database is totally empty (first run)
   const heroImages = dbHeroImages.length > 0 ? dbHeroImages : initialHeroImages;
 
   const heroKeys = content?.landing_hero || {};

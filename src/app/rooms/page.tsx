@@ -40,7 +40,7 @@ export default function RoomsPage() {
                 >
                     <HeroSlider
                         images={Array.isArray(content?.rooms_hero?.image) ? content.rooms_hero.image : [content?.rooms_hero?.image].filter(Boolean)}
-                        fallbackImage="https://res.cloudinary.com/dizwm3mic/image/upload/v1772446787/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0698_zmv8bg.jpg"
+                        fallbackImage="/hero-placeholder.jpg"
                     />
                 </motion.div>
                 <div className={styles.heroOverlay} />
