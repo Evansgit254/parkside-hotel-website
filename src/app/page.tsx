@@ -63,8 +63,7 @@ export default function Home() {
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
   const [bookingStep, setBookingStep] = useState(1);
   const [recentRooms, setRecentRooms] = useState<any[]>([]);
-  const [isConciergeOpen, setIsConciergeOpen] = useState(false);
-  const [conciergeStep, setConciergeStep] = useState(0);
+
   const [bookingData, setBookingData] = useState({
     name: "", email: "", phone: "",
     checkIn: "", checkOut: "", guests: "2 Adults",
@@ -876,58 +875,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* ── AI CONCIERGE ── */}
-      <AnimatePresence>
-        {isConciergeOpen && (
-          <motion.div
-            className={styles.conciergeOverlay}
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className={styles.conciergeHeader}>
-              <div className={styles.aiAvatar}>
-                <span>Villa Concierge</span>
-                <span className={styles.aiAvatarLabel}>● Online · Always Available</span>
-              </div>
-              <button className={styles.closeBtn} onClick={() => setIsConciergeOpen(false)}>&times;</button>
-            </div>
-            <div className={styles.conciergeBody}>
-              <div className={styles.aiMessage}>
-                {conciergeStep === 0 && (content.concierge_messages?.welcome || "Welcome to Parkside Villa. I'm your personal digital concierge. How may I assist you today?")}
-                {conciergeStep === 1 && (content.concierge_messages?.rooms || "Our rooms range from the Deluxe Garden Room to the Presidential Executive Suite. Each is a sanctuary of comfort.")}
-                {conciergeStep === 2 && (content.concierge_messages?.dining || "Our kitchen is led by experienced chefs offering both local Kenyan cuisine and international favorites. Available from 06:00 to 23:00.")}
-              </div>
-              <div className={styles.conciergeOptions}>
-                {conciergeStep === 0 && (<>
-                  <button className={styles.optionBtn} onClick={() => setConciergeStep(1)}>Book a Room</button>
-                  <button className={styles.optionBtn} onClick={() => setConciergeStep(2)}>Dining & Restaurant</button>
-                  <button className={styles.optionBtn} onClick={() => window.open(`https://wa.me/${contactInfo.whatsapp}`, "_blank")}>Chat on WhatsApp</button>
-                </>)}
-                {conciergeStep === 1 && (<>
-                  <button className={styles.optionBtn} onClick={() => { document.getElementById("accommodation")?.scrollIntoView({ behavior: "smooth" }); setIsConciergeOpen(false); }}>Browse Rooms</button>
-                  <button className={styles.optionBtn} onClick={() => setConciergeStep(0)}>← Back</button>
-                </>)}
-                {conciergeStep === 2 && (<>
-                  <button className={styles.optionBtn} onClick={() => { router.push("/dining"); setIsConciergeOpen(false); }}>View Full Menu</button>
-                  <button className={styles.optionBtn} onClick={() => setConciergeStep(0)}>← Back</button>
-                </>)}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <motion.button
-        whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.95 }}
-        className={styles.conciergeBtn}
-        onClick={() => { setIsConciergeOpen(!isConciergeOpen); setConciergeStep(0); }}
-        title="Open Virtual Concierge"
-        aria-label="Open virtual concierge"
-      >
-        <MessageSquare size={22} />
-      </motion.button>
     </main>
+
   );
 }

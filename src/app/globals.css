@@ -346,6 +346,16 @@ iframe.goog-te-menu-frame {
   margin: 0 !important;
 }
 
+/* === EXTERNAL WIDGET HIDES (Vercel Toolbar, etc.) === */
+#vercel-toolbar-iframe,
+vercel-live-feedback,
+.vercel-toolbar-container {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 /* === THEME UTILITIES === */
 
 .maroon-text {
