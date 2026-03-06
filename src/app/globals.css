@@ -346,14 +346,24 @@ iframe.goog-te-menu-frame {
   margin: 0 !important;
 }
 
-/* === EXTERNAL WIDGET HIDES (Vercel Toolbar, etc.) === */
+/* === NUCLEAR EXTERNAL WIDGET HIDE (Vercel Toolbar / Feedback) === */
 #vercel-toolbar-iframe,
 vercel-live-feedback,
-.vercel-toolbar-container {
+.vercel-toolbar-container,
+[data-vercel-toolbar],
+[data-vercel-feedback-button],
+#nd-toolbar-root,
+.vc-toolbar-root,
+.__vercel_toolbar {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  z-index: -1 !important;
 }
 
 /* === THEME UTILITIES === */

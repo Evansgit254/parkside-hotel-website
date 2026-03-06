@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, X, Send, User, Bot } from "lucide-react";
+import { MessageSquare, X, Send } from "lucide-react";
 import { addLead } from "../actions";
+import styles from "./LiveChat.module.css";
 
 export default function LiveChat() {
     const [isOpen, setIsOpen] = useState(false);
@@ -46,58 +47,48 @@ export default function LiveChat() {
     }
 
     return (
-        <div
-            className="fixed z-[2000] font-sans"
-            style={{
-                bottom: '2rem',
-                right: '2rem',
-                left: 'auto' // Force right positioning
-            }}
-        >
+        <div className={styles.chatContainer}>
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className="mb-4 w-96 overflow-hidden rounded-2xl border border-white/10 bg-[#1c1c1a]/95 shadow-2xl backdrop-blur-xl"
+                        className={styles.chatWindow}
                     >
                         {/* Header */}
-                        <div className="bg-[#d4af37] px-6 py-4 flex justify-between items-center">
-                            <div className="flex items-center gap-3">
-                                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                                <span className="font-bold text-[#0f0f0e] uppercase tracking-widest text-xs">Villa Concierge</span>
+                        <div className={styles.header}>
+                            <div className={styles.headerInfo}>
+                                <div className={styles.onlineIndicator} />
+                                <span className={styles.headerTitle}>Villa Concierge</span>
                             </div>
-                            <button onClick={() => setIsOpen(false)} className="text-[#0f0f0e]/60 hover:text-[#0f0f0e]">
+                            <button onClick={() => setIsOpen(false)} className={styles.closeButton}>
                                 <X size={20} />
                             </button>
                         </div>
 
                         {/* Messages Area */}
-                        <div className="h-96 overflow-y-auto p-6 flex flex-col gap-4 bg-black/20">
+                        <div className={styles.messagesArea}>
                             {messages.map((m, i) => (
-                                <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                    <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm ${m.role === 'user'
-                                        ? 'bg-[#d4af37] text-[#0f0f0e]'
-                                        : 'bg-white/5 text-white/80 border border-white/5'
-                                        }`}>
+                                <div key={i} className={`${styles.messageWrapper} ${m.role === 'user' ? styles.userMessageWrapper : styles.botMessageWrapper}`}>
+                                    <div className={`${styles.messageBubble} ${m.role === 'user' ? styles.userBubble : styles.botBubble}`}>
                                         {m.text}
                                     </div>
                                 </div>
                             ))}
-                            {isSubmitting && <div className="text-white/30 text-[10px] animate-pulse">Typing...</div>}
+                            {isSubmitting && <div className={styles.typingIndicator}>Typing...</div>}
                         </div>
 
                         {/* Input Area */}
                         {step < 3 && (
-                            <form onSubmit={handleSend} className="p-4 border-t border-white/5 bg-black/40">
+                            <form onSubmit={handleSend} className={styles.inputArea}>
                                 {step === 2 && (
-                                    <div className="grid grid-cols-2 gap-2 mb-3">
+                                    <div className={styles.formGrid}>
                                         <input
                                             type="text"
                                             required
                                             placeholder="Your Name"
-                                            className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#d4af37]"
+                                            className={styles.inputField}
                                             value={formData.name}
                                             onChange={e => setFormData({ ...formData, name: e.target.value })}
                                         />
@@ -105,25 +96,25 @@ export default function LiveChat() {
                                             type="email"
                                             required
                                             placeholder="Email"
-                                            className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#d4af37]"
+                                            className={styles.inputField}
                                             value={formData.email}
                                             onChange={e => setFormData({ ...formData, email: e.target.value })}
                                         />
                                     </div>
                                 )}
-                                <div className="flex gap-2">
+                                <div className={styles.messageRow}>
                                     <input
                                         type="text"
                                         required
                                         placeholder={step === 1 ? "How can we help?" : "Type your message..."}
-                                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#d4af37]"
+                                        className={styles.textInput}
                                         value={formData.message}
                                         onChange={e => setFormData({ ...formData, message: e.target.value })}
                                     />
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="bg-[#d4af37] text-[#0f0f0e] w-12 h-12 rounded-xl flex items-center justify-center hover:bg-white transition-colors"
+                                        className={styles.sendButton}
                                     >
                                         <Send size={18} />
                                     </button>
@@ -138,9 +129,9 @@ export default function LiveChat() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-16 h-16 rounded-full bg-[#d4af37] text-[#0f0f0e] shadow-2xl flex items-center justify-center relative group"
+                className={styles.chatButton}
             >
-                <div className="absolute inset-0 rounded-full border border-[#d4af37] group-hover:animate-ping opacity-25" />
+                <div className={styles.pingEffect} />
                 {isOpen ? <X size={28} /> : <MessageSquare size={28} />}
             </motion.button>
         </div>
