@@ -77,7 +77,10 @@ export async function getSiteData() {
     const cacheFile = path.join(os.tmpdir(), 'parkside-site-data.cache.json');
 
     // Build-time caching to prevent 7 workers from hitting DB simultaneously
-    if (isBuild) {
+    // Strictly target the production build phase ONLY
+    const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
+
+    if (isBuildPhase) {
         try {
             if (fs.existsSync(cacheFile)) {
                 const stats = fs.statSync(cacheFile);
@@ -94,6 +97,9 @@ export async function getSiteData() {
         // Staggered start: wait 0-3 seconds to avoid "thundering herd" on the DB pool
         const delay = Math.floor(Math.random() * 3000);
         await new Promise(resolve => setTimeout(resolve, delay));
+    } else {
+        // Enforce fresh read in dev/prod-runtime by ignoring cache file
+        // This stops stale /tmp files from reappearing after refresh
     }
 
     try {
@@ -1513,6 +1519,15 @@ export async function updateSiteContent(key: string, value: any) {
             update: { value },
             create: { key, value },
         });
+
+        // Invalidate the site-data cache file if it exists
+        try {
+            const cacheFile = path.join(os.tmpdir(), 'parkside-site-data.cache.json');
+            if (fs.existsSync(cacheFile)) fs.unlinkSync(cacheFile);
+        } catch (e) {
+            // Non-critical, just ensures next read is fresh
+        }
+
         revalidateAll();
         return { success: true };
     } catch (error) {

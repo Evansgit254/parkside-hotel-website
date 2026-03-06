@@ -600,15 +600,42 @@ export default function AdminContent() {
                                                         style={{ resize: 'vertical', lineHeight: 1.7 }}
                                                     />
                                                 ) : field.type === "image-list" ? (
-                                                    <MediaUpload
-                                                        value={val}
-                                                        onChange={(newVal) => handleChange(activeSchemaSection.key, field.name, newVal)}
-                                                        onFilesChange={(urls) => {
-                                                            const existing = Array.isArray(val) ? val : (val ? [val] : []);
-                                                            handleChange(activeSchemaSection.key, field.name, [...existing, ...urls]);
-                                                        }}
-                                                        multiple
-                                                    />
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                                        {Array.isArray(val) && val.length > 0 && (
+                                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '1rem', marginBottom: '0.5rem' }}>
+                                                                {val.map((url, idx) => (
+                                                                    <div key={idx} style={{ position: 'relative', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.07)' }}>
+                                                                        <img src={url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => {
+                                                                                const updated = val.filter((_, i) => i !== idx);
+                                                                                handleChange(activeSchemaSection.key, field.name, updated);
+                                                                            }}
+                                                                            style={{
+                                                                                position: 'absolute', top: '4px', right: '4px',
+                                                                                background: 'rgba(239, 68, 68, 0.9)', border: 'none', borderRadius: '50%',
+                                                                                width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                                                cursor: 'pointer'
+                                                                            }}
+                                                                        >
+                                                                            <X size={12} color="#fff" />
+                                                                        </button>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                        <MediaUpload
+                                                            value=""
+                                                            onChange={() => { }}
+                                                            onFilesChange={(urls) => {
+                                                                const existing = Array.isArray(val) ? val : (val ? [val] : []);
+                                                                const filtered = [...existing, ...urls].filter(Boolean);
+                                                                handleChange(activeSchemaSection.key, field.name, filtered);
+                                                            }}
+                                                            multiple
+                                                        />
+                                                    </div>
                                                 ) : isImage ? (
                                                     <MediaUpload
                                                         value={val}

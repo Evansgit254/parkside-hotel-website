@@ -134,8 +134,16 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
             });
 
             if (!response.ok) {
-                const errResult = await response.json();
-                throw new Error(errResult.error?.message || "Cloudinary upload failed");
+                let errorMsg = "Cloudinary upload failed";
+                try {
+                    const errResult = await response.json();
+                    errorMsg = errResult.error?.message || errorMsg;
+                    // Provide helpful context for common errors
+                    if (errorMsg.toLowerCase().includes("signature")) {
+                        errorMsg += " (Check Vercel environment variables matches .env)";
+                    }
+                } catch (e) { }
+                throw new Error(errorMsg);
             }
 
             const result = await response.json();
@@ -149,6 +157,8 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
         } finally {
             setUploading(false);
             setUploadProgress(null);
+            // Reset file input so same file can be selected again if needed
+            if (fileInputRef.current) fileInputRef.current.value = "";
         }
     };
 
