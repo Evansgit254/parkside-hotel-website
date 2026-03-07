@@ -46,13 +46,19 @@
 }
 
 .image {
-    transition: opacity 0.4s ease;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+        filter 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .loading {
     opacity: 0;
+    filter: blur(10px);
+    transform: scale(1.02);
 }
 
 .loaded {
     opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
 }
