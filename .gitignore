@@ -55,7 +55,7 @@ PARKSIDE VILLA MEDIA/
 /playwright-report/
 
 # One-off scripts
-/scripts/
+!/scripts/
 
 # Root-level PDFs and uploaded assets
 *.pdf
