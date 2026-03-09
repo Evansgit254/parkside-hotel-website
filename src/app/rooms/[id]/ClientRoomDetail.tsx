@@ -79,6 +79,28 @@ export default function ClientRoomDetail({ room }: { room: any }) {
                 </div>
             </section>
 
+            {/* Enhanced Gallery Section (Moved above details for better visibility) */}
+            {room.images && room.images.length > 0 && (
+                <div style={{ background: '#fff', borderBottom: '1px solid #eee' }}>
+                    <div className={styles.container}>
+                        <div style={{ paddingTop: '4rem' }}>
+                            <h2 style={{
+                                fontSize: '2rem',
+                                fontFamily: 'var(--font-serif)',
+                                color: 'var(--primary)',
+                                marginBottom: '0.5rem'
+                            }}>
+                                Explore the {room.name}
+                            </h2>
+                            <p style={{ color: '#6B7280', marginBottom: '2rem' }}>
+                                A visual journey through our premium accommodation and bespoke interiors.
+                            </p>
+                        </div>
+                    </div>
+                    <EnhancedGallery images={room.images} title={room.name} />
+                </div>
+            )}
+
             {/* Content Section */}
             <section className={styles.detailsSection}>
                 <div className={styles.container}>
@@ -145,27 +167,6 @@ export default function ClientRoomDetail({ room }: { room: any }) {
                 </div>
             </section>
 
-            {/* Enhanced Gallery Section */}
-            {room.images && room.images.length > 0 && (
-                <div style={{ background: '#fff', borderTop: '1px solid #eee' }}>
-                    <div className={styles.container}>
-                        <div style={{ paddingTop: '4rem' }}>
-                            <h2 style={{
-                                fontSize: '2rem',
-                                fontFamily: 'var(--font-serif)',
-                                color: 'var(--primary)',
-                                marginBottom: '0.5rem'
-                            }}>
-                                Explore the {room.name}
-                            </h2>
-                            <p style={{ color: '#6B7280', marginBottom: '2rem' }}>
-                                A visual journey through our premium accommodation and bespoke interiors.
-                            </p>
-                        </div>
-                    </div>
-                    <EnhancedGallery images={room.images} title={room.name} />
-                </div>
-            )}
 
             {/* Booking Modal */}
             <AnimatePresence>
