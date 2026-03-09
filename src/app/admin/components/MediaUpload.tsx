@@ -26,9 +26,10 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
     const [mode, setMode] = useState<"upload" | "url" | "local">(firstValue && firstValue.startsWith("/PARKSIDE VILLA MEDIA") ? "local" : (firstValue && !firstValue.startsWith("/") ? "url" : "upload"));
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const [localFiles, setLocalFiles] = useState<string[]>([]);
+    const [localFiles, setLocalFiles] = useState<{ path: string, name: string, folder: string, category: string, tags: string[] }[]>([]);
     const [loadingLocal, setLoadingLocal] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("All");
 
     const [uploadProgress, setUploadProgress] = useState<{ current: number; total: number } | null>(null);
 
@@ -217,9 +218,17 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
         }
     }, [mode, localFiles.length]);
 
-    const filteredLocalFiles = localFiles.filter(f =>
-        f.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredLocalFiles = localFiles.filter(f => {
+        const matchesCategory = categoryFilter === "All" || f.category === categoryFilter;
+        const searchLower = searchTerm.toLowerCase();
+        const matchesSearch = !searchTerm ||
+            f.name.toLowerCase().includes(searchLower) ||
+            f.folder.toLowerCase().includes(searchLower) ||
+            f.tags.some(t => t.includes(searchLower));
+        return matchesCategory && matchesSearch;
+    });
+
+    const categories = ["All", ...Array.from(new Set(localFiles.map(f => f.category)))].sort();
 
     const onDrop = (e: React.DragEvent) => {
         e.preventDefault();
@@ -357,6 +366,19 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                             </button>
                         </div>
 
+                        <div className={styles.categoryFilters}>
+                            {categories.map(cat => (
+                                <button
+                                    key={cat}
+                                    type="button"
+                                    className={`${styles.categoryBtn} ${categoryFilter === cat ? styles.categoryBtnActive : ''}`}
+                                    onClick={() => setCategoryFilter(cat)}
+                                >
+                                    {cat}
+                                </button>
+                            ))}
+                        </div>
+
                         <div className={styles.explorerGrid}>
                             {loadingLocal ? (
                                 <div className={styles.explorerStatus}>Scanning server for assets...</div>
@@ -371,30 +393,32 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                                             className={`${styles.explorerItem} ${isSelected ? styles.explorerItemActive : ''}`}
                                             style={{ '--delay': `${Math.min(idx * 40, 600)}ms` } as React.CSSProperties}
                                             onClick={() => {
+                                                const filePath = file.path;
                                                 if (multiple) {
                                                     const existing = Array.isArray(value) ? value : (value ? [value] : []);
                                                     if (isSelected) {
-                                                        onFilesChange?.(existing.filter(v => v !== file));
+                                                        onFilesChange?.(existing.filter(v => v !== filePath));
                                                     } else {
-                                                        onFilesChange?.([...existing, file]);
+                                                        onFilesChange?.([...existing, filePath]);
                                                     }
                                                 } else {
-                                                    onChange(file);
+                                                    onChange(filePath);
                                                 }
                                             }}
                                         >
                                             <div className={styles.explorerPreview}>
-                                                {file.match(/\.(mp4|webm)$/i) ? (
+                                                {file.path.match(/\.(mp4|webm)$/i) ? (
                                                     <div className={styles.videoPlaceholder}>Video</div>
                                                 ) : (
-                                                    <SafeAdminImage src={file} />
+                                                    <SafeAdminImage src={file.path} />
                                                 )}
+                                                <span className={styles.categoryBadge}>{file.category}</span>
                                             </div>
                                             <div className={styles.explorerLabelStack}>
                                                 <span className={styles.explorerFolder}>
-                                                    {file.split('/').slice(-3, -1).join(' > ')}
+                                                    {file.folder || "Root"}
                                                 </span>
-                                                <span className={styles.explorerLabel}>{file.split('/').pop()}</span>
+                                                <span className={styles.explorerLabel}>{file.name}</span>
                                             </div>
                                             {isSelected && <CheckCircle2 className={styles.selectedCheck} size={14} />}
                                         </div>

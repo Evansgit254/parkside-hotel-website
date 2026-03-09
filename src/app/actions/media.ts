@@ -40,7 +40,7 @@ export async function getLocalMedia() {
     }
 
     try {
-        const allMediaFiles: string[] = [];
+        const allMediaFiles: any[] = [];
 
         const EXCLUDED_DIRS = ['System Volume Information', 'autorun.inf', '.next', '.git', 'node_modules'];
 
@@ -55,11 +55,34 @@ export async function getLocalMedia() {
                 } else {
                     // Include common media formats and ignore hidden/system files
                     if (/\.(jpg|jpeg|png|webp|gif|mp4)$/i.test(item) && !item.startsWith("._")) {
-                        // The URL path should be relative to 'public' equivalent
-                        // On Vercel, the structure is .next/server/chunks/public/...
                         const publicRoot = path.join(rootDir, "..");
                         const relativePath = path.relative(publicRoot, fullPath);
-                        allMediaFiles.push("/" + relativePath.replace(/\\/g, "/"));
+                        const urlPath = "/" + relativePath.replace(/\\/g, "/");
+
+                        // Extract metadata for labeling
+                        const parts = relativePath.split(/[\\/]/);
+                        const filename = parts.pop() || "";
+                        const folder = parts.pop() || "";
+                        const parentFolder = parts.pop() || "";
+
+                        // Determine Category
+                        let category = "General";
+                        const fullPathLower = fullPath.toLowerCase();
+                        if (fullPathLower.includes("accommodation") || fullPathLower.includes("room") || fullPathLower.includes("cottage") || fullPathLower.includes("high rise")) category = "Rooms";
+                        else if (fullPathLower.includes("dining") || fullPathLower.includes("restaurant") || fullPathLower.includes("eateries") || fullPathLower.includes("food")) category = "Dining";
+                        else if (fullPathLower.includes("conference")) category = "Conference";
+                        else if (fullPathLower.includes("pool") || fullPathLower.includes("bar") || fullPathLower.includes("lounge") || fullPathLower.includes("play ground") || fullPathLower.includes("facility")) category = "Facilities";
+                        else if (fullPathLower.includes("event") || fullPathLower.includes("wedding")) category = "Events";
+                        else if (fullPathLower.includes("video")) category = "Videos";
+
+                        allMediaFiles.push({
+                            path: urlPath,
+                            name: filename,
+                            folder: folder,
+                            parent: parentFolder,
+                            category: category,
+                            tags: [category, folder, parentFolder, filename.split('.')[0]].filter(Boolean).map(t => t.toLowerCase())
+                        });
                     }
                 }
             });
@@ -68,7 +91,11 @@ export async function getLocalMedia() {
         if (heroAssetsPath) getAllFiles(heroAssetsPath, heroAssetsPath);
         if (villaMediaPath) getAllFiles(villaMediaPath, villaMediaPath);
 
-        const files = Array.from(new Set(allMediaFiles)).sort((a, b) => a.localeCompare(b));
+        // Sort by category then name
+        const files = allMediaFiles.sort((a, b) => {
+            if (a.category !== b.category) return a.category.localeCompare(b.category);
+            return a.name.localeCompare(b.name);
+        });
 
         return {
             success: true,
