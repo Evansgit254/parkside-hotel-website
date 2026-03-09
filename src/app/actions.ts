@@ -10,15 +10,16 @@ import { z } from "zod";
 import fs from "fs";
 import path from "path";
 import os from "os";
-
-export async function getAuthSession() {
-    return await getAuthSessionLib();
-}
 import {
     Room, Lead, User, Testimonial, BlogPost, Facility,
     MenuCategory, HeroImage, GalleryItem, Promotion, Subscriber, ContactInfo,
     SiteContent, DiningVenue, GalleryCategory
 } from "@prisma/client";
+import * as staticData from "../data/site-data";
+
+export async function getAuthSession() {
+    return await getAuthSessionLib();
+}
 
 // ─────────────────────────────────────────────
 // HELPERS
@@ -69,8 +70,6 @@ async function requireUser() {
 // ─────────────────────────────────────────────
 // SITE DATA (read everything in one call for legacy compatibility)
 // ─────────────────────────────────────────────
-
-import * as staticData from "../data/site-data";
 
 export async function getSiteData() {
     const isBuild = process.env.NEXT_PHASE === 'phase-production-build' || process.env.NODE_ENV === 'production';
