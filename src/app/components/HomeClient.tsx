@@ -267,15 +267,18 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                 </div>
 
                 <div className={styles.roomGrid}>
-                    {rooms
-                        .filter((room: any) => {
-                            const price = typeof room.price === 'string' ? parseFloat(room.price.replace(/[^0-9.]/g, '')) : room.price;
-                            const matchesPrice = price <= bookingData.maxPrice;
-                            const matchesType = bookingData.roomType === "Any Room" || room.name.toLowerCase().includes(bookingData.roomType.toLowerCase());
-                            return matchesPrice && matchesType;
-                        })
-                        .slice(0, 4)
-                        .map((room: any, idx: number) => (
+                    {(() => {
+                        const featuredRooms = rooms.filter((r: any) => r.isFeatured);
+                        const displayedRooms = featuredRooms.length > 0
+                            ? featuredRooms
+                            : rooms.filter((room: any) => {
+                                const price = typeof room.price === 'string' ? parseFloat(room.price.replace(/[^0-9.]/g, '')) : room.price;
+                                const matchesPrice = price <= bookingData.maxPrice;
+                                const matchesType = bookingData.roomType === "Any Room" || room.name.toLowerCase().includes(bookingData.roomType.toLowerCase());
+                                return matchesPrice && matchesType;
+                            }).slice(0, 4);
+
+                        return displayedRooms.map((room: any, idx: number) => (
                             <motion.div
                                 key={room.id}
                                 className={styles.roomCard}
@@ -308,7 +311,8 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                                     </div>
                                 </div>
                             </motion.div>
-                        ))}
+                        ));
+                    })()}
                 </div>
             </section>
 

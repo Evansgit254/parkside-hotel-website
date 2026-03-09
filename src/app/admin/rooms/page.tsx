@@ -14,7 +14,7 @@ export default function AdminRooms() {
     const { formatPrice } = useCurrency();
     const [rooms, setRooms] = useState<any[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editForm, setEditForm] = useState<any>({ id: "", name: "", desc: "", price: "", image: "", images: [], amenities: [], tag: "", capacity: 2 });
+    const [editForm, setEditForm] = useState<any>({ id: "", name: "", desc: "", price: "", image: "", images: [], amenities: [], tag: "", capacity: 2, isFeatured: false });
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
 
@@ -33,13 +33,14 @@ export default function AdminRooms() {
             ...room,
             images: Array.isArray(room.images) ? room.images : [],
             amenities: Array.isArray(room.amenities) ? room.amenities : [],
-            capacity: room.capacity || 2
+            capacity: room.capacity || 2,
+            isFeatured: room.isFeatured || false
         });
         setIsModalOpen(true);
     };
 
     const handleAdd = () => {
-        setEditForm({ id: "NEW", name: "", desc: "", price: "", image: "", images: [], amenities: [], tag: "", capacity: 2 });
+        setEditForm({ id: "NEW", name: "", desc: "", price: "", image: "", images: [], amenities: [], tag: "", capacity: 2, isFeatured: false });
         setIsModalOpen(true);
     };
 
@@ -134,6 +135,7 @@ export default function AdminRooms() {
                             <div style={{ fontSize: '0.8125rem', color: '#6B7280', lineHeight: '1.5', maxWidth: '480px' }}>{room.desc}</div>
                             <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
                                 {room.tag && <span className={`${styles.badge} ${styles.badgeGold}`}>{room.tag}</span>}
+                                {room.isFeatured && <span className={`${styles.badge} ${styles.badgeGreen}`} style={{ background: 'rgba(20,75,54,0.1)', color: '#144B36', border: '1px solid rgba(20,75,54,0.2)' }}>Featured</span>}
                                 <span className={`${styles.badge} ${styles.badgeGold}`}>{room.images?.length || 0} Photos</span>
                             </div>
                         </div>
@@ -221,9 +223,23 @@ export default function AdminRooms() {
                                 className={styles.input}
                                 placeholder="WiFi, AC, TV"
                                 value={Array.isArray(editForm.amenities) ? editForm.amenities.join(", ") : ""}
-                                onChange={e => setEditForm({ ...editForm, amenities: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })}
                             />
                         </div>
+                    </div>
+
+                    <div className={styles.formGroup} style={{ gridColumn: '1 / -1', marginTop: '0.5rem' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', padding: '1rem', background: '#F7F8FC', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                            <input
+                                type="checkbox"
+                                checked={editForm.isFeatured}
+                                onChange={e => setEditForm({ ...editForm, isFeatured: e.target.checked })}
+                                style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#144B36' }}
+                            />
+                            <div>
+                                <div style={{ fontWeight: 600, fontSize: '0.875rem', color: '#111827' }}>Featured on Homepage</div>
+                                <div style={{ fontSize: '0.75rem', color: '#6B7280' }}>Showcase this room in the main landing page slider.</div>
+                            </div>
+                        </label>
                     </div>
                 </div>
             </AdminModal>

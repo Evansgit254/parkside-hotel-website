@@ -172,6 +172,7 @@ export async function getSiteData() {
                 images: (r.images || []).map((img: string) => optimizeCloudinary(img)),
                 tag: r.tag ?? undefined,
                 capacity: r.capacity,
+                isFeatured: r.isFeatured,
             })),
             facilities: (facilities as any[]).map(f => {
                 if (f.id === "conference" && conferenceHalls.length > 0) {
@@ -279,6 +280,7 @@ export async function getPublicSiteData() {
                 images: (r.images || []).map((img: string) => optimizeCloudinary(img)),
                 tag: r.tag ?? undefined,
                 capacity: r.capacity,
+                isFeatured: r.isFeatured,
             })),
             facilities: (facilities as any[]).map(f => ({
                 ...f,
@@ -583,6 +585,7 @@ export async function createRoom(newRoom: {
     image: string;
     tag?: string;
     capacity?: number;
+    isFeatured?: boolean;
 }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
@@ -598,6 +601,7 @@ export async function createRoom(newRoom: {
                 images: (newRoom as any).images ?? [],
                 tag: newRoom.tag ?? null,
                 capacity: newRoom.capacity ?? 2,
+                isFeatured: newRoom.isFeatured ?? false,
             },
         });
         revalidateAll();
@@ -622,6 +626,7 @@ export async function updateRoom(roomId: string, updatedRoom: Partial<Room>) {
                 images: (updatedRoom as any).images ?? undefined,
                 tag: updatedRoom.tag ?? null,
                 capacity: updatedRoom.capacity ?? 2,
+                isFeatured: updatedRoom.isFeatured ?? false,
             },
         });
         revalidateAll();

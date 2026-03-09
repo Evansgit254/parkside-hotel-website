@@ -9,18 +9,19 @@ datasource db {
 }
 
 model Room {
-  id        String   @id @default(cuid())
-  slug      String   @unique
-  name      String
-  desc      String
-  price     String
-  image     String
-  images    Json     @default("[]")
-  amenities Json     @default("[]")
-  tag       String?
-  capacity  Int      @default(2)
-  createdAt DateTime @default(now())
-  leads     Lead[]
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  name       String
+  desc       String
+  price      String
+  image      String
+  images     Json     @default("[]")
+  amenities  Json     @default("[]")
+  tag        String?
+  capacity   Int      @default(2)
+  isFeatured Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  leads      Lead[]
 }
 
 model Lead {
