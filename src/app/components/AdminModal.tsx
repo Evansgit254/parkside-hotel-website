@@ -14,6 +14,7 @@ interface AdminModalProps {
     submitLabel?: string;
     loading?: boolean;
     error?: string | null;
+    danger?: boolean;
 }
 
 export default function AdminModal({
@@ -24,7 +25,8 @@ export default function AdminModal({
     onSubmit,
     submitLabel = "Save Changes",
     loading = false,
-    error = null
+    error = null,
+    danger = false
 }: AdminModalProps) {
     return (
         <AnimatePresence>
@@ -72,7 +74,8 @@ export default function AdminModal({
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className={styles.saveButton}
+                                    className={danger ? styles.logoutBtn : styles.saveButton}
+                                    style={{ marginTop: 0 }}
                                 >
                                     {loading ? "Processing..." : submitLabel}
                                 </button>

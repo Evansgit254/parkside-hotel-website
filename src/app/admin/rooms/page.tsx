@@ -17,6 +17,8 @@ export default function AdminRooms() {
     const [editForm, setEditForm] = useState<any>({ id: "", name: "", desc: "", price: "", image: "", images: [], amenities: [], tag: "", capacity: 2, isFeatured: false });
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const fetchRooms = async () => {
         const data = await getSiteData();
@@ -76,16 +78,18 @@ export default function AdminRooms() {
         setIsSaving(false);
     };
 
-    const handleDelete = async (id: string) => {
-        if (confirm("Are you sure you want to delete this room?")) {
-            const res = await deleteRoom(id);
-            if (res.success) {
-                await fetchRooms();
-                showToast("Room deleted successfully", "success");
-            } else {
-                showToast(res.error || "Failed to delete room.", "error");
-            }
+    const handleDelete = async () => {
+        if (!deleteId) return;
+        setIsDeleting(true);
+        const res = await deleteRoom(deleteId);
+        if (res.success) {
+            await fetchRooms();
+            setDeleteId(null);
+            showToast("Room deleted successfully", "success");
+        } else {
+            showToast(res.error || "Failed to delete room.", "error");
         }
+        setIsDeleting(false);
     };
 
     const removeImage = (index: number) => {
@@ -146,13 +150,33 @@ export default function AdminRooms() {
                             <button onClick={() => handleEdit(room)} className={styles.actionBtn} title="Edit">
                                 <Edit2 size={14} />
                             </button>
-                            <button onClick={() => handleDelete(room.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete">
+                            <button onClick={() => setDeleteId(room.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete">
                                 <Trash2 size={14} />
                             </button>
                         </div>
                     </div>
                 ))}
             </div>
+
+            {/* Delete Confirmation Modal */}
+            <AdminModal
+                isOpen={!!deleteId}
+                onClose={() => setDeleteId(null)}
+                title="Confirm Deletion"
+                onSubmit={(e) => { e.preventDefault(); handleDelete(); }}
+                loading={isDeleting}
+                submitLabel="Delete Room"
+                danger
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ color: '#6B7280', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+                        Are you sure you want to delete <strong style={{ color: '#111827' }}>{rooms.find(r => r.id === deleteId)?.name}</strong>?
+                    </p>
+                    <p style={{ color: '#EF4444', fontSize: '0.8125rem', marginTop: '1rem', fontWeight: 500 }}>
+                        This action cannot be undone and will remove all associated room details.
+                    </p>
+                </div>
+            </AdminModal>
 
             <AdminModal
                 isOpen={isModalOpen}
