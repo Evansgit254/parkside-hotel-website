@@ -178,6 +178,13 @@
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.05em;
+    z-index: 5;
+}
+
+.heroBadges .capacityBadge {
+    position: relative;
+    bottom: auto;
+    left: auto;
 }
 
 .listContent {
