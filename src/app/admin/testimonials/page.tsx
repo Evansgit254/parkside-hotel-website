@@ -14,6 +14,8 @@ export default function AdminTestimonials() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editForm, setEditForm] = useState<any>({ id: "", name: "", title: "", text: "", isNew: false });
     const [isSaving, setIsSaving] = useState(false);
+    const [deleteId, setDeleteId] = useState<number | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         getSiteData().then(data => {
@@ -61,17 +63,19 @@ export default function AdminTestimonials() {
         setIsSaving(false);
     };
 
-    const handleDelete = async (id: number | string) => {
-        if (confirm("Are you sure you want to delete this testimonial?")) {
-            const res = await deleteTestimonial(id as number);
-            if (res?.success) {
-                const data = await getSiteData();
-                setTestimonials(data.testimonials);
-                showToast("Testimonial deleted successfully", "success");
-            } else {
-                showToast(res?.error || "Failed to delete testimonial.", "error");
-            }
+    const handleDelete = async () => {
+        if (deleteId === null) return;
+        setIsDeleting(true);
+        const res = await deleteTestimonial(deleteId);
+        if (res?.success) {
+            const data = await getSiteData();
+            setTestimonials(data.testimonials);
+            setDeleteId(null);
+            showToast("Testimonial deleted successfully", "success");
+        } else {
+            showToast(res?.error || "Failed to delete testimonial.", "error");
         }
+        setIsDeleting(false);
     };
 
     if (loading) return <div className={styles.mainContent}>Loading...</div>;
@@ -157,7 +161,7 @@ export default function AdminTestimonials() {
                                 <button onClick={() => handleEdit(testi)} className={styles.actionBtn} title="Edit">
                                     <Edit2 size={16} />
                                 </button>
-                                <button onClick={() => handleDelete(testi.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete">
+                                <button onClick={() => setDeleteId(testi.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete">
                                     <Trash2 size={16} />
                                 </button>
                             </div>
@@ -165,6 +169,26 @@ export default function AdminTestimonials() {
                     </div>
                 ))}
             </div>
+
+            {/* Delete Confirmation Modal */}
+            <AdminModal
+                isOpen={deleteId !== null}
+                onClose={() => setDeleteId(null)}
+                title="Confirm Deletion"
+                onSubmit={(e) => { e.preventDefault(); handleDelete(); }}
+                loading={isDeleting}
+                submitLabel="Delete Review"
+                danger
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ color: '#6B7280', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+                        Are you sure you want to delete the testimonial from <strong style={{ color: '#111827' }}>{testimonials.find(t => t.id === deleteId)?.name}</strong>?
+                    </p>
+                    <p style={{ color: '#EF4444', fontSize: '0.8125rem', marginTop: '1rem', fontWeight: 500 }}>
+                        This action cannot be undone and will remove the review from the website.
+                    </p>
+                </div>
+            </AdminModal>
 
             <AdminModal
                 isOpen={isModalOpen}

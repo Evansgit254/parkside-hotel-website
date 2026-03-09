@@ -15,6 +15,8 @@ export default function AdminDiningVenues() {
     const [editForm, setEditForm] = useState<any>({ id: "", name: "", desc: "", image: "", images: [], features: [], hours: "" });
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const fetchVenues = async () => {
         const data = await getDiningVenues();
@@ -67,16 +69,18 @@ export default function AdminDiningVenues() {
         setIsSaving(false);
     };
 
-    const handleDelete = async (id: string) => {
-        if (confirm("Are you sure you want to delete this dining venue?")) {
-            const res = await deleteDiningVenue(id);
-            if (res.success) {
-                await fetchVenues();
-                showToast("Dining venue deleted successfully", "success");
-            } else {
-                showToast(res.error || "Failed to delete dining venue.", "error");
-            }
+    const handleDelete = async () => {
+        if (!deleteId) return;
+        setIsDeleting(true);
+        const res = await deleteDiningVenue(deleteId);
+        if (res.success) {
+            await fetchVenues();
+            setDeleteId(null);
+            showToast("Dining venue deleted successfully", "success");
+        } else {
+            showToast(res.error || "Failed to delete dining venue.", "error");
         }
+        setIsDeleting(false);
     };
 
     const removeImage = (index: number) => {
@@ -140,7 +144,7 @@ export default function AdminDiningVenues() {
                             <button onClick={() => handleEdit(venue)} className={styles.actionBtn} title="Edit">
                                 <Edit2 size={16} />
                             </button>
-                            <button onClick={() => handleDelete(venue.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete">
+                            <button onClick={() => setDeleteId(venue.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete">
                                 <Trash2 size={16} />
                             </button>
                         </div>
@@ -150,6 +154,26 @@ export default function AdminDiningVenues() {
                     <div style={{ padding: '3rem', textAlign: 'center', color: '#6B7280' }}>No dining venues found.</div>
                 )}
             </div>
+
+            {/* Delete Confirmation Modal */}
+            <AdminModal
+                isOpen={!!deleteId}
+                onClose={() => setDeleteId(null)}
+                title="Confirm Deletion"
+                onSubmit={(e) => { e.preventDefault(); handleDelete(); }}
+                loading={isDeleting}
+                submitLabel="Delete Venue"
+                danger
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ color: '#6B7280', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+                        Are you sure you want to delete <strong style={{ color: '#111827' }}>{venues.find(v => v.id === deleteId)?.name}</strong>?
+                    </p>
+                    <p style={{ color: '#EF4444', fontSize: '0.8125rem', marginTop: '1rem', fontWeight: 500 }}>
+                        This action cannot be undone and will remove the venue from the dining collection.
+                    </p>
+                </div>
+            </AdminModal>
 
             <AdminModal
                 isOpen={isModalOpen}

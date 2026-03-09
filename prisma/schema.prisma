@@ -123,7 +123,7 @@ model GalleryItem {
   title      String?
   order      Int              @default(0)
   categoryId String?
-  category   GalleryCategory? @relation(fields: [categoryId], references: [id])
+  category   GalleryCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 }
 
 model GalleryCategory {

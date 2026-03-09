@@ -15,6 +15,8 @@ export default function AdminConference() {
     const [editForm, setEditForm] = useState<any>({ id: "", name: "", desc: "", image: "", images: [], capacity: 50, setups: [] });
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const fetchHalls = async () => {
         const data = await getConferenceHalls();
@@ -69,16 +71,18 @@ export default function AdminConference() {
         setIsSaving(false);
     };
 
-    const handleDelete = async (id: string) => {
-        if (confirm("Are you sure you want to delete this conference hall?")) {
-            const res = await deleteConferenceHall(id);
-            if (res.success) {
-                await fetchHalls();
-                showToast("Conference hall deleted successfully", "success");
-            } else {
-                showToast(res.error || "Failed to delete conference hall.", "error");
-            }
+    const handleDelete = async () => {
+        if (!deleteId) return;
+        setIsDeleting(true);
+        const res = await deleteConferenceHall(deleteId);
+        if (res.success) {
+            await fetchHalls();
+            setDeleteId(null);
+            showToast("Conference hall deleted successfully", "success");
+        } else {
+            showToast(res.error || "Failed to delete conference hall.", "error");
         }
+        setIsDeleting(false);
     };
 
     const removeImage = (index: number) => {
@@ -137,7 +141,7 @@ export default function AdminConference() {
                             <button onClick={() => handleEdit(hall)} className={styles.actionBtn} title="Edit">
                                 <Edit2 size={16} />
                             </button>
-                            <button onClick={() => handleDelete(hall.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete">
+                            <button onClick={() => setDeleteId(hall.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete">
                                 <Trash2 size={16} />
                             </button>
                         </div>
@@ -147,6 +151,26 @@ export default function AdminConference() {
                     <div style={{ padding: '3rem', textAlign: 'center', color: '#6B7280' }}>No conference halls found. Add your first hall to get started.</div>
                 )}
             </div>
+
+            {/* Delete Confirmation Modal */}
+            <AdminModal
+                isOpen={!!deleteId}
+                onClose={() => setDeleteId(null)}
+                title="Confirm Deletion"
+                onSubmit={(e) => { e.preventDefault(); handleDelete(); }}
+                loading={isDeleting}
+                submitLabel="Delete Hall"
+                danger
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ color: '#6B7280', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+                        Are you sure you want to delete <strong style={{ color: '#111827' }}>{halls.find(h => h.id === deleteId)?.name}</strong>?
+                    </p>
+                    <p style={{ color: '#EF4444', fontSize: '0.8125rem', marginTop: '1rem', fontWeight: 500 }}>
+                        This action cannot be undone and will remove the hall from the available M.I.C.E. collection.
+                    </p>
+                </div>
+            </AdminModal>
 
             <AdminModal
                 isOpen={isModalOpen}

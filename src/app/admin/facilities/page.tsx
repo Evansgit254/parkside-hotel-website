@@ -15,6 +15,8 @@ export default function AdminFacilities() {
     const [editForm, setEditForm] = useState<any>({ id: "", title: "", desc: "", icon: "Hotel", image: "", images: [], features: [], highlights: [] });
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const fetchFacilities = async () => {
         const data = await getSiteData();
@@ -63,16 +65,18 @@ export default function AdminFacilities() {
         setIsSaving(false);
     };
 
-    const handleDelete = async (id: string) => {
-        if (confirm("Delete this facility? This cannot be undone.")) {
-            const res = await deleteFacility(id);
-            if (res.success) {
-                await fetchFacilities();
-                showToast("Facility deleted successfully", "success");
-            } else {
-                showToast(res.error || "Failed to delete facility.", "error");
-            }
+    const handleDelete = async () => {
+        if (!deleteId) return;
+        setIsDeleting(true);
+        const res = await deleteFacility(deleteId);
+        if (res.success) {
+            await fetchFacilities();
+            setDeleteId(null);
+            showToast("Facility deleted successfully", "success");
+        } else {
+            showToast(res.error || "Failed to delete facility.", "error");
         }
+        setIsDeleting(false);
     };
 
     const removeImage = (index: number) => {
@@ -148,7 +152,7 @@ export default function AdminFacilities() {
                                     <button onClick={() => handleEdit(facility)} className={styles.actionBtn} title="Edit">
                                         <Edit2 size={14} />
                                     </button>
-                                    <button onClick={() => handleDelete(facility.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete">
+                                    <button onClick={() => setDeleteId(facility.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete">
                                         <Trash2 size={14} />
                                     </button>
                                 </div>
@@ -157,6 +161,26 @@ export default function AdminFacilities() {
                     })
                 )}
             </div>
+
+            {/* Delete Confirmation Modal */}
+            <AdminModal
+                isOpen={!!deleteId}
+                onClose={() => setDeleteId(null)}
+                title="Confirm Deletion"
+                onSubmit={(e) => { e.preventDefault(); handleDelete(); }}
+                loading={isDeleting}
+                submitLabel="Delete Facility"
+                danger
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ color: '#6B7280', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+                        Are you sure you want to delete <strong style={{ color: '#111827' }}>{facilities.find(f => f.id === deleteId)?.title}</strong>?
+                    </p>
+                    <p style={{ color: '#EF4444', fontSize: '0.8125rem', marginTop: '1rem', fontWeight: 500 }}>
+                        This action cannot be undone and will remove all associated content.
+                    </p>
+                </div>
+            </AdminModal>
 
             <AdminModal
                 isOpen={isModalOpen}

@@ -14,6 +14,9 @@ export default function AdminDining() {
     const [menu, setMenu] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [deleteCategoryId, setDeleteCategoryId] = useState<string | null>(null);
+    const [deleteItemData, setDeleteItemData] = useState<{ categoryId: string, idx: number } | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     // Category Modal State
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
@@ -76,16 +79,18 @@ export default function AdminDining() {
         setIsSaving(false);
     };
 
-    const handleDeleteCategory = async (categoryId: string) => {
-        if (confirm("Are you sure you want to delete this category and all its items?")) {
-            const res = await deleteDiningCategory(categoryId);
-            if (res.success) {
-                await fetchMenu();
-                showToast("Category deleted successfully", "success");
-            } else {
-                showToast(res.error || "Failed to delete category.", "error");
-            }
+    const handleDeleteCategory = async () => {
+        if (!deleteCategoryId) return;
+        setIsDeleting(true);
+        const res = await deleteDiningCategory(deleteCategoryId);
+        if (res.success) {
+            await fetchMenu();
+            setDeleteCategoryId(null);
+            showToast("Category deleted successfully", "success");
+        } else {
+            showToast(res.error || "Failed to delete category.", "error");
         }
+        setIsDeleting(false);
     };
 
     // Item Handlers
@@ -128,18 +133,22 @@ export default function AdminDining() {
         setIsSaving(false);
     };
 
-    const handleDeleteItem = async (categoryId: string, itemIdx: number) => {
-        if (confirm("Are you sure you want to delete this item?")) {
-            const category = menu.find(c => c.id === categoryId);
-            const updatedItems = category.items.filter((_: any, idx: number) => idx !== itemIdx);
-            const res = await updateDiningCategory(categoryId, { ...category, items: updatedItems });
+    const handleDeleteItem = async () => {
+        if (!deleteItemData) return;
+        setIsDeleting(true);
+        const category = menu.find(c => c.id === deleteItemData.categoryId);
+        if (category) {
+            const updatedItems = category.items.filter((_: any, idx: number) => idx !== deleteItemData.idx);
+            const res = await updateDiningCategory(deleteItemData.categoryId, { ...category, items: updatedItems });
             if (res.success) {
                 await fetchMenu();
+                setDeleteItemData(null);
                 showToast("Dish removed successfully", "success");
             } else {
                 showToast(res.error || "Failed to delete item.", "error");
             }
         }
+        setIsDeleting(false);
     };
 
     if (loading) return <div className={styles.mainContent}>Loading...</div>;
@@ -168,7 +177,7 @@ export default function AdminDining() {
                             </div>
                             <div style={{ display: 'flex', gap: '0.75rem' }}>
                                 <button onClick={() => handleEditCategory(category)} className={styles.actionBtn} title="Edit Category"><Edit2 size={18} /></button>
-                                <button onClick={() => handleDeleteCategory(category.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete Category"><Trash2 size={18} /></button>
+                                <button onClick={() => setDeleteCategoryId(category.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete Category"><Trash2 size={18} /></button>
                             </div>
                         </div>
 
@@ -183,7 +192,7 @@ export default function AdminDining() {
                                         <div style={{ fontWeight: 700, color: 'var(--secondary)', fontSize: '1.1rem', textAlign: 'center' }}>{formatPrice(item.price)}</div>
                                         <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
                                             <button onClick={() => handleEditItem(category.id, idx)} className={styles.actionBtn} title="Edit Item"><Edit2 size={16} /></button>
-                                            <button onClick={() => handleDeleteItem(category.id, idx)} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete Item"><Trash2 size={16} /></button>
+                                            <button onClick={() => setDeleteItemData({ categoryId: category.id, idx })} className={`${styles.actionBtn} ${styles.deleteBtn}`} title="Delete Item"><Trash2 size={16} /></button>
                                         </div>
                                     </div>
                                 ))
@@ -263,6 +272,41 @@ export default function AdminDining() {
                         onChange={e => setItemFormState({ ...itemFormState, price: e.target.value })}
                         required
                     />
+                </div>
+            </AdminModal>
+            {/* Delete Confirmation Modals */}
+            <AdminModal
+                isOpen={!!deleteCategoryId}
+                onClose={() => setDeleteCategoryId(null)}
+                title="Confirm Deletion"
+                onSubmit={(e) => { e.preventDefault(); handleDeleteCategory(); }}
+                loading={isDeleting}
+                submitLabel="Delete Category"
+                danger
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ color: '#6B7280', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+                        Are you sure you want to delete <strong style={{ color: '#111827' }}>{menu.find(c => c.id === deleteCategoryId)?.name}</strong> and all its menu items?
+                    </p>
+                    <p style={{ color: '#EF4444', fontSize: '0.8125rem', marginTop: '1rem', fontWeight: 500 }}>
+                        This action cannot be undone.
+                    </p>
+                </div>
+            </AdminModal>
+
+            <AdminModal
+                isOpen={!!deleteItemData}
+                onClose={() => setDeleteItemData(null)}
+                title="Confirm Deletion"
+                onSubmit={(e) => { e.preventDefault(); handleDeleteItem(); }}
+                loading={isDeleting}
+                submitLabel="Remove Dish"
+                danger
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ color: '#6B7280', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+                        Are you sure you want to remove this dish from the menu?
+                    </p>
                 </div>
             </AdminModal>
         </div>

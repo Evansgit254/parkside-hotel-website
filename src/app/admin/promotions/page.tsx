@@ -5,6 +5,7 @@ import { getPromotions, addPromotion, updatePromotion, deletePromotion } from ".
 import styles from "../admin.module.css";
 import { Plus, Trash2, Calendar, Tag, Percent, ArrowUpRight, Edit2, X, Save } from "lucide-react";
 import { showToast } from "../components/AdminToast";
+import AdminModal from "../../components/AdminModal";
 
 export default function PromotionsAdmin() {
     const [promotions, setPromotions] = useState<any[]>([]);
@@ -19,6 +20,8 @@ export default function PromotionsAdmin() {
         expiry: "",
         description: ""
     });
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         loadPromotions();
@@ -88,15 +91,18 @@ export default function PromotionsAdmin() {
         setLoading(false);
     }
 
-    async function handleDelete(id: string) {
-        if (!confirm("Are you sure you want to delete this promotion?")) return;
-        const res = await deletePromotion(id);
+    async function handleDelete() {
+        if (!deleteId) return;
+        setIsDeleting(true);
+        const res = await deletePromotion(deleteId);
         if (res.success) {
-            setPromotions(promotions.filter(p => p.id !== id));
+            setPromotions(promotions.filter(p => p.id !== deleteId));
+            setDeleteId(null);
             showToast("Promotion deleted successfully", "success");
         } else {
             showToast(res.error || "Failed to delete promotion", "error");
         }
+        setIsDeleting(false);
     }
 
     if (loading) return <div className={styles.loading}>Accessing Vault...</div>;
@@ -213,7 +219,7 @@ export default function PromotionsAdmin() {
                                 <button
                                     className={styles.deleteBtn}
                                     style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444', border: 'none', padding: '8px', cursor: 'pointer', borderRadius: '6px' }}
-                                    onClick={() => handleDelete(promo.id)}
+                                    onClick={() => setDeleteId(promo.id)}
                                 >
                                     <Trash2 size={16} />
                                 </button>
@@ -245,6 +251,25 @@ export default function PromotionsAdmin() {
                     <p>Drive bookings by creating seasonal offers and exclusive discount codes.</p>
                 </div>
             )}
+            {/* Delete Confirmation Modal */}
+            <AdminModal
+                isOpen={!!deleteId}
+                onClose={() => setDeleteId(null)}
+                title="Confirm Deletion"
+                onSubmit={(e) => { e.preventDefault(); handleDelete(); }}
+                loading={isDeleting}
+                submitLabel="Delete Campaign"
+                danger
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ color: '#6B7280', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+                        Are you sure you want to delete <strong style={{ color: '#111827' }}>{promotions.find(p => p.id === deleteId)?.title}</strong>?
+                    </p>
+                    <p style={{ color: '#EF4444', fontSize: '0.8125rem', marginTop: '1rem', fontWeight: 500 }}>
+                        This will terminate the campaign. This action cannot be undone.
+                    </p>
+                </div>
+            </AdminModal>
         </div>
     );
 }

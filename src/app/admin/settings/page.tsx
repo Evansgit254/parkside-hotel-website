@@ -7,6 +7,7 @@ import { getSiteData, updateContactInfo, addHeroImage, deleteHeroImage } from ".
 import { Save, Phone, Mail, MapPin, MessageSquare, Facebook, Instagram, Linkedin, Plus, Trash2, Image as ImageIcon } from "lucide-react";
 import { showToast } from "../components/AdminToast";
 import MediaUpload from "../components/MediaUpload";
+import AdminModal from "../../components/AdminModal";
 
 export default function AdminSettings() {
     const [contact, setContact] = useState<any>(null);
@@ -14,6 +15,8 @@ export default function AdminSettings() {
     const [newImageUrl, setNewImageUrl] = useState("");
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [deleteUrl, setDeleteUrl] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const fetchData = async () => {
         const data = await getSiteData();
@@ -51,16 +54,18 @@ export default function AdminSettings() {
         }
     };
 
-    const handleDeleteImage = async (url: string) => {
-        if (confirm("Remove this hero image?")) {
-            const res = await deleteHeroImage(url);
-            if (res.success) {
-                await fetchData();
-                showToast("Hero image removed successfully", "success");
-            } else {
-                showToast(res.error || "Failed to delete hero image", "error");
-            }
+    const handleDeleteImage = async () => {
+        if (!deleteUrl) return;
+        setIsDeleting(true);
+        const res = await deleteHeroImage(deleteUrl);
+        if (res.success) {
+            await fetchData();
+            setDeleteUrl(null);
+            showToast("Hero image removed successfully", "success");
+        } else {
+            showToast(res.error || "Failed to delete hero image", "error");
         }
+        setIsDeleting(false);
     };
 
     if (loading) return <div className={styles.mainContent}>Loading...</div>;
@@ -181,7 +186,7 @@ export default function AdminSettings() {
                                 <img src={url} alt={`Hero ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)', display: 'flex', alignItems: 'flex-end', padding: '1rem' }}>
                                     <span style={{ fontSize: '0.7rem', color: '#6B7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80%' }}>{url.split('/').pop()}</span>
-                                    <button type="button" onClick={() => handleDeleteImage(url)} style={{ marginLeft: 'auto', padding: '0.5rem', background: 'rgba(239, 68, 68, 0.2)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '8px', cursor: 'pointer', color: '#ef4444' }} title="Remove Image">
+                                    <button type="button" onClick={() => setDeleteUrl(url)} style={{ marginLeft: 'auto', padding: '0.5rem', background: 'rgba(239, 68, 68, 0.2)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '8px', cursor: 'pointer', color: '#ef4444' }} title="Remove Image">
                                         <Trash2 size={16} />
                                     </button>
                                 </div>
@@ -220,6 +225,25 @@ export default function AdminSettings() {
                     </div>
                 </div>
             </div>
+            {/* Delete Confirmation Modal */}
+            <AdminModal
+                isOpen={!!deleteUrl}
+                onClose={() => setDeleteUrl(null)}
+                title="Confirm Deletion"
+                onSubmit={(e) => { e.preventDefault(); handleDeleteImage(); }}
+                loading={isDeleting}
+                submitLabel="Remove Hero Image"
+                danger
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ color: '#6B7280', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+                        Are you sure you want to remove this hero image?
+                    </p>
+                    <p style={{ color: '#EF4444', fontSize: '0.8125rem', marginTop: '1rem', fontWeight: 500 }}>
+                        This will remove the image from the homepage rotation.
+                    </p>
+                </div>
+            </AdminModal>
         </div>
     );
 }

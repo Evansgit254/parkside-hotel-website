@@ -6,6 +6,7 @@ import { getSiteData, getGalleryItems, addGalleryItem, addGalleryItems, deleteGa
 import styles from "../admin.module.css";
 import { Plus, Trash2, Edit2, Image as ImageIcon, Video, Upload, Grid, List, Save, X, ExternalLink, Move, Loader2 } from "lucide-react";
 import { GalleryItem, GalleryCategory } from "@prisma/client";
+import AdminModal from "../../components/AdminModal";
 
 import MediaUpload from "../components/MediaUpload";
 import { showToast } from "../components/AdminToast";
@@ -19,6 +20,9 @@ export default function GalleryAdmin() {
     const [editForm, setEditForm] = useState({ id: "", url: "", type: "image", title: "", categoryId: "" });
     const [categoryForm, setCategoryForm] = useState({ id: "", name: "" });
     const [activeTab, setActiveTab] = useState<"image" | "video">("image");
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [deleteCategoryId, setDeleteCategoryId] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         loadItems();
@@ -91,15 +95,18 @@ export default function GalleryAdmin() {
         setLoading(false);
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm("Remove this item from the gallery?")) return;
-        const res = await deleteGalleryItem(id);
+    const handleDelete = async () => {
+        if (!deleteId) return;
+        setIsDeleting(true);
+        const res = await deleteGalleryItem(deleteId);
         if (res.success) {
-            setItems(items.filter(item => item.id !== id));
+            setItems(items.filter(item => item.id !== deleteId));
+            setDeleteId(null);
             showToast("Gallery item removed successfully", "success");
         } else {
             showToast(res.error || "Failed to delete item.", "error");
         }
+        setIsDeleting(false);
     };
 
     const handleCategorySave = async (e: React.FormEvent) => {
@@ -122,17 +129,18 @@ export default function GalleryAdmin() {
         setLoading(false);
     };
 
-    const handleCategoryDelete = async (id: string) => {
-        if (!confirm("Delete this category? Items will be moved to 'Uncategorized'.")) return;
-        setLoading(true);
-        const res = await deleteGalleryCategory(id);
+    const handleCategoryDelete = async () => {
+        if (!deleteCategoryId) return;
+        setIsDeleting(true);
+        const res = await deleteGalleryCategory(deleteCategoryId);
         if (res.success) {
             await loadItems();
+            setDeleteCategoryId(null);
             showToast("Category deleted", "success");
         } else {
             showToast(res.error || "Failed to delete category", "error");
         }
-        setLoading(false);
+        setIsDeleting(false);
     };
 
     const filteredItems = items.filter(item => item.type === activeTab);
@@ -193,7 +201,7 @@ export default function GalleryAdmin() {
                                 <button className={styles.mediaEditBtn} style={{ background: 'rgba(201,168,76,0.9)', color: '#000', border: 'none', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => handleEdit(item)}>
                                     <Edit2 size={13} />
                                 </button>
-                                <button className={styles.mediaDeleteBtn} onClick={() => handleDelete(item.id)}>
+                                <button className={styles.mediaDeleteBtn} onClick={() => setDeleteId(item.id)}>
                                     <Trash2 size={14} />
                                 </button>
                             </div>
@@ -344,7 +352,7 @@ export default function GalleryAdmin() {
                                         </div>
                                         <div style={{ display: 'flex', gap: '8px' }}>
                                             <button className={styles.actionIcon} onClick={() => setCategoryForm({ id: cat.id, name: cat.name })}><Edit2 size={14} /></button>
-                                            <button className={styles.actionIcon} style={{ color: '#ef4444' }} onClick={() => handleCategoryDelete(cat.id)}><Trash2 size={14} /></button>
+                                            <button className={styles.actionIcon} style={{ color: '#ef4444' }} onClick={() => setDeleteCategoryId(cat.id)}><Trash2 size={14} /></button>
                                         </div>
                                     </div>
                                 ))}
@@ -356,6 +364,44 @@ export default function GalleryAdmin() {
                     </div>
                 </div>
             )}
+            {/* Delete Confirmation Modals */}
+            <AdminModal
+                isOpen={!!deleteId}
+                onClose={() => setDeleteId(null)}
+                title="Confirm Deletion"
+                onSubmit={(e) => { e.preventDefault(); handleDelete(); }}
+                loading={isDeleting}
+                submitLabel="Remove Item"
+                danger
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ color: '#6B7280', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+                        Are you sure you want to remove this asset?
+                    </p>
+                    <p style={{ color: '#EF4444', fontSize: '0.8125rem', marginTop: '1rem', fontWeight: 500 }}>
+                        This will remove the visual from the publicly curated gallery.
+                    </p>
+                </div>
+            </AdminModal>
+
+            <AdminModal
+                isOpen={!!deleteCategoryId}
+                onClose={() => setDeleteCategoryId(null)}
+                title="Confirm Deletion"
+                onSubmit={(e) => { e.preventDefault(); handleCategoryDelete(); }}
+                loading={isDeleting}
+                submitLabel="Delete Category"
+                danger
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ color: '#6B7280', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+                        Are you sure you want to delete <strong style={{ color: '#111827' }}>{categories.find(c => c.id === deleteCategoryId)?.name}</strong>?
+                    </p>
+                    <p style={{ color: '#EF4444', fontSize: '0.8125rem', marginTop: '1rem', fontWeight: 500 }}>
+                        All items in this category will be moved to "Uncategorized".
+                    </p>
+                </div>
+            </AdminModal>
         </div>
     );
 }

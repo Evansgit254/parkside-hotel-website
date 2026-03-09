@@ -8,6 +8,7 @@ import { Plus, Trash2, Edit3, Calendar, User, Search, Filter, Save, X } from "lu
 import { BlogPost } from "@prisma/client";
 import { showToast } from "../components/AdminToast";
 import MediaUpload from "../components/MediaUpload";
+import AdminModal from "../../components/AdminModal";
 
 export default function BlogAdmin() {
     const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -17,6 +18,8 @@ export default function BlogAdmin() {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("All Categories");
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         loadPosts();
@@ -68,15 +71,18 @@ export default function BlogAdmin() {
         setLoading(false);
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this post?")) return;
-        const res = await deleteBlogPost(id);
+    const handleDelete = async () => {
+        if (!deleteId) return;
+        setIsDeleting(true);
+        const res = await deleteBlogPost(deleteId);
         if (res.success) {
-            setPosts(posts.filter(p => p.id !== id));
+            setPosts(posts.filter(p => p.id !== deleteId));
+            setDeleteId(null);
             showToast("Blog post deleted successfully", "success");
         } else {
             showToast(res.error || "Failed to delete post", "error");
         }
+        setIsDeleting(false);
     };
 
     const filteredPosts = posts.filter(p => {
@@ -189,7 +195,7 @@ export default function BlogAdmin() {
                             <button className={styles.actionBtn} onClick={() => handleEdit(post)} title="Edit Article">
                                 <Edit3 size={16} />
                             </button>
-                            <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(post.id)} title="Delete Article">
+                            <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => setDeleteId(post.id)} title="Delete Article">
                                 <Trash2 size={16} />
                             </button>
                         </div>
@@ -203,6 +209,26 @@ export default function BlogAdmin() {
                     </div>
                 )}
             </div>
+
+            {/* Delete Confirmation Modal */}
+            <AdminModal
+                isOpen={!!deleteId}
+                onClose={() => setDeleteId(null)}
+                title="Confirm Deletion"
+                onSubmit={(e) => { e.preventDefault(); handleDelete(); }}
+                loading={isDeleting}
+                submitLabel="Delete Article"
+                danger
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p style={{ color: '#6B7280', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+                        Are you sure you want to delete <strong style={{ color: '#111827' }}>{posts.find(p => p.id === deleteId)?.title}</strong>?
+                    </p>
+                    <p style={{ color: '#EF4444', fontSize: '0.8125rem', marginTop: '1rem', fontWeight: 500 }}>
+                        This action cannot be undone and will remove the article from the public registry.
+                    </p>
+                </div>
+            </AdminModal>
 
             {isEditing && (
                 <div className={styles.modalOverlay}>
