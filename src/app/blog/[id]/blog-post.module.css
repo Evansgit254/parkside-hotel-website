@@ -127,8 +127,8 @@
 .lead {
     font-size: 1.5rem;
     line-height: 1.6;
-    color: var(--ivory);
-    font-weight: 300;
+    color: var(--primary);
+    font-weight: 500;
     margin-bottom: 3rem;
     font-style: italic;
 }
@@ -258,7 +258,7 @@
 
 .relatedTitle {
     font-size: 1.125rem;
-    color: var(--ivory);
+    color: var(--text-primary);
     margin-bottom: 0.5rem;
     transition: color 0.3s ease;
 }

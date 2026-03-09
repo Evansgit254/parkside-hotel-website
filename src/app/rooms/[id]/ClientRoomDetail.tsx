@@ -46,8 +46,8 @@ export default function ClientRoomDetail({ room }: { room: any }) {
             {/* Hero Section */}
             <section className={styles.hero}>
                 <Image
-                    src={room.image}
-                    alt={room.name}
+                    src={room.image && room.image.trim() !== "" ? room.image : "/hero-assets/room_suite.webp"}
+                    alt={room.name || "Room Detail"}
                     fill
                     priority
                     quality={100}

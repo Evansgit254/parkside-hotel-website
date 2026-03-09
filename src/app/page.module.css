@@ -1997,12 +1997,12 @@
 
 @media (max-width: 768px) {
     .header {
-        padding: 0 1rem;
+        padding: 0 1.5rem;
         height: 70px;
     }
 
     .nav {
-        display: none;
+        display: none !important;
     }
 
     .heroContent {
@@ -2061,8 +2061,8 @@
         gap: 0.6rem;
     }
 
-    .logoImage {
-        width: 180px !important;
+    .logoImageFinal {
+        width: 140px !important;
         height: auto !important;
     }
 
@@ -2102,6 +2102,7 @@
 
     .bookingBar {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
     .bookingField {
@@ -2189,8 +2190,17 @@
 
 @media (max-width: 768px) {
     .hamburger {
-        display: flex;
+        display: flex !important;
+        color: var(--white);
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
     }
+}
+
+.headerScrolled .hamburger,
+.headerNonHome .hamburger,
+.navDarkText .hamburger {
+    color: var(--text-primary) !important;
+    text-shadow: none !important;
 }
 
 /* === MOBILE MENU OVERLAY === */

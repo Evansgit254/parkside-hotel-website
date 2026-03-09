@@ -6,31 +6,28 @@
 }
 
 .hero {
-    height: 60vh;
+    height: 70vh;
+    position: relative;
     display: flex;
+    align-items: flex-end;
+    padding-bottom: 5rem;
     overflow: hidden;
+    margin-bottom: 4rem;
 }
 
 .heroContent {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    background: var(--background);
     position: relative;
-    padding: 4rem 0;
+    z-index: 10;
+    width: 100%;
 }
 
 .heroImage {
-    flex: 1.2;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    margin: 2rem 2rem 2rem 0;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    z-index: 1;
 }
 
 .heroImage:hover {
@@ -40,7 +37,8 @@
 .heroOverlay {
     position: absolute;
     inset: 0;
-    background: transparent;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+    z-index: 2;
     pointer-events: none;
 }
 
@@ -57,29 +55,17 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--foreground-soft);
+    color: #ffffff;
     text-decoration: none;
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 2rem;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .backLink:hover {
     color: var(--secondary);
-}
-
-.iconWrapper {
-    width: 64px;
-    height: 64px;
-    background: rgba(183, 148, 62, 0.1);
-    border: 1px solid rgba(183, 148, 62, 0.2);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--secondary);
-    margin-bottom: 2rem;
 }
 
 .title {
@@ -92,11 +78,36 @@
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
-.tagline {
-    font-size: 1.25rem;
-    color: var(--foreground-soft);
-    margin-top: 1rem;
-    font-weight: 500;
+/* Gallery Section */
+.gallerySection {
+    padding-bottom: 4rem;
+}
+
+.mosaicGallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 240px;
+    gap: 1.5rem;
+}
+
+.mosaicItem {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.mosaicItem:nth-child(1) {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.galleryImage {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mosaicItem:hover .galleryImage {
+    transform: scale(1.05);
 }
 
 .infoSection {
@@ -107,6 +118,10 @@
     display: grid;
     grid-template-columns: 1.6fr 1fr;
     gap: 5rem;
+}
+
+.mainInfo {
+    flex: 1;
 }
 
 .descCard {
@@ -190,6 +205,8 @@
 
 .sidebar {
     height: fit-content;
+    position: sticky;
+    top: 6rem;
 }
 
 .actionCard {
@@ -208,7 +225,8 @@
 }
 
 .actionDesc {
-    color: var(--foreground-soft);
+    color: #ffffff;
+    opacity: 0.9;
     line-height: 1.6;
     margin-bottom: 2rem;
 }
@@ -293,19 +311,7 @@
     }
 }
 
-.loading {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--secondary);
-    background: var(--background);
-}
-
-/* Conference Hall Alternating Layout */
+/* Conference Hall Alternating Layout - Kept for consistency */
 .hallsList {
     display: flex;
     flex-direction: column;
@@ -405,28 +411,14 @@
 }
 
 @media (max-width: 968px) {
-    .hero {
-        flex-direction: column;
-        height: auto;
-        gap: 0;
+    .mosaicGallery {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 180px;
     }
 
-    .heroImage {
-        height: 50vh;
-        flex: none;
-        width: calc(100% - 2rem);
-        margin: 1rem;
-        border-radius: 20px;
-        aspect-ratio: 16/9;
-    }
-
-    .heroOverlay {
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
-    }
-
-    .heroContent {
-        flex: none;
-        width: 100%;
+    .mosaicItem:nth-child(1) {
+        grid-column: span 2;
+        grid-row: span 1;
     }
 
     .title {
@@ -436,22 +428,5 @@
     .grid {
         grid-template-columns: 1fr;
         gap: 3rem;
-    }
-
-    .hallCard,
-    .hallCardReverse {
-        flex-direction: column;
-    }
-
-    .hallImageWrapper {
-        min-height: 300px;
-    }
-
-    .hallContent {
-        padding: 2rem;
-    }
-
-    .hallTitle {
-        font-size: 2rem;
     }
 }

@@ -138,7 +138,7 @@
 
 .filterSelect option {
     background: #FFFFFF;
-    color: var(--ivory);
+    color: var(--text-primary);
     padding: 10px;
 }
 
@@ -452,7 +452,7 @@
 .buttonSecondary {
     flex: 1;
     background: transparent;
-    color: var(--ivory);
+    color: var(--text-primary);
     padding: 1.125rem;
     border: 1px solid var(--border-dark);
     border-radius: 4px;
