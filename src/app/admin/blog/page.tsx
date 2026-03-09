@@ -206,7 +206,7 @@ export default function BlogAdmin() {
 
             {isEditing && (
                 <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent} style={{ maxWidth: '1100px', background: '#0E0E0E' }}>
+                    <div className={styles.modalContent} style={{ maxWidth: '1100px' }}>
                         <div className={styles.modalHeader}>
                             <div>
                                 <h3 className={styles.modalTitle}>{currentPost?.id ? "Refine Article" : "Compose New Entry"}</h3>

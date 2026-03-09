@@ -1183,8 +1183,9 @@
 .composerLabel {
     font-size: 0.625rem;
     text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: rgba(74, 43, 102, 0.3);
+    letter-spacing: 0.2rem;
+    color: var(--admin-text-soft);
+    font-weight: 700;
 }
 
 .composerInput {
@@ -1322,10 +1323,10 @@
 }
 
 .modalTitle {
-    font-family: var(--font-serif);
-    font-size: 1.5rem;
+    font-family: var(--font-playfair), serif;
+    font-size: 1.75rem;
     font-weight: 700;
-    color: var(--primary);
+    color: var(--admin-green);
     margin: 0;
     letter-spacing: -0.01em;
 }
