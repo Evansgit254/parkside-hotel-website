@@ -999,7 +999,7 @@ export async function addPromotion(promotion: {
                 code: promotion.code,
                 title: promotion.title ?? null,
                 description: promotion.description ?? null,
-                discount: promotion.discount,
+                discount: promotion.discount ?? null,
                 type: promotion.type ?? "percentage",
                 validFrom: promotion.validFrom ? new Date(promotion.validFrom) : null,
                 validTo: promotion.validTo ? new Date(promotion.validTo) : null,
@@ -1028,7 +1028,7 @@ export async function deletePromotion(id: string) {
 
 export async function updatePromotion(id: string, promotion: {
     code: string;
-    discount: number;
+    discount?: number | null;
     type?: string;
     validFrom?: string;
     validTo?: string;
@@ -1044,7 +1044,7 @@ export async function updatePromotion(id: string, promotion: {
                 code: promotion.code,
                 title: promotion.title ?? null,
                 description: promotion.description ?? null,
-                discount: promotion.discount,
+                discount: promotion.discount ?? null,
                 type: promotion.type ?? "percentage",
                 validFrom: promotion.validFrom ? new Date(promotion.validFrom) : null,
                 validTo: promotion.validTo ? new Date(promotion.validTo) : null,

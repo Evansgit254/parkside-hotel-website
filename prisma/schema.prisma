@@ -138,7 +138,7 @@ model Promotion {
   code        String    @unique
   title       String?
   description String?
-  discount    Float
+  discount    Float?
   type        String    @default("percentage")
   validFrom   DateTime?
   validTo     DateTime?

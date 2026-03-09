@@ -165,7 +165,6 @@ export default function PromotionsAdmin() {
                                     <label className={styles.label}>Discount (%)</label>
                                     <input
                                         type="number"
-                                        required
                                         className={styles.input}
                                         placeholder="20"
                                         value={editForm.discount}

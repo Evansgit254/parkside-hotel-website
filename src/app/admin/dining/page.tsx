@@ -270,7 +270,6 @@ export default function AdminDining() {
                         placeholder="e.g. $45"
                         value={itemFormState.price}
                         onChange={e => setItemFormState({ ...itemFormState, price: e.target.value })}
-                        required
                     />
                 </div>
             </AdminModal>

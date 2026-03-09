@@ -37,8 +37,12 @@ export const CurrencyProvider = ({ children }: { children: React.ReactNode }) =>
     };
 
     const formatPrice = (priceInput: string | number) => {
+        if (priceInput === undefined || priceInput === null || priceInput === "" || priceInput === 0 || priceInput === "0") {
+            return "Price on request";
+        }
+
         const kesPrice = typeof priceInput === "string" ? parseFloat(priceInput.replace(/[^0-9.]/g, '')) : priceInput;
-        if (isNaN(kesPrice)) return typeof priceInput === "string" ? priceInput : "";
+        if (isNaN(kesPrice)) return typeof priceInput === "string" ? priceInput : "Price on request";
 
         if (currency === "KES") {
             return `KES ${kesPrice.toLocaleString()}`;
