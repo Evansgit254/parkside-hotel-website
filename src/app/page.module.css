@@ -116,11 +116,25 @@
     gap: 2rem;
 }
 
+@media (max-width: 768px) {
+    .navContainer {
+        gap: 0.75rem;
+    }
+}
+
+
 .headerActions {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
+
+@media (max-width: 768px) {
+    .headerActions {
+        gap: 0.5rem;
+    }
+}
+
 
 .currencyToggle {
     background: transparent;
@@ -155,8 +169,15 @@
 
 .translateWrapper {
     margin-top: 4px;
-    /* Align slightly with nav items */
+    min-width: 100px;
 }
+
+@media (max-width: 768px) {
+    .translateWrapper {
+        min-width: 80px;
+    }
+}
+
 
 .logoContainer {
     display: flex;
@@ -2211,8 +2232,11 @@
         display: flex !important;
         color: var(--white);
         text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        margin-left: 0.25rem;
+        padding: 0.5rem 0.25rem;
     }
 }
+
 
 .headerScrolled .hamburger,
 .headerNonHome .hamburger,

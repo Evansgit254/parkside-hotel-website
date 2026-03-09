@@ -330,10 +330,10 @@ iframe.goog-te-menu-frame {
   color: var(--white) !important;
 }
 
-/* Hide the Google logo and extra text */
+/* Hide the Google logo and extra text but keep the dropdown */
 .goog-logo-link,
-.goog-te-gadget span,
-.goog-te-gadget>div {
+.goog-te-gadget span:not(.goog-te-menu-value),
+.goog-te-gadget>div:not(.goog-te-combo) {
   display: none !important;
 }
 
@@ -344,7 +344,10 @@ iframe.goog-te-menu-frame {
 
 .goog-te-gadget .goog-te-combo {
   margin: 0 !important;
+  display: inline-block !important;
+  visibility: visible !important;
 }
+
 
 /* === NUCLEAR EXTERNAL WIDGET HIDE (Vercel Toolbar / Feedback) === */
 #vercel-toolbar-iframe,

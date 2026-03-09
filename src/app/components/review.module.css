@@ -159,3 +159,32 @@
     margin: 0 auto 2rem;
     border: 2px solid rgba(74, 43, 102, 0.15);
 }
+
+@media (max-width: 768px) {
+    .formCard {
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
+    }
+
+    .formTitle {
+        font-size: 1.5rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .formHeader {
+        margin-bottom: 2rem;
+    }
+
+    .ratingGroup {
+        margin-bottom: 1.5rem;
+    }
+
+    .submitBtn {
+        padding: 1rem;
+        font-size: 0.7rem;
+    }
+}
