@@ -645,7 +645,11 @@ export async function deleteRoom(roomId: string) {
         revalidateAll();
         return { success: true };
     } catch (error: any) {
-        console.error("Error deleting room:", error);
+        console.error(`FAILED TO DELETE ROOM [${roomId}]:`, {
+            message: error.message,
+            code: error.code,
+            meta: error.meta
+        });
         return { success: false, error: error.message || "Database error" };
     }
 }

@@ -36,7 +36,7 @@ model Lead {
   time      String   @default("Just now")
   roomSlug  String?
   createdAt DateTime @default(now())
-  room      Room?    @relation(fields: [roomSlug], references: [slug])
+  room      Room?    @relation(fields: [roomSlug], references: [slug], onDelete: SetNull)
 }
 
 model User {
