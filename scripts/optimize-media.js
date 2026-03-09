@@ -80,18 +80,43 @@ const imagesToOptimize = [
     { path: 'public/PARKSIDE VILLA MEDIA/Accommodation/Executive Rooms/IMG_9094.JPG', name: 'room_exec_1' },
     { path: 'public/PARKSIDE VILLA MEDIA/Accommodation/Executive Rooms/IMG_9098.JPG', name: 'room_exec_2' },
     { path: 'public/PARKSIDE VILLA MEDIA/Accommodation/Executive Rooms/IMG_9101.JPG', name: 'room_exec_3' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Accommodation/Executive Rooms/_MG_0776.jpg', name: 'room_exec_luxury' },
     { path: 'public/PARKSIDE VILLA MEDIA/Accommodation/Deluxe Rooms/IMG_9118.JPG', name: 'room_deluxe_2' },
     { path: 'public/PARKSIDE VILLA MEDIA/Accommodation/Deluxe Rooms/IMG_9125.JPG', name: 'room_deluxe_3' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Accommodation/Deluxe Rooms/_MG_0803.jpg', name: 'room_deluxe_luxury' },
     { path: 'public/PARKSIDE VILLA MEDIA/Accommodation/Standard premiums/IMG_9133.JPG', name: 'room_standard_1' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Accommodation/Standard premiums/IMG_9134.JPG', name: 'room_standard_2' },
     { path: 'public/PARKSIDE VILLA MEDIA/Accommodation/Cottages/IMG_9155.JPG', name: 'cottage_1' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Accommodation/Cottages/IMG_9191.JPG', name: 'cottage_view' },
 
-    // Facilities Variety (March 9)
+    // Facilities & Recreation (March 9)
     { path: 'public/PARKSIDE VILLA MEDIA/Swimming Pool/20220214_122732.jpg', name: 'facility_pool_1' },
     { path: 'public/PARKSIDE VILLA MEDIA/Swimming Pool/20220214_115739.jpg', name: 'facility_pool_2' },
     { path: 'public/PARKSIDE VILLA MEDIA/Pool Table/IMG_9049.JPG', name: 'facility_pool_table' },
     { path: 'public/PARKSIDE VILLA MEDIA/Play Ground/0I2A0052.JPG', name: 'facility_playground_1' },
-    { path: 'public/PARKSIDE VILLA MEDIA/Conference Halls/Syokimau/IMG_5914.JPG', name: 'facility_conference_1' },
-    { path: 'public/PARKSIDE VILLA MEDIA/Dining and Restaurant/IMG_8562.JPG', name: 'facility_dining_1' }
+    { path: 'public/PARKSIDE VILLA MEDIA/Swimming Pool/20220214_124019.jpg', name: 'facility_playground_2' },
+
+    // Dining and Restaurant (March 9)
+    { path: 'public/PARKSIDE VILLA MEDIA/Dining and Restaurant/IMG_8562.JPG', name: 'facility_dining_1' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Eateries and drinks/nyam chom.jpg', name: 'food_nyama_choma' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Eateries and drinks/breakfast.jpg', name: 'food_breakfast' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Eateries and drinks/chicken.jpg', name: 'food_chicken' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Eateries and drinks/juice.jpg', name: 'food_juice' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Eateries and drinks/IMG_9253.JPG', name: 'dining_luxury_1' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Eateries and drinks/IMG_9271.JPG', name: 'dining_luxury_2' },
+
+    // Bar and Lounge (March 9)
+    { path: 'public/PARKSIDE VILLA MEDIA/Bar/_MG_0638.jpg', name: 'bar_1' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Bar/_MG_3163.jpg', name: 'bar_2' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Bar/_MG_3166.jpg', name: 'bar_3' },
+    { path: 'public/PARKSIDE VILLA MEDIA/VIP LOUNGE/lounge.jpg', name: 'lounge_1' },
+    { path: 'public/PARKSIDE VILLA MEDIA/VIP LOUNGE/_MG_0762.jpg', name: 'lounge_luxury' },
+
+    // Events and Conferences (March 9)
+    { path: 'public/PARKSIDE VILLA MEDIA/Conference Halls/Syokimau/IMG_5914.JPG', name: 'conference_1' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Events/IMG-20251021-WA0131.jpg', name: 'event_wedding_1' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Events/IMG-20251021-WA0183.jpg', name: 'event_wedding_2' },
+    { path: 'public/PARKSIDE VILLA MEDIA/Events/IMG-20251021-WA0187.jpg', name: 'event_decor' }
 ];
 
 async function run() {
