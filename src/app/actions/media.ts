@@ -29,37 +29,42 @@ export async function getLocalMedia() {
     };
 
     const heroAssetsPath = findDir(cwd, "hero-assets");
+    const villaMediaPath = findDir(cwd, "PARKSIDE VILLA MEDIA");
 
-    if (!heroAssetsPath) {
+    if (!heroAssetsPath && !villaMediaPath) {
         return {
             success: false,
-            error: "High-resolution hero assets folder not found on server.",
+            error: "Local media assets folder not found on server.",
             files: []
         };
     }
 
     try {
-        // The URL path should be relative to the 'public' equivalent to be served by Next.js
-        const publicPath = path.join(heroAssetsPath, "..");
+        const allMediaFiles: string[] = [];
 
-        const getAllFiles = (dirPath: string, arrayOfFiles: string[] = []) => {
-            const files = fs.readdirSync(dirPath);
-            files.forEach((file) => {
-                const fullPath = path.join(dirPath, file);
+        const getAllFiles = (dirPath: string, rootDir: string) => {
+            const items = fs.readdirSync(dirPath);
+            items.forEach((item) => {
+                const fullPath = path.join(dirPath, item);
                 if (fs.statSync(fullPath).isDirectory()) {
-                    arrayOfFiles = getAllFiles(fullPath, arrayOfFiles);
+                    getAllFiles(fullPath, rootDir);
                 } else {
                     // Include common media formats and ignore hidden/system files
-                    if (/\.(jpg|jpeg|png|webp|gif|mp4)$/i.test(file) && !file.startsWith("._")) {
-                        const relativePath = path.relative(publicPath, fullPath);
-                        arrayOfFiles.push("/" + relativePath.replace(/\\/g, "/"));
+                    if (/\.(jpg|jpeg|png|webp|gif|mp4)$/i.test(item) && !item.startsWith("._")) {
+                        // The URL path should be relative to 'public' equivalent
+                        // On Vercel, the structure is .next/server/chunks/public/...
+                        const publicRoot = path.join(rootDir, "..");
+                        const relativePath = path.relative(publicRoot, fullPath);
+                        allMediaFiles.push("/" + relativePath.replace(/\\/g, "/"));
                     }
                 }
             });
-            return arrayOfFiles;
         };
 
-        const files = getAllFiles(heroAssetsPath).sort((a, b) => a.localeCompare(b));
+        if (heroAssetsPath) getAllFiles(heroAssetsPath, heroAssetsPath);
+        if (villaMediaPath) getAllFiles(villaMediaPath, villaMediaPath);
+
+        const files = Array.from(new Set(allMediaFiles)).sort((a, b) => a.localeCompare(b));
 
         return {
             success: true,
