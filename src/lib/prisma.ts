@@ -32,18 +32,18 @@ function createPrismaClient() {
 
     let url = process.env.DATABASE_URL || "";
 
-    // During build or production, we MUST limit connections per worker and increase timeout
-    // Next.js uses multiple workers (e.g. 7-10) which can quickly exhaust Neon's free tier (10-20 connections total)
-    if (process.env.NODE_ENV === "production") {
-        const urlParams = new URL(url.replace("postgresql://", "http://")); // dummy protocol for URL parser
+    // Apply stability settings for all environments to handle Neon cold starts and idle timeouts
+    if (url && (url.startsWith("postgresql://") || url.startsWith("postgres://"))) {
+        const urlParams = new URL(url.replace(/^postgres(ql)?:\/\//, "http://"));
 
-        // Ensure connection_limit is low (2) for each worker
-        urlParams.searchParams.set("connection_limit", "2");
+        // Ensure connection_limit is manageable (2 for prod workers, 5 for dev)
+        const limit = process.env.NODE_ENV === "production" ? "2" : "5";
+        urlParams.searchParams.set("connection_limit", limit);
 
-        // Increase connect_timeout for Neon cold starts (15s)
-        urlParams.searchParams.set("connect_timeout", "15");
+        // Increase connect_timeout for Neon cold starts (20s) - helps with 'Closed' errors on wake
+        urlParams.searchParams.set("connect_timeout", "20");
 
-        // Increase pool_timeout for busy builds
+        // Increase pool_timeout for busy builds/renders
         urlParams.searchParams.set("pool_timeout", "60");
 
         url = url.split("?")[0] + "?" + urlParams.searchParams.toString();
