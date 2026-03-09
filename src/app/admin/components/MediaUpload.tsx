@@ -219,7 +219,10 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
     }, [mode, localFiles.length]);
 
     const filteredLocalFiles = localFiles.filter(f => {
-        const matchesCategory = categoryFilter === "All" || f.category === categoryFilter;
+        // Power Search: If user is searching, bypass the category filter
+        const isSearching = searchTerm.trim().length > 0;
+        const matchesCategory = isSearching || categoryFilter === "All" || f.category === categoryFilter;
+
         const searchLower = searchTerm.toLowerCase();
         const matchesSearch = !searchTerm ||
             f.name.toLowerCase().includes(searchLower) ||
@@ -381,9 +384,23 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
 
                         <div className={styles.explorerGrid}>
                             {loadingLocal ? (
-                                <div className={styles.explorerStatus}>Scanning server for assets...</div>
+                                <div className={styles.explorerStatus}>
+                                    <Loader2 className={styles.spinner} size={24} />
+                                    <p>Scanning server for assets...</p>
+                                </div>
                             ) : filteredLocalFiles.length === 0 ? (
-                                <div className={styles.explorerStatus}>No high-res assets found.</div>
+                                <div className={styles.explorerStatus}>
+                                    <ImageIcon size={48} style={{ opacity: 0.1, marginBottom: '1rem' }} />
+                                    <h3>No matches found</h3>
+                                    <p>We couldn't find any high-res assets matching your search/filter.</p>
+                                    <button
+                                        type="button"
+                                        className={styles.resetBtn}
+                                        onClick={() => { setSearchTerm(""); setCategoryFilter("All"); }}
+                                    >
+                                        Clear all filters
+                                    </button>
+                                </div>
                             ) : (
                                 filteredLocalFiles.map((file, idx) => {
                                     const isSelected = Array.isArray(value) ? value.includes(file.path) : value === file.path;

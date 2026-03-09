@@ -65,12 +65,18 @@ export async function getLocalMedia() {
                         const folder = parts.pop() || "";
                         const parentFolder = parts.pop() || "";
 
-                        // Determine Category
+                        // Determine Category - Specific keywords first
                         let category = "General";
                         const fullPathLower = fullPath.toLowerCase();
-                        if (fullPathLower.includes("accommodation") || fullPathLower.includes("room") || fullPathLower.includes("cottage") || fullPathLower.includes("high rise")) category = "Rooms";
+
+                        // Order matters for specificity
+                        if (fullPathLower.includes("high rise")) category = "Rooms";
+                        else if (fullPathLower.includes("cottage")) category = "Rooms";
+                        else if (fullPathLower.includes("accommodation") || fullPathLower.includes("room")) category = "Rooms";
+                        else if (fullPathLower.includes("ground dining")) category = "Dining";
                         else if (fullPathLower.includes("dining") || fullPathLower.includes("restaurant") || fullPathLower.includes("eateries") || fullPathLower.includes("food")) category = "Dining";
-                        else if (fullPathLower.includes("conference")) category = "Conference";
+                        else if (fullPathLower.includes("conference") || fullPathLower.includes("hall")) category = "Conference";
+                        else if (fullPathLower.includes("swimming pool") || fullPathLower.includes("pool table")) category = "Facilities";
                         else if (fullPathLower.includes("pool") || fullPathLower.includes("bar") || fullPathLower.includes("lounge") || fullPathLower.includes("play ground") || fullPathLower.includes("facility")) category = "Facilities";
                         else if (fullPathLower.includes("event") || fullPathLower.includes("wedding")) category = "Events";
                         else if (fullPathLower.includes("video")) category = "Videos";

@@ -2784,10 +2784,19 @@
 
 .categoryFilters {
     display: flex;
-    flex-wrap: wrap;
     gap: 0.5rem;
     margin-bottom: 1.25rem;
-    padding: 0 0.5rem;
+    padding: 0 0.5rem 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+}
+
+.categoryFilters::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari/Webkit */
 }
 
 .categoryBtn {
@@ -2831,4 +2840,42 @@
     border-radius: 4px;
     z-index: 2;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.explorerStatus {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: #F9FAFB;
+    border-radius: 16px;
+    border: 2px dashed #E5E7EB;
+    color: #6B7280;
+}
+
+.explorerStatus h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0.5rem 0;
+}
+
+.resetBtn {
+    margin-top: 1.5rem;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #144B36;
+    background: #EBF5F1;
+    border: 1px solid #C4E2D6;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.resetBtn:hover {
+    background: #D1EADE;
+    transform: translateY(-1px);
 }
