@@ -386,7 +386,7 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                                 <div className={styles.explorerStatus}>No high-res assets found.</div>
                             ) : (
                                 filteredLocalFiles.map((file, idx) => {
-                                    const isSelected = Array.isArray(value) ? value.includes(file) : value === file;
+                                    const isSelected = Array.isArray(value) ? value.includes(file.path) : value === file.path;
                                     return (
                                         <div
                                             key={idx}
