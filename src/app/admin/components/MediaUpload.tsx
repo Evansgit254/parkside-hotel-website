@@ -369,6 +369,7 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                                         <div
                                             key={idx}
                                             className={`${styles.explorerItem} ${isSelected ? styles.explorerItemActive : ''}`}
+                                            style={{ '--delay': `${Math.min(idx * 40, 600)}ms` } as React.CSSProperties}
                                             onClick={() => {
                                                 if (multiple) {
                                                     const existing = Array.isArray(value) ? value : (value ? [value] : []);
@@ -386,7 +387,7 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                                                 {file.match(/\.(mp4|webm)$/i) ? (
                                                     <div className={styles.videoPlaceholder}>Video</div>
                                                 ) : (
-                                                    <img src={file} alt="" loading="lazy" />
+                                                    <SafeAdminImage src={file} />
                                                 )}
                                             </div>
                                             <span className={styles.explorerLabel}>{file.split('/').pop()}</span>
@@ -413,5 +414,22 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                 )}
             </div>
         </div>
+    );
+}
+
+function SafeAdminImage({ src }: { src: string }) {
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    return (
+        <>
+            {!isLoaded && <div className={styles.shimmer} />}
+            <img
+                src={src}
+                alt=""
+                loading="lazy"
+                onLoad={() => setIsLoaded(true)}
+                className={isLoaded ? styles.loaded : ""}
+            />
+        </>
     );
 }

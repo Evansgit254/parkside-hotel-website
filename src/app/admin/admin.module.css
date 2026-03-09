@@ -1407,6 +1407,40 @@
     }
 }
 
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes staggeredEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .loginCard {
     width: 100%;
     max-width: 420px;
@@ -2621,6 +2655,8 @@
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 1.25rem;
     align-content: flex-start;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
 }
 
 .explorerItem {
@@ -2630,19 +2666,21 @@
     border-radius: 10px;
     padding: 0.5rem;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: staggeredEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--delay, 0ms);
 }
 
 .explorerItem:hover {
     border-color: #144B36;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
 }
 
 .explorerItemActive {
     border-color: #144B36;
     background: rgba(20, 75, 54, 0.03);
-    box-shadow: 0 0 0 2px rgba(20, 75, 54, 0.1);
+    box-shadow: 0 0 0 2px rgba(20, 75, 54, 0.1), 0 12px 24px rgba(0, 0, 0, 0.08);
 }
 
 .explorerPreview {
@@ -2654,12 +2692,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+}
+
+.shimmer {
+    background: linear-gradient(to right, #f1f3f5 8%, #e9ecef 18%, #f1f3f5 33%);
+    background-size: 2000px 100%;
+    animation: shimmer 2s infinite linear;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
 }
 
 .explorerPreview img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.explorerPreview img.loaded {
+    opacity: 1;
 }
 
 .explorerLabel {
