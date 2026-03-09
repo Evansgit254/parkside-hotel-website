@@ -42,12 +42,16 @@ export async function getLocalMedia() {
     try {
         const allMediaFiles: string[] = [];
 
+        const EXCLUDED_DIRS = ['System Volume Information', 'autorun.inf', '.next', '.git', 'node_modules'];
+
         const getAllFiles = (dirPath: string, rootDir: string) => {
             const items = fs.readdirSync(dirPath);
             items.forEach((item) => {
                 const fullPath = path.join(dirPath, item);
                 if (fs.statSync(fullPath).isDirectory()) {
-                    getAllFiles(fullPath, rootDir);
+                    if (!EXCLUDED_DIRS.includes(item)) {
+                        getAllFiles(fullPath, rootDir);
+                    }
                 } else {
                     // Include common media formats and ignore hidden/system files
                     if (/\.(jpg|jpeg|png|webp|gif|mp4)$/i.test(item) && !item.startsWith("._")) {

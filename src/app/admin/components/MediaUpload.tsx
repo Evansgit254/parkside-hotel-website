@@ -390,7 +390,12 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                                                     <SafeAdminImage src={file} />
                                                 )}
                                             </div>
-                                            <span className={styles.explorerLabel}>{file.split('/').pop()}</span>
+                                            <div className={styles.explorerLabelStack}>
+                                                <span className={styles.explorerFolder}>
+                                                    {file.split('/').slice(-3, -1).join(' > ')}
+                                                </span>
+                                                <span className={styles.explorerLabel}>{file.split('/').pop()}</span>
+                                            </div>
                                             {isSelected && <CheckCircle2 className={styles.selectedCheck} size={14} />}
                                         </div>
                                     );
@@ -424,7 +429,7 @@ function SafeAdminImage({ src }: { src: string }) {
         <>
             {!isLoaded && <div className={styles.shimmer} />}
             <img
-                src={src}
+                src={encodeURI(src)}
                 alt=""
                 loading="lazy"
                 onLoad={() => setIsLoaded(true)}
