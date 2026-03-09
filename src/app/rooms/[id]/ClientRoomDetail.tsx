@@ -11,7 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 import EnhancedGallery from "../../components/EnhancedGallery";
 
-export default function ClientRoomDetail({ room }: { room: any }) {
+export default function ClientRoomDetail({ room, contactInfo }: { room: any; contactInfo?: any }) {
     const router = useRouter();
     const { formatPrice } = useCurrency();
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -151,15 +151,13 @@ export default function ClientRoomDetail({ room }: { room: any }) {
                                     Instant Reservation
                                 </button>
 
-                                <div className={styles.conciergeInfo}>
-                                    <div className={styles.conciergeItem}>
-                                        <Phone size={16} />
-                                        <span>Concierge: +254 700 000000</span>
-                                    </div>
-                                    <div className={styles.conciergeItem}>
-                                        <Mail size={16} />
-                                        <span>Inquiries: info@parksidevilla.com</span>
-                                    </div>
+                                <div className={styles.conciergeItem}>
+                                    <Phone size={16} />
+                                    <span>Concierge: {contactInfo?.phone || "+254 701023026"}</span>
+                                </div>
+                                <div className={styles.conciergeItem}>
+                                    <Mail size={16} />
+                                    <span>Inquiries: {contactInfo?.email || "info@parksidevillakitui.com"}</span>
                                 </div>
                             </div>
                         </div>
@@ -252,7 +250,7 @@ export default function ClientRoomDetail({ room }: { room: any }) {
                                     </div>
                                     <div>
                                         <label className={styles.label}>Phone *</label>
-                                        <input type="tel" required placeholder="+254 700 000000" value={bookingData.phone} onChange={e => setBookingData({ ...bookingData, phone: e.target.value })} className={styles.input} />
+                                        <input type="tel" required placeholder={contactInfo?.phone || "+254 701023026"} value={bookingData.phone} onChange={e => setBookingData({ ...bookingData, phone: e.target.value })} className={styles.input} />
                                     </div>
                                 </div>
 

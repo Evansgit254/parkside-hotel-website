@@ -35,5 +35,5 @@ export default async function RoomDetailPage({ params }: { params: Promise<{ id:
         );
     }
 
-    return <ClientRoomDetail room={room} />;
+    return <ClientRoomDetail room={room} contactInfo={data.contactInfo} />;
 }

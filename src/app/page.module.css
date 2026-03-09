@@ -1997,7 +1997,7 @@
 
 @media (max-width: 768px) {
     .header {
-        padding: 0 1.5rem;
+        padding: 0 1.25rem;
         height: 70px;
     }
 
@@ -2054,15 +2054,15 @@
     }
 
     .navContainer {
-        gap: 0.5rem;
+        gap: 0.25rem;
     }
 
     .headerActions {
-        gap: 0.6rem;
+        gap: 0.4rem;
     }
 
     .logoImageFinal {
-        width: 140px !important;
+        width: 120px !important;
         height: auto !important;
     }
 
@@ -2073,6 +2073,24 @@
 
     .profileLink {
         gap: 0.25rem;
+    }
+
+    @media (max-width: 360px) {
+        .header {
+            padding: 0 0.75rem;
+        }
+
+        .logoImageFinal {
+            width: 100px !important;
+        }
+
+        .headerActions {
+            gap: 0.25rem;
+        }
+
+        .currencyToggle {
+            padding: 0.2rem 0.4rem;
+        }
     }
 
     .roomCard:nth-child(1),

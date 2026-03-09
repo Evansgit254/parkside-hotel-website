@@ -94,14 +94,14 @@ export default async function DiningVenueDetailPage({ params }: { params: Promis
                                 <p className={styles.inquiryDesc}>Reserve your table or inquire about private dining arrangements.</p>
                                 <div className={styles.inquiryActions}>
                                     <a
-                                        href={`https://wa.me/${contactInfo?.whatsapp || '254700000000'}?text=${encodeURIComponent(`Hello, I'd like to make a reservation at ${venue.name} at Parkside Villa.`)}`}
+                                        href={`https://wa.me/${contactInfo?.whatsapp || '254701023026'}?text=${encodeURIComponent(`Hello, I'd like to make a reservation at ${venue.name} at Parkside Villa.`)}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className={styles.primaryBtn}
                                     >
                                         <MessageCircle size={18} /> WhatsApp Us
                                     </a>
-                                    <a href={`mailto:${contactInfo?.email || 'concierge@parksidevillakitui.com'}?subject=Reservation: ${venue.name}`} className={styles.secondaryBtn}>
+                                    <a href={`mailto:${contactInfo?.email || 'info@parksidevillakitui.com'}?subject=Reservation: ${venue.name}`} className={styles.secondaryBtn}>
                                         <Send size={18} /> Email Inquiry
                                     </a>
                                 </div>
