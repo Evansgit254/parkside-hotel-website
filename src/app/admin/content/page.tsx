@@ -369,7 +369,6 @@ export default function AdminContent() {
 
     const loadData = async () => {
         const data = await getSiteData();
-        console.log("[DIAG] Loaded Data Content:", JSON.stringify(data?.content, null, 2));
         if (data?.content) setContent(data.content);
         if (data?.contactInfo) {
             const ci = data.contactInfo;

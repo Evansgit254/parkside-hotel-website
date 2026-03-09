@@ -558,6 +558,7 @@ export async function deleteLead(id: number) {
 export async function requestBookingAction(bookingId: number, type: "modify" | "cancel", reason: string) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
+        await requireUser();
         const label = type === "modify" ? "Modification" : "Cancellation";
         await prisma.lead.update({
             where: { id: bookingId },
@@ -797,9 +798,14 @@ export async function addFacility(f: Partial<Facility> & { title: string; desc: 
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
-        const id = f.id ?? f.title.toLowerCase().replace(/\s+/g, "-");
+        const parsed = FacilitySchema.safeParse(f);
+        if (!parsed.success) {
+            return { success: false, error: "Invalid facility data" };
+        }
+        const safe = parsed.data;
+        const id = (f.id ?? safe.title.toLowerCase().replace(/\s+/g, "-")).replace(/[^a-z0-9-]/g, "");
         await prisma.facility.create({
-            data: { id, title: f.title, desc: f.desc, icon: f.icon, image: f.image ?? null, images: (f as any).images ?? [], features: f.features ?? [], highlights: f.highlights ?? [] },
+            data: { id, title: safe.title, desc: safe.desc, icon: safe.icon, image: safe.image ?? null, images: safe.images ?? [], features: safe.features ?? [], highlights: safe.highlights ?? [] },
         });
         revalidateAll();
         return { success: true };
@@ -983,6 +989,8 @@ export async function addPromotion(promotion: {
     type?: string;
     validFrom?: string;
     validTo?: string;
+    title?: string;
+    description?: string;
 }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
@@ -990,6 +998,8 @@ export async function addPromotion(promotion: {
         const newPromotion = await prisma.promotion.create({
             data: {
                 code: promotion.code,
+                title: promotion.title ?? null,
+                description: promotion.description ?? null,
                 discount: promotion.discount,
                 type: promotion.type ?? "percentage",
                 validFrom: promotion.validFrom ? new Date(promotion.validFrom) : null,
@@ -1023,6 +1033,8 @@ export async function updatePromotion(id: string, promotion: {
     type?: string;
     validFrom?: string;
     validTo?: string;
+    title?: string;
+    description?: string;
 }) {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
@@ -1031,6 +1043,8 @@ export async function updatePromotion(id: string, promotion: {
             where: { id },
             data: {
                 code: promotion.code,
+                title: promotion.title ?? null,
+                description: promotion.description ?? null,
                 discount: promotion.discount,
                 type: promotion.type ?? "percentage",
                 validFrom: promotion.validFrom ? new Date(promotion.validFrom) : null,
@@ -1156,7 +1170,24 @@ export async function loginAdmin(email: string, password: string) {
         return { success: false, message: "Server configuration error: Admin credentials not configured. Please contact the system administrator." };
     }
 
-    if (email.trim().toLowerCase() !== adminEmail.trim().toLowerCase() || password !== adminPass) {
+    if (email.trim().toLowerCase() !== adminEmail.trim().toLowerCase()) {
+        return { success: false, message: "Invalid administrative credentials. Please check for typos and try again." };
+    }
+
+    // Support bcrypt-hashed passwords (recommended) with plaintext fallback
+    const isBcryptHash = adminPass.startsWith("$2b$") || adminPass.startsWith("$2a$");
+    let passwordMatch = false;
+    if (isBcryptHash) {
+        passwordMatch = await bcrypt.compare(password, adminPass);
+    } else {
+        // Plaintext fallback — log warning in dev
+        if (process.env.NODE_ENV !== "production") {
+            console.warn("⚠️  ADMIN_PASSWORD is stored as plaintext. Set a bcrypt hash for production security.");
+        }
+        passwordMatch = password === adminPass;
+    }
+
+    if (!passwordMatch) {
         return { success: false, message: "Invalid administrative credentials. Please check for typos and try again." };
     }
 
@@ -1189,19 +1220,32 @@ export async function logoutAdmin() {
     return { success: true };
 }
 
+const RegisterUserSchema = z.object({
+    name: z.string().min(1, "Name is required").max(100),
+    email: z.string().email("Valid email required").max(200),
+    password: z.string().min(8, "Password must be at least 8 characters").max(128),
+});
+
 export async function registerUser(user: {
     name: string;
     email: string;
     password: string;
 }) {
     if (!isDatabaseConfigured()) return { success: false, message: "Database not configured" };
+
+    const parsed = RegisterUserSchema.safeParse(user);
+    if (!parsed.success) {
+        return { success: false, message: parsed.error.issues[0]?.message || "Invalid registration details" };
+    }
+    const safe = parsed.data;
+
     try {
-        const existing = await prisma.user.findUnique({ where: { email: user.email } });
+        const existing = await prisma.user.findUnique({ where: { email: safe.email } });
         if (existing) return { success: false, message: "Email already registered" };
 
-        const hashedPassword = await bcrypt.hash(user.password, 10);
+        const hashedPassword = await bcrypt.hash(safe.password, 10);
         const newUser = await prisma.user.create({
-            data: { name: user.name, email: user.email, password: hashedPassword },
+            data: { name: safe.name, email: safe.email, password: hashedPassword },
         });
         const { password: _, ...safeUser } = newUser;
         return { success: true, user: safeUser };
@@ -1527,22 +1571,12 @@ export async function updateSiteContent(key: string, value: any) {
 
         // Basic guardrail: avoid unbounded string blobs in dynamic content.
         if (typeof value === "string") {
-            console.log(`[DIAG] updateSiteContent key: ${key}, value length: ${value.length}`);
             if (value.length > 4000) {
                 throw new Error("Content value too long");
             }
         }
 
         SiteContentSchema.parse({ key, value });
-        console.log(`[DIAG] Prisma Upsert - Key: ${key}, Value Type: ${typeof value}`);
-        if (typeof value === 'object') {
-            console.log(`[DIAG] Value Keys: ${Object.keys(value).join(", ")}`);
-            Object.keys(value).forEach(k => {
-                if (typeof value[k] === 'string') {
-                    console.log(`[DIAG] Property ${k} length: ${value[k].length}`);
-                }
-            });
-        }
         await prisma.siteContent.upsert({
             where: { key },
             update: { value },

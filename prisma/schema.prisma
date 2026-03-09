@@ -134,13 +134,15 @@ model GalleryCategory {
 }
 
 model Promotion {
-  id        String    @id @default(cuid())
-  code      String    @unique
-  discount  Float
-  type      String    @default("percentage")
-  validFrom DateTime?
-  validTo   DateTime?
-  createdAt DateTime  @default(now())
+  id          String    @id @default(cuid())
+  code        String    @unique
+  title       String?
+  description String?
+  discount    Float
+  type        String    @default("percentage")
+  validFrom   DateTime?
+  validTo     DateTime?
+  createdAt   DateTime  @default(now())
 }
 
 model Subscriber {
