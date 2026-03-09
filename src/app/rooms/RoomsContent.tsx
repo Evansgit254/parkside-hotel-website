@@ -46,10 +46,10 @@ export default function RoomsContent({ initialRooms, content }: RoomsContentProp
             const matchesSearch = room.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 room.desc.toLowerCase().includes(searchQuery.toLowerCase());
 
-            const numericPrice = typeof room.price === 'string'
+            const numericPrice = (room.price && typeof room.price === 'string')
                 ? parseInt(room.price.replace(/[^0-9]/g, ""))
-                : room.price;
-            const matchesPrice = isNaN(numericPrice) || numericPrice <= maxPrice;
+                : (typeof room.price === 'number' ? room.price : 0);
+            const matchesPrice = !room.price || isNaN(numericPrice) || numericPrice <= maxPrice;
 
             const matchesGuests = guestFilter === "Any" || (room.capacity || 2) >= parseInt(guestFilter);
             return matchesSearch && matchesPrice && matchesGuests;
@@ -130,7 +130,7 @@ export default function RoomsContent({ initialRooms, content }: RoomsContentProp
                 <div className={styles.listContainer}>
                     {filteredRooms.map((room, index) => {
                         const isEven = index % 2 === 1;
-                        const price = typeof room.price === 'string' ? room.price : `KES ${room.price}`;
+                        const price = room.price ? (typeof room.price === 'string' ? room.price : `KES ${room.price}`) : "Price on request";
 
                         return (
                             <motion.div
@@ -159,8 +159,8 @@ export default function RoomsContent({ initialRooms, content }: RoomsContentProp
                                 <div className={styles.itemContent}>
                                     <div className={styles.contentHeader}>
                                         <div className={styles.priceTag}>
-                                            <span className={styles.priceAmount}>{price}</span>
-                                            <span className={styles.pricePeriod}>/ night</span>
+                                            <span className={styles.priceAmount}>{room.price ? formatPrice(room.price) : "Price on request"}</span>
+                                            {room.price && <span className={styles.pricePeriod}>/ night</span>}
                                         </div>
                                         <h2 className={styles.itemTitle}>{room.name}</h2>
                                     </div>
@@ -230,7 +230,7 @@ export default function RoomsContent({ initialRooms, content }: RoomsContentProp
 
                             <span className={styles.stepBadge}>Step {bookingStep} of 3</span>
                             <h3 className={styles.modalTitle}>{selectedRoom.name}</h3>
-                            <p className={styles.modalSubtitle}>{formatPrice(selectedRoom.price)} · PER NIGHT</p>
+                            <p className={styles.modalSubtitle}>{selectedRoom.price ? `${formatPrice(selectedRoom.price)} · PER NIGHT` : "Price on request"}</p>
 
                             <form onSubmit={async (e) => {
                                 e.preventDefault();
@@ -401,7 +401,7 @@ export default function RoomsContent({ initialRooms, content }: RoomsContentProp
                                                     <div className={styles.modalActions}>
                                                         <button type="button" onClick={() => setPaymentStep("method")} className={styles.buttonSecondary}>Back</button>
                                                         <button type="submit" disabled={!!bookingStatus} className={styles.buttonPrimary}>
-                                                            {bookingStatus ? <Loader2 size={14} className={styles.spin} /> : `Pay ${formatPrice(selectedRoom.price)}`}
+                                                            {bookingStatus ? <Loader2 size={14} className={styles.spin} /> : (selectedRoom.price ? `Pay ${formatPrice(selectedRoom.price)}` : "Confirm Reservation")}
                                                         </button>
                                                     </div>
                                                 </div>

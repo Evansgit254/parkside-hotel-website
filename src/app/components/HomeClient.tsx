@@ -272,8 +272,8 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                         const displayedRooms = featuredRooms.length > 0
                             ? featuredRooms
                             : rooms.filter((room: any) => {
-                                const price = typeof room.price === 'string' ? parseFloat(room.price.replace(/[^0-9.]/g, '')) : room.price;
-                                const matchesPrice = price <= bookingData.maxPrice;
+                                const priceVal = room.price ? (typeof room.price === 'string' ? parseFloat(room.price.replace(/[^0-9.]/g, '')) : room.price) : 0;
+                                const matchesPrice = !room.price || priceVal <= bookingData.maxPrice;
                                 const matchesType = bookingData.roomType === "Any Room" || room.name.toLowerCase().includes(bookingData.roomType.toLowerCase());
                                 return matchesPrice && matchesType;
                             }).slice(0, 4);
@@ -300,7 +300,7 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                                     <h3 className={styles.roomType}>{room.name}</h3>
                                     <p className={styles.roomDesc}>{room.desc}</p>
                                     <div className={styles.roomPrice}>
-                                        <span className={styles.roomPriceValue}>{formatPrice(room.price)} <small style={{ fontSize: '0.7em', opacity: 0.6, fontFamily: 'var(--font-sans)', letterSpacing: '0.1em' }}>/ NIGHT</small></span>
+                                        <span className={styles.roomPriceValue}>{room.price ? formatPrice(room.price) : "Price on request"} {room.price && <small style={{ fontSize: '0.7em', opacity: 0.6, fontFamily: 'var(--font-sans)', letterSpacing: '0.1em' }}>/ NIGHT</small>}</span>
                                         <button
                                             className={styles.buttonPrimary}
                                             style={{ padding: '0.6rem 1.25rem', fontSize: '0.5625rem' }}
@@ -512,7 +512,7 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                                 </div>
                                 <div className={styles.recentInfo}>
                                     <span className={styles.recentName}>{r.name}</span>
-                                    <span className={styles.recentPrice}>{formatPrice(r.price)} / NIGHT</span>
+                                    <span className={styles.recentPrice}>{r.price ? `${formatPrice(r.price)} / NIGHT` : "Price on request"}</span>
                                 </div>
                             </Link>
                         ))}
@@ -631,7 +631,7 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                                 Step {bookingStep} of 3
                             </span>
                             <h3 className={styles.modalTitle}>{selectedRoom.name}</h3>
-                            <p className={styles.modalSubtitle}>{formatPrice(selectedRoom.price)} · PER NIGHT</p>
+                            <p className={styles.modalSubtitle}>{selectedRoom.price ? `${formatPrice(selectedRoom.price)} · PER NIGHT` : "Price on request"}</p>
 
                             <form
                                 noValidate

@@ -13,7 +13,7 @@ model Room {
   slug       String   @unique
   name       String
   desc       String
-  price      String
+  price      String?
   image      String
   images     Json     @default("[]")
   amenities  Json     @default("[]")

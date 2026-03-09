@@ -71,8 +71,8 @@ export default function ClientRoomDetail({ room }: { room: any }) {
                         {room.tag && <span className={styles.tag}>{room.tag}</span>}
                         <h1 className={styles.title}>{room.name}</h1>
                         <div className={styles.priceContainer}>
-                            <span className={styles.price}>{formatPrice(room.price)}</span>
-                            <span className={styles.perNight}>/ per night</span>
+                            <span className={styles.price}>{room.price ? formatPrice(room.price) : "Price on request"}</span>
+                            {room.price && <span className={styles.perNight}>/ per night</span>}
                         </div>
                     </motion.div>
                 </div>
@@ -168,7 +168,7 @@ export default function ClientRoomDetail({ room }: { room: any }) {
                                 &times;
                             </button>
                             <h3 className={styles.modalTitle}>Book {room.name}</h3>
-                            <p className={styles.modalSubtitle}>{formatPrice(room.price)} / per night</p>
+                            <p className={styles.modalSubtitle}>{room.price ? `${formatPrice(room.price)} / per night` : "Price on request"}</p>
 
                             <form onSubmit={async (e) => {
                                 e.preventDefault();

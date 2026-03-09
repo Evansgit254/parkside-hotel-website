@@ -581,7 +581,7 @@ export async function createRoom(newRoom: {
     id?: string;
     name: string;
     desc: string;
-    price: string;
+    price?: string;
     image: string;
     tag?: string;
     capacity?: number;
@@ -596,7 +596,7 @@ export async function createRoom(newRoom: {
                 slug,
                 name: newRoom.name,
                 desc: newRoom.desc,
-                price: newRoom.price,
+                price: newRoom.price ?? null,
                 image: newRoom.image,
                 images: (newRoom as any).images ?? [],
                 tag: newRoom.tag ?? null,
@@ -621,7 +621,7 @@ export async function updateRoom(roomId: string, updatedRoom: Partial<Room>) {
             data: {
                 name: updatedRoom.name,
                 desc: updatedRoom.desc,
-                price: updatedRoom.price,
+                price: updatedRoom.price ?? null,
                 image: updatedRoom.image,
                 images: (updatedRoom as any).images ?? undefined,
                 tag: updatedRoom.tag ?? null,

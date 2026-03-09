@@ -228,7 +228,7 @@ export default function AdminRooms() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div className={styles.formGroup}>
                             <label className={styles.label}>Price</label>
-                            <input className={styles.input} placeholder="e.g. $150" value={editForm.price} onChange={e => setEditForm({ ...editForm, price: e.target.value })} required />
+                            <input className={styles.input} placeholder="e.g. $150" value={editForm.price} onChange={e => setEditForm({ ...editForm, price: e.target.value })} />
                         </div>
                         <div className={styles.formGroup}>
                             <label className={styles.label}>Max Guests (Capacity)</label>
