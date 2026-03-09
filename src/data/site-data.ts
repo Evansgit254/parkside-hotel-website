@@ -70,7 +70,7 @@ export const facilities = [
             "Nzambani Hall",
             "Syokimau Hall",
             "Highrise Hall",
-            "Masai Mara Hall",
+            "Maasai Mara Hall",
             "Longonot Hall"
         ],
         highlights: [
@@ -88,9 +88,10 @@ export const facilities = [
         icon: "Utensils",
         image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772371880/parkside-villa-media/Dining_and_Restaurant/20220322_124810_n3g83g.jpg",
         features: [
-            "Main Restaurant",
+            "Open Bar and Restaurant",
             "VIP Lounge",
-            "Open Bar & Restaurant"
+            "Board room",
+            "Coffee garden suite"
         ],
         highlights: [
             "International and local Kamba cuisine",
@@ -173,10 +174,10 @@ export const menuCategories = [
 ];
 
 export const contactInfo = {
-    phone: "+254 700 000000",
+    phone: "+254 701023026",
     email: "info@parksidevillakitui.com",
-    whatsapp: "254700000000",
-    address: "Parkside Villa, Kitui - Kenya",
+    whatsapp: "254701023026",
+    address: "P.O. Box 675-90200, Kitui",
     social: {
         facebook: "https://facebook.com/parksidevillakitui",
         instagram: "https://instagram.com/parksidevillakitui",
