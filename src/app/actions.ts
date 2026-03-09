@@ -135,11 +135,6 @@ export async function getSiteData() {
             users, galleryItems, conferenceHalls, siteContentRows, diningVenues, galleryCategories
         ] = results;
 
-        const content = siteContentRows.reduce((acc: any, row: SiteContent) => {
-            acc[row.key] = row.value;
-            return acc;
-        }, {});
-
         const optimizeCloudinary = (url: any): any => {
             if (!url) return null;
             if (Array.isArray(url)) return url.map(u => optimizeCloudinary(u)).filter(Boolean);
@@ -158,6 +153,24 @@ export async function getSiteData() {
                 return null;
             }
         };
+
+        const content = siteContentRows.reduce((acc: any, row: any) => {
+            // Apply Cloudinary optimization recursively to all strings in the JSON value
+            const optimizeValue = (val: any): any => {
+                if (typeof val === 'string') return optimizeCloudinary(val);
+                if (Array.isArray(val)) return val.map(v => optimizeValue(v));
+                if (val && typeof val === 'object') {
+                    const optimized: any = {};
+                    for (const k in val) {
+                        optimized[k] = optimizeValue(val[k]);
+                    }
+                    return optimized;
+                }
+                return val;
+            };
+            acc[row.key] = optimizeValue(row.value);
+            return acc;
+        }, {});
 
         // Map DB rows to the shape the UI already expects
         const finalData = {

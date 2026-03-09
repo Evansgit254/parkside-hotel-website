@@ -80,16 +80,22 @@ export default function Dining() {
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1.2 }}
                 >
-                    <SafeImage
-                        src={content?.dining_hero?.image || "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446807/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0703_qptc5r.jpg"}
-                        alt="Fine Dining"
-                        fill
-                        priority
-                        quality={90}
-                        className={styles.heroImage}
-                        style={{ objectFit: 'cover' }}
-                        fallbackText="Our Culinary Haven"
-                    />
+                    {(() => {
+                        const heroImg = content?.dining_hero?.image;
+                        const resolvedHeroImg = Array.isArray(heroImg) ? heroImg[0] : heroImg;
+                        return (
+                            <SafeImage
+                                src={resolvedHeroImg || "https://res.cloudinary.com/dizwm3mic/image/upload/v1772446807/parkside-villa-media/Front_Image_Or_Background_Image/_MG_0703_qptc5r.jpg"}
+                                alt="Fine Dining"
+                                fill
+                                priority
+                                quality={90}
+                                className={styles.heroImage}
+                                style={{ objectFit: 'cover' }}
+                                fallbackText="Our Culinary Haven"
+                            />
+                        );
+                    })()}
                 </motion.div>
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>

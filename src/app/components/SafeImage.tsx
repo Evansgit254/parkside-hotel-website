@@ -28,10 +28,20 @@ const SafeImage: React.FC<SafeImageProps> = (allProps) => {
 
     const showPlaceholder = error || !src || src === "";
 
+    // Handle arrays or non-string values gracefully
+    let resolvedSrc = src;
+    if (Array.isArray(src)) {
+        resolvedSrc = src[0];
+    }
+
+    if (typeof resolvedSrc !== 'string') {
+        resolvedSrc = null;
+    }
+
     // Ensure local paths with spaces are encoded for Next.js Image component
-    const processedSrc = src && src.startsWith("/") && src.includes(" ")
-        ? encodeURI(src)
-        : src;
+    const processedSrc = resolvedSrc && resolvedSrc.startsWith("/") && resolvedSrc.includes(" ")
+        ? encodeURI(resolvedSrc)
+        : resolvedSrc;
 
     return (
         <div className={`${styles.wrapper} ${props.className || ''}`}>
