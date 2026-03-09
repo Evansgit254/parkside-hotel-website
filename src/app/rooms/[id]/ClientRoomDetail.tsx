@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, Star, Coffee, Wifi, Tv, Wind, CheckCircle2, Calendar, Phone, Mail } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import EnhancedGallery from "../../components/EnhancedGallery";
 
 export default function ClientRoomDetail({ room }: { room: any }) {
     const router = useRouter();
@@ -143,6 +144,28 @@ export default function ClientRoomDetail({ room }: { room: any }) {
                     </div>
                 </div>
             </section>
+
+            {/* Enhanced Gallery Section */}
+            {room.images && room.images.length > 0 && (
+                <div style={{ background: '#fff', borderTop: '1px solid #eee' }}>
+                    <div className={styles.container}>
+                        <div style={{ paddingTop: '4rem' }}>
+                            <h2 style={{
+                                fontSize: '2rem',
+                                fontFamily: 'var(--font-serif)',
+                                color: 'var(--primary)',
+                                marginBottom: '0.5rem'
+                            }}>
+                                Explore the {room.name}
+                            </h2>
+                            <p style={{ color: '#6B7280', marginBottom: '2rem' }}>
+                                A visual journey through our premium accommodation and bespoke interiors.
+                            </p>
+                        </div>
+                    </div>
+                    <EnhancedGallery images={room.images} title={room.name} />
+                </div>
+            )}
 
             {/* Booking Modal */}
             <AnimatePresence>

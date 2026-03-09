@@ -19,6 +19,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
 }
 
+import EnhancedGallery from "../../components/EnhancedGallery";
+
 export default async function ConferenceDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const [hall, data] = await Promise.all([
@@ -58,41 +60,8 @@ export default async function ConferenceDetailPage({ params }: { params: Promise
                 </div>
             </section>
 
-            {/* Mosaic Gallery */}
-            <section className={styles.gallerySection}>
-                <div className={styles.container}>
-                    <div className={styles.mosaicGallery}>
-                        {/* Main Large Image (Index 0) */}
-                        <div className={styles.mosaicItem}>
-                            <SafeImage
-                                src={allImages[0]}
-                                alt={`${hall.name} - Featured`}
-                                fill
-                                priority
-                                sizes="(max-width: 768px) 100vw, 50vw"
-                                className={styles.galleryImage}
-                                style={{ objectFit: 'cover' }}
-                                fallbackText="Venue highlights"
-                            />
-                        </div>
-
-                        {/* Secondary Images (Index 1-4) */}
-                        {allImages.slice(1, 5).map((img, idx) => (
-                            <div key={idx} className={styles.mosaicItem}>
-                                <SafeImage
-                                    src={img}
-                                    alt={`${hall.name} - View ${idx + 2}`}
-                                    fill
-                                    sizes="(max-width: 768px) 50vw, 25vw"
-                                    className={styles.galleryImage}
-                                    style={{ objectFit: 'cover' }}
-                                    fallbackText="Meeting space"
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            {/* Enhanced Gallery Section */}
+            <EnhancedGallery images={allImages} title={hall.name} />
 
             {/* Content */}
             <section className={styles.detailContent}>

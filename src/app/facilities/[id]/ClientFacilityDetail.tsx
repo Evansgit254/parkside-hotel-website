@@ -3,6 +3,7 @@
 import { CheckCircle2, MapPin, Users, Calendar, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import styles from "./facility-detail.module.css";
+import EnhancedGallery from "../../components/EnhancedGallery";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
@@ -38,39 +39,8 @@ export default function ClientFacilityDetail({ facility }: { facility: any }) {
                 </div>
             </section>
 
-            {/* Mosaic Gallery Section */}
-            <section className={styles.gallerySection}>
-                <div className={styles.container}>
-                    <div className={styles.mosaicGallery}>
-                        {/* Featured Image */}
-                        <div className={styles.mosaicItem}>
-                            <Image
-                                src={allImages[0] || "/placeholder-facility.jpg"}
-                                alt={`${facility.title} - Featured`}
-                                fill
-                                priority
-                                sizes="(max-width: 768px) 100vw, 50vw"
-                                className={styles.galleryImage}
-                                style={{ objectFit: 'cover' }}
-                            />
-                        </div>
-
-                        {/* Grid Images */}
-                        {allImages.slice(1, 5).map((img, idx) => (
-                            <div key={idx} className={styles.mosaicItem}>
-                                <Image
-                                    src={img}
-                                    alt={`${facility.title} - Highlight ${idx + 1}`}
-                                    fill
-                                    sizes="(max-width: 768px) 50vw, 25vw"
-                                    className={styles.galleryImage}
-                                    style={{ objectFit: 'cover' }}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            {/* Enhanced Gallery Section */}
+            <EnhancedGallery images={allImages} title={facility.title} />
 
             {/* Content Section */}
             <section className={styles.infoSection}>

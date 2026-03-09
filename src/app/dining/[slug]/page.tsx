@@ -19,6 +19,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
 }
 
+import EnhancedGallery from "../../components/EnhancedGallery";
+
 export default async function DiningVenueDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const [venue, data] = await Promise.all([
@@ -60,41 +62,8 @@ export default async function DiningVenueDetailPage({ params }: { params: Promis
                 </div>
             </section>
 
-            {/* Mosaic Gallery */}
-            <section className={styles.gallerySection}>
-                <div className={styles.container}>
-                    <div className={styles.mosaicGallery}>
-                        {/* Featured Image */}
-                        <div className={styles.mosaicItem}>
-                            <SafeImage
-                                src={allImages[0]}
-                                alt={`${venue.name} - Featured`}
-                                fill
-                                priority
-                                sizes="(max-width: 768px) 100vw, 50vw"
-                                className={styles.galleryImage}
-                                style={{ objectFit: 'cover' }}
-                                fallbackText="Featured ambiance"
-                            />
-                        </div>
-
-                        {/* Grid Images */}
-                        {allImages.slice(1, 5).map((img, idx) => (
-                            <div key={idx} className={styles.mosaicItem}>
-                                <SafeImage
-                                    src={img}
-                                    alt={`${venue.name} - View ${idx + 2}`}
-                                    fill
-                                    sizes="(max-width: 768px) 50vw, 25vw"
-                                    className={styles.galleryImage}
-                                    style={{ objectFit: 'cover' }}
-                                    fallbackText="Dining view"
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            {/* Enhanced Gallery Section */}
+            <EnhancedGallery images={allImages} title={venue.name} />
 
             {/* Content */}
             <section className={styles.detailContent}>
