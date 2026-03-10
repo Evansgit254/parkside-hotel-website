@@ -174,7 +174,7 @@ export const menuCategories = [
 ];
 
 export const contactInfo = {
-    phone: "+254 701023026",
+    phone: "+254 701 023 026",
     email: "info@parksidevillakitui.com",
     whatsapp: "254701023026",
     address: "P.O. Box 675-90200, Kitui",

@@ -316,9 +316,9 @@ const TABS = [
 ];
 
 const defaultContact = {
-    phone: "+254 700 000000",
+    phone: "+254 701 023 026",
     email: "info@parksidevillakitui.com",
-    whatsapp: "254700000000",
+    whatsapp: "254701023026",
     address: "Parkside Villa, Kitui - Kenya",
     facebook: "https://facebook.com/parksidevillakitui",
     instagram: "https://instagram.com/parksidevillakitui",
@@ -326,9 +326,9 @@ const defaultContact = {
 };
 
 const contactFields = [
-    { key: "phone", label: "Phone Number", type: "tel", placeholder: "+254 700 000000", group: "Basic" },
+    { key: "phone", label: "Phone Number", type: "tel", placeholder: "+254 701 023 026", group: "Basic" },
     { key: "email", label: "Email Address", type: "email", placeholder: "info@parksidevillakitui.com", group: "Basic" },
-    { key: "whatsapp", label: "WhatsApp (international, no +)", type: "text", placeholder: "254700000000", group: "Basic" },
+    { key: "whatsapp", label: "WhatsApp (international, no +)", type: "text", placeholder: "254701023026", group: "Basic" },
     { key: "address", label: "Physical Address", type: "text", placeholder: "Parkside Villa, Kitui - Kenya", group: "Basic" },
     { key: "facebook", label: "Facebook URL", type: "url", placeholder: "https://facebook.com/...", group: "Social" },
     { key: "instagram", label: "Instagram URL", type: "url", placeholder: "https://instagram.com/...", group: "Social" },

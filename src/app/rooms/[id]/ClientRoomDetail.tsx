@@ -153,7 +153,7 @@ export default function ClientRoomDetail({ room, contactInfo }: { room: any; con
 
                                 <div className={styles.conciergeItem}>
                                     <Phone size={16} />
-                                    <span>Concierge: {contactInfo?.phone || "+254 701023026"}</span>
+                                    <span>Concierge: {contactInfo?.phone || "+254 701 023 026"}</span>
                                 </div>
                                 <div className={styles.conciergeItem}>
                                     <Mail size={16} />
@@ -250,7 +250,7 @@ export default function ClientRoomDetail({ room, contactInfo }: { room: any; con
                                     </div>
                                     <div>
                                         <label className={styles.label}>Phone *</label>
-                                        <input type="tel" required placeholder={contactInfo?.phone || "+254 701023026"} value={bookingData.phone} onChange={e => setBookingData({ ...bookingData, phone: e.target.value })} className={styles.input} />
+                                        <input type="tel" required placeholder={contactInfo?.phone || "+254 701 023 026"} value={bookingData.phone} onChange={e => setBookingData({ ...bookingData, phone: e.target.value })} className={styles.input} />
                                     </div>
                                 </div>
 

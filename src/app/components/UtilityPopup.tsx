@@ -52,7 +52,7 @@ export default function UtilityPopup() {
                     </p>
                     <div className={styles.contactInfo}>
                         <span>For reservations & inquiries:</span>
-                        <strong>+254 701 023026</strong>
+                        <strong>+254 701 023 026</strong>
                     </div>
                 </div>
             </motion.div>
