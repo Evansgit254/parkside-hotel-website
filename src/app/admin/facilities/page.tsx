@@ -223,13 +223,13 @@ export default function AdminFacilities() {
                     {/* Title */}
                     <div className={styles.formGroup}>
                         <label className={styles.label}>Facility Title</label>
-                        <input className={styles.input} placeholder="e.g. Infinity Lounge" value={editForm.title} onChange={e => setEditForm({ ...editForm, title: e.target.value })} required />
+                        <input className={styles.input} placeholder="e.g. Infinity Lounge" value={editForm.title} onChange={e => setEditForm({ ...editForm, title: e.target.value })} />
                     </div>
 
                     {/* Description */}
                     <div className={styles.formGroup}>
                         <label className={styles.label}>Description</label>
-                        <textarea className={styles.input} style={{ minHeight: '90px', resize: 'vertical' }} placeholder="What makes this facility special?..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} required />
+                        <textarea className={styles.input} style={{ minHeight: '90px', resize: 'vertical' }} placeholder="What makes this facility special?..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} />
                     </div>
 
                     {/* Features */}
@@ -247,7 +247,7 @@ export default function AdminFacilities() {
                     {/* Icon picker */}
                     <div className={styles.formGroup}>
                         <label className={styles.label}>Icon</label>
-                        <select className={styles.input} style={{ appearance: 'none', cursor: 'pointer' }} value={editForm.icon} onChange={e => setEditForm({ ...editForm, icon: e.target.value })} required>
+                        <select className={styles.input} style={{ appearance: 'none', cursor: 'pointer' }} value={editForm.icon} onChange={e => setEditForm({ ...editForm, icon: e.target.value })} >
                             <option value="Hotel">Hotel / General</option>
                             <option value="Users">Users / Conference</option>
                             <option value="Utensils">Utensils / Dining</option>

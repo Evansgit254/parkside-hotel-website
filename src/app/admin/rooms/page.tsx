@@ -217,12 +217,12 @@ export default function AdminRooms() {
 
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
                         <label className={styles.label}>Room Name</label>
-                        <input className={styles.input} placeholder="e.g. Executive Suite" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} required />
+                        <input className={styles.input} placeholder="e.g. Executive Suite" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} />
                     </div>
 
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
                         <label className={styles.label}>Description</label>
-                        <textarea className={styles.input} style={{ minHeight: '90px', resize: 'vertical' }} placeholder="Describe the room's unique features..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} required />
+                        <textarea className={styles.input} style={{ minHeight: '90px', resize: 'vertical' }} placeholder="Describe the room's unique features..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} />
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -232,7 +232,7 @@ export default function AdminRooms() {
                         </div>
                         <div className={styles.formGroup}>
                             <label className={styles.label}>Max Guests (Capacity)</label>
-                            <input type="number" min="1" className={styles.input} placeholder="e.g. 2" value={editForm.capacity} onChange={e => setEditForm({ ...editForm, capacity: e.target.value })} required />
+                            <input type="number" min="1" className={styles.input} placeholder="e.g. 2" value={editForm.capacity} onChange={e => setEditForm({ ...editForm, capacity: e.target.value })} />
                         </div>
                     </div>
 

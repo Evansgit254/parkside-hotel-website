@@ -254,7 +254,7 @@ export default function BlogAdmin() {
                                         <label className={styles.composerLabel}>Article Headline</label>
                                         <input
                                             type="text"
-                                            required
+                                            
                                             placeholder="Enter a captivating title..."
                                             className={styles.composerInput}
                                             value={currentPost?.title || ""}
@@ -267,7 +267,7 @@ export default function BlogAdmin() {
                                         <textarea
                                             placeholder="Tell the story of Parkside Villa..."
                                             className={`${styles.composerInput} ${styles.composerTextarea}`}
-                                            required
+                                            
                                             value={currentPost?.content || ""}
                                             onChange={e => setCurrentPost(prev => ({ ...prev, content: e.target.value }))}
                                         />

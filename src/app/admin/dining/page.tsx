@@ -228,7 +228,7 @@ export default function AdminDining() {
                         placeholder="e.g. Main Course, Wine List..."
                         value={categoryForm.name}
                         onChange={e => setCategoryForm({ ...categoryForm, name: e.target.value })}
-                        required
+                        
                     />
                 </div>
             </AdminModal>
@@ -249,7 +249,7 @@ export default function AdminDining() {
                         placeholder="e.g. Grilled Ribeye Steak"
                         value={itemFormState.name}
                         onChange={e => setItemFormState({ ...itemFormState, name: e.target.value })}
-                        required
+                        
                     />
                 </div>
                 <div className={styles.formGroup}>
@@ -260,7 +260,7 @@ export default function AdminDining() {
                         placeholder="Key ingredients, preparation method..."
                         value={itemFormState.desc}
                         onChange={e => setItemFormState({ ...itemFormState, desc: e.target.value })}
-                        required
+                        
                     />
                 </div>
                 <div className={styles.formGroup}>

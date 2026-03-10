@@ -94,7 +94,7 @@ export default function AdminSettings() {
                                 className={styles.input}
                                 value={contact.phone}
                                 onChange={e => setContact({ ...contact, phone: e.target.value })}
-                                required
+                                
                             />
                         </div>
                         <div className={styles.formGroup}>
@@ -104,7 +104,7 @@ export default function AdminSettings() {
                                 className={styles.input}
                                 value={contact.email}
                                 onChange={e => setContact({ ...contact, email: e.target.value })}
-                                required
+                                
                             />
                         </div>
                         <div className={styles.formGroup}>
@@ -114,7 +114,7 @@ export default function AdminSettings() {
                                 value={contact.whatsapp}
                                 onChange={e => setContact({ ...contact, whatsapp: e.target.value })}
                                 placeholder="e.g. 254700000000"
-                                required
+                                
                             />
                         </div>
                         <div className={styles.formGroup}>
@@ -123,7 +123,7 @@ export default function AdminSettings() {
                                 className={styles.input}
                                 value={contact.address}
                                 onChange={e => setContact({ ...contact, address: e.target.value })}
-                                required
+                                
                             />
                         </div>
                     </div>

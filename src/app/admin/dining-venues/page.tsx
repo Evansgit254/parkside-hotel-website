@@ -214,12 +214,12 @@ export default function AdminDiningVenues() {
 
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
                         <label className={styles.label}>Venue Name</label>
-                        <input className={styles.input} placeholder="e.g. VIP Lounge" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} required />
+                        <input className={styles.input} placeholder="e.g. VIP Lounge" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} />
                     </div>
 
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
                         <label className={styles.label}>Description</label>
-                        <textarea className={styles.input} style={{ minHeight: '80px' }} placeholder="Describe the atmosphere, offerings..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} required />
+                        <textarea className={styles.input} style={{ minHeight: '80px' }} placeholder="Describe the atmosphere, offerings..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} />
                     </div>
 
                     <div className={styles.formGroup}>

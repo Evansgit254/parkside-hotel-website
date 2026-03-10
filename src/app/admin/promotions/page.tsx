@@ -143,7 +143,7 @@ export default function PromotionsAdmin() {
                                     <label className={styles.label}>Campaign Title</label>
                                     <input
                                         type="text"
-                                        required
+                                        
                                         className={styles.input}
                                         placeholder="e.g. Easter Special"
                                         value={editForm.title}
@@ -154,7 +154,7 @@ export default function PromotionsAdmin() {
                                     <label className={styles.label}>Discount Code</label>
                                     <input
                                         type="text"
-                                        required
+                                        
                                         className={styles.input}
                                         placeholder="PV-EASTER-20"
                                         value={editForm.code}
@@ -175,7 +175,7 @@ export default function PromotionsAdmin() {
                                     <label className={styles.label}>Expiry Date</label>
                                     <input
                                         type="date"
-                                        required
+                                        
                                         className={styles.input}
                                         value={editForm.expiry}
                                         onChange={e => setEditForm({ ...editForm, expiry: e.target.value })}

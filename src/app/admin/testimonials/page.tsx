@@ -206,7 +206,7 @@ export default function AdminTestimonials() {
                         placeholder="Paste the guest's feedback here..."
                         value={editForm.text}
                         onChange={e => setEditForm({ ...editForm, text: e.target.value })}
-                        required
+                        
                     />
                 </div>
 
@@ -218,7 +218,7 @@ export default function AdminTestimonials() {
                             placeholder="e.g. Sarah J. Johnson"
                             value={editForm.name}
                             onChange={e => setEditForm({ ...editForm, name: e.target.value })}
-                            required
+                            
                         />
                     </div>
                     <div className={styles.formGroup}>
@@ -228,7 +228,7 @@ export default function AdminTestimonials() {
                             placeholder="e.g. Business Traveler"
                             value={editForm.title}
                             onChange={e => setEditForm({ ...editForm, title: e.target.value })}
-                            required
+                            
                         />
                     </div>
                 </div>

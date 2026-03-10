@@ -211,12 +211,12 @@ export default function AdminConference() {
 
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
                         <label className={styles.label}>Hall Name</label>
-                        <input className={styles.input} placeholder="e.g. Amboseli Hall" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} required />
+                        <input className={styles.input} placeholder="e.g. Amboseli Hall" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} />
                     </div>
 
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
                         <label className={styles.label}>Description & Features</label>
-                        <textarea className={styles.input} style={{ minHeight: '100px', resize: 'vertical' }} placeholder="Detail the hall's features (projectors, AC, lighting, etc.)..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} required />
+                        <textarea className={styles.input} style={{ minHeight: '100px', resize: 'vertical' }} placeholder="Detail the hall's features (projectors, AC, lighting, etc.)..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} />
                     </div>
 
                     <div className={styles.formGroup}>
@@ -225,7 +225,7 @@ export default function AdminConference() {
                             <div style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--secondary)' }}>
                                 <Users size={16} />
                             </div>
-                            <input type="number" min="1" className={styles.input} style={{ paddingLeft: '2.5rem' }} placeholder="e.g. 100" value={editForm.capacity} onChange={e => setEditForm({ ...editForm, capacity: parseInt(e.target.value) || 0 })} required />
+                            <input type="number" min="1" className={styles.input} style={{ paddingLeft: '2.5rem' }} placeholder="e.g. 100" value={editForm.capacity} onChange={e => setEditForm({ ...editForm, capacity: parseInt(e.target.value) || 0 })} />
                         </div>
                     </div>
                 </div>

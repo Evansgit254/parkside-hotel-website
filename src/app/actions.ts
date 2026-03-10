@@ -592,10 +592,10 @@ export async function requestBookingAction(bookingId: number, type: "modify" | "
 
 export async function createRoom(newRoom: {
     id?: string;
-    name: string;
-    desc: string;
+    name?: string;
+    desc?: string;
     price?: string;
-    image: string;
+    image?: string;
     tag?: string;
     capacity?: number;
     isFeatured?: boolean;
@@ -603,14 +603,14 @@ export async function createRoom(newRoom: {
     if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
     try {
         await requireAdmin();
-        const slug = newRoom.id ?? newRoom.name.toLowerCase().replace(/\s+/g, "-");
+        const slug = newRoom.id ?? (newRoom.name || "room-" + Date.now()).toLowerCase().replace(/\s+/g, "-");
         await prisma.room.create({
             data: {
                 slug,
-                name: newRoom.name,
-                desc: newRoom.desc,
+                name: newRoom.name || "Unnamed Room",
+                desc: newRoom.desc || "",
                 price: newRoom.price ?? null,
-                image: newRoom.image,
+                image: newRoom.image || "",
                 images: (newRoom as any).images ?? [],
                 tag: newRoom.tag ?? null,
                 capacity: newRoom.capacity ?? 2,
@@ -703,10 +703,10 @@ export async function updateTestimonial(id: number, updatedData: Partial<Testimo
         await prisma.testimonial.update({
             where: { id },
             data: {
-                name: updatedData.name,
-                title: updatedData.title,
-                text: updatedData.text,
-                status: updatedData.status,
+                name: updatedData.name || undefined,
+                title: updatedData.title || undefined,
+                text: updatedData.text || undefined,
+                status: updatedData.status || undefined,
             },
         });
         revalidateAll();
@@ -815,9 +815,18 @@ export async function addFacility(f: Partial<Facility> & { title: string; desc: 
             return { success: false, error: "Invalid facility data" };
         }
         const safe = parsed.data;
-        const id = (f.id ?? safe.title.toLowerCase().replace(/\s+/g, "-")).replace(/[^a-z0-9-]/g, "");
+        const id = (f.id ?? (safe.title || "facility-" + Date.now()).toLowerCase().replace(/\s+/g, "-")).replace(/[^a-z0-9-]/g, "");
         await prisma.facility.create({
-            data: { id, title: safe.title, desc: safe.desc, icon: safe.icon, image: safe.image ?? null, images: safe.images ?? [], features: safe.features ?? [], highlights: safe.highlights ?? [] },
+            data: {
+                id,
+                title: safe.title || "Unnamed Facility",
+                desc: safe.desc || "",
+                icon: safe.icon || "star",
+                image: safe.image ?? null,
+                images: safe.images ?? [],
+                features: safe.features ?? [],
+                highlights: safe.highlights ?? []
+            },
         });
         revalidateAll();
         return { success: true };
@@ -828,9 +837,9 @@ export async function addFacility(f: Partial<Facility> & { title: string; desc: 
 }
 
 const FacilitySchema = z.object({
-    title: z.string().min(1),
-    desc: z.string().min(1),
-    icon: z.string().min(1),
+    title: z.string().optional().nullable(),
+    desc: z.string().optional().nullable(),
+    icon: z.string().optional().nullable(),
     image: z.string().optional().nullable(),
     images: z.array(z.string()).optional(),
     features: z.array(z.any()).optional(),
@@ -845,13 +854,13 @@ export async function updateFacility(facilityId: string, updatedFacility: any) {
         await prisma.facility.update({
             where: { id: facilityId },
             data: {
-                title: parsed.title,
-                desc: parsed.desc,
-                icon: parsed.icon,
-                image: parsed.image ?? null,
+                title: parsed.title || undefined,
+                desc: parsed.desc || undefined,
+                icon: parsed.icon || undefined,
+                image: parsed.image ?? undefined,
                 images: parsed.images ?? undefined,
-                features: parsed.features ?? [],
-                highlights: parsed.highlights ?? [],
+                features: parsed.features ?? undefined,
+                highlights: parsed.highlights ?? undefined,
             },
         });
         revalidateAll();
@@ -1306,13 +1315,13 @@ export async function getUserBookings(userId: string) {
 
 const BlogPostSchema = z.object({
     id: z.string().optional(),
-    title: z.string().min(1),
-    excerpt: z.string(),
-    content: z.string(),
+    title: z.string().optional().nullable(),
+    excerpt: z.string().optional().nullable(),
+    content: z.string().optional().nullable(),
     date: z.string().optional(),
     author: z.string().optional(),
-    category: z.string(),
-    image: z.string()
+    category: z.string().optional().nullable(),
+    image: z.string().optional().nullable()
 });
 
 export async function createBlogPost(post: any) {
@@ -1322,14 +1331,14 @@ export async function createBlogPost(post: any) {
         const validPost = BlogPostSchema.parse(post);
         const newPost = await prisma.blogPost.create({
             data: {
-                id: validPost.id || validPost.title.toLowerCase().replace(/\s+/g, "-"),
-                title: validPost.title,
-                excerpt: validPost.excerpt,
-                content: validPost.content,
+                id: validPost.id || (validPost.title || "post-" + Date.now()).toLowerCase().replace(/\s+/g, "-"),
+                title: validPost.title || "Untitled Post",
+                excerpt: validPost.excerpt || "",
+                content: validPost.content || "",
                 date: validPost.date || new Date().toISOString().split("T")[0],
                 author: validPost.author || "Parkside Villa",
-                category: validPost.category,
-                image: validPost.image,
+                category: validPost.category || "General",
+                image: validPost.image || "",
             },
         });
         revalidateAll();
@@ -1347,7 +1356,15 @@ export async function updateBlogPost(id: string, post: any) {
         const validPost = BlogPostSchema.partial().parse(post);
         await prisma.blogPost.update({
             where: { id },
-            data: validPost,
+            data: {
+                title: validPost.title || undefined,
+                excerpt: validPost.excerpt || undefined,
+                content: validPost.content || undefined,
+                date: validPost.date || undefined,
+                author: validPost.author || undefined,
+                category: validPost.category || undefined,
+                image: validPost.image || undefined,
+            },
         });
         revalidateAll();
         return { success: true };
@@ -1628,9 +1645,9 @@ export async function getConferenceHalls() {
 }
 
 const ConferenceHallSchema = z.object({
-    name: z.string().min(1),
-    desc: z.string().min(1),
-    image: z.string(),
+    name: z.string().optional().nullable(),
+    desc: z.string().optional().nullable(),
+    image: z.string().optional().nullable(),
     images: z.array(z.string()).optional(),
     capacity: z.union([z.string(), z.number()]).optional(),
     setups: z.array(z.any()).optional(),
@@ -1643,10 +1660,10 @@ export async function createConferenceHall(data: any) {
         const parsed = ConferenceHallSchema.parse(data);
         const newHall = await prisma.conferenceHall.create({
             data: {
-                slug: parsed.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-                name: parsed.name,
-                desc: parsed.desc,
-                image: parsed.image,
+                slug: (parsed.name || "Hall").toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                name: parsed.name || "Unnamed Hall",
+                desc: parsed.desc || "",
+                image: parsed.image || "",
                 images: parsed.images || [],
                 capacity: parseInt(String(parsed.capacity)) || 50,
                 setups: parsed.setups || [],
@@ -1669,13 +1686,13 @@ export async function updateConferenceHall(id: string, data: any) {
         const updatedHall = await prisma.conferenceHall.update({
             where: { id },
             data: {
-                name: parsed.name,
-                desc: parsed.desc,
-                image: parsed.image,
+                name: parsed.name || "Unnamed Hall",
+                desc: parsed.desc || "",
+                image: parsed.image || "",
                 images: parsed.images ?? undefined,
                 capacity: parseInt(String(parsed.capacity)) || 50,
                 setups: parsed.setups,
-                slug: parsed.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+                slug: (parsed.name || id).toLowerCase().replace(/[^a-z0-9]+/g, '-')
             }
         });
         revalidateAll();
@@ -1737,8 +1754,8 @@ export async function getDiningVenueBySlug(slug: string) {
 }
 
 const DiningVenueSchema = z.object({
-    name: z.string().min(1),
-    desc: z.string().min(1),
+    name: z.string().optional().nullable(),
+    desc: z.string().optional().nullable(),
     image: z.string().optional(),
     images: z.array(z.string()).optional(),
     features: z.array(z.any()).optional(),
@@ -1752,9 +1769,9 @@ export async function createDiningVenue(data: any) {
         const parsed = DiningVenueSchema.parse(data);
         const venue = await prisma.diningVenue.create({
             data: {
-                slug: parsed.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-                name: parsed.name,
-                desc: parsed.desc,
+                slug: (parsed.name || "Venue").toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                name: parsed.name || "Unnamed Venue",
+                desc: parsed.desc || "",
                 image: parsed.image || '',
                 images: parsed.images || [],
                 features: parsed.features || [],
@@ -1778,13 +1795,13 @@ export async function updateDiningVenue(id: string, data: any) {
         const venue = await prisma.diningVenue.update({
             where: { id },
             data: {
-                name: parsed.name,
-                desc: parsed.desc,
+                name: parsed.name || "Unnamed Venue",
+                desc: parsed.desc || "",
                 image: parsed.image || '',
                 images: parsed.images ?? undefined,
                 features: parsed.features || [],
                 hours: parsed.hours || null,
-                slug: parsed.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+                slug: (parsed.name || id).toLowerCase().replace(/[^a-z0-9]+/g, '-')
             }
         });
         revalidateAll();
