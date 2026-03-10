@@ -42,8 +42,9 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
         ? content.landing_hero.image.filter(Boolean)
         : content?.landing_hero?.image ? [content.landing_hero.image].filter(Boolean) : [];
 
-    // Priority: CMS content images > heroImage table > static fallback
-    const heroImages = cmsHeroImages.length > 0 ? cmsHeroImages : dbHeroImages.length > 0 ? dbHeroImages : initialHeroImages;
+    // Priority: CMS content images + heroImage table, then static fallback if both empty
+    const uniqueHeroImages = Array.from(new Set([...cmsHeroImages, ...dbHeroImages]));
+    const heroImages = uniqueHeroImages.length > 0 ? uniqueHeroImages : initialHeroImages;
 
     const heroKeys = content?.landing_hero || {};
     const roomsKeys = content?.rooms_intro || {};

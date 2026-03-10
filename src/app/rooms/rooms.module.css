@@ -13,7 +13,7 @@
 
 /* HERO */
 .hero {
-    height: 50vh;
+    height: 70vh;
     min-height: 400px;
     display: flex;
     flex-direction: column;
@@ -598,9 +598,25 @@
 }
 
 @media (max-width: 768px) {
+    .hero {
+        height: 70vh !important;
+        min-height: 400px !important;
+    }
+
     .roomGrid {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+
+    .listItem {
+        flex-direction: column !important;
+        height: auto !important;
+    }
+
+    .itemImageWrapper {
+        width: 100% !important;
+        height: 320px !important;
+        display: block !important;
     }
 
     .roomContent {
@@ -664,7 +680,7 @@
 }
 
 .heroSection {
-    height: 50vh;
+    height: 70vh;
     min-height: 400px;
     display: flex;
     flex-direction: column;
@@ -1230,12 +1246,35 @@
     }
 
     .itemImageWrapper {
-        width: 100%;
+        width: 100% !important;
+        height: 320px !important;
+        display: block !important;
     }
 }
 
 @media (max-width: 768px) {
     .infoCards {
         grid-template-columns: 1fr;
+    }
+}
+/* FINAL MOBILE OVERRIDES FOR ROOM CARDS */
+@media (max-width: 1024px) {
+    .listItem {
+        flex-direction: column !important;
+        height: auto !important;
+        gap: 30px !important;
+    }
+
+    .itemImageWrapper {
+        width: 100% !important;
+        height: 350px !important;
+        min-height: 350px !important;
+        display: block !important;
+        flex: none !important;
+        position: relative !important;
+    }
+    
+    .itemContent {
+        padding: 20px 0 !important;
     }
 }

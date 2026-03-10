@@ -8,7 +8,7 @@
 /* ── HERO ── */
 .hero,
 .detailHero {
-    height: 50vh;
+    height: 70vh;
     min-height: 400px;
     display: flex;
     flex-direction: column;
@@ -498,6 +498,13 @@
 
 /* ── MOBILE ── */
 @media (max-width: 768px) {
+
+    .hero,
+    .detailHero {
+        height: 70vh !important;
+        min-height: 400px !important;
+    }
+
     .listItem {
         flex-direction: column;
         gap: 1.5rem;

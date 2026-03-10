@@ -6,7 +6,7 @@
 
 .hero {
     position: relative;
-    height: 50vh;
+    height: 70vh;
     min-height: 400px;
     width: 100%;
     display: flex;
@@ -254,8 +254,8 @@
 
 @media (max-width: 768px) {
     .hero {
-        height: 50vh;
-        min-height: 350px;
+        height: 70vh !important;
+        min-height: 400px !important;
     }
 
     .title {

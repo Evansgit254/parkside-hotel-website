@@ -6,7 +6,7 @@
 }
 
 .hero {
-    height: 50vh;
+    height: 70vh;
     min-height: 400px;
     display: flex;
     flex-direction: column;
@@ -218,9 +218,5 @@
 @media (max-width: 768px) {
     .grid {
         grid-template-columns: 1fr;
-    }
-
-    .hero {
-        height: 60vh;
     }
 }
