@@ -613,7 +613,7 @@ export async function createRoom(newRoom: {
                 image: newRoom.image || "",
                 images: (newRoom as any).images ?? [],
                 tag: newRoom.tag ?? null,
-                capacity: newRoom.capacity ?? 2,
+                capacity: newRoom.capacity ?? 0,
                 isFeatured: newRoom.isFeatured ?? false,
             },
         });
@@ -638,7 +638,7 @@ export async function updateRoom(roomId: string, updatedRoom: Partial<Room>) {
                 image: updatedRoom.image,
                 images: (updatedRoom as any).images ?? undefined,
                 tag: updatedRoom.tag ?? null,
-                capacity: updatedRoom.capacity ?? 2,
+                capacity: updatedRoom.capacity ?? undefined,
                 isFeatured: updatedRoom.isFeatured ?? false,
             },
         });
@@ -1665,7 +1665,7 @@ export async function createConferenceHall(data: any) {
                 desc: parsed.desc || "",
                 image: parsed.image || "",
                 images: parsed.images || [],
-                capacity: parseInt(String(parsed.capacity)) || 50,
+                capacity: (parsed.capacity !== undefined && parsed.capacity !== null) ? parseInt(String(parsed.capacity)) : 0,
                 setups: parsed.setups || [],
             }
         });
@@ -1690,7 +1690,7 @@ export async function updateConferenceHall(id: string, data: any) {
                 desc: parsed.desc || "",
                 image: parsed.image || "",
                 images: parsed.images ?? undefined,
-                capacity: parseInt(String(parsed.capacity)) || 50,
+                capacity: (parsed.capacity !== undefined && parsed.capacity !== null) ? parseInt(String(parsed.capacity)) : undefined,
                 setups: parsed.setups,
                 slug: (parsed.name || id).toLowerCase().replace(/[^a-z0-9]+/g, '-')
             }

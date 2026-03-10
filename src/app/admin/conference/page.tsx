@@ -132,10 +132,12 @@ export default function AdminConference() {
                             <div style={{ fontSize: '0.85rem', color: '#6B7280', lineHeight: '1.5', maxWidth: '500px' }}>{hall.desc}</div>
                         </div>
 
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: 'var(--secondary)', fontWeight: 600 }}>
-                            <Users size={16} />
-                            {hall.capacity} pax
-                        </div>
+                        {hall.capacity > 0 && (
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: 'var(--secondary)', fontWeight: 600 }}>
+                                <Users size={16} />
+                                {hall.capacity} pax
+                            </div>
+                        )}
 
                         <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
                             <button onClick={() => handleEdit(hall)} className={styles.actionBtn} title="Edit">

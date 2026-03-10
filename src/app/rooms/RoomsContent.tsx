@@ -180,7 +180,9 @@ export default function RoomsContent({ initialRooms, content }: RoomsContentProp
                                                 <div className={styles.amenityItem}><Tv size={14} /> Smart TV</div>
                                             </>
                                         )}
-                                        <div className={styles.amenityItem}><Users size={14} /> Up to {room.capacity || 2} Guests</div>
+                                        {room.capacity > 0 && (
+                                            <div className={styles.amenityItem}><Users size={14} /> Up to {room.capacity} Guests</div>
+                                        )}
                                     </div>
 
                                     <div className={styles.actionGroup}>

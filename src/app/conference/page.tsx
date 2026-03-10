@@ -88,9 +88,11 @@ export default function ConferencePage() {
                                         <Users size={48} />
                                     </div>
                                 )}
-                                <div className={styles.capacityBadge}>
-                                    <Users size={14} /> {hall.capacity} guests
-                                </div>
+                                {hall.capacity > 0 && (
+                                    <div className={styles.capacityBadge}>
+                                        <Users size={14} /> {hall.capacity} guests
+                                    </div>
+                                )}
                             </div>
                             <div className={styles.listContent}>
                                 <h2 className={styles.listName}>{hall.name}</h2>

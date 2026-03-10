@@ -54,9 +54,11 @@ export default async function ConferenceDetailPage({ params }: { params: Promise
                         <ChevronLeft size={18} /> All Conference Halls
                     </Link>
                     <h1 className={styles.title}>{hall.name}</h1>
-                    <div className={styles.heroBadges}>
-                        <span className={styles.capacityBadge}><Users size={14} /> {hall.capacity} guests</span>
-                    </div>
+                    {hall.capacity > 0 && (
+                        <div className={styles.heroBadges}>
+                            <span className={styles.capacityBadge}><Users size={14} /> {hall.capacity} guests</span>
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -103,10 +105,12 @@ export default async function ConferenceDetailPage({ params }: { params: Promise
                                         <Send size={18} /> Email Inquiry
                                     </a>
                                 </div>
-                                <div className={styles.capacityInfo}>
-                                    <Users size={16} />
-                                    <span>Up to <strong>{hall.capacity}</strong> guests</span>
-                                </div>
+                                {hall.capacity > 0 && (
+                                    <div className={styles.capacityInfo}>
+                                        <Users size={16} />
+                                        <span>Up to <strong>{hall.capacity}</strong> guests</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
