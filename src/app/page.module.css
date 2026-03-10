@@ -267,6 +267,15 @@
     color: rgba(255, 255, 255, 1);
 }
 
+.navActive {
+    color: var(--gold-light) !important;
+}
+
+.navActive::after {
+    width: 100% !important;
+    background: var(--gold-light) !important;
+}
+
 .headerScrolled .nav a::after {
     background: var(--primary);
 }

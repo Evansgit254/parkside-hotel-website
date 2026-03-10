@@ -134,46 +134,52 @@ export default function Header() {
 
                     {/* Desktop nav */}
                     <nav className={styles.nav}>
-                        {navLinks.map(link => (
-                            <div
-                                key={link.label + link.href}
-                                className={styles.navItemContainer}
-                                onMouseEnter={() => link.subLinks && setActiveDropdown(link.label)}
-                                onMouseLeave={() => setActiveDropdown(null)}
-                            >
-                                <Link
-                                    href={link.href}
-                                    className={`${pathname === link.href ? 'maroon-text' : ''} ${link.subLinks ? styles.hasSublinks : ''}`}
-                                    onClick={() => setActiveDropdown(null)}
+                        {navLinks.map(link => {
+                            const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
+                            return (
+                                <div
+                                    key={link.label + link.href}
+                                    className={styles.navItemContainer}
+                                    onMouseEnter={() => link.subLinks && setActiveDropdown(link.label)}
+                                    onMouseLeave={() => setActiveDropdown(null)}
                                 >
-                                    {link.label}
-                                    {link.subLinks && <ChevronDown size={10} style={{ marginLeft: '4px', opacity: 0.5 }} />}
-                                </Link>
+                                    <Link
+                                        href={link.href}
+                                        className={`${isActive ? styles.navActive : ''} ${link.subLinks ? styles.hasSublinks : ''}`}
+                                        onClick={() => setActiveDropdown(null)}
+                                    >
+                                        {link.label}
+                                        {link.subLinks && <ChevronDown size={10} style={{ marginLeft: '4px', opacity: 0.5 }} />}
+                                    </Link>
 
-                                <AnimatePresence>
-                                    {link.subLinks && activeDropdown === link.label && (
-                                        <motion.div
-                                            className={styles.dropdownMenu}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: 10 }}
-                                            transition={{ duration: 0.2, ease: "easeOut" }}
-                                        >
-                                            {link.subLinks.map(subLink => (
-                                                <Link
-                                                    key={subLink.href + subLink.label}
-                                                    href={subLink.href}
-                                                    className={styles.dropdownItem}
-                                                    onClick={() => setActiveDropdown(null)}
-                                                >
-                                                    {subLink.label}
-                                                </Link>
-                                            ))}
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </div>
-                        ))}
+                                    <AnimatePresence>
+                                        {link.subLinks && activeDropdown === link.label && (
+                                            <motion.div
+                                                className={styles.dropdownMenu}
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: 10 }}
+                                                transition={{ duration: 0.2, ease: "easeOut" }}
+                                            >
+                                                {link.subLinks.map(subLink => {
+                                                    const isSubActive = pathname === subLink.href;
+                                                    return (
+                                                        <Link
+                                                            key={subLink.href + subLink.label}
+                                                            href={subLink.href}
+                                                            className={`${styles.dropdownItem} ${isSubActive ? styles.navActive : ''}`}
+                                                            onClick={() => setActiveDropdown(null)}
+                                                        >
+                                                            {subLink.label}
+                                                        </Link>
+                                                    );
+                                                })}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            );
+                        })}
                     </nav>
 
                     <div className={styles.headerActions}>
@@ -223,7 +229,7 @@ export default function Header() {
                                     <div key={link.label + link.href}>
                                         {link.subLinks ? (
                                             <button
-                                                className={`${styles.mobileNavLink} ${styles.mobileNavAccordion}`}
+                                                className={`${styles.mobileNavLink} ${styles.mobileNavAccordion} ${pathname.startsWith(link.href) ? styles.navActive : ''}`}
                                                 onClick={() => setActiveDropdown(isOpen ? null : link.label)}
                                                 aria-expanded={isOpen}
                                             >
@@ -253,16 +259,19 @@ export default function Header() {
                                                     style={{ overflow: 'hidden' }}
                                                 >
                                                     <div className={styles.mobileSubNav}>
-                                                        {link.subLinks.map(subLink => (
-                                                            <Link
-                                                                key={subLink.href + subLink.label}
-                                                                href={subLink.href}
-                                                                className={styles.mobileSubNavLink}
-                                                                onClick={() => setIsMobileMenuOpen(false)}
-                                                            >
-                                                                {subLink.label}
-                                                            </Link>
-                                                        ))}
+                                                        {link.subLinks.map(subLink => {
+                                                            const isSubActive = pathname === subLink.href;
+                                                            return (
+                                                                <Link
+                                                                    key={subLink.href + subLink.label}
+                                                                    href={subLink.href}
+                                                                    className={`${styles.mobileSubNavLink} ${isSubActive ? styles.navActive : ''}`}
+                                                                    onClick={() => setIsMobileMenuOpen(false)}
+                                                                >
+                                                                    {subLink.label}
+                                                                </Link>
+                                                            );
+                                                        })}
                                                     </div>
                                                 </motion.div>
                                             )}
