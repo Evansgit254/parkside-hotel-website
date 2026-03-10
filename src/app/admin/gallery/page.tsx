@@ -244,7 +244,7 @@ export default function GalleryAdmin() {
                                 {error}
                             </div>
                         )}
-                        <form onSubmit={handleSave} className={styles.modalBody}>
+                        <form noValidate onSubmit={handleSave} className={styles.modalBody}>
                             <div className={styles.formGrid}>
                                 <div className={styles.formSection}>
                                     <label className={styles.label}>Resource Title</label>
@@ -324,7 +324,7 @@ export default function GalleryAdmin() {
                         </div>
 
                         <div className={styles.modalBody}>
-                            <form onSubmit={handleCategorySave} style={{ display: 'flex', gap: '10px', marginBottom: '24px' }}>
+                            <form noValidate onSubmit={handleCategorySave} style={{ display: 'flex', gap: '10px', marginBottom: '24px' }}>
                                 <input
                                     type="text"
                                     className={styles.input}

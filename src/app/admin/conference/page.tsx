@@ -49,7 +49,7 @@ export default function AdminConference() {
         let res;
         const payload = {
             ...editForm,
-            capacity: parseInt(editForm.capacity) || 50,
+            capacity: parseInt(editForm.capacity) === 0 ? 0 : (parseInt(editForm.capacity) || 50),
             setups: Array.isArray(editForm.setups) ? editForm.setups : [],
             images: Array.isArray(editForm.images) ? editForm.images : []
         };
@@ -225,7 +225,7 @@ export default function AdminConference() {
                             <div style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--secondary)' }}>
                                 <Users size={16} />
                             </div>
-                            <input type="number" min="1" className={styles.input} style={{ paddingLeft: '2.5rem' }} placeholder="e.g. 100" value={editForm.capacity} onChange={e => setEditForm({ ...editForm, capacity: parseInt(e.target.value) || 0 })} />
+                            <input type="number" className={styles.input} style={{ paddingLeft: '2.5rem' }} placeholder="e.g. 100" value={editForm.capacity} onChange={e => setEditForm({ ...editForm, capacity: parseInt(e.target.value) || 0 })} />
                         </div>
                     </div>
                 </div>

@@ -59,7 +59,7 @@ export default function AdminRooms() {
             ...editForm,
             images: Array.isArray(editForm.images) ? editForm.images : [],
             amenities: Array.isArray(editForm.amenities) ? editForm.amenities : [],
-            capacity: parseInt(editForm.capacity) || 2
+            capacity: parseInt(editForm.capacity) === 0 ? 0 : (parseInt(editForm.capacity) || 2)
         };
         if (editForm.id === "NEW") {
             const { id, ...roomData } = payload;
@@ -232,7 +232,7 @@ export default function AdminRooms() {
                         </div>
                         <div className={styles.formGroup}>
                             <label className={styles.label}>Max Guests (Capacity)</label>
-                            <input type="number" min="1" className={styles.input} placeholder="e.g. 2" value={editForm.capacity} onChange={e => setEditForm({ ...editForm, capacity: e.target.value })} />
+                            <input type="number" className={styles.input} placeholder="e.g. 2" value={editForm.capacity} onChange={e => setEditForm({ ...editForm, capacity: e.target.value })} />
                         </div>
                     </div>
 

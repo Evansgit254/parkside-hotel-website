@@ -59,7 +59,7 @@ export default function AdminModal({
                             </div>
                         )}
 
-                        <form onSubmit={onSubmit} style={{ padding: '0 2rem 2rem' }}>
+                        <form onSubmit={onSubmit} style={{ padding: '0 2rem 2rem' }} noValidate>
                             {children}
 
                             <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>

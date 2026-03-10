@@ -81,7 +81,7 @@ export default function AdminSettings() {
 
             <div style={{ display: 'grid', gap: '3rem' }}>
                 {/* Contact Information Section */}
-                <form onSubmit={handleSave} className={styles.card}>
+                <form noValidate onSubmit={handleSave} className={styles.card}>
                     <div style={{ marginBottom: '2.5rem' }}>
                         <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', marginBottom: '0.5rem' }}>Core Identity</h3>
                         <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Maintain accurate contact details for guest communication</p>

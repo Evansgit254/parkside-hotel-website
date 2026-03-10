@@ -137,7 +137,7 @@ export default function PromotionsAdmin() {
                                 {error}
                             </div>
                         )}
-                        <form onSubmit={handleSave} className={styles.modalBody}>
+                        <form noValidate onSubmit={handleSave} className={styles.modalBody}>
                             <div className={styles.formGrid}>
                                 <div className={styles.formSection}>
                                     <label className={styles.label}>Campaign Title</label>

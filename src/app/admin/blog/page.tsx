@@ -247,7 +247,7 @@ export default function BlogAdmin() {
                             </div>
                         )}
 
-                        <form onSubmit={handleSave} className={styles.modalBody}>
+                        <form noValidate onSubmit={handleSave} className={styles.modalBody}>
                             <div className={styles.editorialComposer}>
                                 <div className={styles.composerMain}>
                                     <div className={styles.composerField}>
