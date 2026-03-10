@@ -22,7 +22,14 @@ export default function ConferenceClient({ halls, content }: ConferenceClientPro
     const yParallax = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
     const intro = content?.conference_intro || {};
-    const heroImage = content?.facilities_hero?.image?.[0] || halls[0]?.image;
+    // Read from conference_hero first, fall back to facilities_hero for backward compat, then first hall image
+    const conferenceHeroImages = content?.conference_hero?.image;
+    const facilitiesHeroImages = content?.facilities_hero?.image;
+    const heroImageRaw = Array.isArray(conferenceHeroImages) ? conferenceHeroImages[0]
+        : conferenceHeroImages
+        ?? (Array.isArray(facilitiesHeroImages) ? facilitiesHeroImages[0] : facilitiesHeroImages)
+        ?? halls[0]?.image;
+    const heroImage = heroImageRaw;
     const showHero = !!heroImage;
 
     return (

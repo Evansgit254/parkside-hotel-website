@@ -143,6 +143,15 @@ const contentSchema = [
         ]
     },
     {
+        key: "conference_hero",
+        label: "Conference Hero Images",
+        description: "Manage sliding background images for the Conference page hero banner.",
+        icon: LayoutTemplate,
+        fields: [
+            { name: "image", label: "Hero Images (Add multiple)", type: "image-list", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg" }
+        ]
+    },
+    {
         key: "facilities_hero",
         label: "Facilities Hero Images",
         description: "Manage sliding background images for the Facilities page hero banner.",
@@ -305,7 +314,7 @@ const contentSchema = [
 ];
 
 const TABS = [
-    { id: "hero-images", label: "Hero Images", keys: ["landing_hero", "rooms_hero", "facilities_hero", "dining_hero", "blog_hero"] },
+    { id: "hero-images", label: "Hero Images", keys: ["landing_hero", "rooms_hero", "conference_hero", "facilities_hero", "dining_hero", "blog_hero"] },
     { id: "navigation", label: "Navigation", keys: ["nav_main", "nav_accommodation"] },
     { id: "page-intros", label: "Page Intros", keys: ["rooms_intro", "dining_intro", "facilities_intro", "gallery_intro", "blog_intro", "recent_rooms", "brand_quote", "testimonials_intro", "dining_menu"] },
     { id: "footer", label: "Footer", keys: ["footer_about", "footer_titles", "footer_links", "footer_pillars"] },
