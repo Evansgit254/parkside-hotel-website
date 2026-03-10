@@ -187,7 +187,7 @@ const contentSchema = [
         fields: [
             { name: "badge", label: "Section Badge", type: "text", default: "Get In Touch" },
             { name: "title", label: "Section Title", type: "text", default: "Begin Your Journey" },
-            { name: "hours", label: "Opening Hours", type: "text", default: "Reception 24/7 · Dining 06:00–23:00" },
+            { name: "hours", label: "Opening Hours", type: "text", default: "Reception 24/7 · Dining 24/7" },
             { name: "form_placeholder", label: "Form Placeholder", type: "text", default: "How can we assist you?" }
         ]
     },
@@ -258,7 +258,7 @@ const contentSchema = [
         fields: [
             { name: "welcome", label: "Step 0: Welcome Message", type: "textarea", default: "Welcome to Parkside Villa. I'm your personal digital concierge. How may I assist you today?" },
             { name: "rooms", label: "Step 1: Accommodation Message", type: "textarea", default: "Our rooms range from the Deluxe Garden Room to the Presidential Executive Suite. Each is a sanctuary of comfort." },
-            { name: "dining", label: "Step 2: Dining Message", type: "textarea", default: "Our kitchen is led by experienced chefs offering both local Kenyan cuisine and international favorites. Available from 06:00 to 23:00." }
+            { name: "dining", label: "Step 2: Dining Message", type: "textarea", default: "Our kitchen is led by experienced chefs offering both local Kenyan cuisine and international favorites. Available 24/7." }
         ]
     },
     {

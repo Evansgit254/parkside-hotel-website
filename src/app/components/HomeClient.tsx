@@ -537,7 +537,7 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                                 { label: "Address", icon: MapPin, text: contactInfo.address },
                                 { label: "Phone", icon: Phone, text: contactInfo.phone, link: `tel:${contactInfo.phone}` },
                                 { label: "Email", icon: Mail, text: contactInfo.email, link: `mailto:${contactInfo.email}` },
-                                { label: "Hours", icon: Calendar, text: content?.contact_section?.hours || "Reception 24/7 · Dining 06:00–23:00" },
+                                { label: "Hours", icon: Calendar, text: content?.contact_section?.hours || "Reception 24/7 · Dining 24/7" },
                             ].map((item: any, i: number) => (
                                 <div key={`contact-item-${i}`} className={styles.contactItem}>
                                     <span className={styles.contactLabel}>{item.label}</span>
