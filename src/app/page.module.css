@@ -27,80 +27,80 @@
 }
 
 .headerScrolled {
-    background: rgba(255, 255, 255, 0.75);
+    background: var(--primary);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(20, 75, 54, 0.08);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
-    height: 70px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+    height: 75px;
 }
 
+
 .headerNonHome {
-    background: rgba(255, 255, 255, 0.85);
+    background: var(--primary);
     backdrop-filter: blur(25px) saturate(160%);
     -webkit-backdrop-filter: blur(25px) saturate(160%);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .headerNonHome.headerScrolled {
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--primary);
 }
 
+
 .headerScrolled .nav a {
-    color: var(--text-primary);
+    color: var(--white);
     text-shadow: none;
     font-weight: 600;
 }
 
 .headerScrolled .logo {
-    color: var(--primary);
+    color: var(--white);
     text-shadow: none;
-    font-weight: 700;
-    letter-spacing: 0.15em;
 }
 
 .headerScrolled .profileLink {
-    color: var(--text-primary);
+    color: var(--white);
     text-shadow: none;
 }
+
 
 /* === NON-HOMEPAGE DARK TEXT (rooms, blog, admin, etc.) === */
 /* Applied when !isHomepage regardless of scroll state */
 .navDarkText .logo {
-    color: var(--primary);
+    color: var(--white);
     text-shadow: none;
-    font-weight: 700;
 }
 
 .navDarkText .nav a {
-    color: var(--text-primary);
+    color: rgba(255, 255, 255, 0.9);
     text-shadow: none;
     font-weight: 600;
 }
 
 .navDarkText .nav a::after {
-    background: var(--primary);
+    background: var(--white);
 }
 
 .navDarkText .nav a:hover {
-    color: var(--primary);
+    color: var(--white);
 }
 
 .navDarkText .profileLink {
-    color: var(--text-primary);
-    text-shadow: none;
+    color: var(--white);
 }
 
 .navDarkText .currencyToggle {
-    border-color: rgba(20, 75, 54, 0.3);
-    color: var(--primary);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--white);
 }
 
 .navDarkText .currencyToggle:hover {
-    background: var(--primary);
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
-    border-color: var(--primary);
+    border-color: var(--white);
 }
+
 
 .navDarkText .hamburger {
     color: var(--text-primary);
@@ -157,15 +157,16 @@
 }
 
 .headerScrolled .currencyToggle {
-    border-color: rgba(20, 75, 54, 0.3);
-    color: var(--primary);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--white);
 }
 
 .headerScrolled .currencyToggle:hover {
-    background: var(--primary);
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
-    border-color: var(--primary);
+    border-color: var(--white);
 }
+
 
 .translateWrapper {
     margin-top: 4px;
@@ -176,7 +177,16 @@
     .translateWrapper {
         min-width: 80px;
     }
+
+    .translateWrapperMobile {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: center;
+    }
 }
+
 
 
 .logoContainer {
@@ -2241,9 +2251,10 @@
 .headerScrolled .hamburger,
 .headerNonHome .hamburger,
 .navDarkText .hamburger {
-    color: var(--text-primary) !important;
+    color: var(--white) !important;
     text-shadow: none !important;
 }
+
 
 /* === MOBILE MENU OVERLAY === */
 .mobileMenuOverlay {

@@ -284,7 +284,9 @@ export default function Header() {
                             <button onClick={toggleCurrency} className={styles.currencyToggle}>
                                 {currency}
                             </button>
+                            <div id="google_translate_admin" className={styles.translateWrapperMobile}></div>
                         </div>
+
                     </div >
                 </div >
             )
