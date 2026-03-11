@@ -1753,25 +1753,6 @@ export async function getDiningVenueBySlug(slug: string) {
     }
 }
 
-export async function updateContactInfo(data: Partial<ContactInfo>) {
-    if (!isDatabaseConfigured()) return { success: false, error: "Database not configured" };
-    try {
-        await requireAdmin();
-        const updated = await prisma.contactInfo.update({
-            where: { id: 1 },
-            data: {
-                ...data,
-                social: data.social !== undefined ? data.social as any : undefined
-            }
-        });
-        revalidateAll();
-        return { success: true, contactInfo: updated };
-    } catch (error: any) {
-        console.error("Error updating contact info:", error);
-        return { success: false, error: error.message || "Database error" };
-    }
-}
-
 const DiningVenueSchema = z.object({
     name: z.string().optional().nullable(),
     desc: z.string().optional().nullable(),
