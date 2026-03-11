@@ -8,6 +8,7 @@ import { useState, useRef } from "react";
 import { Utensils, Salad, IceCream, ChevronRight } from "lucide-react";
 import { useScroll, useTransform } from "framer-motion";
 import { useCurrency } from "../context/CurrencyContext";
+import HeroSlider from "../components/HeroSlider";
 
 interface MenuItem {
     name: string;
@@ -57,8 +58,8 @@ export default function DiningClient({ menuCategories, content, diningVenues }: 
     };
 
     const heroImg = content?.dining_hero?.image;
-    const resolvedHeroImg = Array.isArray(heroImg) ? heroImg[0] : heroImg;
-    const showHero = !!resolvedHeroImg;
+    const heroImages = Array.isArray(heroImg) ? heroImg.filter(Boolean) : (heroImg ? [heroImg] : []);
+    const showHero = heroImages.length > 0;
 
     const venueDefaults: Record<string, any> = {
         dining_vip_lounge: {
@@ -130,23 +131,7 @@ export default function DiningClient({ menuCategories, content, diningVenues }: 
         <main className={styles.main} ref={containerRef}>
             {showHero ? (
                 <section className={styles.hero}>
-                    <motion.div
-                        style={{ y: yParallax, height: '100%', width: '100%', position: 'absolute', top: 0, left: 0 }}
-                        initial={{ scale: 1.1, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 1.2 }}
-                    >
-                        <SafeImage
-                            src={resolvedHeroImg}
-                            alt="Fine Dining"
-                            fill
-                            priority
-                            quality={90}
-                            className={styles.heroImage}
-                            style={{ objectFit: 'cover' }}
-                            fallbackText="Our Culinary Haven"
-                        />
-                    </motion.div>
+                    <HeroSlider images={heroImages} fallbackImage={heroImages[0]} />
                     <div className={styles.heroOverlay} />
                     <div className={styles.heroContent}>
                         <motion.div
