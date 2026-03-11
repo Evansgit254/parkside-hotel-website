@@ -193,7 +193,12 @@ export default function AdminDiningVenues() {
                     </div>
 
                     <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
-                        <label className={styles.label}>Venue Gallery (4+ Photos Recommended)</label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                            <label className={styles.label}>Venue Gallery (4+ Photos Recommended)</label>
+                            <span style={{ fontSize: '0.75rem', color: '#10B981', fontWeight: 500, background: 'rgba(16, 185, 129, 0.1)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
+                                Premium Detail View
+                            </span>
+                        </div>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
                             {editForm.images?.map((url: string, idx: number) => (
                                 <div key={idx} style={{ position: 'relative', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)' }}>

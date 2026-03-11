@@ -7,6 +7,7 @@ export default async function DiningPage() {
     const data = await getSiteData();
     const menuCategories = data.menuCategories || [];
     const content = data.content || {};
+    const diningVenues = data.diningVenues || [];
 
-    return <DiningClient menuCategories={menuCategories} content={content} />;
+    return <DiningClient menuCategories={menuCategories} content={content} diningVenues={diningVenues} />;
 }

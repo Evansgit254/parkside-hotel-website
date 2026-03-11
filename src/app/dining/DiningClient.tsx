@@ -1,10 +1,11 @@
 "use client";
 
 import SafeImage from "../components/SafeImage";
+import Link from "next/link";
 import styles from "./page.module.css";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect, useRef } from "react";
-import { Utensils, Salad, IceCream } from "lucide-react";
+import { useState, useRef } from "react";
+import { Utensils, Salad, IceCream, ChevronRight } from "lucide-react";
 import { useScroll, useTransform } from "framer-motion";
 import { useCurrency } from "../context/CurrencyContext";
 
@@ -21,8 +22,9 @@ interface MenuCategory {
 }
 
 interface DiningClientProps {
-    menuCategories: MenuCategory[];
+    menuCategories: any[];
     content: any;
+    diningVenues: any[];
 }
 
 const categoryIcons: Record<string, any> = {
@@ -31,7 +33,7 @@ const categoryIcons: Record<string, any> = {
     desserts: IceCream
 };
 
-export default function DiningClient({ menuCategories, content }: DiningClientProps) {
+export default function DiningClient({ menuCategories, content, diningVenues }: DiningClientProps) {
     const { formatPrice } = useCurrency();
     const [activeCategory, setActiveCategory] = useState<string>("all");
     const containerRef = useRef(null);
@@ -111,6 +113,19 @@ export default function DiningClient({ menuCategories, content }: DiningClientPr
         desc: content.dining_menu_info?.desc || "An extensive curated selection of gourmet appetizers, main courses, and artisanal desserts."
     };
 
+    // Use DB venues if they exist, otherwise fallback to standard 5
+    const displayVenues = (diningVenues && diningVenues.length > 0)
+        ? diningVenues.slice(0, 5).map((v: any) => ({
+            key: v.slug,
+            data: {
+                title: v.name,
+                desc: v.desc,
+                image: v.images && v.images.length > 0 ? v.images : [v.image]
+            },
+            slug: v.slug
+        }))
+        : venues.map(v => ({ ...v, slug: v.key.replace('dining_', '').replace(/_/g, '-') }));
+
     return (
         <main className={styles.main} ref={containerRef}>
             {showHero ? (
@@ -157,7 +172,7 @@ export default function DiningClient({ menuCategories, content }: DiningClientPr
 
             {/* ── VENUES ── */}
             <section className={styles.venuesSection}>
-                {venues.map((venue, idx) => (
+                {displayVenues.map((venue, idx) => (
                     <motion.div
                         key={venue.key}
                         className={`${styles.venueCard} ${idx % 2 === 1 ? styles.reverse : ''}`}
@@ -202,6 +217,10 @@ export default function DiningClient({ menuCategories, content }: DiningClientPr
                                     <span>Chef's Choice</span>
                                 </div>
                             </div>
+                            <Link href={`/dining/${venue.slug}`} className={styles.discoverBtn}>
+                                Discover More
+                                <ChevronRight size={18} />
+                            </Link>
                         </div>
                     </motion.div>
                 ))}

@@ -426,6 +426,30 @@
     }
 }
 
+.venu.feature span {
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+.discoverBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 0.8rem 1.5rem;
+    background: #1a2a44;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.discoverBtn:hover {
+    background: #2a3c5a;
+    transform: translateX(5px);
+}
+
 @media (max-width: 768px) {
     .venuesSection {
         gap: 6rem;
