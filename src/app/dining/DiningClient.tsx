@@ -218,16 +218,16 @@ export default function DiningClient({ menuCategories, content, diningVenues }: 
                                 </div>
                             </div>
                             <Link
-                                href={venue.isAnchor ? venue.slug : `/dining/${venue.slug}`}
+                                href={(venue as any).isAnchor ? venue.slug : `/dining/${venue.slug}`}
                                 className={styles.discoverBtn}
                                 onClick={(e) => {
-                                    if (venue.isAnchor) {
+                                    if ((venue as any).isAnchor) {
                                         e.preventDefault();
                                         document.querySelector(venue.slug)?.scrollIntoView({ behavior: 'smooth' });
                                     }
                                 }}
                             >
-                                {venue.isAnchor ? 'Explore Menu' : 'Discover More'}
+                                {(venue as any).isAnchor ? 'Explore Menu' : 'Discover More'}
                                 <ChevronRight size={18} />
                             </Link>
                         </div>

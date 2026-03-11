@@ -212,21 +212,21 @@
 .bookButton {
     width: 100%;
     padding: 1.25rem;
-    background: linear-gradient(135deg, var(--secondary) 0%, var(--gold-dark) 100%);
-    color: var(--background-alt);
+    background: var(--secondary);
+    color: #ffffff;
     border: none;
     border-radius: 12px;
     font-weight: 800;
     font-size: 1rem;
     cursor: pointer;
     transition: transform 0.2s ease, opacity 0.2s ease;
-    box-shadow: 0 10px 20px rgba(201, 168, 76, 0.15);
+    box-shadow: 0 10px 20px rgba(74, 43, 102, 0.25);
 }
 
 .bookButton:hover {
     transform: translateY(-2px);
-    opacity: 0.95;
-    background: linear-gradient(135deg, var(--gold-dark) 0%, var(--secondary) 100%);
+    opacity: 0.9;
+    background: var(--secondary);
 }
 
 .conciergeInfo {
