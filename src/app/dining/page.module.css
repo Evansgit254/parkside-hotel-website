@@ -434,20 +434,25 @@
 .discoverBtn {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-top: 1.5rem;
-    padding: 0.8rem 1.5rem;
-    background: #1a2a44;
+    gap: 0.625rem;
+    margin-top: 2rem;
+    padding: 0.75rem 1.75rem;
+    background: #111827;
     color: white;
     text-decoration: none;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    border-radius: 4px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    transition: all 0.4s var(--ease-luxury);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .discoverBtn:hover {
-    background: #2a3c5a;
-    transform: translateX(5px);
+    background: #1f2937;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 @media (max-width: 768px) {
