@@ -151,13 +151,15 @@ export default function ClientRoomDetail({ room, contactInfo }: { room: any; con
                                     Instant Reservation
                                 </button>
 
-                                <div className={styles.conciergeItem}>
-                                    <Phone size={16} />
-                                    <span>Concierge: {contactInfo?.phone || "+254 701 023 026"}</span>
-                                </div>
-                                <div className={styles.conciergeItem}>
-                                    <Mail size={16} />
-                                    <span>Inquiries: {contactInfo?.email || "info@parksidevillakitui.com"}</span>
+                                <div className={styles.conciergeInfo}>
+                                    <div className={styles.conciergeItem}>
+                                        <Phone size={16} />
+                                        <span>Concierge: {contactInfo?.phone || "+254 701 023 026"}</span>
+                                    </div>
+                                    <div className={styles.conciergeItem}>
+                                        <Mail size={16} />
+                                        <span>Inquiries: {contactInfo?.email || "info@parksidevillakitui.com"}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
