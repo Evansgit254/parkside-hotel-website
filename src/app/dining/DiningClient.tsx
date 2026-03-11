@@ -58,6 +58,59 @@ export default function DiningClient({ menuCategories, content }: DiningClientPr
     const resolvedHeroImg = Array.isArray(heroImg) ? heroImg[0] : heroImg;
     const showHero = !!resolvedHeroImg;
 
+    const venueDefaults: Record<string, any> = {
+        dining_vip_lounge: {
+            title: "VIP Lounge",
+            desc: "An exclusive sanctuary for refined tastes and private conversations.",
+            image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg"
+        },
+        dining_open_bar: {
+            title: "Open Bar & Counter",
+            desc: "A lively spot for socializing over masterfully crafted cocktails and refreshments.",
+            image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg"
+        },
+        dining_coffee_garden: {
+            title: "Coffee Garden Suites",
+            desc: "Enjoy your morning brew or evening tea in our tranquil, garden-surrounded suites.",
+            image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg"
+        },
+        dining_ground_restaurant: {
+            title: "Ground Restaurant",
+            desc: "Our signature dining space offering the finest local and international cuisines.",
+            image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg"
+        },
+        dining_breakfast_restaurant: {
+            title: "Breakfast Restaurant",
+            desc: "Start your day with a celebration of fresh flavors in our sunlit breakfast hall.",
+            image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg"
+        }
+    };
+
+    const venues = [
+        { key: 'dining_vip_lounge', icon: Utensils },
+        { key: 'dining_open_bar', icon: Utensils },
+        { key: 'dining_coffee_garden', icon: Utensils },
+        { key: 'dining_ground_restaurant', icon: Utensils },
+        { key: 'dining_breakfast_restaurant', icon: Utensils },
+    ].map(v => {
+        const dbData = content[v.key] || {};
+        const fallback = venueDefaults[v.key] || {};
+        return {
+            ...v,
+            data: {
+                title: dbData.title || fallback.title,
+                desc: dbData.desc || fallback.desc,
+                image: dbData.image || fallback.image
+            }
+        };
+    });
+
+    const menuInfo = {
+        eyebrow: content.dining_menu_info?.eyebrow || "Explore Our Flavors",
+        title: content.dining_menu_info?.title || "Exquisite Flavor Selections",
+        desc: content.dining_menu_info?.desc || "An extensive curated selection of gourmet appetizers, main courses, and artisanal desserts."
+    };
+
     return (
         <main className={styles.main} ref={containerRef}>
             {showHero ? (
@@ -102,13 +155,70 @@ export default function DiningClient({ menuCategories, content }: DiningClientPr
                 </section>
             )}
 
+            {/* ── VENUES ── */}
+            <section className={styles.venuesSection}>
+                {venues.map((venue, idx) => (
+                    <motion.div
+                        key={venue.key}
+                        className={`${styles.venueCard} ${idx % 2 === 1 ? styles.reverse : ''}`}
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 0.8, delay: 0.1 }}
+                    >
+                        <div className={styles.venueGallery}>
+                            <div className={styles.imageGrid}>
+                                {(() => {
+                                    const images = Array.isArray(venue.data.image) ? venue.data.image : [venue.data.image].filter(Boolean);
+                                    if (images.length === 0) return <div className={styles.placeholderImage}>No images available</div>;
+
+                                    return images.slice(0, 3).map((img: string, i: number) => (
+                                        <div key={i} className={`${styles.imageWrapper} ${i === 0 ? styles.large : styles.small}`}>
+                                            <SafeImage
+                                                src={img}
+                                                alt={venue.data.title || "Dining Venue"}
+                                                fill
+                                                className={styles.image}
+                                                style={{ objectFit: 'cover' }}
+                                            />
+                                        </div>
+                                    ));
+                                })()}
+                            </div>
+                        </div>
+                        <div className={styles.venueInfo}>
+                            <div className={styles.venueHeader}>
+                                <span className={styles.venueNum}>0{idx + 1}</span>
+                                <h2 className={styles.venueTitle}>{venue.data.title}</h2>
+                            </div>
+                            <p className={styles.venueDesc}>{venue.data.desc}</p>
+                            <div className={styles.venueFeatures}>
+                                <div className={styles.feature}>
+                                    <Utensils size={16} />
+                                    <span>Premium Service</span>
+                                </div>
+                                <div className={styles.feature}>
+                                    <Utensils size={16} />
+                                    <span>Chef's Choice</span>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                ))}
+            </section>
+
             <section className={styles.section} id="menu">
                 <motion.div
                     {...fadeInUp}
                     style={{ textAlign: 'center', marginBottom: '3rem' }}
                 >
-                    <span className="gold-text" style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 600 }}>{content.dining_menu?.eyebrow || "Explore Our Flavors"}</span>
-                    <h2 style={{ fontSize: '2.5rem', marginTop: '1rem' }}>{content.dining_menu?.title || "Exquisite Flavor Selections"}</h2>
+                    <span className="gold-text" style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 600 }}>{menuInfo.eyebrow || "Explore Our Flavors"}</span>
+                    <h2 style={{ fontSize: '2.5rem', marginTop: '1rem' }}>{menuInfo.title || "Exquisite Flavor Selections"}</h2>
+                    {menuInfo.desc && (
+                        <p style={{ maxWidth: '700px', margin: '1.5rem auto 0', color: '#666', lineHeight: 1.7 }}>
+                            {menuInfo.desc}
+                        </p>
+                    )}
 
                     {/* Category Filter */}
                     <div className={styles.filterBar}>

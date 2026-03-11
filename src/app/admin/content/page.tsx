@@ -9,7 +9,7 @@ import { showToast } from "../components/AdminToast";
 import {
     Save, Loader2, LayoutTemplate, Phone, BarChart2,
     Star, ChevronRight, CheckCircle2, AlertCircle, Upload, Cloud,
-    Image as ImageIcon, AlertTriangle, X
+    Image as ImageIcon, AlertTriangle, X, Utensils
 } from "lucide-react";
 import MediaUpload from "../components/MediaUpload";
 
@@ -170,6 +170,72 @@ const contentSchema = [
         ]
     },
     {
+        key: "dining_vip_lounge",
+        label: "VIP Lounge",
+        description: "Configure the luxury VIP lounge section of our dining experience.",
+        icon: Utensils,
+        fields: [
+            { name: "title", label: "Category Title", type: "text", default: "VIP Lounge" },
+            { name: "desc", label: "Description", type: "textarea", default: "An exclusive sanctuary for refined tastes and private conversations." },
+            { name: "image", label: "Gallery Images", type: "image-list", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg" }
+        ]
+    },
+    {
+        key: "dining_open_bar",
+        label: "Open Bar & Counter",
+        description: "Configure the vibrant open bar and service counter area.",
+        icon: Utensils,
+        fields: [
+            { name: "title", label: "Category Title", type: "text", default: "Open Bar & Counter" },
+            { name: "desc", label: "Description", type: "textarea", default: "A lively spot for socializing over masterfully crafted cocktails and refreshments." },
+            { name: "image", label: "Gallery Images", type: "image-list", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg" }
+        ]
+    },
+    {
+        key: "dining_coffee_garden",
+        label: "Coffee Garden Suites",
+        description: "Configure the serene coffee garden suites among our lush greenery.",
+        icon: Utensils,
+        fields: [
+            { name: "title", label: "Category Title", type: "text", default: "Coffee Garden Suites" },
+            { name: "desc", label: "Description", type: "textarea", default: "Enjoy your morning brew or evening tea in our tranquil, garden-surrounded suites." },
+            { name: "image", label: "Gallery Images", type: "image-list", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg" }
+        ]
+    },
+    {
+        key: "dining_ground_restaurant",
+        label: "Ground Restaurant",
+        description: "Configure our main ground-floor restaurant experience.",
+        icon: Utensils,
+        fields: [
+            { name: "title", label: "Category Title", type: "text", default: "Ground Restaurant" },
+            { name: "desc", label: "Description", type: "textarea", default: "Our signature dining space offering the finest local and international cuisines." },
+            { name: "image", label: "Gallery Images", type: "image-list", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg" }
+        ]
+    },
+    {
+        key: "dining_breakfast_restaurant",
+        label: "Breakfast Restaurant",
+        description: "Configure the dedicated space for our gourmet breakfast service.",
+        icon: Utensils,
+        fields: [
+            { name: "title", label: "Category Title", type: "text", default: "Breakfast Restaurant" },
+            { name: "desc", label: "Description", type: "textarea", default: "Start your day with a celebration of fresh flavors in our sunlit breakfast hall." },
+            { name: "image", label: "Gallery Images", type: "image-list", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg" }
+        ]
+    },
+    {
+        key: "dining_menu_info",
+        label: "Menu Overview",
+        description: "Control titles and copy for the full menu section.",
+        icon: Utensils,
+        fields: [
+            { name: "title", label: "Category Title", type: "text", default: "Our Menu" },
+            { name: "desc", label: "Description", type: "textarea", default: "An extensive curated selection of gourmet appetizers, main courses, and artisanal desserts." },
+            { name: "image", label: "Menu Gallery Images", type: "image-list", default: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772373676/parkside-villa-media/EXTRA_PHOTOS/IMG_8551_mbm7db.jpg" }
+        ]
+    },
+    {
         key: "blog_hero",
         label: "Blog Hero Images",
         description: "Manage sliding background images for the Blog page hero banner.",
@@ -318,6 +384,7 @@ const TABS = [
     { id: "navigation", label: "Navigation", keys: ["nav_main", "nav_accommodation"] },
     { id: "page-intros", label: "Page Intros", keys: ["rooms_intro", "dining_intro", "facilities_intro", "gallery_intro", "blog_intro", "recent_rooms", "brand_quote", "testimonials_intro", "dining_menu"] },
     { id: "footer", label: "Footer", keys: ["footer_about", "footer_titles", "footer_links", "footer_pillars"] },
+    { id: "dining-page", label: "Dining Page", keys: ["dining_vip_lounge", "dining_open_bar", "dining_coffee_garden", "dining_ground_restaurant", "dining_breakfast_restaurant", "dining_menu_info"] },
     { id: "stats", label: "Statistics", keys: ["experience_stats"] },
     { id: "concierge", label: "Concierge", keys: ["concierge_messages"] },
     { id: "seo", label: "SEO", keys: ["seo_metadata"] },
