@@ -4,6 +4,7 @@ import {
     Calendar, ArrowUpRight, Smartphone, CreditCard, Check, Shield,
     Users, Utensils, Waves, Wine, Hotel, MapPin, Phone, Mail, Facebook, Instagram, Linkedin
 } from "lucide-react";
+import GoogleMap from "./GoogleMap";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import Link from "next/link";
@@ -135,6 +136,23 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
             setBookingStatus("Error processing reservation");
             setTimeout(() => setBookingStatus(""), 3000);
         }
+    };
+
+    const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setContactStatus("Sending...");
+        const fd = new FormData(e.currentTarget as HTMLFormElement);
+        await addLead({
+            name: (fd.get("name") as string) || "",
+            email: (fd.get("email") as string) || "",
+            phone: (fd.get("phone") as string) || "N/A",
+            date: "N/A",
+            room: "General Inquiry",
+            guests: (fd.get("message") as string) || "",
+        });
+        setContactStatus("Message sent!");
+        (e.target as HTMLFormElement).reset();
+        setTimeout(() => setContactStatus(""), 4000);
     };
 
     return (
@@ -525,14 +543,17 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
             <section id="contact" className={styles.contactSection}>
                 <div className={styles.contactInner}>
                     <motion.div
-                        className={styles.contactLeft}
-                        initial="hidden" whileInView="visible" viewport={{ once: true }}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
                         variants={stagger}
+                        className={styles.contactLeft}
                     >
                         <motion.span variants={fadeUp} className={styles.badge}>{content?.contact_section?.badge || "Get In Touch"}</motion.span>
                         <motion.h2 variants={fadeUp} className={styles.contactTitle}>
                             {content?.contact_section?.title || <>Begin Your<br />Journey</>}
                         </motion.h2>
+
                         <motion.div variants={fadeUp} className={styles.contactDetails}>
                             {[
                                 { label: "Address", icon: MapPin, text: contactInfo.address },
@@ -560,50 +581,42 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                     </motion.div>
 
                     <motion.form
+                        initial={{ opacity: 0, x: 50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                        onSubmit={handleContactSubmit}
                         className={styles.contactForm}
-                        initial="hidden" whileInView="visible" viewport={{ once: true }}
-                        variants={stagger}
-                        onSubmit={async (e) => {
-                            e.preventDefault();
-                            setContactStatus("Sending...");
-                            const fd = new FormData(e.currentTarget as HTMLFormElement);
-                            await addLead({
-                                name: (fd.get("name") as string) || "",
-                                email: (fd.get("email") as string) || "",
-                                phone: "N/A",
-                                date: "N/A",
-                                room: "General Inquiry",
-                                guests: (fd.get("message") as string) || "",
-                            });
-                            setContactStatus("Message sent!");
-                            (e.target as HTMLFormElement).reset();
-                            setTimeout(() => setContactStatus(""), 4000);
-                        }}
                     >
-                        {[
-                            { name: "name", label: "Full Name", type: "text", placeholder: "Your name" },
-                            { name: "email", label: "Email Address", type: "email", placeholder: "your@email.com" },
-                        ].map(f => (
-                            <motion.div key={`form-group-${f.name}`} variants={fadeUp} className={styles.formGroup}>
-                                <label className={styles.formLabel}>{f.label}</label>
-                                <input name={f.name} type={f.type} className={styles.input} placeholder={f.placeholder} required />
-                            </motion.div>
-                        ))}
-                        <motion.div variants={fadeUp} className={styles.formGroup}>
+                        <div className={styles.formGroup}>
+                            <label className={styles.formLabel}>Full Name</label>
+                            <input type="text" name="name" className={styles.input} placeholder="John Doe" required />
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                            <div className={styles.formGroup}>
+                                <label className={styles.formLabel}>Email Address</label>
+                                <input type="email" name="email" className={styles.input} placeholder="john@example.com" required />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.formLabel}>Phone Number</label>
+                                <input type="tel" name="phone" className={styles.input} placeholder="+254..." />
+                            </div>
+                        </div>
+                        <div className={styles.formGroup}>
                             <label className={styles.formLabel}>Message</label>
                             <textarea name="message" className={`${styles.input} ${styles.textarea}`} placeholder={content?.contact_section?.form_placeholder || "How can we assist you?"} required />
-                        </motion.div>
-                        <motion.div variants={fadeUp}>
-                            <Magnetic>
-                                <button type="submit" className={styles.buttonPrimary} disabled={!!contactStatus}>
-                                    <span>{contactStatus || "Send Enquiry"}</span>
-                                    {!contactStatus && <ArrowUpRight size={14} />}
-                                </button>
-                            </Magnetic>
-                        </motion.div>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <button type="submit" className={styles.buttonPrimary} disabled={!!contactStatus}>
+                                <span>{contactStatus || "Send Enquiry"}</span>
+                                {!contactStatus && <ArrowUpRight size={14} />}
+                            </button>
+                        </div>
                     </motion.form>
                 </div>
             </section>
+
+            <GoogleMap />
 
 
             {/* ── BOOKING MODAL ── */}

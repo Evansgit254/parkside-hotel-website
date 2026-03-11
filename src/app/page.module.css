@@ -1413,7 +1413,7 @@
 /* Contact Section Fixes */
 .contactSection {
     background: #F8F6F0;
-    padding: 5rem var(--container-padding) 10rem;
+    padding: 5rem var(--container-padding) 4rem;
     position: relative;
     overflow: visible;
     scroll-margin-top: 110px;

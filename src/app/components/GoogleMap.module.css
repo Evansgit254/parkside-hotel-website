@@ -1,0 +1,84 @@
+.mapSection {
+    padding: 2rem var(--container-padding) 8rem;
+    background: #F8F6F0;
+    /* Matching contact section background */
+}
+
+.mapContainer {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.mapWrapper {
+    width: 100%;
+    height: 450px;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(20, 75, 54, 0.08);
+    border: 1px solid rgba(20, 75, 54, 0.05);
+    background: #FFFFFF;
+}
+
+.mapFrame {
+    width: 100%;
+    height: 100%;
+    filter: grayscale(0.2) contrast(1.1);
+    transition: filter 0.5s ease;
+}
+
+.mapFrame:hover {
+    filter: grayscale(0) contrast(1);
+}
+
+.mapInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.infoBadge {
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--secondary);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(20, 75, 54, 0.1);
+    border-radius: 100px;
+}
+
+.infoTitle {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--secondary);
+    margin-bottom: 1rem;
+}
+
+.infoDesc {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .mapWrapper {
+        height: 350px;
+        border-radius: 1.5rem;
+    }
+
+    .mapSection {
+        padding-bottom: 5rem;
+    }
+
+    .infoTitle {
+        font-size: 1.5rem;
+    }
+}
