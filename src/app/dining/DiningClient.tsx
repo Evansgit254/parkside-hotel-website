@@ -115,8 +115,8 @@ export default function DiningClient({ menuCategories, content, diningVenues }: 
     };
 
     // Use DB venues if they exist, otherwise fallback to standard 5
-    const displayVenues = (diningVenues && diningVenues.length > 0)
-        ? diningVenues.slice(0, 5).map((v: any) => ({
+    const dbVenues = (diningVenues && diningVenues.length > 0)
+        ? diningVenues.map((v: any) => ({
             key: v.slug,
             data: {
                 title: v.name,
@@ -126,6 +126,21 @@ export default function DiningClient({ menuCategories, content, diningVenues }: 
             slug: v.slug
         }))
         : venues.map(v => ({ ...v, slug: v.key.replace('dining_', '').replace(/_/g, '-') }));
+
+    // Append "Our Menu" as the 6th category
+    const displayVenues = [
+        ...dbVenues.slice(0, 5),
+        {
+            key: 'our-menu',
+            data: {
+                title: "Our menu",
+                desc: "Explore our extensive curated selection of gourmet appetizers, main courses, and artisanal desserts.",
+                image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772371880/parkside-villa-media/Dining_and_Restaurant/20220322_124810_n3g83g.jpg"
+            },
+            slug: "#menu",
+            isAnchor: true
+        }
+    ];
 
     return (
         <main className={styles.main} ref={containerRef}>
@@ -202,8 +217,17 @@ export default function DiningClient({ menuCategories, content, diningVenues }: 
                                     <span>Chef's Choice</span>
                                 </div>
                             </div>
-                            <Link href={`/dining/${venue.slug}`} className={styles.discoverBtn}>
-                                Discover More
+                            <Link
+                                href={venue.isAnchor ? venue.slug : `/dining/${venue.slug}`}
+                                className={styles.discoverBtn}
+                                onClick={(e) => {
+                                    if (venue.isAnchor) {
+                                        e.preventDefault();
+                                        document.querySelector(venue.slug)?.scrollIntoView({ behavior: 'smooth' });
+                                    }
+                                }}
+                            >
+                                {venue.isAnchor ? 'Explore Menu' : 'Discover More'}
                                 <ChevronRight size={18} />
                             </Link>
                         </div>
