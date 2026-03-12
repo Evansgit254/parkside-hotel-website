@@ -225,7 +225,7 @@ export default function AdminRooms() {
                         <textarea className={styles.input} style={{ minHeight: '90px', resize: 'vertical' }} placeholder="Describe the room's unique features..." value={editForm.desc} onChange={e => setEditForm({ ...editForm, desc: e.target.value })} />
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className={styles.formRow}>
                         <div className={styles.formGroup}>
                             <label className={styles.label}>Price</label>
                             <input className={styles.input} placeholder="e.g. $150" value={editForm.price} onChange={e => setEditForm({ ...editForm, price: e.target.value })} />
@@ -236,7 +236,7 @@ export default function AdminRooms() {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className={styles.formRow}>
                         <div className={styles.formGroup}>
                             <label className={styles.label}>Tag (Optional)</label>
                             <input className={styles.input} placeholder="e.g. Best Seller" value={editForm.tag || ""} onChange={e => setEditForm({ ...editForm, tag: e.target.value })} />

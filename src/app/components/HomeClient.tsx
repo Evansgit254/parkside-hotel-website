@@ -592,7 +592,7 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                             <label className={styles.formLabel}>Full Name</label>
                             <input type="text" name="name" className={styles.input} placeholder="John Doe" required />
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                        <div className={styles.formRow}>
                             <div className={styles.formGroup}>
                                 <label className={styles.formLabel}>Email Address</label>
                                 <input type="email" name="email" className={styles.input} placeholder="john@example.com" required />
@@ -672,7 +672,7 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                                 <AnimatePresence mode="wait">
                                     {bookingStep === 1 && (
                                         <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                            <div className={styles.formRow}>
                                                 <div className={styles.formGroup}>
                                                     <label className={styles.formLabel}>CHECK IN</label>
                                                     <div className={styles.inputWithIcon}>
@@ -745,7 +745,7 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                                             {paymentStep === "card" && (
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                                                     <div className={styles.formGroup}><label className={styles.formLabel}>CARD NUMBER</label><div style={{ position: 'relative' }}><input type="text" placeholder="**** **** **** 4242" className={styles.input} required /></div></div>
-                                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                                    <div className={styles.formRow}>
                                                         <div className={styles.formGroup}><label className={styles.formLabel}>EXPIRY</label><input type="text" placeholder="MM/YY" className={styles.input} required /></div>
                                                         <div className={styles.formGroup}><label className={styles.formLabel}>CVV</label><input type="password" placeholder="***" className={styles.input} required /></div>
                                                     </div>

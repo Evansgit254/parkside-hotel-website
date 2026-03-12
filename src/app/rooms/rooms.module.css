@@ -5,6 +5,9 @@
     font-family: var(--font-body);
 }
 
+@media (max-width: 768px) {
+}
+
 .container {
     max-width: 1400px;
     margin: 0 auto;
@@ -23,6 +26,13 @@
     overflow: hidden;
     width: 100%;
     text-align: center;
+    padding-top: 90px;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding-top: 75px;
+    }
 }
 
 .heroImage {

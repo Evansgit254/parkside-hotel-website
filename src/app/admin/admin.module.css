@@ -811,6 +811,19 @@
     gap: 1.25rem;
 }
 
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+    .formRow {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
 /* === BUTTONS === */
 .loginButton {
     width: 100%;

@@ -628,7 +628,7 @@ export default function AdminContent() {
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', flex: 1 }}>
                                 {/* Group stat fields into pairs for experience_stats */}
                                 {activeSchemaSection.key === "experience_stats" ? (
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem 2rem' }}>
+                                    <div className={styles.formRow} style={{ gap: '1.5rem 2rem' }}>
                                         {[1, 2, 3, 4].map(n => (
                                             <div key={n} style={{
                                                 background: '#F7F8FC', border: '1px solid rgba(0,0,0,0.07)',
@@ -752,7 +752,7 @@ export default function AdminContent() {
 
             {/* ── Contact Info Tab ── */}
             {activeTab === "contact" && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: '#F7F8FC', border: '1px solid rgba(0,0,0,0.07)' }}>
+                <div className={styles.formRow} style={{ gap: '1px', background: '#F7F8FC', border: '1px solid rgba(0,0,0,0.07)' }}>
                     {/* Basic Info */}
                     <div style={{ background: '#FFFFFF', padding: '2rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                         <div style={{ borderBottom: '1px solid rgba(0,0,0,0.07)', paddingBottom: '1.25rem' }}>

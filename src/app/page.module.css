@@ -378,13 +378,22 @@
     position: relative;
     height: calc(100vh - 90px);
     min-height: 600px;
-
+    padding-top: 90px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     background: #050f0b;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        height: auto;
+        min-height: 100vh;
+        padding-top: 120px;
+        padding-bottom: 4rem;
+    }
 }
 
 .heroSlide {
@@ -461,12 +470,12 @@
 
 .title {
     font-family: var(--font-serif);
-    font-size: clamp(3.5rem, 7vw, 6.5rem);
+    font-size: clamp(2.5rem, 8vw, 6.5rem);
     font-weight: 800;
-    line-height: 1.0;
+    line-height: 1.1;
     color: #FFFFFF !important;
     letter-spacing: -0.02em;
-    max-width: 800px;
+    max-width: 900px;
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -1506,14 +1515,27 @@
 .contactForm {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
     position: relative;
     z-index: 2;
     background: #FFFFFF;
-    padding: clamp(2rem, 5vw, 4rem);
+    padding: clamp(1.5rem, 5vw, 4rem);
     border-radius: 2rem;
     box-shadow: 0 30px 60px rgba(20, 75, 54, 0.08);
     border: 1px solid rgba(20, 75, 54, 0.05);
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+    .formRow {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
 }
 
 .formGroup {

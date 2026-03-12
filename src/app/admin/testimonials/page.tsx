@@ -210,7 +210,7 @@ export default function AdminTestimonials() {
                     />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div className={styles.formRow}>
                     <div className={styles.formGroup}>
                         <label className={styles.label}>Guest Name</label>
                         <input

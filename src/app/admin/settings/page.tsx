@@ -87,7 +87,7 @@ export default function AdminSettings() {
                         <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Maintain accurate contact details for guest communication</p>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                    <div className={styles.formRow}>
                         <div className={styles.formGroup}>
                             <label className={styles.label}><Phone size={14} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Primary Phone</label>
                             <input
