@@ -11,6 +11,17 @@
     background: var(--background);
 }
 
+.contentWrapper {
+    flex: 1;
+    margin-top: 90px;
+}
+
+@media (max-width: 768px) {
+    .contentWrapper {
+        margin-top: 70px;
+    }
+}
+
 /* === NAVIGATION === */
 .header {
     position: fixed;

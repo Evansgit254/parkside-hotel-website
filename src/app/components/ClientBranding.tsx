@@ -12,8 +12,7 @@ export default function ClientBranding({ children }: { children: React.ReactNode
     return (
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             {!isHideBranding && <Header />}
-            <div style={{ flex: 1, marginTop: !isHideBranding ? '90px' : '0' }}>
-
+            <div className={!isHideBranding ? styles.contentWrapper : ''} style={{ flex: 1 }}>
                 {children}
             </div>
             {!isHideBranding && <Footer />}
