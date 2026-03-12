@@ -37,14 +37,14 @@ function createPrismaClient() {
         const urlParams = new URL(url.replace(/^postgres(ql)?:\/\//, "http://"));
 
         // Ensure connection_limit is manageable (2 for prod workers, 5 for dev)
-        const limit = process.env.NODE_ENV === "production" ? "2" : "5";
+        const limit = process.env.NODE_ENV === "production" ? "10" : "5";
         urlParams.searchParams.set("connection_limit", limit);
 
         // Increase connect_timeout for Neon cold starts (20s) - helps with 'Closed' errors on wake
         urlParams.searchParams.set("connect_timeout", "20");
 
         // Increase pool_timeout for busy builds/renders
-        urlParams.searchParams.set("pool_timeout", "60");
+        urlParams.searchParams.set("pool_timeout", "120");
 
         url = url.split("?")[0] + "?" + urlParams.searchParams.toString();
     }

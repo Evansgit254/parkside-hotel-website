@@ -16,7 +16,7 @@ test.describe('Parkside Villa Admin CRUD Operations', () => {
     test('Rooms CRUD', async ({ page }) => {
         console.log('>>> [Rooms Test] Starting...');
         await page.goto('/admin/rooms', { waitUntil: 'domcontentloaded' });
-        await expect(page.getByRole('heading', { name: 'Accommodation' })).toBeVisible({ timeout: 10000 });
+        await expect(page.getByRole('heading', { name: 'Rooms' })).toBeVisible({ timeout: 10000 });
 
         const timestamp = Date.now().toString();
         const roomName = `Test Room ${timestamp}`;
@@ -25,7 +25,6 @@ test.describe('Parkside Villa Admin CRUD Operations', () => {
         await page.fill('input[placeholder="e.g. Executive Suite"]', roomName);
         await page.fill('input[placeholder="e.g. $150"]', '999');
         await page.fill('textarea[placeholder="Describe the room\'s unique features..."]', 'Test description');
-        await page.fill('input[placeholder="https://images.unsplash.com/..."]', 'https://images.unsplash.com/photo-1590490360182-c33d57733427');
 
         await page.getByRole('button', { name: 'Save Changes' }).click();
         await expect(page.getByText('KES 999')).toBeVisible({ timeout: 15000 });
