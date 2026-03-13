@@ -5,13 +5,14 @@ import { getSiteData } from "../actions";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./gallery.module.css";
 import Image from "next/image";
-import { Play } from "lucide-react";
+import { Play, X, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function GalleryPage() {
     const [media, setMedia] = useState<{ url: string; category: string; caption?: string; type: 'image' | 'video'; thumbnail?: string }[]>([]);
     const [content, setContent] = useState<any>({});
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("All");
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
     useEffect(() => {
         getSiteData().then(data => {
@@ -82,6 +83,34 @@ export default function GalleryPage() {
         ? media
         : media.filter(m => m.category === activeFilter);
 
+    const imageItems = filteredMedia.filter(m => m.type === 'image');
+
+    const openLightbox = (index: number) => {
+        const item = filteredMedia[index];
+        if (item.type === 'video') {
+            window.open(item.url, '_blank');
+            return;
+        }
+        // Find this item's position among image-only items
+        const imgIdx = imageItems.findIndex(img => img.url === item.url);
+        setLightboxIndex(imgIdx >= 0 ? imgIdx : 0);
+    };
+
+    const closeLightbox = () => setLightboxIndex(null);
+    const prevImage = () => setLightboxIndex(i => i !== null ? (i - 1 + imageItems.length) % imageItems.length : null);
+    const nextImage = () => setLightboxIndex(i => i !== null ? (i + 1) % imageItems.length : null);
+
+    useEffect(() => {
+        const handleKey = (e: KeyboardEvent) => {
+            if (lightboxIndex === null) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') prevImage();
+            if (e.key === 'ArrowRight') nextImage();
+        };
+        window.addEventListener('keydown', handleKey);
+        return () => window.removeEventListener('keydown', handleKey);
+    }, [lightboxIndex, imageItems.length]);
+
     if (loading) return <div className={styles.loading}>Curating Gallery...</div>;
 
     return (
@@ -132,11 +161,7 @@ export default function GalleryPage() {
                                 transition={{ duration: 0.5 }}
                                 key={`${item.url}-${index}`}
                                 className={styles.imageCard}
-                                onClick={() => {
-                                    if (item.type === 'video') {
-                                        window.open(item.url, '_blank');
-                                    }
-                                }}
+                                onClick={() => openLightbox(index)}
                             >
                                 <div className={styles.imageWrapper}>
                                     <Image
@@ -163,6 +188,51 @@ export default function GalleryPage() {
                     </AnimatePresence>
                 </motion.div>
             </section>
+
+            {/* Lightbox */}
+            <AnimatePresence>
+                {lightboxIndex !== null && imageItems[lightboxIndex] && (
+                    <motion.div
+                        className={styles.lightbox}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={closeLightbox}
+                    >
+                        <button className={styles.lightboxClose} onClick={closeLightbox}>
+                            <X size={28} />
+                        </button>
+
+                        <button className={`${styles.lightboxNav} ${styles.lightboxPrev}`} onClick={(e) => { e.stopPropagation(); prevImage(); }}>
+                            <ChevronLeft size={36} />
+                        </button>
+
+                        <motion.div
+                            key={lightboxIndex}
+                            className={styles.lightboxContent}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ duration: 0.2 }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <img
+                                src={imageItems[lightboxIndex].url}
+                                alt={imageItems[lightboxIndex].caption || "Gallery Image"}
+                                className={styles.lightboxImage}
+                            />
+                            <div className={styles.lightboxCaption}>
+                                {imageItems[lightboxIndex].caption && <h3>{imageItems[lightboxIndex].caption}</h3>}
+                                <span>{lightboxIndex + 1} / {imageItems.length}</span>
+                            </div>
+                        </motion.div>
+
+                        <button className={`${styles.lightboxNav} ${styles.lightboxNext}`} onClick={(e) => { e.stopPropagation(); nextImage(); }}>
+                            <ChevronRight size={36} />
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
