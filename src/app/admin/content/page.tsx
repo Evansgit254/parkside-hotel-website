@@ -396,8 +396,8 @@ const defaultContact = {
     email: "info@parksidevillakitui.com",
     whatsapp: "254701023026",
     address: "Parkside Villa, Kitui - Kenya",
-    facebook: "https://facebook.com/parksidevillakitui",
-    instagram: "https://instagram.com/parksidevillakitui",
+    facebook: "https://www.facebook.com/ParksideVilla/",
+    instagram: "https://www.instagram.com/kituiparksidevilla/",
     linkedin: "https://linkedin.com/company/parksidevillakitui",
 };
 

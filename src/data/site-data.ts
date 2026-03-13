@@ -179,10 +179,10 @@ export const contactInfo = {
     whatsapp: "254701023026",
     address: "P.O. Box 675-90200, Kitui",
     social: {
-        facebook: "https://facebook.com/parksidevillakitui",
-        instagram: "https://instagram.com/parksidevillakitui",
+        facebook: "https://www.facebook.com/ParksideVilla/",
+        instagram: "https://www.instagram.com/kituiparksidevilla/",
         linkedin: "https://linkedin.com/company/parksidevillakitui",
-        tiktok: "https://tiktok.com/@parksidevillakitui",
+        tiktok: "https://www.tiktok.com/@parkside.villa.kitui",
         whatsapp: "https://wa.me/254701023026"
     }
 };
