@@ -128,14 +128,21 @@ export default function DiningClient({ menuCategories, content, diningVenues }: 
         : venues.map(v => ({ ...v, slug: v.key.replace('dining_', '').replace(/_/g, '-') }));
 
     // Append "Our Menu" as the 6th category
+    const menuCardImage = (() => {
+        const img = content?.dining_menu_info?.image;
+        if (Array.isArray(img) && img.filter(Boolean).length > 0) return img.filter(Boolean);
+        if (typeof img === 'string' && img) return [img];
+        return ["https://res.cloudinary.com/dizwm3mic/image/upload/v1772371880/parkside-villa-media/Dining_and_Restaurant/20220322_124810_n3g83g.jpg"];
+    })();
+
     const displayVenues = [
         ...dbVenues.slice(0, 5),
         {
             key: 'our-menu',
             data: {
-                title: "Our menu",
-                desc: "Explore our extensive curated selection of gourmet appetizers, main courses, and artisanal desserts.",
-                image: "https://res.cloudinary.com/dizwm3mic/image/upload/v1772371880/parkside-villa-media/Dining_and_Restaurant/20220322_124810_n3g83g.jpg"
+                title: content?.dining_menu_info?.title || "Our menu",
+                desc: content?.dining_menu_info?.desc || "Explore our extensive curated selection of gourmet appetizers, main courses, and artisanal desserts.",
+                image: menuCardImage
             },
             slug: "#menu",
             isAnchor: true
