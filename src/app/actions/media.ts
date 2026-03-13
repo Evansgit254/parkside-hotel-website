@@ -73,6 +73,7 @@ export async function getLocalMedia() {
                         if (fullPathLower.includes("high rise")) category = "Rooms";
                         else if (fullPathLower.includes("cottage")) category = "Rooms";
                         else if (fullPathLower.includes("accommodation") || fullPathLower.includes("room")) category = "Rooms";
+                        else if (fullPathLower.includes("vip lounge")) category = "Dining";
                         else if (fullPathLower.includes("ground dining")) category = "Dining";
                         else if (fullPathLower.includes("dining") || fullPathLower.includes("restaurant") || fullPathLower.includes("eateries") || fullPathLower.includes("food")) category = "Dining";
                         else if (fullPathLower.includes("conference") || fullPathLower.includes("hall")) category = "Conference";
