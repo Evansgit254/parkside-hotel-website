@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Instagram, Linkedin, MessageCircle, PlaySquare } from "lucide-react";
+import { Facebook, Instagram, MessageCircle, PlaySquare } from "lucide-react";
 import styles from "../page.module.css";
 import { useState, useEffect } from "react";
 import { getPublicSiteData, subscribeNewsletter } from "../actions";
@@ -57,7 +57,6 @@ export default function Footer() {
                         <div className={styles.footerSocial}>
                             {contactInfo.social?.facebook && <a href={contactInfo.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Facebook size={20} /></a>}
                             {contactInfo.social?.instagram && <a href={contactInfo.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Instagram size={20} /></a>}
-                            {contactInfo.social?.linkedin && <a href={contactInfo.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Linkedin size={20} /></a>}
                             {contactInfo.social?.whatsapp && <a href={contactInfo.social.whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><MessageCircle size={20} /></a>}
                             {contactInfo.social?.tiktok && <a href={contactInfo.social.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok"><PlaySquare size={20} /></a>}
                         </div>

@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 import { useState, useEffect } from "react";
 import styles from "../admin.module.css";
 import { getSiteData, updateContactInfo, addHeroImage, deleteHeroImage } from "../../actions";
-import { Save, Phone, Mail, MapPin, MessageSquare, Facebook, Instagram, Linkedin, Plus, Trash2, Image as ImageIcon } from "lucide-react";
+import { Save, Phone, Mail, MapPin, MessageSquare, Facebook, Instagram, Plus, Trash2, Image as ImageIcon } from "lucide-react";
 import { showToast } from "../components/AdminToast";
 import MediaUpload from "../components/MediaUpload";
 import AdminModal from "../../components/AdminModal";
@@ -150,15 +150,6 @@ export default function AdminSettings() {
                                 className={styles.input}
                                 value={contact.social?.instagram || ''}
                                 onChange={e => setContact({ ...contact, social: { ...contact.social, instagram: e.target.value } })}
-                            />
-                        </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}><Linkedin size={14} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> LinkedIn Network</label>
-                            <input
-                                type="url"
-                                className={styles.input}
-                                value={contact.social?.linkedin || ''}
-                                onChange={e => setContact({ ...contact, social: { ...contact.social, linkedin: e.target.value } })}
                             />
                         </div>
                     </div>

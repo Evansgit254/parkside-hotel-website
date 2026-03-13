@@ -181,7 +181,6 @@ export const contactInfo = {
     social: {
         facebook: "https://www.facebook.com/ParksideVilla/",
         instagram: "https://www.instagram.com/kituiparksidevilla/",
-        linkedin: "https://linkedin.com/company/parksidevillakitui",
         tiktok: "https://www.tiktok.com/@parkside.villa.kitui",
         whatsapp: "https://wa.me/254701023026"
     }

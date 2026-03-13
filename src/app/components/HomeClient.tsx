@@ -2,7 +2,7 @@
 
 import {
     Calendar, ArrowUpRight, Smartphone, CreditCard, Check, Shield,
-    Users, Utensils, Waves, Wine, Hotel, MapPin, Phone, Mail, Facebook, Instagram, Linkedin
+    Users, Utensils, Waves, Wine, Hotel, MapPin, Phone, Mail, Facebook, Instagram
 } from "lucide-react";
 import GoogleMap from "./GoogleMap";
 import { useState, useEffect } from "react";
@@ -576,7 +576,6 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                         <motion.div variants={fadeUp} style={{ display: 'flex', gap: '1.5rem', paddingTop: '1rem' }}>
                             {contactInfo.social?.facebook && <a href={contactInfo.social.facebook} target="_blank" rel="noreferrer" style={{ color: 'var(--text-muted)' }}><Facebook size={18} /></a>}
                             {contactInfo.social?.instagram && <a href={contactInfo.social.instagram} target="_blank" rel="noreferrer" style={{ color: 'var(--text-muted)' }}><Instagram size={18} /></a>}
-                            {contactInfo.social?.linkedin && <a href={contactInfo.social.linkedin} target="_blank" rel="noreferrer" style={{ color: 'var(--text-muted)' }}><Linkedin size={18} /></a>}
                         </motion.div>
                     </motion.div>
 
