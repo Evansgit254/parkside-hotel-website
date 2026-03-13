@@ -1147,6 +1147,47 @@ export async function getCloudinarySignature() {
     }
 }
 
+/**
+ * Direct local file upload to public/uploads.
+ * This should be used for files larger than Cloudinary limits.
+ */
+export async function uploadFileLocal(formData: FormData) {
+    try {
+        await requireAdmin();
+        const file = formData.get("file") as File;
+        if (!file) {
+            return { success: false, error: "No file provided" };
+        }
+
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const suffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
+        const originalName = file.name || "upload";
+        const cleanName = originalName.replace(/[^a-zA-Z0-9.-]/g, "_");
+        const filename = `${suffix}-${cleanName}`;
+        
+        const uploadDir = path.join(process.cwd(), "public", "uploads");
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+
+        const filePath = path.join(uploadDir, filename);
+        fs.writeFileSync(filePath, buffer);
+
+        // Return the public path
+        const publicPath = `/uploads/${filename}`;
+        
+        return { 
+            success: true, 
+            url: publicPath,
+            name: originalName,
+            size: file.size
+        };
+    } catch (error: any) {
+        console.error("Local upload error:", error);
+        return { success: false, error: error.message || "Failed to upload file locally" };
+    }
+}
+
 // ─────────────────────────────────────────────
 // AUTH & PROFILE
 // ─────────────────────────────────────────────

@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Upload, X, Image as ImageIcon, Link as LinkIcon, Loader2, CheckCircle2 } from "lucide-react";
 import styles from "../admin.module.css";
-import { getCloudinarySignature } from "../../actions";
+import { getCloudinarySignature, uploadFileLocal } from "../../actions";
 import { getLocalMedia } from "../../actions/media";
 import { showToast } from "./AdminToast";
 
@@ -40,7 +40,7 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
         if (multiple) {
             const validFiles = Array.from(files).filter(file => {
                 if (file.size > MAX_FILE_SIZE) {
-                    showToast(`Skipping ${file.name}: Exceeds 10MB limit.`, "error");
+                    showToast(`Skipping ${file.name}: Exceeds 10MB limit. Consider local upload.`, "error");
                     return false;
                 }
                 return true;
@@ -51,11 +51,39 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
         } else {
             const file = files[0];
             if (file.size > MAX_FILE_SIZE) {
-                showToast(`File too large: ${file.name} is over 10MB. Please compress or use a smaller image.`, "error");
-                if (fileInputRef.current) fileInputRef.current.value = "";
+                const proceedLocal = confirm(`${file.name} is over 10MB (Cloudinary limit). Would you like to upload it directly to local server storage instead?`);
+                if (proceedLocal) {
+                    uploadFileToLocalServer(file);
+                } else {
+                    if (fileInputRef.current) fileInputRef.current.value = "";
+                }
                 return;
             }
             uploadFile(file);
+        }
+    };
+
+    const uploadFileToLocalServer = async (file: File) => {
+        setUploading(true);
+        setUploadProgress({ current: 1, total: 1 });
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            
+            const result = await uploadFileLocal(formData);
+            if (result.success && result.url) {
+                onChange(result.url);
+                showToast("Asset uploaded to local storage successfully", "success");
+            } else {
+                throw new Error(result.error || "Local upload failed");
+            }
+        } catch (error: any) {
+            console.error("Local upload failed", error);
+            showToast(error.message || "Local upload failed", "error");
+        } finally {
+            setUploading(false);
+            setUploadProgress(null);
+            if (fileInputRef.current) fileInputRef.current.value = "";
         }
     };
 
@@ -343,7 +371,7 @@ export default function MediaUpload({ value, onChange, onFilesChange, label, typ
                                 </div>
                                 <h3>Drop your imagery here</h3>
                                 <p>Drag and drop or click to browse files</p>
-                                <span className={styles.dropzoneNote}>Supports JPG, PNG, WEBP (Max 10MB)</span>
+                                <span className={styles.dropzoneNote}>Supports JPG, PNG, WEBP (Cloudinary &lt; 10MB | Local &gt; 10MB)</span>
                             </div>
                         )}
                     </div>
