@@ -200,7 +200,7 @@ export async function getSiteData() {
             diningVenues: (diningVenues as any[]).map(v => ({ ...v, image: v.image ? optimizeCloudinary(v.image) : null, images: (v.images || []).map((img: string) => optimizeCloudinary(img)) })),
             testimonials: testimonials as Testimonial[],
             menuCategories: menuCategories as MenuCategory[],
-            contactInfo: contactInfoRow ? { ...(contactInfoRow as ContactInfo), social: (contactInfoRow as ContactInfo).social || {} } : getStaticSiteData().contactInfo,
+            contactInfo: contactInfoRow ? { ...(contactInfoRow as ContactInfo), social: { ...staticData.contactInfo.social, ...((contactInfoRow as ContactInfo).social as any || {}) } } : getStaticSiteData().contactInfo,
             blogPosts: (blogPosts as any[]).map(p => ({ ...p, image: p.image ? optimizeCloudinary(p.image) : "" })),
             leads: leads.map((l: Lead) => ({
                 id: l.id,
@@ -305,7 +305,7 @@ export async function getPublicSiteData() {
             diningVenues: (diningVenues as any[]).map(v => ({ ...v, image: v.image ? optimizeCloudinary(v.image) : null, images: (v.images || []).map((img: string) => optimizeCloudinary(img)) })),
             testimonials: testimonials as Testimonial[],
             menuCategories: menuCategories as MenuCategory[],
-            contactInfo: contactInfoRow ? { ...(contactInfoRow as ContactInfo), social: (contactInfoRow as ContactInfo).social || {} } : getStaticSiteData().contactInfo,
+            contactInfo: contactInfoRow ? { ...(contactInfoRow as ContactInfo), social: { ...staticData.contactInfo.social, ...((contactInfoRow as ContactInfo).social as any || {}) } } : getStaticSiteData().contactInfo,
             blogPosts: (blogPosts as any[]).map(p => ({ ...p, image: p.image ? optimizeCloudinary(p.image) : "" })),
             galleryItems: (galleryItems as any[]).map(i => ({ ...i, url: optimizeCloudinary(i.url) })),
             galleryVideos: galleryItems.filter((i: GalleryItem) => i.type === "video").map((i: any) => ({ ...i, url: optimizeCloudinary(i.url) })),
