@@ -47,7 +47,9 @@ export default async function ConferenceDetailPage({ params }: { params: Promise
                         style={{ objectFit: 'cover' }}
                         fallbackText={hall.name}
                     />
-                ) : null}
+                ) : (
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #144B36 0%, #1a1a2e 50%, #4A2B66 100%)' }} />
+                )}
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>
                     <Link href="/conference" className={styles.backLink}>
@@ -62,8 +64,17 @@ export default async function ConferenceDetailPage({ params }: { params: Promise
                 </div>
             </section>
 
-            {/* Enhanced Gallery Section */}
-            <EnhancedGallery images={allImages} title={hall.name} />
+            {/* Enhanced Gallery Section or Coming Soon */}
+            {allImages.length > 0 ? (
+                <EnhancedGallery images={allImages} title={hall.name} />
+            ) : (
+                <section style={{ padding: '4rem 2rem', textAlign: 'center', background: '#f9f9f6' }}>
+                    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+                        <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: '#144B36', marginBottom: '1rem' }}>Gallery Coming Soon</h2>
+                        <p style={{ color: '#6B7280', lineHeight: 1.7 }}>We are currently preparing high-resolution photos of {hall.name}. Please check back soon for a full visual tour.</p>
+                    </div>
+                </section>
+            )}
 
             {/* Content */}
             <section className={styles.detailContent}>

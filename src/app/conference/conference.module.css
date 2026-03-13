@@ -153,14 +153,25 @@
     transform: scale(1.05);
 }
 
-.placeholderImage {
+.placeholderImage,
+.comingSoonPlaceholder {
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #1a1a2e, #0f3460);
-    color: rgba(212, 175, 55, 0.5);
+    gap: 0.75rem;
+    background: linear-gradient(135deg, #144B36 0%, #1a1a2e 50%, #4A2B66 100%);
+    color: rgba(212, 175, 55, 0.7);
+}
+
+.comingSoonPlaceholder span {
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(212, 175, 55, 0.8);
 }
 
 .capacityBadge {

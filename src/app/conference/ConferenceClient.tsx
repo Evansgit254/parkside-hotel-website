@@ -3,7 +3,7 @@
 import Link from "next/link";
 import SafeImage from "../components/SafeImage";
 import styles from "./conference.module.css";
-import { Users, ArrowRight } from "lucide-react";
+import { Users, ArrowRight, Clock } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
@@ -97,8 +97,9 @@ export default function ConferenceClient({ halls, content }: ConferenceClientPro
                                         fallbackText="Venue image coming soon"
                                     />
                                 ) : (
-                                    <div className={styles.placeholderImage}>
-                                        <Users size={48} />
+                                    <div className={styles.comingSoonPlaceholder}>
+                                        <Clock size={40} />
+                                        <span>Coming Soon</span>
                                     </div>
                                 )}
                                 {hall.capacity > 0 && (
@@ -112,9 +113,10 @@ export default function ConferenceClient({ halls, content }: ConferenceClientPro
                                 <p className={styles.listDesc}>{hall.desc}</p>
                                 {hall.setups && hall.setups.length > 0 && (
                                     <div className={styles.setupTags}>
-                                        {hall.setups.map((setup: string, i: number) => (
-                                            <span key={i} className={styles.setupTag}>{setup}</span>
-                                        ))}
+                                        {hall.setups.map((setup: any, i: number) => {
+                                            const label = typeof setup === 'string' ? setup : setup.name || 'Setup';
+                                            return <span key={i} className={styles.setupTag}>{label}</span>;
+                                        })}
                                     </div>
                                 )}
                                 <span className={styles.viewDetails}>
