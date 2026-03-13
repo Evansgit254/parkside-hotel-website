@@ -127,27 +127,11 @@ export default function DiningClient({ menuCategories, content, diningVenues }: 
         }))
         : venues.map(v => ({ ...v, slug: v.key.replace('dining_', '').replace(/_/g, '-') }));
 
-    // Append "Our Menu" as the 6th category
-    const menuCardImage = (() => {
-        const img = content?.dining_menu_info?.image;
-        if (Array.isArray(img) && img.filter(Boolean).length > 0) return img.filter(Boolean);
-        if (typeof img === 'string' && img) return [img];
-        return ["https://res.cloudinary.com/dizwm3mic/image/upload/v1772371880/parkside-villa-media/Dining_and_Restaurant/20220322_124810_n3g83g.jpg"];
-    })();
-
-    const displayVenues = [
-        ...dbVenues.slice(0, 5),
-        {
-            key: 'our-menu',
-            data: {
-                title: content?.dining_menu_info?.title || "Our menu",
-                desc: content?.dining_menu_info?.desc || "Explore our extensive curated selection of gourmet appetizers, main courses, and artisanal desserts.",
-                image: menuCardImage
-            },
-            slug: "#menu",
-            isAnchor: true
-        }
-    ];
+    // Show all DB venues — if a venue has slug 'our-menu', it links to #menu instead of a detail page
+    const displayVenues = dbVenues.map((v: any) => ({
+        ...v,
+        isAnchor: v.slug === 'our-menu'
+    }));
 
     return (
         <main className={styles.main} ref={containerRef}>
@@ -225,12 +209,12 @@ export default function DiningClient({ menuCategories, content, diningVenues }: 
                                 </div>
                             </div>
                             <Link
-                                href={(venue as any).isAnchor ? venue.slug : `/dining/${venue.slug}`}
+                                href={(venue as any).isAnchor ? '#menu' : `/dining/${venue.slug}`}
                                 className={styles.discoverBtn}
                                 onClick={(e) => {
                                     if ((venue as any).isAnchor) {
                                         e.preventDefault();
-                                        document.querySelector(venue.slug)?.scrollIntoView({ behavior: 'smooth' });
+                                        document.querySelector('#menu')?.scrollIntoView({ behavior: 'smooth' });
                                     }
                                 }}
                             >
