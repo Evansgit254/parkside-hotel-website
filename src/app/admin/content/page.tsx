@@ -398,6 +398,7 @@ const defaultContact = {
     address: "Parkside Villa, Kitui - Kenya",
     facebook: "https://www.facebook.com/ParksideVilla/",
     instagram: "https://www.instagram.com/kituiparksidevilla/",
+    tiktok: "https://www.tiktok.com/@parkside.villa.kitui",
 };
 
 const contactFields = [
@@ -407,6 +408,7 @@ const contactFields = [
     { key: "address", label: "Physical Address", type: "text", placeholder: "Parkside Villa, Kitui - Kenya", group: "Basic" },
     { key: "facebook", label: "Facebook URL", type: "url", placeholder: "https://facebook.com/...", group: "Social" },
     { key: "instagram", label: "Instagram URL", type: "url", placeholder: "https://instagram.com/...", group: "Social" },
+    { key: "tiktok", label: "TikTok URL", type: "url", placeholder: "https://tiktok.com/@...", group: "Social" },
 ];
 
 // ─── Component ─────────────────────────────────────────────────────────────────
@@ -454,6 +456,7 @@ export default function AdminContent() {
                 address: ci.address || defaultContact.address,
                 facebook: social.facebook || defaultContact.facebook,
                 instagram: social.instagram || defaultContact.instagram,
+                tiktok: social.tiktok || defaultContact.tiktok,
             });
         }
         setLoading(false);
@@ -480,7 +483,11 @@ export default function AdminContent() {
             email: contactData.email,
             whatsapp: contactData.whatsapp,
             address: contactData.address,
-            social: { facebook: contactData.facebook, instagram: contactData.instagram }
+            social: { 
+                facebook: contactData.facebook, 
+                instagram: contactData.instagram,
+                tiktok: contactData.tiktok 
+            }
         });
         setSavingContact(false);
         showToast(result.success ? "Contact information saved." : "Error saving contact info.", result.success ? "success" : "error");

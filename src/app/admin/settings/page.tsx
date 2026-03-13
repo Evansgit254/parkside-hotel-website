@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 import { useState, useEffect } from "react";
 import styles from "../admin.module.css";
 import { getSiteData, updateContactInfo, addHeroImage, deleteHeroImage } from "../../actions";
-import { Save, Phone, Mail, MapPin, MessageSquare, Facebook, Instagram, Plus, Trash2, Image as ImageIcon } from "lucide-react";
+import { Save, Phone, Mail, MapPin, MessageSquare, Facebook, Instagram, PlaySquare, Plus, Trash2, Image as ImageIcon } from "lucide-react";
 import { showToast } from "../components/AdminToast";
 import MediaUpload from "../components/MediaUpload";
 import AdminModal from "../../components/AdminModal";
@@ -144,12 +144,12 @@ export default function AdminSettings() {
                             />
                         </div>
                         <div className={styles.formGroup}>
-                            <label className={styles.label}><Instagram size={14} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Instagram Feed</label>
+                            <label className={styles.label}><PlaySquare size={14} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> TikTok URL</label>
                             <input
                                 type="url"
                                 className={styles.input}
-                                value={contact.social?.instagram || ''}
-                                onChange={e => setContact({ ...contact, social: { ...contact.social, instagram: e.target.value } })}
+                                value={contact.social?.tiktok || ''}
+                                onChange={e => setContact({ ...contact, social: { ...contact.social, tiktok: e.target.value } })}
                             />
                         </div>
                     </div>

@@ -7,6 +7,18 @@ import styles from "../page.module.css";
 import { useState, useEffect } from "react";
 import { getPublicSiteData, subscribeNewsletter } from "../actions";
 
+const TikTokIcon = ({ size = 20 }: { size?: number }) => (
+    <svg 
+        width={size} 
+        height={size} 
+        viewBox="0 0 24 24" 
+        fill="currentColor" 
+        style={{ display: 'inline-block', verticalAlign: 'middle' }}
+    >
+        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.6-4.13-1.46-.12 3.53-.02 7.07-.02 10.6 0 1.25-.26 2.58-1 3.65-1.12 1.63-3.15 2.45-5.07 2.22-2.12-.13-4.1-1.57-4.82-3.6-.82-2.11-.23-4.71 1.48-6.18 1.14-.99 2.68-1.44 4.19-1.3l.02 4.02c-.89-.11-1.85.11-2.48.78-.65.7-.75 2.05-.05 2.77.65.71 1.83.7 2.41.02.41-.47.46-1.13.46-1.74-.01-4.77-.01-9.53-.01-14.3.01-1.14.04-2.29-.02-3.44z"/>
+    </svg>
+);
+
 export default function Footer() {
     const [contactInfo, setContactInfo] = useState<any>(null);
     const [content, setContent] = useState<any>({});
@@ -58,7 +70,7 @@ export default function Footer() {
                             {contactInfo.social?.facebook && <a href={contactInfo.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Facebook size={20} /></a>}
                             {contactInfo.social?.instagram && <a href={contactInfo.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Instagram size={20} /></a>}
                             {contactInfo.social?.whatsapp && <a href={contactInfo.social.whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><MessageCircle size={20} /></a>}
-                            {contactInfo.social?.tiktok && <a href={contactInfo.social.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok"><PlaySquare size={20} /></a>}
+                            {contactInfo.social?.tiktok && <a href={contactInfo.social.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok"><TikTokIcon size={20} /></a>}
                         </div>
                     </div>
 
