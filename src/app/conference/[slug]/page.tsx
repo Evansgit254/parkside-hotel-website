@@ -73,19 +73,25 @@ export default async function ConferenceDetailPage({ params }: { params: Promise
                             <h2 className={styles.sectionHeading}>About {hall.name}</h2>
                             <p className={styles.detailDesc}>{hall.desc}</p>
 
-                            {hall.setups && (hall.setups as string[]).length > 0 && (
+                            {hall.setups && (hall.setups as any[]).length > 0 && (
                                 <div className={styles.setupSection}>
                                     <h3 className={styles.subHeading}>Available Setups</h3>
                                     <div className={styles.setupGrid}>
-                                        {(hall.setups as string[]).map((setup: string, i: number) => (
-                                            <div key={i} className={styles.setupCard}>
-                                                <CheckCircle2 size={18} className={styles.checkIcon} />
-                                                <span>{setup}</span>
-                                            </div>
-                                        ))}
+                                        {(hall.setups as any[]).map((setup: any, i: number) => {
+                                            const label = typeof setup === 'string'
+                                                ? setup
+                                                : `${setup.name || 'Setup'}${setup.capacity ? ` (${setup.capacity} pax)` : ''}`;
+                                            return (
+                                                <div key={i} className={styles.setupCard}>
+                                                    <CheckCircle2 size={18} className={styles.checkIcon} />
+                                                    <span>{label}</span>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             )}
+
                         </div>
 
                         <div className={styles.sideColumn}>
