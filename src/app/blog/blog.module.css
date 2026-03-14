@@ -226,7 +226,29 @@
 }
 
 @media (max-width: 768px) {
+    .blogSection {
+        padding: 4rem 0;
+    }
+
     .grid {
         grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .blogCard {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        margin-left: calc(-1 * var(--container-padding));
+        margin-right: calc(-1 * var(--container-padding));
+    }
+
+    .imageWrapper {
+        height: 420px;
+        border-radius: 0;
+    }
+
+    .cardContent {
+        padding: 2rem 1.5rem;
     }
 }

@@ -2108,6 +2108,9 @@
     .roomGrid {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+        gap: 0;
     }
 
     .recentSection {

@@ -931,8 +931,8 @@
 }
 
 .detailHeroSection {
-    height: 40vh;
-    min-height: 380px;
+    height: 60vh;
+    min-height: 420px;
     position: relative;
     display: flex;
     align-items: center;
@@ -1113,12 +1113,12 @@
     }
 
     .mosaicItem {
-        height: 250px;
+        height: 350px;
     }
 
     .mosaicItem:first-child {
         grid-column: span 1;
-        height: 250px;
+        height: 350px;
     }
 }
 
