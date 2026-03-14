@@ -98,18 +98,18 @@ export default function AdminLeads() {
                                 <div className={styles.tableRow} style={{ gridTemplateColumns: '1fr 1fr 130px 90px 90px' }}>
 
                                     {/* Guest info */}
-                                    <div style={{ display: 'flex', gap: '0.875rem', alignItems: 'flex-start' }}>
-                                        <div style={{ width: '36px', height: '36px', background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#C9A84C', flexShrink: 0 }}>
-                                            <User size={16} />
+                                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                                        <div style={{ width: '42px', height: '42px', background: 'var(--admin-green-bg)', border: '1px solid var(--admin-green-muted)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--admin-green)', flexShrink: 0 }}>
+                                            <User size={18} />
                                         </div>
                                         <div>
-                                            <div style={{ fontWeight: 500, fontSize: '0.9375rem', color: '#6B7280', marginBottom: '0.35rem' }}>{lead.name}</div>
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: '#6B7280' }}>
-                                                    <Mail size={11} /> {lead.email}
+                                            <div style={{ fontWeight: 600, fontSize: '1rem', color: 'var(--admin-text)', marginBottom: '0.4rem' }}>{lead.name}</div>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8125rem', color: 'var(--admin-text-soft)' }}>
+                                                    <Mail size={12} style={{ opacity: 0.7 }} /> {lead.email}
                                                 </div>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: '#6B7280' }}>
-                                                    <Phone size={11} /> {lead.phone}
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8125rem', color: 'var(--admin-text-soft)' }}>
+                                                    <Phone size={12} style={{ opacity: 0.7 }} /> {lead.phone}
                                                 </div>
                                             </div>
                                         </div>
@@ -117,14 +117,14 @@ export default function AdminLeads() {
 
                                     {/* Booking details */}
                                     <div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: '#C9A84C', marginBottom: '0.35rem' }}>
-                                            <BedDouble size={14} /> {lead.room}
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9375rem', fontWeight: 600, color: 'var(--admin-green)', marginBottom: '0.4rem' }}>
+                                            <BedDouble size={16} /> {lead.room}
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: '#6B7280' }}>
-                                            <Calendar size={11} /> {lead.date}
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8125rem', color: 'var(--admin-text-soft)' }}>
+                                            <Calendar size={12} style={{ opacity: 0.7 }} /> {lead.date}
                                         </div>
                                         {lead.guests && (
-                                            <div style={{ fontSize: '0.6875rem', color: '#6B7280', marginTop: '0.2rem', letterSpacing: '0.05em' }}>{lead.guests}</div>
+                                            <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-muted)', marginTop: '0.3rem', fontWeight: 500 }}>{lead.guests}</div>
                                         )}
                                     </div>
 
@@ -134,27 +134,29 @@ export default function AdminLeads() {
                                             value={lead.status}
                                             onChange={e => handleStatusChange(lead.id, e.target.value)}
                                             style={{
-                                                padding: '0.35rem 0.625rem',
-                                                fontSize: '0.5625rem',
-                                                letterSpacing: '0.15em',
+                                                padding: '0.5rem 0.875rem',
+                                                fontSize: '0.6875rem',
+                                                letterSpacing: '0.05em',
                                                 textTransform: 'uppercase',
-                                                fontWeight: 500,
-                                                width: 'auto',
+                                                fontWeight: 700,
+                                                width: '120px',
+                                                borderRadius: '100px',
                                                 background: lead.status === 'Confirmed'
                                                     ? 'rgba(16,185,129,0.08)'
                                                     : lead.status === 'Cancelled'
                                                         ? 'rgba(239,68,68,0.08)'
                                                         : 'rgba(245,158,11,0.08)',
                                                 color: lead.status === 'Confirmed'
-                                                    ? '#10b981'
+                                                    ? '#059669'
                                                     : lead.status === 'Cancelled'
-                                                        ? '#ef4444'
-                                                        : '#f59e0b',
+                                                        ? '#dc2626'
+                                                        : '#d97706',
                                                 border: `1px solid ${lead.status === 'Confirmed' ? 'rgba(16,185,129,0.2)' : lead.status === 'Cancelled' ? 'rgba(239,68,68,0.2)' : 'rgba(245,158,11,0.2)'}`,
                                                 outline: 'none',
                                                 cursor: 'pointer',
                                                 fontFamily: 'inherit',
                                                 appearance: 'none',
+                                                textAlign: 'center'
                                             }}
                                         >
                                             <option value="Pending">Pending</option>
@@ -164,21 +166,22 @@ export default function AdminLeads() {
                                     </div>
 
                                     {/* Received time */}
-                                    <div style={{ fontSize: '0.6875rem', color: '#6B7280', display: 'flex', alignItems: 'flex-start', gap: '0.375rem' }}>
-                                        <Clock size={11} style={{ marginTop: '1px', flexShrink: 0 }} /> {lead.time}
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-muted)', display: 'flex', alignItems: 'flex-start', gap: '0.4rem', fontWeight: 500 }}>
+                                        <Clock size={12} style={{ marginTop: '2px', flexShrink: 0, opacity: 0.7 }} /> {lead.time}
                                     </div>
 
                                     {/* Action buttons */}
-                                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-                                        <button onClick={() => handleStatusChange(lead.id, 'Confirmed')} className={styles.actionBtn} title="Confirm" style={{ color: '#10b981' }}>
-                                            <CheckCircle size={14} />
+                                    <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+                                        <button onClick={() => handleStatusChange(lead.id, 'Confirmed')} className={styles.actionBtn} title="Confirm" style={{ color: '#059669', background: 'rgba(16,185,129,0.05)', borderRadius: '8px', padding: '0.5rem' }}>
+                                            <CheckCircle size={16} />
                                         </button>
                                         <button
                                             onClick={() => setConfirmDeleteId(confirmDeleteId === lead.id ? null : lead.id)}
                                             className={`${styles.actionBtn} ${styles.deleteBtn}`}
                                             title="Delete"
+                                            style={{ background: 'rgba(239,68,68,0.05)', borderRadius: '8px', padding: '0.5rem' }}
                                         >
-                                            <Trash2 size={14} />
+                                            <Trash2 size={16} />
                                         </button>
                                     </div>
                                 </div>
@@ -186,41 +189,43 @@ export default function AdminLeads() {
                                 {/* Inline delete confirmation */}
                                 {confirmDeleteId === lead.id && (
                                     <div style={{
-                                        background: 'rgba(239,68,68,0.05)',
-                                        borderTop: '1px solid rgba(239,68,68,0.15)',
-                                        borderBottom: '1px solid rgba(239,68,68,0.08)',
-                                        padding: '1rem 2rem',
+                                        background: 'rgba(239,68,68,0.03)',
+                                        borderTop: '1px solid rgba(239,68,68,0.1)',
+                                        borderBottom: '1px solid rgba(239,68,68,0.05)',
+                                        padding: '1.25rem 2rem',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
-                                        gap: '1rem'
+                                        gap: '1rem',
+                                        animation: 'slideDown 0.2s ease'
                                     }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.8125rem', color: '#6B7280' }}>
-                                            <AlertTriangle size={15} color="#ef4444" />
-                                            Remove enquiry from <strong style={{ color: '#6B7280' }}>&nbsp;{lead.name}</strong>? This cannot be undone.
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.875rem', color: 'var(--admin-text-soft)', fontWeight: 500 }}>
+                                            <AlertTriangle size={18} color="#dc2626" />
+                                            <span>Remove enquiry from <strong style={{ color: 'var(--admin-text)' }}>{lead.name}</strong>? This action is permanent.</span>
                                         </div>
-                                        <div style={{ display: 'flex', gap: '0.5rem', flexShrink: 0 }}>
-                                            <button onClick={() => setConfirmDeleteId(null)} className={styles.actionBtn} style={{ padding: '0.5rem 1rem', width: 'auto' }}>
-                                                Cancel
+                                        <div style={{ display: 'flex', gap: '0.75rem', flexShrink: 0 }}>
+                                            <button onClick={() => setConfirmDeleteId(null)} style={{ padding: '0.625rem 1.25rem', background: 'white', border: '1px solid var(--admin-border)', borderRadius: '8px', color: 'var(--admin-text-soft)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>
+                                                Keep Enquiry
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(lead.id)}
                                                 disabled={isDeleting}
                                                 style={{
-                                                    padding: '0.5rem 1rem',
-                                                    background: '#ef4444',
+                                                    padding: '0.625rem 1.25rem',
+                                                    background: '#dc2626',
                                                     border: 'none',
-                                                    color: '#111827',
+                                                    borderRadius: '8px',
+                                                    color: 'white',
                                                     cursor: 'pointer',
-                                                    fontSize: '0.625rem',
-                                                    letterSpacing: '0.15em',
-                                                    textTransform: 'uppercase',
+                                                    fontSize: '0.75rem',
+                                                    letterSpacing: '0.02em',
                                                     fontWeight: 600,
                                                     opacity: isDeleting ? 0.6 : 1,
                                                     fontFamily: 'inherit',
+                                                    boxShadow: '0 2px 10px rgba(220, 38, 38, 0.2)'
                                                 }}
                                             >
-                                                {isDeleting ? 'Removing...' : 'Confirm Delete'}
+                                                {isDeleting ? 'Removing...' : 'Delete Permanently'}
                                             </button>
                                         </div>
                                     </div>

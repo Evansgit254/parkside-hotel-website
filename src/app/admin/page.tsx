@@ -44,17 +44,17 @@ export default function AdminDashboard() {
             {/* Stat Cards — Borderless grid */}
             <div className={styles.cardGrid}>
                 {stats.map((stat) => (
-                    <div key={stat.name} className={styles.card}>
-                        <div className={styles.cardAccent} style={{ color: stat.color }} />
+                    <div key={stat.name} className={styles.card} style={{ borderLeft: `4px solid ${stat.color}` }}>
                         <div className={styles.cardInner}>
                             <div className={styles.cardIconRow}>
-                                <div className={styles.cardIcon} style={{ color: stat.color }}>
-                                    <stat.icon size={16} />
+                                <div className={styles.cardIcon} style={{ background: `${stat.color}10`, color: stat.color, border: `1px solid ${stat.color}20` }}>
+                                    <stat.icon size={18} />
                                 </div>
+                                <span style={{ fontSize: '0.625rem', fontWeight: 700, color: stat.color, textTransform: 'uppercase', letterSpacing: '0.1em' }}>+12%</span>
                             </div>
-                            <div className={styles.cardValue}>{stat.value}</div>
-                            <div className={styles.cardLabel}>{stat.name}</div>
-                            <div className={styles.cardSubLabel}>{stat.label}</div>
+                            <div className={styles.cardValue} style={{ fontSize: '2.5rem', marginBottom: '0.25rem' }}>{stat.value}</div>
+                            <div className={styles.cardLabel} style={{ fontSize: '0.75rem', color: 'var(--admin-text)', fontWeight: 700 }}>{stat.name}</div>
+                            <div className={styles.cardSubLabel} style={{ fontSize: '0.8125rem', color: 'var(--admin-text-soft)' }}>{stat.label}</div>
                         </div>
                     </div>
                 ))}
@@ -66,34 +66,34 @@ export default function AdminDashboard() {
                 <div className={styles.panelDark}>
                     <div className={styles.panelHeader}>
                         <div>
-                            <h2 className={styles.panelTitle}>Recent Activity</h2>
-                            <p className={styles.panelSub}>Live feed of guest interactions</p>
+                            <h2 className={styles.panelTitle} style={{ fontSize: '1.5rem' }}>Recent Activity</h2>
+                            <p className={styles.panelSub} style={{ fontSize: '0.875rem' }}>Live feed of guest interactions</p>
                         </div>
-                        <span className={styles.liveIndicator}>Live</span>
+                        <span className={styles.liveIndicator}>Live Now</span>
                     </div>
 
                     <div className={styles.activityFeed}>
                         {recentActivity.length > 0 ? (
                             recentActivity.map((a: any) => (
-                                <div key={a.id} className={styles.activityItem}>
-                                    <div className={styles.activityIconBox} style={{ color: a.color }}>
-                                        {a.type === "Lead" ? <Calendar size={14} /> : <Star size={14} />}
+                                <div key={a.id} className={styles.activityItem} style={{ padding: '1.25rem 0' }}>
+                                    <div className={styles.activityIconBox} style={{ color: a.color, width: '40px', height: '40px', borderRadius: '12px' }}>
+                                        {a.type === "Lead" ? <Calendar size={16} /> : <Star size={16} />}
                                     </div>
                                     <div className={styles.activityContent}>
                                         <div
                                             className={styles.activityTag}
-                                            style={{ color: a.color, borderColor: a.color }}
+                                            style={{ color: a.color, borderColor: `${a.color}30`, background: `${a.color}10`, padding: '0.25rem 0.75rem', fontSize: '0.625rem' }}
                                         >
                                             {a.type}
                                         </div>
-                                        <div className={styles.activityUser}>{a.user}</div>
-                                        <div className={styles.activityDesc}>{a.action}</div>
+                                        <div className={styles.activityUser} style={{ fontSize: '1rem', fontWeight: 600 }}>{a.user}</div>
+                                        <div className={styles.activityDesc} style={{ fontSize: '0.875rem', color: 'var(--admin-text-soft)' }}>{a.action}</div>
                                     </div>
-                                    <div className={styles.activityTime}>{a.time}</div>
+                                    <div className={styles.activityTime} style={{ fontSize: '0.75rem', fontWeight: 500 }}>{a.time}</div>
                                 </div>
                             ))
                         ) : (
-                            <div className={styles.emptyFeed}>
+                            <div className={styles.emptyFeed} style={{ padding: '3rem 0', textAlign: 'center', color: 'var(--admin-text-muted)' }}>
                                 <p>No recent activity detected.</p>
                             </div>
                         )}
@@ -101,11 +101,11 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Agenda */}
-                <div className={styles.panelDark} style={{ borderLeft: "1px solid rgba(0,0,0,0.07)" }}>
+                <div className={styles.panelDark}>
                     <div className={styles.panelHeader}>
                         <div>
-                            <h2 className={styles.panelTitle}>Today&apos;s Agenda</h2>
-                            <p className={styles.panelSub}>Priority tasks for estate management</p>
+                            <h2 className={styles.panelTitle} style={{ fontSize: '1.5rem' }}>Today&apos;s Agenda</h2>
+                            <p className={styles.panelSub} style={{ fontSize: '0.875rem' }}>Priority tasks for estate management</p>
                         </div>
                     </div>
 
@@ -117,20 +117,20 @@ export default function AdminDashboard() {
                                 const badgeColor = isPriority
                                     ? { color: "#ef4444", borderColor: "rgba(239,68,68,0.2)", background: "rgba(239,68,68,0.06)" }
                                     : item.status === "Pending"
-                                        ? { color: "#f59e0b", borderColor: "rgba(245,158,11,0.2)", background: "rgba(245,158,11,0.06)" }
-                                        : { color: "#6B7280", bordercolor: "#6B7280", background: "transparent" };
+                                        ? { color: "#d97706", borderColor: "rgba(217,119,6,0.2)", background: "rgba(217,119,6,0.06)" }
+                                        : { color: "var(--admin-text-soft)", borderColor: "var(--admin-border)", background: "transparent" };
 
                                 return (
-                                    <div key={i} className={styles.agendaItem}>
-                                        <div className={styles.agendaDot} style={{ background: dotColor }} />
+                                    <div key={i} className={styles.agendaItem} style={{ padding: '1.25rem 0' }}>
+                                        <div className={styles.agendaDot} style={{ background: dotColor, transform: 'scale(1.2)' }} />
                                         <div className={styles.agendaContent}>
-                                            <div className={styles.agendaTask}>{item.task}</div>
-                                            <div className={styles.agendaDesc}>{item.desc}</div>
-                                            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginTop: "0.5rem" }}>
-                                                <span className={styles.agendaTime}>{item.time}</span>
+                                            <div className={styles.agendaTask} style={{ fontSize: '1rem', fontWeight: 600 }}>{item.task}</div>
+                                            <div className={styles.agendaDesc} style={{ fontSize: '0.875rem', color: 'var(--admin-text-soft)' }}>{item.desc}</div>
+                                            <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginTop: "0.75rem" }}>
+                                                <span className={styles.agendaTime} style={{ fontSize: '0.75rem', fontWeight: 500 }}>{item.time}</span>
                                                 <span
                                                     className={styles.agendaBadge}
-                                                    style={badgeColor}
+                                                    style={{ ...badgeColor, padding: '0.25rem 0.75rem', fontSize: '0.625rem' }}
                                                 >
                                                     {item.status}
                                                 </span>
@@ -140,7 +140,7 @@ export default function AdminDashboard() {
                                 );
                             })
                         ) : (
-                            <div className={styles.emptyFeed}>
+                            <div className={styles.emptyFeed} style={{ padding: '3rem 0', textAlign: 'center', color: 'var(--admin-text-muted)' }}>
                                 <p>No scheduled check-ins for today.</p>
                             </div>
                         )}
