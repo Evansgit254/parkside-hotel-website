@@ -480,3 +480,135 @@
         gap: 3rem;
     }
 }
+
+/* Modal Styles */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 15, 14, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    z-index: 2000;
+}
+
+.modalContent {
+    background: var(--background);
+    width: 100%;
+    max-width: 600px;
+    border-radius: 24px;
+    padding: 3rem;
+    position: relative;
+    border: 1px solid var(--border);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.2);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.closeModal {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--foreground-soft);
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+
+.closeModal:hover {
+    color: var(--primary);
+}
+
+.modalTitle {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.modalSubtitle {
+    color: var(--foreground-soft);
+    font-size: 0.95rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.formLabel {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--primary);
+    opacity: 0.8;
+}
+
+.input {
+    background: var(--background-alt);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    color: var(--foreground);
+    font-family: inherit;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--secondary);
+    background: var(--background);
+}
+
+.textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.successState {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.successIcon {
+    width: 64px;
+    height: 64px;
+    background: var(--secondary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
