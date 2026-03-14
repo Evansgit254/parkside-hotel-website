@@ -143,11 +143,11 @@ async function main() {
         where: { id: 1 },
         update: {
             phone: "+254 700 000000", email: "info@parksidevillakitui.com", address: "Parkside Villa, Kitui - Kenya",
-            social: { facebook: "https://facebook.com/parksidevillakitui", instagram: "https://instagram.com/parksidevillakitui" }
+            social: { facebook: "https://facebook.com/parksidevillakitui", instagram: "https://www.instagram.com/kituiparksidevilla/" }
         },
         create: {
             id: 1, phone: "+254 700 000000", email: "info@parksidevillakitui.com", address: "Parkside Villa, Kitui - Kenya",
-            social: { facebook: "https://facebook.com/parksidevillakitui", instagram: "https://instagram.com/parksidevillakitui" }
+            social: { facebook: "https://facebook.com/parksidevillakitui", instagram: "https://www.instagram.com/kituiparksidevilla/" }
         }
     });
 

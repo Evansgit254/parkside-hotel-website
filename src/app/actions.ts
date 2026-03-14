@@ -23,6 +23,9 @@ const sanitizeSocialLinks = (social: any) => {
     if (!s.facebook || s.facebook.includes("parksidevillakitui")) {
         s.facebook = "https://www.facebook.com/ParksideVilla/";
     }
+    if (!s.instagram || s.instagram.includes("parksidevillakitui")) {
+        s.instagram = "https://www.instagram.com/kituiparksidevilla/";
+    }
     if (!s.tiktok || s.tiktok.includes("parksidevillakitui")) {
         s.tiktok = "https://www.tiktok.com/@parkside.villa.kitui";
     }
