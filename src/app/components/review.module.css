@@ -164,6 +164,8 @@
     .formCard {
         padding: 2rem 1.5rem;
         border-radius: 20px;
+        margin-top: 1rem;
+        margin-bottom: 3rem;
     }
 
     .formTitle {
