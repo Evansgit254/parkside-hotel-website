@@ -1278,7 +1278,8 @@
     .listItem {
         flex-direction: column !important;
         height: auto !important;
-        gap: 30px !important;
+        gap: 0 !important;
+        margin-bottom: 2rem !important;
     }
 
     .itemImageWrapper {

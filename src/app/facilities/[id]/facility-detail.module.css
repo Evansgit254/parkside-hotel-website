@@ -438,13 +438,12 @@
         grid-auto-rows: 350px;
         margin-left: -1.5rem;
         margin-right: -1.5rem;
-        gap: 0;
+        gap: 1.5rem;
     }
 
     .mosaicItem {
         border-radius: 0;
         box-shadow: none;
-        border-bottom: 1px solid var(--border-light);
     }
 
     .mosaicItem:nth-child(1) {
