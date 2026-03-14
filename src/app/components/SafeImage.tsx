@@ -56,7 +56,6 @@ const SafeImage: React.FC<SafeImageProps> = (allProps) => {
                     src={processedSrc || ""}
                     alt={alt || "Parkside Villa"}
                     className={`${props.className || ''} ${styles.image} ${isLoading ? styles.loading : styles.loaded}`}
-                    unoptimized={processedSrc?.includes('res.cloudinary.com')}
                     onLoadingComplete={() => setIsLoading(false)}
                     onError={() => setError(true)}
                 />

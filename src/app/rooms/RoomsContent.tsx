@@ -148,6 +148,7 @@ export default function RoomsContent({ initialRooms, content }: RoomsContentProp
                                         alt={room.name}
                                         fill
                                         sizes="(max-width: 1024px) 100vw, 50vw"
+                                        priority={index < 2}
                                         className={styles.itemImage}
                                         style={{ objectFit: 'cover' }}
                                         fallbackText="Room image coming soon"
