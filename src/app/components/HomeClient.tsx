@@ -680,6 +680,14 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                                     if (bookingStep === 2) { setBookingStep(3); setPaymentStep("method"); return; }
                                     if (bookingStep === 3) {
                                         if (paymentStep === "method") {
+                                            if (bookingData.paymentMethod === "reception") {
+                                                setBookingStatus("Confirming...");
+                                                await new Promise(r => setTimeout(r, 1500));
+                                                setPaymentStep("success");
+                                                setBookingStatus("Confirmed!");
+                                                setTimeout(() => finalizeBooking(), 1500);
+                                                return;
+                                            }
                                             if (bookingData.paymentMethod === "mpesa") { setPaymentStep("mpesa"); setMpesaTimer(10); return; }
                                             if (bookingData.paymentMethod === "card") { setPaymentStep("card"); return; }
                                         }
@@ -747,12 +755,47 @@ export default function HomeClient({ siteData, initialHeroImages }: HomeClientPr
                                         <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                                             {paymentStep === "method" && (
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                                                    <p className={styles.formLabel}>PAYMENT METHOD</p>
-                                                    <div onClick={() => setBookingData({ ...bookingData, paymentMethod: 'mpesa' })} className={`${styles.paymentOption} ${bookingData.paymentMethod === 'mpesa' ? styles.paymentOptionActive : ''}`}><Smartphone size={20} /><div style={{ flex: 1 }}><p style={{ fontWeight: 600 }}>M-Pesa</p></div>{bookingData.paymentMethod === 'mpesa' && <Check size={16} color="var(--secondary)" />}</div>
-                                                    <div onClick={() => setBookingData({ ...bookingData, paymentMethod: 'card' })} className={`${styles.paymentOption} ${bookingData.paymentMethod === 'card' ? styles.paymentOptionActive : ''}`}><CreditCard size={20} /><div style={{ flex: 1 }}><p style={{ fontWeight: 600 }}>Card</p></div>{bookingData.paymentMethod === 'card' && <Check size={16} color="var(--secondary)" />}</div>
+                                                    <div className={styles.maintenanceNotice}>
+                                                        <Shield size={18} className={styles.maintenanceIcon} />
+                                                        <div className={styles.maintenanceText}>
+                                                            <strong>Note:</strong> Online payments are being updated. Secure your room now with <strong>Pay at Hotel</strong>.
+                                                        </div>
+                                                    </div>
+
+                                                    <div
+                                                        onClick={() => setBookingData({ ...bookingData, paymentMethod: 'reception' })}
+                                                        className={`${styles.paymentOption} ${bookingData.paymentMethod === 'reception' ? styles.paymentOptionActive : ''}`}
+                                                    >
+                                                        <Hotel size={20} />
+                                                        <div style={{ flex: 1 }}>
+                                                            <p style={{ fontWeight: 600 }}>Pay at Hotel</p>
+                                                            <p style={{ fontSize: '0.75rem', opacity: 0.7 }}>Pay on arrival</p>
+                                                        </div>
+                                                        {bookingData.paymentMethod === 'reception' && <Check size={16} color="var(--secondary)" />}
+                                                    </div>
+
+                                                    <div className={styles.paymentOption} style={{ opacity: 0.6, cursor: 'not-allowed' }}>
+                                                        <Smartphone size={20} />
+                                                        <div style={{ flex: 1 }}>
+                                                            <p style={{ fontWeight: 600 }}>M-Pesa</p>
+                                                            <p style={{ fontSize: '0.75rem', opacity: 0.7 }}>Coming Soon</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className={styles.paymentOption} style={{ opacity: 0.6, cursor: 'not-allowed' }}>
+                                                        <CreditCard size={20} />
+                                                        <div style={{ flex: 1 }}>
+                                                            <p style={{ fontWeight: 600 }}>Card</p>
+                                                            <p style={{ fontSize: '0.75rem', opacity: 0.7 }}>Coming Soon</p>
+                                                        </div>
+                                                    </div>
+
                                                     <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                                                         <button type="button" onClick={() => setBookingStep(2)} className={styles.buttonSecondary}>Back</button>
-                                                        <button type="submit" disabled={!bookingData.paymentMethod} className={styles.buttonPrimary} style={{ flex: 2 }}><span>Proceed to Pay</span> <ArrowUpRight size={14} /></button>
+                                                        <button type="submit" disabled={!bookingData.paymentMethod} className={styles.buttonPrimary} style={{ flex: 2 }}>
+                                                            <span>{bookingData.paymentMethod === 'reception' ? 'Confirm Reservation' : 'Proceed to Pay'}</span> 
+                                                            <ArrowUpRight size={14} />
+                                                        </button>
                                                     </div>
                                                 </div>
                                             )}

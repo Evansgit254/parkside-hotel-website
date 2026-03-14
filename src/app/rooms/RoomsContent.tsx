@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
     Wifi, Coffee, Tv, Wind, Star, CheckCircle2,
     Calendar, Phone, Mail, Smartphone, CreditCard,
-    Shield, Check, Loader2, Wine, Users
+    Shield, Check, Loader2, Wine, Users, Hotel
 } from "lucide-react";
 import Link from "next/link";
 import SafeImage from "../components/SafeImage";
@@ -242,7 +242,13 @@ export default function RoomsContent({ initialRooms, content }: RoomsContentProp
 
                                 if (bookingStep === 3) {
                                     if (paymentStep === "method") {
-                                        if (bookingData.paymentMethod === "mpesa") {
+                                        if (bookingData.paymentMethod === "reception") {
+                                            setBookingStatus("Confirming Reservation...");
+                                            await new Promise(r => setTimeout(r, 1500));
+                                            setPaymentStep("success");
+                                            setBookingStatus("Reservation Confirmed!");
+                                            return;
+                                        } else if (bookingData.paymentMethod === "mpesa") {
                                             setPaymentStep("mpesa");
                                             setMpesaTimer(10);
                                             return;
@@ -332,33 +338,54 @@ export default function RoomsContent({ initialRooms, content }: RoomsContentProp
                                         <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className={styles.formStep}>
                                             {paymentStep === "method" && (
                                                 <div className={styles.paymentMethodList}>
+                                                    <div className={styles.maintenanceNotice}>
+                                                        <Shield size={20} className={styles.maintenanceIcon} />
+                                                        <div className={styles.maintenanceText}>
+                                                            <strong>Note:</strong> Online payments are currently undergoing maintenance. You can still secure your room by choosing <strong>Pay at Reception</strong> below.
+                                                        </div>
+                                                    </div>
+
                                                     <div
-                                                        onClick={() => setBookingData({ ...bookingData, paymentMethod: 'mpesa' })}
-                                                        className={`${styles.paymentOption} ${bookingData.paymentMethod === 'mpesa' ? styles.paymentOptionActive : ''}`}
+                                                        onClick={() => setBookingData({ ...bookingData, paymentMethod: 'reception' })}
+                                                        className={`${styles.paymentOption} ${bookingData.paymentMethod === 'reception' ? styles.paymentOptionActive : ''}`}
+                                                    >
+                                                        <Hotel size={20} />
+                                                        <div className={styles.paymentText}>
+                                                            <p className={styles.paymentTitle}>Pay at Reception</p>
+                                                            <p className={styles.paymentDesc}>Pay on arrival at the hotel</p>
+                                                        </div>
+                                                        {bookingData.paymentMethod === 'reception' && <Check size={16} color="var(--secondary)" />}
+                                                    </div>
+
+                                                    <div
+                                                        className={styles.paymentOption}
+                                                        style={{ opacity: 0.6, cursor: 'not-allowed' }}
                                                     >
                                                         <Smartphone size={20} />
                                                         <div className={styles.paymentText}>
                                                             <p className={styles.paymentTitle}>M-Pesa STK Push</p>
-                                                            <p className={styles.paymentDesc}>Payment via Safaricom line</p>
+                                                            <p className={styles.paymentDesc}>Temporarily unavailable</p>
                                                         </div>
-                                                        {bookingData.paymentMethod === 'mpesa' && <Check size={16} color="var(--secondary)" />}
+                                                        <span className={styles.comingSoon}>Soon</span>
                                                     </div>
 
                                                     <div
-                                                        onClick={() => setBookingData({ ...bookingData, paymentMethod: 'card' })}
-                                                        className={`${styles.paymentOption} ${bookingData.paymentMethod === 'card' ? styles.paymentOptionActive : ''}`}
+                                                        className={styles.paymentOption}
+                                                        style={{ opacity: 0.6, cursor: 'not-allowed' }}
                                                     >
                                                         <CreditCard size={20} />
                                                         <div className={styles.paymentText}>
                                                             <p className={styles.paymentTitle}>Credit/Debit Card</p>
-                                                            <p className={styles.paymentDesc}>Visa, Mastercard, AMEX</p>
+                                                            <p className={styles.paymentDesc}>Temporarily unavailable</p>
                                                         </div>
-                                                        {bookingData.paymentMethod === 'card' && <Check size={16} color="var(--secondary)" />}
+                                                        <span className={styles.comingSoon}>Soon</span>
                                                     </div>
 
                                                     <div className={styles.modalActions}>
                                                         <button type="button" onClick={() => { setBookingStep(2); setPaymentStep(null); }} className={styles.buttonSecondary}>Back</button>
-                                                        <button type="submit" disabled={!bookingData.paymentMethod} className={styles.buttonPrimary}>Proceed to Pay</button>
+                                                        <button type="submit" disabled={!bookingData.paymentMethod} className={styles.buttonPrimary}>
+                                                            {bookingData.paymentMethod === 'reception' ? 'Confirm Reservation' : 'Proceed to Pay'}
+                                                        </button>
                                                     </div>
                                                 </div>
                                             )}

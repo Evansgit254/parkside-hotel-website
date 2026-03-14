@@ -499,7 +499,37 @@
 
 .paymentOptionActive {
     border-color: var(--secondary);
-    background: rgba(212, 175, 55, 0.1);
+    background: rgba(201,168,76,0.05);
+}
+
+.maintenanceNotice {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid var(--secondary);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+}
+
+.maintenanceIcon {
+    color: var(--secondary);
+    flex-shrink: 0;
+}
+
+.maintenanceText {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: var(--primary);
+}
+
+.comingSoon {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--secondary);
+    font-weight: 600;
+    margin-left: auto;
 }
 
 .paymentTitle {
