@@ -7,7 +7,7 @@ import styles from "../page.module.css";
 
 export default function ClientBranding({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const isHideBranding = pathname?.startsWith('/admin');
+    const isHideBranding = pathname?.startsWith('/admin') && pathname !== '/admin/login';
     const isHomepage = pathname === '/';
 
     return (
