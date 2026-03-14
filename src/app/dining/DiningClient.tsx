@@ -184,6 +184,7 @@ export default function DiningClient({ menuCategories, content, diningVenues }: 
                                                 src={img}
                                                 alt={venue.data.title || "Dining Venue"}
                                                 fill
+                                                priority={idx === 0 && i === 0}
                                                 className={styles.image}
                                                 style={{ objectFit: 'cover' }}
                                             />

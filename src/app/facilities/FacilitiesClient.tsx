@@ -68,6 +68,7 @@ export default function FacilitiesClient({ facilities, content }: FacilitiesClie
                                         alt={facility.title}
                                         fill
                                         sizes="(max-width: 1024px) 100vw, 50vw"
+                                        priority={index < 2}
                                         className={styles.itemImage}
                                         style={{ objectFit: 'cover' }}
                                         fallbackText="Amenity details coming soon"
