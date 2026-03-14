@@ -621,12 +621,18 @@
     .listItem {
         flex-direction: column !important;
         height: auto !important;
+        margin-left: calc(-1 * var(--container-padding)) !important;
+        margin-right: calc(-1 * var(--container-padding)) !important;
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
     }
 
     .itemImageWrapper {
         width: 100% !important;
-        height: 320px !important;
+        height: 420px !important;
         display: block !important;
+        border-radius: 0 !important;
     }
 
     .roomContent {
@@ -1277,11 +1283,12 @@
 
     .itemImageWrapper {
         width: 100% !important;
-        height: 350px !important;
-        min-height: 350px !important;
+        height: 420px !important;
+        min-height: 420px !important;
         display: block !important;
         flex: none !important;
         position: relative !important;
+        border-radius: 0 !important;
     }
     
     .itemContent {

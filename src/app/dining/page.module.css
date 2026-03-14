@@ -469,7 +469,7 @@
     }
 
     .imageGrid {
-        grid-template-rows: repeat(2, 160px);
+        grid-template-rows: repeat(2, 220px);
     }
 
     .venueInfo {

@@ -2125,7 +2125,7 @@
     }
 
     .roomCard {
-        height: 300px;
+        height: 420px;
     }
 
     .navContainer {
@@ -2171,7 +2171,7 @@
     .roomCard:nth-child(1),
     .roomCard:nth-child(4) {
         grid-column: span 1;
-        height: 380px;
+        height: 420px;
     }
 
     .contactSection {
