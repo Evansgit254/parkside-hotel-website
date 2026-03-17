@@ -153,23 +153,55 @@ export default function AdminDining() {
         setIsDeleting(false);
     };
 
+    const handleScrollToCategory = (id: string) => {
+        const element = document.getElementById(`category-${id}`);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
     if (loading) return <div>Loading...</div>;
 
     return (
         <div>
             <div className={styles.sectionHeader}>
-                <div>
+                <div style={{ flex: 1 }}>
                     <h1 className={styles.sectionTitle}>Dining & Cuisine</h1>
                     <p style={{ color: '#6B7280', marginTop: '0.5rem' }}>Manage your gourmet menu categories and culinary delights</p>
                 </div>
-                <button onClick={handleAddCategory} className={styles.addButton}>
-                    <Plus size={18} /> New Category
-                </button>
+
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <div style={{ position: 'relative' }}>
+                        <select 
+                            className={styles.input} 
+                            style={{ 
+                                paddingRight: '2.5rem', 
+                                minWidth: '220px',
+                                background: 'white',
+                                borderRadius: '12px',
+                                fontSize: '0.875rem',
+                                fontWeight: 600,
+                                cursor: 'pointer'
+                            }}
+                            onChange={(e) => handleScrollToCategory(e.target.value)}
+                            value=""
+                        >
+                            <option value="" disabled>Jump to Category...</option>
+                            {menu.map(cat => (
+                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <button onClick={handleAddCategory} className={styles.addButton}>
+                        <Plus size={18} /> New Category
+                    </button>
+                </div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
                 {menu.map((category) => (
-                    <div key={category.id} className={styles.card} style={{ padding: '0', overflow: 'hidden' }}>
+                    <div key={category.id} id={`category-${category.id}`} className={styles.card} style={{ padding: '0', overflow: 'hidden' }}>
                         <div style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#F7F8FC', borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                 <span style={{ padding: '0.75rem', background: 'rgba(74, 43, 102, 0.08)', color: 'var(--secondary)', borderRadius: '12px' }}>
