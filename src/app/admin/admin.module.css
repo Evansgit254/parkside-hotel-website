@@ -843,6 +843,10 @@
     position: relative;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(20, 75, 54, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .loginButton::before {
