@@ -54,8 +54,13 @@ PARKSIDE VILLA MEDIA/
 /test-results/
 /playwright-report/
 
-# One-off scripts
-!/scripts/
-
-# Root-level PDFs and uploaded assets
+# Root-level PDF and HTML documents
 *.pdf
+*.html
+
+# Root-level utility scripts (one-off)
+check_gallery.ts
+delete_images.ts
+scripts/consolidated-edits.py
+scripts/edit-contract-direct.ts
+scripts/redact-personal-details.py
