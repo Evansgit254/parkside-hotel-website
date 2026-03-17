@@ -39,7 +39,9 @@ export default function AdminDining() {
     };
 
     useEffect(() => {
-        fetchMenu();
+        fetchMenu().then(() => {
+            console.log("AdminDining: Menu loaded", menu.length, "categories");
+        });
     }, []);
 
     const [error, setError] = useState<string | null>(null);
@@ -151,10 +153,10 @@ export default function AdminDining() {
         setIsDeleting(false);
     };
 
-    if (loading) return <div className={styles.mainContent}>Loading...</div>;
+    if (loading) return <div>Loading...</div>;
 
     return (
-        <div className={styles.mainContent}>
+        <div>
             <div className={styles.sectionHeader}>
                 <div>
                     <h1 className={styles.sectionTitle}>Dining & Cuisine</h1>

@@ -15,12 +15,12 @@ model Room {
   desc       String
   price      String?
   image      String
-  images     Json     @default("[]")
-  amenities  Json     @default("[]")
   tag        String?
   capacity   Int      @default(2)
-  isFeatured Boolean  @default(false)
   createdAt  DateTime @default(now())
+  images     Json     @default("[]")
+  amenities  Json     @default("[]")
+  isFeatured Boolean  @default(false)
   leads      Lead[]
 }
 
@@ -36,7 +36,7 @@ model Lead {
   time      String   @default("Just now")
   roomSlug  String?
   createdAt DateTime @default(now())
-  room      Room?    @relation(fields: [roomSlug], references: [slug], onDelete: SetNull)
+  room      Room?    @relation(fields: [roomSlug], references: [slug])
 }
 
 model User {
@@ -74,9 +74,9 @@ model Facility {
   desc       String
   icon       String
   image      String?
-  images     Json    @default("[]")
   features   Json    @default("[]")
   highlights Json    @default("[]")
+  images     Json    @default("[]")
 }
 
 model ConferenceHall {
@@ -85,10 +85,10 @@ model ConferenceHall {
   name      String
   desc      String
   image     String
-  images    Json     @default("[]")
   capacity  Int      @default(50)
   setups    Json     @default("[]")
   createdAt DateTime @default(now())
+  images    Json     @default("[]")
 }
 
 model DiningVenue {
@@ -123,7 +123,7 @@ model GalleryItem {
   title      String?
   order      Int              @default(0)
   categoryId String?
-  category   GalleryCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  category   GalleryCategory? @relation(fields: [categoryId], references: [id])
 }
 
 model GalleryCategory {
@@ -136,13 +136,13 @@ model GalleryCategory {
 model Promotion {
   id          String    @id @default(cuid())
   code        String    @unique
-  title       String?
-  description String?
   discount    Float?
   type        String    @default("percentage")
   validFrom   DateTime?
   validTo     DateTime?
   createdAt   DateTime  @default(now())
+  description String?
+  title       String?
 }
 
 model Subscriber {
