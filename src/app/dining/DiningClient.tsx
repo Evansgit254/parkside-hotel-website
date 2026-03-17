@@ -127,11 +127,8 @@ export default function DiningClient({ menuCategories, content, diningVenues }: 
         }))
         : venues.map(v => ({ ...v, slug: v.key.replace('dining_', '').replace(/_/g, '-') }));
 
-    // Show all DB venues — if a venue has slug 'our-menu', it links to #menu instead of a detail page
-    const displayVenues = dbVenues.map((v: any) => ({
-        ...v,
-        isAnchor: v.slug === 'our-menu'
-    }));
+    // Show all DB venues
+    const displayVenues = dbVenues;
 
     return (
         <main className={styles.main} ref={containerRef}>
@@ -210,16 +207,10 @@ export default function DiningClient({ menuCategories, content, diningVenues }: 
                                 </div>
                             </div>
                             <Link
-                                href={(venue as any).isAnchor ? '#menu' : `/dining/${venue.slug}`}
+                                href={`/dining/${venue.slug}`}
                                 className={styles.discoverBtn}
-                                onClick={(e) => {
-                                    if ((venue as any).isAnchor) {
-                                        e.preventDefault();
-                                        document.querySelector('#menu')?.scrollIntoView({ behavior: 'smooth' });
-                                    }
-                                }}
                             >
-                                {(venue as any).isAnchor ? 'Explore Menu' : 'Discover More'}
+                                {venue.slug === 'our-menu' ? 'Explore Menu' : 'Discover More'}
                                 <ChevronRight size={18} />
                             </Link>
                         </div>
