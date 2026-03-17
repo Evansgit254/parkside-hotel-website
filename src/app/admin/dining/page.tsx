@@ -13,6 +13,7 @@ export default function AdminDining() {
     const { formatPrice } = useCurrency();
     const [menu, setMenu] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedCategoryId, setSelectedCategoryId] = useState<string>("all");
     const [isSaving, setIsSaving] = useState(false);
     const [deleteCategoryId, setDeleteCategoryId] = useState<string | null>(null);
     const [deleteItemData, setDeleteItemData] = useState<{ categoryId: string, idx: number } | null>(null);
@@ -153,12 +154,9 @@ export default function AdminDining() {
         setIsDeleting(false);
     };
 
-    const handleScrollToCategory = (id: string) => {
-        const element = document.getElementById(`category-${id}`);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    };
+    const filteredMenu = selectedCategoryId === "all" 
+        ? menu 
+        : menu.filter(cat => cat.id === selectedCategoryId);
 
     if (loading) return <div>Loading...</div>;
 
@@ -183,10 +181,10 @@ export default function AdminDining() {
                                 fontWeight: 600,
                                 cursor: 'pointer'
                             }}
-                            onChange={(e) => handleScrollToCategory(e.target.value)}
-                            value=""
+                            onChange={(e) => setSelectedCategoryId(e.target.value)}
+                            value={selectedCategoryId}
                         >
-                            <option value="" disabled>Jump to Category...</option>
+                            <option value="all">All Categories</option>
                             {menu.map(cat => (
                                 <option key={cat.id} value={cat.id}>{cat.name}</option>
                             ))}
@@ -200,8 +198,8 @@ export default function AdminDining() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-                {menu.map((category) => (
-                    <div key={category.id} id={`category-${category.id}`} className={styles.card} style={{ padding: '0', overflow: 'hidden' }}>
+                {filteredMenu.map((category) => (
+                    <div key={category.id} className={styles.card} style={{ padding: '0', overflow: 'hidden' }}>
                         <div style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#F7F8FC', borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                 <span style={{ padding: '0.75rem', background: 'rgba(74, 43, 102, 0.08)', color: 'var(--secondary)', borderRadius: '12px' }}>
