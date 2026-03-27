@@ -430,6 +430,17 @@
     z-index: 3;
 }
 
+@media (max-width: 768px) {
+    .imageReveal {
+        object-fit: contain;
+        object-position: center 25%;
+        opacity: 0.9;
+    }
+    .heroOverlay {
+        background: linear-gradient(to bottom, rgba(5, 15, 11, 0.1) 0%, rgba(5, 15, 11, 0.85) 45%, #050f0b 100%);
+    }
+}
+
 .heroContent {
     position: relative;
     z-index: 10;
