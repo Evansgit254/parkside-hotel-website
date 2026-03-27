@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
 import styles from "../admin.module.css";
-import { getSiteData, updateContactInfo, addHeroImage, deleteHeroImage } from "../../actions";
+import { getSiteData, updateContactInfo, addHeroImage, deleteHeroImage, updateSiteContent } from "../../actions";
 import { Save, Phone, Mail, MapPin, MessageSquare, Facebook, Instagram, PlaySquare, Plus, Trash2, Image as ImageIcon } from "lucide-react";
 import { showToast } from "../components/AdminToast";
 import MediaUpload from "../components/MediaUpload";
@@ -17,11 +17,21 @@ export default function AdminSettings() {
     const [saving, setSaving] = useState(false);
     const [deleteUrl, setDeleteUrl] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [popup, setPopup] = useState({
+        enabled: false,
+        title: "Resort Information",
+        text: "Swimming Pool • VIP Lounge • Conference Rooms • Free Wi-Fi",
+        phone: "+254 701 023 026"
+    });
+    const [savingPopup, setSavingPopup] = useState(false);
 
     const fetchData = async () => {
         const data = await getSiteData();
         if (data && data.contactInfo) setContact(data.contactInfo);
         if (data && data.heroImages) setHeroImages(data.heroImages);
+        if (data && data.content && data.content['utility-popup']) {
+            setPopup({ ...popup, ...data.content['utility-popup'] });
+        }
         setLoading(false);
     };
 
@@ -66,6 +76,18 @@ export default function AdminSettings() {
             showToast(res.error || "Failed to delete hero image", "error");
         }
         setIsDeleting(false);
+    };
+
+    const handleUpdatePopup = async (newPopup: any) => {
+        setSavingPopup(true);
+        const res = await updateSiteContent('utility-popup', newPopup);
+        if (res.success) {
+            setPopup(newPopup);
+            showToast("Pop-up configuration updated", "success");
+        } else {
+            showToast("Failed to update pop-up", "error");
+        }
+        setSavingPopup(false);
     };
 
     if (loading) return <div className={styles.mainContent}>Loading...</div>;
@@ -160,6 +182,91 @@ export default function AdminSettings() {
                         </button>
                     </div>
                 </form>
+
+                {/* Engagement & Alerts Section */}
+                <div className={styles.card}>
+                    <div style={{ marginBottom: '2.5rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                            <MessageSquare size={20} color="var(--secondary)" />
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', margin: 0 }}>Engagement & Alerts</h3>
+                        </div>
+                        <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Manage the site-wide utility pop-up and informational modals</p>
+                    </div>
+
+                    <div style={{ padding: '2rem', background: '#F9FAFB', borderRadius: '16px', border: '1px solid #E5E7EB' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
+                            <div>
+                                <h4 style={{ fontSize: '1rem', fontWeight: 700, margin: 0 }}>Utility Information Pop-up</h4>
+                                <p style={{ fontSize: '0.8125rem', color: '#6B7280', margin: '0.25rem 0 0' }}>This pop-up appears after a 3-second delay on the first visit of each session.</p>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                <label className={styles.label} style={{ margin: 0 }}>Active</label>
+                                <button
+                                    onClick={() => handleUpdatePopup({ ...popup, enabled: !popup.enabled })}
+                                    style={{
+                                        width: '48px',
+                                        height: '24px',
+                                        borderRadius: '100px',
+                                        background: popup.enabled ? 'var(--admin-green)' : '#D1D5DB',
+                                        border: 'none',
+                                        position: 'relative',
+                                        cursor: 'pointer',
+                                        transition: 'background 0.3s'
+                                    }}
+                                >
+                                    <div style={{
+                                        width: '18px',
+                                        height: '18px',
+                                        borderRadius: '50%',
+                                        background: '#fff',
+                                        position: 'absolute',
+                                        top: '3px',
+                                        left: popup.enabled ? '27px' : '3px',
+                                        transition: 'left 0.3s'
+                                    }} />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'grid', gap: '1.5rem', opacity: popup.enabled ? 1 : 0.6, pointerEvents: popup.enabled ? 'auto' : 'none' }}>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Pop-up Title</label>
+                                <input
+                                    className={styles.input}
+                                    value={popup.title}
+                                    onChange={e => setPopup({ ...popup, title: e.target.value })}
+                                />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Highlights (Bullet points separated by dots)</label>
+                                <input
+                                    className={styles.input}
+                                    value={popup.text}
+                                    onChange={e => setPopup({ ...popup, text: e.target.value })}
+                                    placeholder="e.g. Swimming Pool • VIP Lounge • Conference Rooms"
+                                />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Contact Detail (Phone/WhatsApp)</label>
+                                <input
+                                    className={styles.input}
+                                    value={popup.phone}
+                                    onChange={e => setPopup({ ...popup, phone: e.target.value })}
+                                />
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <button
+                                    onClick={() => handleUpdatePopup(popup)}
+                                    disabled={savingPopup}
+                                    className={styles.loginButton}
+                                    style={{ width: 'auto', background: 'var(--secondary)', color: 'white' }}
+                                >
+                                    {savingPopup ? "Saving..." : "Save Pop-up Config"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Hero Slideshow Section */}
                 <div className={styles.card}>

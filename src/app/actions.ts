@@ -1649,6 +1649,17 @@ export async function updateSiteData(_data: any) {
     return { success: true };
 }
 
+export async function getSiteContent(key: string) {
+    if (!isDatabaseConfigured()) return null;
+    try {
+        const row = await prisma.siteContent.findUnique({ where: { key } });
+        return row ? row.value : null;
+    } catch (error) {
+        console.error(`Error fetching site content [${key}]:`, error);
+        return null;
+    }
+}
+
 // ─────────────────────────────────────────────
 // SITE CONTENT (Dynamic CMS)
 // ─────────────────────────────────────────────

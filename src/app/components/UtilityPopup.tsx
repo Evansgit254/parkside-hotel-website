@@ -5,12 +5,31 @@ import { X, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./UtilityPopup.module.css";
 import { usePathname } from "next/navigation";
+import { getSiteContent } from "../actions";
 
 export default function UtilityPopup() {
     const [isVisible, setIsVisible] = useState(false);
+    const [config, setConfig] = useState({
+        enabled: true,
+        title: "Resort Information",
+        text: "Swimming Pool • VIP Lounge\nConference Rooms • Free Wi-Fi",
+        phone: "+254 701 023 026"
+    });
     const pathname = usePathname();
 
     useEffect(() => {
+        const fetchConfig = async () => {
+            const data = await getSiteContent('utility-popup');
+            if (data && typeof data === 'object' && !Array.isArray(data)) {
+                setConfig(prev => ({ ...prev, ...data as Record<string, any> }));
+            }
+        };
+        fetchConfig();
+    }, []);
+
+    useEffect(() => {
+        if (!config.enabled) return;
+
         // Show popup after a short delay on first visit per session
         const hasSeenPopup = sessionStorage.getItem("hasSeenUtilityPopup");
         if (!hasSeenPopup && !pathname.startsWith("/admin")) {
@@ -20,9 +39,9 @@ export default function UtilityPopup() {
             }, 3000);
             return () => clearTimeout(timer);
         }
-    }, [pathname]);
+    }, [pathname, config.enabled]);
 
-    if (!isVisible || pathname.startsWith("/admin")) return null;
+    if (!isVisible || pathname.startsWith("/admin") || !config.enabled) return null;
 
     return (
         <AnimatePresence>
@@ -36,7 +55,7 @@ export default function UtilityPopup() {
                 <div className={styles.popupHeader}>
                     <div className={styles.popupTitle}>
                         <Info size={16} />
-                        <span>Resort Information</span>
+                        <span>{config.title}</span>
                     </div>
                     <button
                         onClick={() => setIsVisible(false)}
@@ -48,11 +67,11 @@ export default function UtilityPopup() {
                 </div>
                 <div className={styles.popupBody}>
                     <p className={styles.amenities}>
-                        Swimming Pool • VIP Lounge<br />Conference Rooms • Free Wi-Fi
+                        {config.text}
                     </p>
                     <div className={styles.contactInfo}>
                         <span>For reservations & inquiries:</span>
-                        <strong>+254 701 023 026</strong>
+                        <strong>{config.phone}</strong>
                     </div>
                 </div>
             </motion.div>
