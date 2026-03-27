@@ -12,7 +12,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const facility = data.facilities?.find((f: any) => f.id === id);
     return {
         title: facility ? `${facility.title} | Facilities | Parkside Villa Kitui` : "Facility Detail",
-        description: facility?.desc || "Experience luxury at Parkside Villa Kitui."
+        description: facility?.desc || "Experience luxury at Parkside Villa Kitui.",
+        alternates: { canonical: `/facilities/${id}` },
+        openGraph: facility?.image ? {
+            images: Array.isArray(facility.image) ? facility.image.map((url: string) => ({ url })) : [{ url: facility.image }]
+        } : undefined
     };
 }
 

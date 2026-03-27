@@ -14,6 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     return {
         title: `${post.title} | Parkside Villa Journal`,
         description: post.excerpt,
+        alternates: { canonical: `/blog/${id}` },
         openGraph: {
             title: post.title,
             description: post.excerpt,

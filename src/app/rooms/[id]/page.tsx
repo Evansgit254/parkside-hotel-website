@@ -13,7 +13,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const room = data.rooms?.find((r: any) => r.id === id);
     return {
         title: room ? `${room.name} | Accommodation | Parkside Villa Kitui` : "Room Detail",
-        description: room?.desc || "Luxury suites and cottages at Parkside Villa Kitui."
+        description: room?.desc || "Luxury suites and cottages at Parkside Villa Kitui.",
+        alternates: { canonical: `/rooms/${id}` },
+        openGraph: room?.image ? {
+            images: Array.isArray(room.image) ? room.image.map((url: string) => ({ url })) : [{ url: room.image }]
+        } : undefined
     };
 }
 

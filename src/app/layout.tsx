@@ -32,6 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const siteKeywords = seo.keywords ? seo.keywords.split(',').map((k: string) => k.trim()) : ["Kitui hotel", "Parkside Villa Kitui", "accommodation in Kitui", "conference facilities Kitui", "best hotel Kitui", "luxury hotel Kitui, Kenya", "places to stay in Kitui"];
 
   return {
+    metadataBase: new URL('https://www.parksidevillakitui.com'),
     title: siteTitle,
     description: siteDescription,
     keywords: siteKeywords,

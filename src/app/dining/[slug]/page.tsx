@@ -15,6 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return {
         title: `${venue.name} | Dining at Parkside Villa Kitui`,
         description: venue.desc,
+        alternates: { canonical: `/dining/${slug}` },
         openGraph: { title: venue.name, description: venue.desc, images: venue.image ? [venue.image] : [] },
     };
 }
