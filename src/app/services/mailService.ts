@@ -21,8 +21,8 @@ function getResend() {
     return new Resend(key);
 }
 
-const FROM_EMAIL = process.env.NOTIFICATION_FROM_EMAIL || "Parkside Villa <onboarding@resend.dev>";
-const ADMIN_EMAIL = process.env.NOTIFICATION_ADMIN_EMAIL || "concierge@parksidevillakitui.com";
+const FROM_EMAIL = process.env.NOTIFICATION_FROM_EMAIL || "Parkside Villa <info@parksidevillakitui.com>";
+const ADMIN_EMAIL = process.env.NOTIFICATION_ADMIN_EMAIL || "reservations@parksidevillakitui.com";
 
 export class NotificationService {
 
