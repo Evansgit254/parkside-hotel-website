@@ -78,7 +78,7 @@ export default function AdminLogin() {
                             className={styles.input}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="admin@parksidevilla.com"
+                            placeholder=""
                             required
                         />
                     </div>
@@ -93,7 +93,7 @@ export default function AdminLogin() {
                                 className={styles.input}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="••••••••"
+                                placeholder=""
                                 required
                             />
                             <button
