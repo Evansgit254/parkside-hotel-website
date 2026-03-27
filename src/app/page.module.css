@@ -432,35 +432,20 @@
 
 @media (max-width: 768px) {
     .hero {
-        display: flex;
-        flex-direction: column;
-        padding-top: 70px;
         height: auto;
-        min-height: auto;
+        min-height: 70vh; /* Reduced from 100vh to severely decrease horizontal cropping of the image */
+        padding-top: 70px;
+        padding-bottom: 2rem;
     }
-
-    /* Target the HeroSlider absolute wrapper and make it relative to the flow */
-    .hero > div:first-child {
-        position: relative !important;
-        width: 100%;
-        height: 55vw !important; /* Roughly 16:9 aspect ratio */
-        min-height: 250px;
-    }
-
+    
     .imageReveal {
-        object-fit: cover; /* It will cover the 16:9 box without cropping much */
+        object-fit: contain;
+        object-position: center top;
+        opacity: 0.9;
     }
-
+    
     .heroOverlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to bottom, transparent 60%, #050f0b 100%);
-    }
-
-    .heroContent {
-        padding-top: 2rem;
-        background: #050f0b;
-        margin-top: -1px; /* Remove any gap */
+        background: linear-gradient(to bottom, rgba(5, 15, 11, 0.2) 0%, rgba(5, 15, 11, 0.6) 100%);
     }
 }
 
