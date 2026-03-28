@@ -1320,9 +1320,11 @@
         flex: none !important;
         position: relative !important;
         border-radius: 0 !important;
+        order: 2 !important;
     }
     
     .itemContent {
         padding: 20px 20px !important;
+        order: 1 !important;
     }
 }

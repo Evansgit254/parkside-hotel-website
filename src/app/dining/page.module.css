@@ -471,6 +471,7 @@
     .venueGallery {
         width: 100%;
         min-height: 460px;
+        order: 2;
     }
 
     .imageGrid {
@@ -490,6 +491,7 @@
     .venueInfo {
         text-align: center;
         align-items: center;
+        order: 1;
     }
 
     .venueHeader {
