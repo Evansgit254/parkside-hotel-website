@@ -212,7 +212,14 @@ export default function Header() {
                         onClick={e => e.stopPropagation()}
                     >
                         <div className={styles.mobileMenuHeader}>
-                            <Image src="/logo_kitui.png" alt="Parkside Villa Kitui" width={220} height={70} className={styles.logoImageFinal} />
+                            <Image 
+                                src="/logo_kitui_white.png" 
+                                alt="Parkside Villa Kitui" 
+                                width={220} 
+                                height={70} 
+                                className={styles.logoImageFinal}
+                                style={{ filter: 'brightness(0) invert(0.2) sepia(1) hue-rotate(100deg) saturate(3) contrast(1.2)' }}
+                            />
                             <button
                                 className={styles.mobileMenuClose}
                                 onClick={() => setIsMobileMenuOpen(false)}
