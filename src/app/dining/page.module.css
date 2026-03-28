@@ -468,8 +468,23 @@
         gap: 3rem;
     }
 
+    .venueGallery {
+        width: 100%;
+        min-height: 460px;
+    }
+
     .imageGrid {
-        grid-template-rows: repeat(2, 220px);
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 200px);
+        height: 460px;
+    }
+
+    .imageWrapper {
+        height: 100%;
+    }
+
+    .large {
+        grid-row: span 2;
     }
 
     .venueInfo {
