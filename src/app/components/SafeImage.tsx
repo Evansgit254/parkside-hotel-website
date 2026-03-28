@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image, { ImageProps } from 'next/image';
 import { ImageIcon } from 'lucide-react';
 import styles from './SafeImage.module.css';
@@ -19,12 +19,20 @@ const SafeImage: React.FC<SafeImageProps> = (allProps) => {
     } = allProps;
     const [error, setError] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const imgRef = useRef<HTMLImageElement>(null);
 
     // Reset error state if src changes
     useEffect(() => {
         setError(false);
         setIsLoading(true);
     }, [src]);
+
+    // Fallback: if image already loaded before onLoad could fire (cached images)
+    useEffect(() => {
+        if (imgRef.current && imgRef.current.complete) {
+            setIsLoading(false);
+        }
+    });
 
     const showPlaceholder = error || !src || src === "";
 
@@ -53,10 +61,11 @@ const SafeImage: React.FC<SafeImageProps> = (allProps) => {
             ) : (
                 <Image
                     {...props}
+                    ref={imgRef}
                     src={processedSrc || ""}
                     alt={alt || "Parkside Villa"}
                     className={`${props.className || ''} ${styles.image} ${isLoading ? styles.loading : styles.loaded}`}
-                    onLoadingComplete={() => setIsLoading(false)}
+                    onLoad={() => setIsLoading(false)}
                     onError={() => setError(true)}
                 />
             )}
