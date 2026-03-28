@@ -5,7 +5,6 @@ import ClientBranding from "./components/ClientBranding";
 import { CurrencyProvider } from "./context/CurrencyContext";
 import LiveChatWrapper from "./components/LiveChatWrapper";
 import UtilityPopup from "./components/UtilityPopup";
-import Script from "next/script";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -43,11 +42,20 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "Parkside Villa Kitui",
       locale: "en_KE",
       type: "website",
+      images: [
+        {
+          url: "https://www.parksidevillakitui.com/og-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: "Parkside Villa Kitui - Best Hotel & Conference in Kitui",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: "Parkside Villa Kitui",
       description: siteDescription,
+      images: ["https://www.parksidevillakitui.com/og-image.jpg"],
     },
     alternates: {
       canonical: "https://www.parksidevillakitui.com",
@@ -81,34 +89,6 @@ export default function RootLayout({
           </ClientBranding>
           <LiveChatWrapper />
         </CurrencyProvider>
-
-        {/* Global Google Translate Scripts */}
-        <Script
-          src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-          strategy="afterInteractive"
-        />
-        <Script id="google-translate-config" strategy="afterInteractive">
-          {`
-            function googleTranslateElementInit() {
-              if (typeof google !== 'undefined' && google.translate) {
-                new google.translate.TranslateElement({
-                  pageLanguage: 'en',
-                  layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                  autoDisplay: false
-                }, 'google_translate_element');
-                
-                // Also initialize the admin one if it exists
-                if (document.getElementById('google_translate_admin')) {
-                  new google.translate.TranslateElement({
-                    pageLanguage: 'en',
-                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                    autoDisplay: false
-                  }, 'google_translate_admin');
-                }
-              }
-            }
-          `}
-        </Script>
       </body>
     </html>
   );
