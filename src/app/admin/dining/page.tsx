@@ -116,7 +116,7 @@ export default function AdminDining() {
         const category = menu.find(c => c.id === itemFormState.categoryId);
         if (!category) return;
 
-        let updatedItems = [...category.items];
+        const updatedItems = [...category.items];
         const newItem = { name: itemFormState.name, desc: itemFormState.desc, price: itemFormState.price };
 
         if (itemFormState.itemIdx === "NEW") {
