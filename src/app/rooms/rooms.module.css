@@ -334,19 +334,23 @@
     backdrop-filter: blur(8px);
     z-index: 1000;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 2rem;
+    padding: 1.5rem;
+    overflow-y: auto;
 }
 
 .modalContent {
     background: #FFFFFF;
     width: 100%;
     max-width: 500px;
+    max-height: 92vh;
+    overflow-y: auto;
     padding: 3rem;
     border-radius: 20px;
     border: 1px solid var(--border-dark);
     position: relative;
+    margin: auto;
 }
 
 .closeModal {
@@ -1326,5 +1330,17 @@
     .itemContent {
         padding: 20px 20px !important;
         order: 1 !important;
+    }
+}
+
+/* MOBILE MODAL PADDING REDUCTION */
+@media (max-width: 480px) {
+    .modalOverlay {
+        padding: 0.75rem !important;
+        align-items: flex-start !important;
+    }
+    .modalContent {
+        padding: 1.5rem 1.25rem !important;
+        max-height: 92dvh !important;
     }
 }
