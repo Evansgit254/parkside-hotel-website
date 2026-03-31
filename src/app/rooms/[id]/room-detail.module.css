@@ -273,9 +273,10 @@
     backdrop-filter: blur(5px);
     z-index: 1000;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 1.5rem;
+    padding: 1rem;
+    overflow-y: auto;
 }
 
 .modalContent {
@@ -284,10 +285,13 @@
     border-radius: 32px;
     width: 100%;
     max-width: 550px;
+    max-height: 92dvh;
+    overflow-y: auto;
     border: 1px solid var(--border-light);
     position: relative;
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1);
     color: var(--text-primary);
+    margin: auto;
 }
 
 .closeModal {
@@ -402,5 +406,15 @@
 
     .sidebar {
         position: static;
+    }
+}
+
+@media (max-width: 480px) {
+    .modalOverlay {
+        padding: 0.5rem;
+    }
+    .modalContent {
+        padding: 1.25rem !important;
+        border-radius: 20px;
     }
 }
