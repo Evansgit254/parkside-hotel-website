@@ -392,7 +392,7 @@
     position: relative;
     height: calc(100vh - 90px);
     min-height: 600px;
-    margin-top: 90px;
+    padding-top: 90px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -405,7 +405,7 @@
     .hero {
         height: auto;
         min-height: 100vh;
-        margin-top: 70px;
+        padding-top: 70px;
         padding-bottom: 4rem;
     }
 }
@@ -434,7 +434,7 @@
     .hero {
         height: auto;
         min-height: 70vh; /* Reduced from 100vh to severely decrease horizontal cropping of the image */
-        margin-top: 70px;
+        padding-top: 70px;
         padding-bottom: 2rem;
     }
     

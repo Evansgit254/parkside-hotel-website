@@ -56,7 +56,7 @@ export default function HeroSlider({
                         quality={90}
                         sizes="100vw"
                         className={styles.imageReveal}
-                        style={{ objectFit: "cover" }}
+                        style={{ objectFit: "cover", objectPosition: "center 20%" }}
                         fallbackText="Welcome to Parkside Villa"
                     />
                 </motion.div>
