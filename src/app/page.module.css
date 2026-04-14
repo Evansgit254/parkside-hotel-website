@@ -194,7 +194,7 @@
 
 @media (max-width: 768px) {
     .translateWrapper {
-        min-width: 80px;
+        display: none; /* Hidden in header on mobile — available in the slide-out menu */
     }
 
     .translateWrapperMobile {
