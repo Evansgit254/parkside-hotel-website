@@ -130,7 +130,7 @@
 
 @media (max-width: 768px) {
     .navContainer {
-        gap: 2rem;
+        gap: 0.5rem;
     }
 }
 
@@ -143,7 +143,7 @@
 
 @media (max-width: 768px) {
     .headerActions {
-        gap: 1rem;
+        gap: 0.25rem;
     }
 }
 
@@ -177,6 +177,13 @@
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
     border-color: var(--white);
+}
+
+@media (max-width: 768px) {
+    .currencyToggle {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.65rem;
+    }
 }
 
 

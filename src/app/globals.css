@@ -357,10 +357,17 @@ iframe.goog-te-menu-frame {
   letter-spacing: 0.05em !important;
 }
 
-.headerNonHome .goog-te-combo,
-.headerScrolled .goog-te-combo {
+.headerScrolled .goog-te-combo,
+.headerNonHome .goog-te-combo {
   color: var(--white) !important;
   border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+@media (max-width: 768px) {
+  .goog-te-combo {
+    padding: 0.2rem 0.5rem !important;
+    font-size: 0.6rem !important;
+  }
 }
 
 
