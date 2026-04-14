@@ -370,6 +370,24 @@ iframe.goog-te-menu-frame {
   }
 }
 
+/* Mobile: make the select an invisible full-area tap target over the globe icon */
+@media (max-width: 768px) {
+  #google_translate_element .goog-te-combo,
+  #google_translate_element select {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0 !important;
+    cursor: pointer !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    font-size: 16px !important; /* Prevent iOS auto-zoom */
+    z-index: 2 !important;
+  }
+}
+
 
 
 
