@@ -39,10 +39,13 @@ export default function HeroSlider({
             <AnimatePresence mode="wait">
                 <motion.div
                     key={currentSlide}
-                    initial={{ scale: 1.08, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
+                    initial={{ scale: currentSlide % 2 === 0 ? 1.0 : 1.15, opacity: 0 }}
+                    animate={{ scale: currentSlide % 2 === 0 ? 1.15 : 1.0, opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ 
+                        opacity: { duration: 1.4, ease: [0.16, 1, 0.3, 1] },
+                        scale: { duration: 10, ease: "linear" }
+                    }}
                     style={{ position: 'absolute', inset: 0 }}
                 >
                     <SafeImage
