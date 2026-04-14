@@ -74,6 +74,8 @@ export const viewport = {
   maximumScale: 5,
 };
 
+import GoogleTranslateScript from "./components/GoogleTranslateScript";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -83,6 +85,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${playfair.variable} ${mulish.variable}`} suppressHydrationWarning>
         <CurrencyProvider>
+          <GoogleTranslateScript />
           <ClientBranding>
             {children}
             <UtilityPopup />
