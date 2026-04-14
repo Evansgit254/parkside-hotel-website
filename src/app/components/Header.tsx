@@ -183,14 +183,15 @@ export default function Header() {
                     </nav>
 
                     <div className={styles.headerActions}>
-                        <Link href={user ? "/profile" : "/login"} className={styles.profileLink}>
-                            <User size={20} className={user ? 'maroon-text' : ''} />
-                            <span className={styles.profileText}>{user ? 'Profile' : 'Sign In'}</span>
-                        </Link>
                         <button onClick={toggleCurrency} className={styles.currencyToggle}>
                             {currency}
                         </button>
                         <div id="google_translate_element" className={styles.translateWrapper}></div>
+                        
+                        <Link href={user ? "/profile" : "/login"} className={styles.profileLink}>
+                            <User size={20} className={user ? 'maroon-text' : ''} />
+                            <span className={styles.profileText}>{user ? 'Profile' : 'Sign In'}</span>
+                        </Link>
 
                         {/* Hamburger — mobile only */}
                         <button
