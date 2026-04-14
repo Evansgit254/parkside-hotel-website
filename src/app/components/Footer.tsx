@@ -118,6 +118,36 @@ export default function Footer() {
                 </div>
                 <div className={styles.footerBottom}>
                     <p>&copy; {new Date().getFullYear()} Parkside Villa Kitui. All Rights Reserved. | <Link href="/admin" className={styles.footerAdminLink}>Admin Login</Link></p>
+                    <p className={styles.footerCredit}>
+                        Website designed &amp; developed by{' '}
+                        <a
+                            href="https://wa.me/254703840886"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.footerCreditLink}
+                            title="Chat on WhatsApp"
+                        >
+                            Evans Mumo
+                        </a>
+                        {' · '}
+                        <a
+                            href="mailto:evansdev86@gmail.com"
+                            className={styles.footerCreditLink}
+                            title="Send an Email"
+                        >
+                            evansdev86@gmail.com
+                        </a>
+                        {' · '}
+                        <a
+                            href="https://wa.me/254703840886"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.footerCreditLink}
+                            title="WhatsApp"
+                        >
+                            +254 703 840 886
+                        </a>
+                    </p>
                 </div>
             </div>
         </footer>

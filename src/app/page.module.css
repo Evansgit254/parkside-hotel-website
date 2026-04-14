@@ -1792,6 +1792,26 @@
     text-decoration: underline;
 }
 
+.footerCredit {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.55) !important;
+    letter-spacing: 0.04em;
+    text-align: center;
+    margin-top: 0.25rem;
+}
+
+.footerCreditLink {
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-weight: 500;
+}
+
+.footerCreditLink:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
 @media (min-width: 768px) {
     .footerBottom {
         flex-direction: row;
